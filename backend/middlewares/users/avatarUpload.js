@@ -1,4 +1,4 @@
-const uploader = require('../../utils/singleUploader');
+const uploader = require("../../utils/singleUploader")
 
 function avatarUpload(req, res, next) {
     const upload = uploader(
@@ -12,17 +12,16 @@ function avatarUpload(req, res, next) {
     upload.any()(req, res, (err) => {
         if(err) {
             res.status(500).json({
-                    errors: {
-                        avatar: {
-                            msg: err.message
-                        }
+                errors: {
+                    avatar: {
+                        msg: err.message,
                     }
+                }
             });
         } else {
             next();
         }
-    })
+    });
 }
-
 
 module.exports = avatarUpload;

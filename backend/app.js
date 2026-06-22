@@ -6,6 +6,7 @@ const cookieParser = require("cookie-parser");
 const path = require('path');
 const connectDB = require('./server');
 const usersRouter = require('./routers/usersRouter');
+const { notFoundHandler, errorHandler } = require('./middlewares/common/errorHandler');
 
 
 const app = express();
@@ -26,7 +27,14 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
 // routing setup
-app.use('/users', usersRouter);
+app.use('/api/v1/users', usersRouter);
+
+// 404 not found handler
+app.use(notFoundHandler);
+
+// common error handler
+app.use(errorHandler);
+
 
 app.listen(process.env.PORT, () => {
     console.log(`app is connected at port ${process.env.PORT}`)
