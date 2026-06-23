@@ -6,6 +6,7 @@ const cookieParser = require("cookie-parser");
 const path = require('path');
 const connectDB = require('./server');
 const usersRouter = require('./routers/usersRouter');
+const booksRouter = require("./routers/booksRouter");
 const { notFoundHandler, errorHandler } = require('./middlewares/common/errorHandler');
 
 
@@ -28,6 +29,7 @@ app.use(cookieParser(process.env.COOKIE_SECRET));
 
 // routing setup
 app.use('/api/v1/users', usersRouter);
+app.use("/api/v1/books", booksRouter);
 
 // 404 not found handler
 app.use(notFoundHandler);
