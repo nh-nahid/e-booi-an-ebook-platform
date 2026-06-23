@@ -4,8 +4,9 @@ const Order = require("../models/Order");
 
 // order create
 async function createOrder(req, res, next) {
-
     try {
+        const { shippingAddress, paymentMethod } = req.body;
+
         const cartItems = await Cart.find({
             user: req.user.id,
         }).populate("book");
@@ -19,36 +20,72 @@ async function createOrder(req, res, next) {
         const orderItems = [];
         let totalAmount = 0;
 
+        let hasDigital = false;
+        let hasPhysical = false;
+
+        // Validate stock + build order items
         for (const item of cartItems) {
+            const book = item.book;
+
+            if (!book) continue;
+
             orderItems.push({
-                book: item.book._id,
+                book: book._id,
                 quantity: item.quantity,
-                price: item.book.price,
-                bookType: item.book.bookType,
+                price: book.price,
+                bookType: book.bookType,
             });
 
-            totalAmount += item.quantity * item.book.price;
+            totalAmount += item.quantity * book.price;
 
-            if (
-                item.book.bookType === "physical" &&
-                item.book.stock < item.quantity
-                
-            ) {
-                return res.status(400).json({
-                    message: `${item.book.title} is out of stock`,
-                });
+            if (book.bookType === "physical") {
+                hasPhysical = true;
+
+                if (book.stock < item.quantity) {
+                    return res.status(400).json({
+                        message: `${book.title} is out of stock`,
+                    });
+                }
+            }
+
+            if (book.bookType === "digital") {
+                hasDigital = true;
             }
         }
 
+        // 🚨 COD restriction for digital books
+        if (paymentMethod === "cod" && hasDigital) {
+            return res.status(400).json({
+                message:
+                    "Cash on Delivery is not allowed for digital books",
+            });
+        }
+
+        // Create order
         const order = new Order({
             user: req.user.id,
             items: orderItems,
             totalAmount,
-            shippingAddress: req.body.shippingAddress,
+            shippingAddress,
+            paymentMethod,
+
+            paymentStatus:
+                paymentMethod === "cod" ? "pending" : "pending",
+
+            orderStatus: "pending",
         });
 
         await order.save();
 
+        // Reduce stock only for physical books
+        for (const item of cartItems) {
+            if (item.book.bookType === "physical") {
+                item.book.stock -= item.quantity;
+                await item.book.save();
+            }
+        }
+
+        // Clear cart
         await Cart.deleteMany({
             user: req.user.id,
         });

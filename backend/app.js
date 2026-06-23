@@ -9,6 +9,7 @@ const usersRouter = require('./routers/usersRouter');
 const booksRouter = require("./routers/booksRouter");
 const cartRouter = require("./routers/cartRouter");
 const orderRouter = require("./routers/orderRouter");
+const paymentRouter = require("./routers/paymentRouter");
 const { notFoundHandler, errorHandler } = require('./middlewares/common/errorHandler');
 
 
@@ -34,6 +35,8 @@ app.use('/api/v1/users', usersRouter);
 app.use("/api/v1/books", booksRouter);
 app.use("/api/v1/cart", cartRouter);
 app.use("/api/v1/orders", orderRouter);
+app.use("/api/v1/payment", paymentRouter);
+
 
 // 404 not found handler
 app.use(notFoundHandler);
