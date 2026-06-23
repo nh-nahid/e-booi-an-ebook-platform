@@ -7,6 +7,8 @@ const path = require('path');
 const connectDB = require('./server');
 const usersRouter = require('./routers/usersRouter');
 const booksRouter = require("./routers/booksRouter");
+const cartRouter = require("./routers/cartRouter");
+const orderRouter = require("./routers/orderRouter");
 const { notFoundHandler, errorHandler } = require('./middlewares/common/errorHandler');
 
 
@@ -30,6 +32,8 @@ app.use(cookieParser(process.env.COOKIE_SECRET));
 // routing setup
 app.use('/api/v1/users', usersRouter);
 app.use("/api/v1/books", booksRouter);
+app.use("/api/v1/cart", cartRouter);
+app.use("/api/v1/orders", orderRouter);
 
 // 404 not found handler
 app.use(notFoundHandler);
