@@ -11,6 +11,8 @@ const cartRouter = require("./routers/cartRouter");
 const orderRouter = require("./routers/orderRouter");
 const paymentRouter = require("./routers/paymentRouter");
 const adminRouter = require("./routers/adminRouter");
+const reviewRouter = require("./routers/reviewRouter");
+
 
 const {
   notFoundHandler,
@@ -41,7 +43,7 @@ app.use("/api/v1/cart", cartRouter);
 app.use("/api/v1/orders", orderRouter);
 app.use("/api/v1/payment", paymentRouter);
 app.use("/api/v1/admin", adminRouter);
-
+app.use("/api/v1/reviews", reviewRouter);
 
 // 404 not found handler
 app.use(notFoundHandler);
