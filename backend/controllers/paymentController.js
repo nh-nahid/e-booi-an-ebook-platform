@@ -1,5 +1,9 @@
 const SSLCommerzPayment = require("sslcommerz-lts");
 const Order = require("../models/Order");
+const sendEmail = require("../utils/sendEmail");
+const paymentEmail = require("../emails/templates/paymentEmail");
+const digitalBookEmail = require("../emails/templates/digitalBookEmail");
+const User = require("../models/User");
 
 // initialize payment
 async function initiatePayment(req, res, next) {
@@ -79,7 +83,8 @@ async function paymentSuccess(req, res, next) {
     try {
         const { tran_id, bank_tran_id } = req.body;
 
-        const order = await Order.findById(tran_id);
+        const order = await Order.findById(tran_id)
+            .populate("items.book");
 
         if (!order) {
             return res.status(404).json({
@@ -93,9 +98,58 @@ async function paymentSuccess(req, res, next) {
 
         await order.save();
 
+        // Get customer
+        const user = await User.findById(order.user);
+
+        // Payment success email
+        try {
+            await sendEmail({
+                to: user.email,
+                subject: "Payment Successful",
+                html: paymentEmail(
+                    user,
+                    order,
+                    bank_tran_id
+                ),
+            });
+        } catch (emailError) {
+            console.log(
+                "Payment email failed:",
+                emailError.message
+            );
+        }
+
+        // Send digital books email
+        const digitalBooks = order.items
+            .filter(
+                item =>
+                    item.book &&
+                    item.book.bookType === "digital"
+            )
+            .map(item => item.book);
+
+        if (digitalBooks.length > 0) {
+            try {
+                await sendEmail({
+                    to: user.email,
+                    subject: "Your Digital Books",
+                    html: digitalBookEmail(
+                        user,
+                        digitalBooks
+                    ),
+                });
+            } catch (emailError) {
+                console.log(
+                    "Digital book email failed:",
+                    emailError.message
+                );
+            }
+        }
+
         res.redirect(
             `${process.env.FRONTEND_URL}/payment-success`
         );
+
     } catch (error) {
         next(error);
     }

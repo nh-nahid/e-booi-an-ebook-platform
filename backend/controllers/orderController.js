@@ -1,232 +1,236 @@
 const Cart = require("../models/Cart");
 const Book = require("../models/Book");
 const Order = require("../models/Order");
+const User = require("../models/User");
+const sendEmail = require("../utils/sendEmail");
+const orderEmail = require("../emails/templates/orderEmail");
 
 // order create
 async function createOrder(req, res, next) {
-    try {
-        const { shippingAddress, paymentMethod } = req.body;
+  try {
+    const { shippingAddress, paymentMethod } = req.body;
 
-        const cartItems = await Cart.find({
-            user: req.user.id,
-        }).populate("book");
+    const cartItems = await Cart.find({
+      user: req.user.id,
+    }).populate("book");
 
-        if (!cartItems.length) {
-            return res.status(400).json({
-                message: "Cart is empty",
-            });
-        }
-
-        const orderItems = [];
-        let totalAmount = 0;
-
-        let hasDigital = false;
-        let hasPhysical = false;
-
-        // Validate stock + build order items
-        for (const item of cartItems) {
-            const book = item.book;
-
-            if (!book) continue;
-
-            orderItems.push({
-                book: book._id,
-                quantity: item.quantity,
-                price: book.price,
-                bookType: book.bookType,
-            });
-
-            totalAmount += item.quantity * book.price;
-
-            if (book.bookType === "physical") {
-                hasPhysical = true;
-
-                if (book.stock < item.quantity) {
-                    return res.status(400).json({
-                        message: `${book.title} is out of stock`,
-                    });
-                }
-            }
-
-            if (book.bookType === "digital") {
-                hasDigital = true;
-            }
-        }
-
-        // 🚨 COD restriction for digital books
-        if (paymentMethod === "cod" && hasDigital) {
-            return res.status(400).json({
-                message:
-                    "Cash on Delivery is not allowed for digital books",
-            });
-        }
-
-        // Create order
-        const order = new Order({
-            user: req.user.id,
-            items: orderItems,
-            totalAmount,
-            shippingAddress,
-            paymentMethod,
-
-            paymentStatus:
-                paymentMethod === "cod" ? "pending" : "pending",
-
-            orderStatus: "pending",
-        });
-
-        await order.save();
-
-        // Reduce stock only for physical books
-        for (const item of cartItems) {
-            if (item.book.bookType === "physical") {
-                item.book.stock -= item.quantity;
-                await item.book.save();
-            }
-        }
-
-        // Clear cart
-        await Cart.deleteMany({
-            user: req.user.id,
-        });
-
-        res.status(201).json({
-            message: "Order created successfully",
-            order,
-        });
-    } catch (error) {
-        next(error);
+    if (!cartItems.length) {
+      return res.status(400).json({
+        message: "Cart is empty",
+      });
     }
-}
 
+    const orderItems = [];
+    let totalAmount = 0;
+
+    let hasDigital = false;
+    let hasPhysical = false;
+
+    // Validate stock + build order items
+    for (const item of cartItems) {
+      const book = item.book;
+
+      if (!book) continue;
+
+      orderItems.push({
+        book: book._id,
+        quantity: item.quantity,
+        price: book.price,
+        bookType: book.bookType,
+      });
+
+      totalAmount += item.quantity * book.price;
+
+      if (book.bookType === "physical") {
+        hasPhysical = true;
+
+        if (book.stock < item.quantity) {
+          return res.status(400).json({
+            message: `${book.title} is out of stock`,
+          });
+        }
+      }
+
+      if (book.bookType === "digital") {
+        hasDigital = true;
+      }
+    }
+
+    // 🚨 COD restriction for digital books
+    if (paymentMethod === "cod" && hasDigital) {
+      return res.status(400).json({
+        message: "Cash on Delivery is not allowed for digital books",
+      });
+    }
+
+    // Create order
+    const order = new Order({
+      user: req.user.id,
+      items: orderItems,
+      totalAmount,
+      shippingAddress,
+      paymentMethod,
+
+      paymentStatus: paymentMethod === "cod" ? "pending" : "pending",
+
+      orderStatus: "pending",
+    });
+
+    await order.save();
+
+    // Reduce stock only for physical books
+    for (const item of cartItems) {
+      if (item.book.bookType === "physical") {
+        item.book.stock -= item.quantity;
+        await item.book.save();
+      }
+    }
+
+    // Clear cart
+    await Cart.deleteMany({
+      user: req.user.id,
+    });
+
+    const user = await User.findById(req.user.id);
+    
+    await sendEmail({
+      to: user.email,
+      subject: "Order Confirmation",
+      html: orderEmail(user, order),
+    });
+
+    res.status(201).json({
+      message: "Order created successfully",
+      order,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
 
 // get order
 async function getMyOrders(req, res, next) {
-    try {
-        const orders = await Order.find({
-            user: req.user.id,
-        }).populate("items.book");
+  try {
+    const orders = await Order.find({
+      user: req.user.id,
+    }).populate("items.book");
 
-        res.json(orders);
-    } catch (error) {
-        next(error);
-    }
+    res.json(orders);
+  } catch (error) {
+    next(error);
+  }
 }
 
 // admin get all orders
 async function getOrders(req, res, next) {
-    try {
-        const orders = await Order.find()
-            .populate("user", "name email")
-            .populate("items.book");
+  try {
+    const orders = await Order.find()
+      .populate("user", "name email")
+      .populate("items.book");
 
-        res.json(orders);
-    } catch (error) {
-        next(error);
-    }
+    res.json(orders);
+  } catch (error) {
+    next(error);
+  }
 }
 
 // update order status
 async function updateOrderStatus(req, res, next) {
-    try {
-        const order = await Order.findByIdAndUpdate(
-            req.params.id,
-            {
-                orderStatus: req.body.orderStatus,
-            },
-            {
-                new: true,
-            }
-        );
+  try {
+    const order = await Order.findByIdAndUpdate(
+      req.params.id,
+      {
+        orderStatus: req.body.orderStatus,
+      },
+      {
+        new: true,
+      },
+    );
 
-        res.json(order);
-    } catch (error) {
-        next(error);
-    }
+    res.json(order);
+  } catch (error) {
+    next(error);
+  }
 }
 
 // download digital books
 async function downloadBook(req, res, next) {
-    try {
-        const order = await Order.findOne({
-            user: req.user.id,
-            paymentStatus: "paid",
-            "items.book": req.params.bookId,
-        }).populate("items.book");
+  try {
+    const order = await Order.findOne({
+      user: req.user.id,
+      paymentStatus: "paid",
+      "items.book": req.params.bookId,
+    }).populate("items.book");
 
-        if (!order) {
-            return res.status(403).json({
-                message: "Book not purchased",
-            });
-        }
-
-        const item = order.items.find(
-            item =>
-                item.book._id.toString() === req.params.bookId
-        );
-
-        if (item.book.bookType !== "digital") {
-            return res.status(400).json({
-                message: "Not a digital book",
-            });
-        }
-
-        res.download(
-            `public/uploads/pdfs/${item.book.pdfFile}`
-        );
-    } catch (error) {
-        next(error);
+    if (!order) {
+      return res.status(403).json({
+        message: "Book not purchased",
+      });
     }
+
+    const item = order.items.find(
+      (item) => item.book._id.toString() === req.params.bookId,
+    );
+
+    if (item.book.bookType !== "digital") {
+      return res.status(400).json({
+        message: "Not a digital book",
+      });
+    }
+
+    res.download(`public/uploads/pdfs/${item.book.pdfFile}`);
+  } catch (error) {
+    next(error);
+  }
 }
 
 // update payment status
 async function updatePaymentStatus(req, res, next) {
-    try {
-        const order = await Order.findByIdAndUpdate(
-            req.params.id,
-            {
-                paymentStatus: req.body.paymentStatus,
-            },
-            { new: true }
-        );
+  try {
+    const order = await Order.findByIdAndUpdate(
+      req.params.id,
+      {
+        paymentStatus: req.body.paymentStatus,
+      },
+      { new: true },
+    );
 
-        res.json(order);
-    } catch (error) {
-        next(error);
-    }
+    res.json(order);
+  } catch (error) {
+    next(error);
+  }
 }
-
 
 // user digital library
 async function getLibrary(req, res, next) {
-    try {
-        const orders = await Order.find({
-            user: req.user.id,
-            paymentStatus: "paid",
-        }).populate("items.book");
+  try {
+    const orders = await Order.find({
+      user: req.user.id,
+      paymentStatus: "paid",
+    }).populate("items.book");
 
-        const books = [];
+    const books = [];
 
-        orders.forEach(order => {
-            order.items.forEach(item => {
-                if (item.book.bookType === "digital") {
-                    books.push(item.book);
-                }
-            });
-        });
+    orders.forEach((order) => {
+      order.items.forEach((item) => {
+        if (item.book.bookType === "digital") {
+          books.push(item.book);
+        }
+      });
+    });
 
-        res.json(books);
-    } catch (error) {
-        next(error);
-    }
+    res.json(books);
+  } catch (error) {
+    next(error);
+  }
 }
 
 module.exports = {
-    createOrder,
-    getMyOrders,
-    getOrders,
-    updateOrderStatus,
-    downloadBook,
-    updatePaymentStatus,
-    getLibrary
-}
+  createOrder,
+  getMyOrders,
+  getOrders,
+  updateOrderStatus,
+  downloadBook,
+  updatePaymentStatus,
+  getLibrary,
+};

@@ -3,6 +3,8 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const { unlink } = require("fs");
 const path = require("path");
+const sendEmail = require('../utils/sendEmail');
+const welcomeEmail = require('../emails/templates/welcomeEmail');
 
 // =======================
 // GET ALL USERS (ADMIN)
@@ -49,7 +51,7 @@ async function addUser(req, res, next) {
     try {
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
-        const file = req.files && req.files.length > 0 ? req.files[0] : null;
+        const file = req.files?.[0];
         const filename = file ? file.filename : null;
 
         const newUser = new User({
@@ -60,10 +62,22 @@ async function addUser(req, res, next) {
 
         await newUser.save();
 
-        res.status(201).json({
-            message: "User registered successfully!",
+        console.log("User saved");
+
+        await sendEmail({
+            to: newUser.email,
+            subject: "Welcome to Book Store",
+            html: welcomeEmail(newUser),
         });
+
+        console.log("Email sent");
+
+        res.status(201).json({
+            message: "User registered successfully",
+        });
+
     } catch (error) {
+        console.log(error);
         next(error);
     }
 }
