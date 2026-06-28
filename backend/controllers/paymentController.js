@@ -49,7 +49,7 @@ async function initiatePayment(req, res, next) {
     cus_country: "Bangladesh",
 };
 
-        console.log("SSL DATA:", data);
+       
 
         const sslcz = new SSLCommerzPayment(
             process.env.SSL_STORE_ID,
