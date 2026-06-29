@@ -1,14 +1,24 @@
 const SSLCommerzPayment = require("sslcommerz-lts");
+
 const Order = require("../models/Order");
+const User = require("../models/User");
+const Coupon = require("../models/Coupon");
+
 const sendEmail = require("../utils/sendEmail");
+
 const paymentEmail = require("../emails/templates/paymentEmail");
 const digitalBookEmail = require("../emails/templates/digitalBookEmail");
-const User = require("../models/User");
 
-// initialize payment
+// ======================
+// INITIALIZE PAYMENT
+// ======================
 async function initiatePayment(req, res, next) {
     try {
-        const order = await Order.findById(req.params.id);
+        const order = await Order.findById(
+            req.params.id
+        )
+            .populate("user")
+            .populate("coupon");
 
         if (!order) {
             return res.status(404).json({
@@ -16,40 +26,80 @@ async function initiatePayment(req, res, next) {
             });
         }
 
-       const data = {
-    total_amount: order.totalAmount,
-    currency: "BDT",
-    tran_id: order._id.toString(),
+        if (order.paymentStatus === "paid") {
+            return res.status(400).json({
+                message: "Order already paid",
+            });
+        }
 
-    success_url: `${process.env.BACKEND_URL}/api/v1/payment/success`,
-    fail_url: `${process.env.BACKEND_URL}/api/v1/payment/fail`,
-    cancel_url: `${process.env.BACKEND_URL}/api/v1/payment/cancel`,
+        const customer = order.user;
 
-    ipn_url: `${process.env.BACKEND_URL}/api/v1/payment/ipn`,
+        const data = {
+            total_amount:
+                order.finalAmount || order.totalAmount,
 
-    shipping_method: "Courier",
-    product_name: "Book Purchase",
-    product_category: "Books",
-    product_profile: "general",
+            currency: "BDT",
 
-    // ✅ REQUIRED SHIPPING FIELDS
-    ship_name: order.shippingAddress.fullName,
-    ship_add1: order.shippingAddress.address,
-    ship_city: order.shippingAddress.city,
-    ship_postcode: order.shippingAddress.postalCode || "0000",
-    ship_country: "Bangladesh",
-    ship_phone: order.shippingAddress.phone,
+            tran_id: order._id.toString(),
 
-    // CUSTOMER INFO
-    cus_name: order.shippingAddress.fullName,
-    cus_email: "test@email.com",
-    cus_phone: order.shippingAddress.phone,
-    cus_add1: order.shippingAddress.address,
-    cus_city: order.shippingAddress.city,
-    cus_country: "Bangladesh",
-};
+            success_url:
+                `${process.env.BACKEND_URL}/api/v1/payment/success`,
 
-       
+            fail_url:
+                `${process.env.BACKEND_URL}/api/v1/payment/fail`,
+
+            cancel_url:
+                `${process.env.BACKEND_URL}/api/v1/payment/cancel`,
+
+            ipn_url:
+                `${process.env.BACKEND_URL}/api/v1/payment/ipn`,
+
+            shipping_method: "Courier",
+
+            product_name: "Book Purchase",
+
+            product_category: "Books",
+
+            product_profile: "general",
+
+            // Shipping Information
+            ship_name:
+                order.shippingAddress.fullName,
+
+            ship_add1:
+                order.shippingAddress.address,
+
+            ship_city:
+                order.shippingAddress.city,
+
+            ship_postcode:
+                order.shippingAddress.postalCode ||
+                "0000",
+
+            ship_country: "Bangladesh",
+
+            ship_phone:
+                order.shippingAddress.phone,
+
+            // Customer Information
+            cus_name:
+                order.shippingAddress.fullName,
+
+            cus_email:
+                customer?.email ||
+                "customer@example.com",
+
+            cus_phone:
+                order.shippingAddress.phone,
+
+            cus_add1:
+                order.shippingAddress.address,
+
+            cus_city:
+                order.shippingAddress.city,
+
+            cus_country: "Bangladesh",
+        };
 
         const sslcz = new SSLCommerzPayment(
             process.env.SSL_STORE_ID,
@@ -59,17 +109,20 @@ async function initiatePayment(req, res, next) {
 
         const apiResponse = await sslcz.init(data);
 
-        console.log("SSL RESPONSE:", apiResponse);
-
-        if (!apiResponse || !apiResponse.GatewayPageURL) {
+        if (
+            !apiResponse ||
+            !apiResponse.GatewayPageURL
+        ) {
             return res.status(500).json({
-                message: "Payment gateway failed to initialize",
+                message:
+                    "Payment gateway failed to initialize",
                 debug: apiResponse,
             });
         }
 
         return res.json({
-            gatewayURL: apiResponse.GatewayPageURL,
+            gatewayURL:
+                apiResponse.GatewayPageURL,
         });
 
     } catch (error) {
@@ -78,18 +131,30 @@ async function initiatePayment(req, res, next) {
     }
 }
 
-// payment success
+// ======================
+// PAYMENT SUCCESS
+// ======================
 async function paymentSuccess(req, res, next) {
     try {
         const { tran_id, bank_tran_id } = req.body;
 
-        const order = await Order.findById(tran_id)
-            .populate("items.book");
+        const order = await Order.findById(
+            tran_id
+        )
+            .populate("items.book")
+            .populate("coupon");
 
         if (!order) {
             return res.status(404).json({
                 message: "Order not found",
             });
+        }
+
+        // Prevent duplicate processing
+        if (order.paymentStatus === "paid") {
+            return res.redirect(
+                `${process.env.FRONTEND_URL}/payment-success`
+            );
         }
 
         order.paymentStatus = "paid";
@@ -98,8 +163,22 @@ async function paymentSuccess(req, res, next) {
 
         await order.save();
 
+        // Increase coupon usage count
+        if (order.coupon) {
+            await Coupon.findByIdAndUpdate(
+                order.coupon._id,
+                {
+                    $inc: {
+                        usedCount: 1,
+                    },
+                }
+            );
+        }
+
         // Get customer
-        const user = await User.findById(order.user);
+        const user = await User.findById(
+            order.user
+        );
 
         // Payment success email
         try {
@@ -119,7 +198,7 @@ async function paymentSuccess(req, res, next) {
             );
         }
 
-        // Send digital books email
+        // Digital books
         const digitalBooks = order.items
             .filter(
                 item =>
@@ -140,7 +219,7 @@ async function paymentSuccess(req, res, next) {
                 });
             } catch (emailError) {
                 console.log(
-                    "Digital book email failed:",
+                    "Digital email failed:",
                     emailError.message
                 );
             }
@@ -155,14 +234,18 @@ async function paymentSuccess(req, res, next) {
     }
 }
 
-//payment fail
+// ======================
+// PAYMENT FAILED
+// ======================
 async function paymentFail(req, res) {
     res.redirect(
         `${process.env.FRONTEND_URL}/payment-failed`
     );
 }
 
-//payment cancel
+// ======================
+// PAYMENT CANCELLED
+// ======================
 async function paymentCancel(req, res) {
     res.redirect(
         `${process.env.FRONTEND_URL}/payment-cancel`
@@ -174,4 +257,4 @@ module.exports = {
     paymentSuccess,
     paymentFail,
     paymentCancel,
-}
+};

@@ -4,11 +4,16 @@ const Order = require("../models/Order");
 const User = require("../models/User");
 const sendEmail = require("../utils/sendEmail");
 const orderEmail = require("../emails/templates/orderEmail");
+const Coupon = require("../models/Coupon");
 
 // order create
 async function createOrder(req, res, next) {
   try {
-    const { shippingAddress, paymentMethod } = req.body;
+    const {
+      shippingAddress,
+      paymentMethod,
+      couponCode,
+    } = req.body;
 
     const cartItems = await Cart.find({
       user: req.user.id,
@@ -24,9 +29,8 @@ async function createOrder(req, res, next) {
     let totalAmount = 0;
 
     let hasDigital = false;
-    let hasPhysical = false;
 
-    // Validate stock + build order items
+    // Build order items
     for (const item of cartItems) {
       const book = item.book;
 
@@ -42,8 +46,6 @@ async function createOrder(req, res, next) {
       totalAmount += item.quantity * book.price;
 
       if (book.bookType === "physical") {
-        hasPhysical = true;
-
         if (book.stock < item.quantity) {
           return res.status(400).json({
             message: `${book.title} is out of stock`,
@@ -56,29 +58,98 @@ async function createOrder(req, res, next) {
       }
     }
 
-    // 🚨 COD restriction for digital books
+    // COD restriction
     if (paymentMethod === "cod" && hasDigital) {
       return res.status(400).json({
-        message: "Cash on Delivery is not allowed for digital books",
+        message:
+          "Cash on Delivery is not allowed for digital books",
       });
     }
 
-    // Create order
+    // ======================
+    // Coupon Logic
+    // ======================
+
+    let discountAmount = 0;
+    let finalAmount = totalAmount;
+    let couponId = null;
+
+    if (couponCode) {
+      const coupon = await Coupon.findOne({
+        code: couponCode.toUpperCase(),
+        isActive: true,
+      });
+
+      if (!coupon) {
+        return res.status(400).json({
+          message: "Invalid coupon",
+        });
+      }
+
+      if (new Date() > coupon.expiryDate) {
+        return res.status(400).json({
+          message: "Coupon expired",
+        });
+      }
+
+      if (
+        coupon.usageLimit > 0 &&
+        coupon.usedCount >= coupon.usageLimit
+      ) {
+        return res.status(400).json({
+          message: "Coupon limit exceeded",
+        });
+      }
+
+      if (totalAmount < coupon.minimumAmount) {
+        return res.status(400).json({
+          message: `Minimum order amount is ${coupon.minimumAmount}`,
+        });
+      }
+
+      if (coupon.type === "percentage") {
+        discountAmount =
+          (totalAmount * coupon.value) / 100;
+      } else {
+        discountAmount = coupon.value;
+      }
+
+      finalAmount = totalAmount - discountAmount;
+
+      if (finalAmount < 0) {
+        finalAmount = 0;
+      }
+
+      coupon.usedCount += 1;
+      await coupon.save();
+
+      couponId = coupon._id;
+    }
+
+    // ======================
+    // Create Order
+    // ======================
+
     const order = new Order({
       user: req.user.id,
       items: orderItems,
+
       totalAmount,
+      discountAmount,
+      finalAmount,
+
+      coupon: couponId,
+
       shippingAddress,
       paymentMethod,
 
-      paymentStatus: paymentMethod === "cod" ? "pending" : "pending",
-
+      paymentStatus: "pending",
       orderStatus: "pending",
     });
 
     await order.save();
 
-    // Reduce stock only for physical books
+    // Reduce stock
     for (const item of cartItems) {
       if (item.book.bookType === "physical") {
         item.book.stock -= item.quantity;
@@ -91,8 +162,9 @@ async function createOrder(req, res, next) {
       user: req.user.id,
     });
 
+    // Send email
     const user = await User.findById(req.user.id);
-    
+
     await sendEmail({
       to: user.email,
       subject: "Order Confirmation",
@@ -103,6 +175,7 @@ async function createOrder(req, res, next) {
       message: "Order created successfully",
       order,
     });
+
   } catch (error) {
     next(error);
   }

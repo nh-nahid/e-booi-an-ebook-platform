@@ -14,6 +14,7 @@ const paymentRouter = require("./routers/paymentRouter");
 const adminRouter = require("./routers/adminRouter");
 const reviewRouter = require("./routers/reviewRouter");
 const wishlistRouter = require("./routers/wishlistRouter");
+const couponRouter = require("./routers/couponRouter");
 
 const {
   notFoundHandler,
@@ -45,6 +46,7 @@ app.use("/api/v1/payment", paymentRouter);
 app.use("/api/v1/admin", adminRouter);
 app.use("/api/v1/reviews", reviewRouter);
 app.use("/api/v1/wishlist", wishlistRouter);
+app.use("/api/v1/coupons", couponRouter);
 
 // 404 not found handler
 app.use(notFoundHandler);
