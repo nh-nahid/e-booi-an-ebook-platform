@@ -8,6 +8,7 @@ const {
     downloadBook,
     updatePaymentStatus,
     getLibrary,
+    downloadInvoice,
 } = require("../controllers/orderController");
 
 const {
@@ -17,24 +18,50 @@ const {
 
 const router = express.Router();
 
+// =======================
+// CUSTOMER ROUTES
+// =======================
+
+// Create Order
 router.post(
     "/",
     checkLogin,
     createOrder
 );
 
+// My Orders
 router.get(
     "/my-orders",
     checkLogin,
     getMyOrders
 );
 
+// My Digital Library
 router.get(
     "/library",
     checkLogin,
     getLibrary
 );
 
+// Download purchased digital book
+router.get(
+    "/download/:bookId",
+    checkLogin,
+    downloadBook
+);
+
+// Download invoice
+router.get(
+    "/:id/invoice",
+    checkLogin,
+    downloadInvoice
+);
+
+// =======================
+// ADMIN ROUTES
+// =======================
+
+// All Orders
 router.get(
     "/",
     checkLogin,
@@ -42,6 +69,7 @@ router.get(
     getOrders
 );
 
+// Update order status
 router.patch(
     "/:id/status",
     checkLogin,
@@ -49,18 +77,12 @@ router.patch(
     updateOrderStatus
 );
 
-router.get(
-    "/download/:bookId",
-    checkLogin,
-    downloadBook
-);
-
+// Update payment status (COD etc.)
 router.patch(
     "/:id/payment",
     checkLogin,
     requireRole("admin"),
     updatePaymentStatus
 );
-
 
 module.exports = router;

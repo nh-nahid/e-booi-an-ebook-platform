@@ -48,6 +48,11 @@ app.use("/api/v1/reviews", reviewRouter);
 app.use("/api/v1/wishlist", wishlistRouter);
 app.use("/api/v1/coupons", couponRouter);
 
+app.use(
+  "/invoices",
+  express.static(path.join(__dirname, "public", "uploads", "invoices")),
+);
+
 // 404 not found handler
 app.use(notFoundHandler);
 

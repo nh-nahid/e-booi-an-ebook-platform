@@ -5,6 +5,7 @@ const User = require("../models/User");
 const sendEmail = require("../utils/sendEmail");
 const orderEmail = require("../emails/templates/orderEmail");
 const Coupon = require("../models/Coupon");
+const path = require("path");
 
 // order create
 async function createOrder(req, res, next) {
@@ -298,6 +299,46 @@ async function getLibrary(req, res, next) {
   }
 }
 
+// download invoice
+async function downloadInvoice(req, res, next) {
+    try {
+        const order = await Order.findById(req.params.id);
+
+        if (!order) {
+            return res.status(404).json({
+                message: "Order not found",
+            });
+        }
+
+        // Only the owner or an admin can download
+        if (
+            order.user.toString() !== req.user.id &&
+            req.user.role !== "admin"
+        ) {
+            return res.status(403).json({
+                message: "Access denied",
+            });
+        }
+
+        if (!order.invoiceUrl) {
+            return res.status(404).json({
+                message: "Invoice not found",
+            });
+        }
+
+        const filePath = path.join(
+    __dirname,
+    "..",
+    "public",
+    order.invoiceUrl.replace(/^\//, "")
+);
+
+        res.download(filePath);
+    } catch (error) {
+        next(error);
+    }
+}
+
 module.exports = {
   createOrder,
   getMyOrders,
@@ -306,4 +347,5 @@ module.exports = {
   downloadBook,
   updatePaymentStatus,
   getLibrary,
+  downloadInvoice
 };

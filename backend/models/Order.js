@@ -83,6 +83,13 @@ const orderSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
+    invoiceNumber: {
+      type: String,
+    },
+
+    invoiceUrl: {
+      type: String,
+    },
   },
 
   {

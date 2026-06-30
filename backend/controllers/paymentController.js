@@ -8,6 +8,7 @@ const sendEmail = require("../utils/sendEmail");
 
 const paymentEmail = require("../emails/templates/paymentEmail");
 const digitalBookEmail = require("../emails/templates/digitalBookEmail");
+const generateInvoice = require("../utils/generateInvoice");
 
 // ======================
 // INITIALIZE PAYMENT
@@ -138,9 +139,7 @@ async function paymentSuccess(req, res, next) {
     try {
         const { tran_id, bank_tran_id } = req.body;
 
-        const order = await Order.findById(
-            tran_id
-        )
+        const order = await Order.findById(tran_id)
             .populate("items.book")
             .populate("coupon");
 
@@ -150,46 +149,44 @@ async function paymentSuccess(req, res, next) {
             });
         }
 
-        // Prevent duplicate processing
+        // Prevent duplicate callback processing
         if (order.paymentStatus === "paid") {
             return res.redirect(
                 `${process.env.FRONTEND_URL}/payment-success`
             );
         }
 
+        // Update payment info
         order.paymentStatus = "paid";
         order.transactionId = bank_tran_id;
         order.paidAt = new Date();
 
-        await order.save();
-
-        // Increase coupon usage count
+        // Increase coupon usage
         if (order.coupon) {
-            await Coupon.findByIdAndUpdate(
-                order.coupon._id,
-                {
-                    $inc: {
-                        usedCount: 1,
-                    },
-                }
-            );
+            await Coupon.findByIdAndUpdate(order.coupon._id, {
+                $inc: {
+                    usedCount: 1,
+                },
+            });
         }
 
-        // Get customer
-        const user = await User.findById(
-            order.user
-        );
+        // Customer
+        const user = await User.findById(order.user);
 
-        // Payment success email
+        // Generate invoice
+        const invoice = await generateInvoice(order, user);
+
+        order.invoiceNumber = invoice.invoiceNumber;
+        order.invoiceUrl = invoice.invoiceUrl;
+
+        await order.save();
+
+        // Payment confirmation email
         try {
             await sendEmail({
                 to: user.email,
                 subject: "Payment Successful",
-                html: paymentEmail(
-                    user,
-                    order,
-                    bank_tran_id
-                ),
+                html: paymentEmail(user, order, bank_tran_id),
             });
         } catch (emailError) {
             console.log(
@@ -198,7 +195,7 @@ async function paymentSuccess(req, res, next) {
             );
         }
 
-        // Digital books
+        // Send digital books email
         const digitalBooks = order.items
             .filter(
                 item =>
@@ -212,10 +209,7 @@ async function paymentSuccess(req, res, next) {
                 await sendEmail({
                     to: user.email,
                     subject: "Your Digital Books",
-                    html: digitalBookEmail(
-                        user,
-                        digitalBooks
-                    ),
+                    html: digitalBookEmail(user, digitalBooks),
                 });
             } catch (emailError) {
                 console.log(
@@ -228,7 +222,6 @@ async function paymentSuccess(req, res, next) {
         res.redirect(
             `${process.env.FRONTEND_URL}/payment-success`
         );
-
     } catch (error) {
         next(error);
     }
