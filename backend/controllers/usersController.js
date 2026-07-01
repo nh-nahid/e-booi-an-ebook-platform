@@ -5,6 +5,7 @@ const { unlink } = require("fs");
 const path = require("path");
 const sendEmail = require('../utils/sendEmail');
 const welcomeEmail = require('../emails/templates/welcomeEmail');
+const resetPasswordEmail = require("../emails/templates/resetPasswordEmail");
 
 // =======================
 // GET ALL USERS (ADMIN)
@@ -233,6 +234,91 @@ async function logoutUser(req, res) {
     });
 }
 
+// FORGOT PASSWORD
+async function forgotPassword(req, res, next) {
+    try {
+
+        const { email } = req.body;
+
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found",
+            });
+        }
+
+        const token = jwt.sign(
+            {
+                id: user._id,
+            },
+            process.env.JWT_SECRET,
+            {
+                expiresIn: "15m",
+            }
+        );
+
+        const resetLink =
+            `${process.env.FRONTEND_URL}/reset-password/${token}`;
+
+        await sendEmail({
+            to: user.email,
+            subject: "Reset Password",
+            html: resetPasswordEmail(
+                user,
+                resetLink
+            ),
+        });
+
+        res.json({
+            message:
+                "Password reset link sent successfully",
+        });
+
+    } catch (error) {
+        next(error);
+    }
+}
+
+// RESET PASSWORD
+async function resetPassword(req, res, next) {
+
+    try {
+
+        const { token, password } = req.body;
+
+        const decoded = jwt.verify(
+            token,
+            process.env.JWT_SECRET
+        );
+
+        const hashedPassword =
+            await bcrypt.hash(password, 10);
+
+        await User.findByIdAndUpdate(
+            decoded.id,
+            {
+                password: hashedPassword,
+            }
+        );
+
+        res.json({
+            message:
+                "Password reset successfully",
+        });
+
+    } catch (error) {
+
+        return res.status(400).json({
+            message:
+                "Invalid or expired reset link",
+        });
+
+    }
+
+}
+
+
 module.exports = {
     getUsers,
     getUser,
@@ -241,4 +327,6 @@ module.exports = {
     deleteUser,
     loginUser,
     logoutUser,
+    forgotPassword,
+    resetPassword
 };

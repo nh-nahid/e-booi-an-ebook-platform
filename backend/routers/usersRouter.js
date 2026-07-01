@@ -8,9 +8,11 @@ const {
     deleteUser,
     loginUser,
     logoutUser,
+    resetPassword,
+    forgotPassword,
 } = require("../controllers/usersController");
 
-const {checkLogin, requireRole} = require("../middlewares/common/checkLogin");
+const { checkLogin, requireRole } = require("../middlewares/common/checkLogin");
 
 const avatarUpload = require("../middlewares/users/avatarUpload");
 
@@ -71,5 +73,9 @@ router.delete(
     requireRole("admin"),
     deleteUser
 );
+
+// forgot and reset password
+router.post( "/forgot-password", forgotPassword );
+router.post( "/reset-password", resetPassword );
 
 module.exports = router;
