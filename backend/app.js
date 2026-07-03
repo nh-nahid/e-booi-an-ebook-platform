@@ -48,6 +48,7 @@ app.use("/api/v1/reviews", reviewRouter);
 app.use("/api/v1/wishlist", wishlistRouter);
 app.use("/api/v1/coupons", couponRouter);
 
+// invoice route
 app.use(
   "/invoices",
   express.static(path.join(__dirname, "public", "uploads", "invoices")),
