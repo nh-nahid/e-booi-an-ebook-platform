@@ -56,17 +56,22 @@ export default function UserMenu() {
     : "";
 
   const handleLogout = () => {
-    logout(undefined, {
-      onSuccess: () => {
-        queryClient.removeQueries({ queryKey: ["profile"] });
-        toast.success("Logged out successfully");
-        router.replace("/login");
-      },
-      onError: (err: ApiError) => {
-  toast.error(err.response?.data?.message ?? "Logout failed");
+  console.log("logout clicked");
+
+  logout(undefined, {
+    onSuccess: () => {
+  queryClient.setQueryData(["profile"], null);
+
+  toast.success("Logged out successfully");
+
+  router.replace("/login");
 },
-    });
-  };
+
+    onError: (error) => {
+      toast.error(error.response?.data?.message ?? "Logout failed");
+    },
+  });
+};
 
   return (
     <DropdownMenu>
@@ -115,10 +120,10 @@ export default function UserMenu() {
 
         {/* LOGOUT */}
         <DropdownMenuItem
-          onSelect={handleLogout}
-          disabled={isPending}
-          className="text-red-600"
-        >
+  onClick={handleLogout}
+  disabled={isPending}
+  className="text-red-600"
+>
           <LogOut className="mr-2 h-4 w-4" />
           Logout
         </DropdownMenuItem>

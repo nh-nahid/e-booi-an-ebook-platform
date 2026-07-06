@@ -91,7 +91,7 @@ export default function MobileNav() {
           {/* Auth section stays buttons (no link wrapping button) */}
           {isAuthenticated ? (
             <div className="mt-4">
-              <UserMenu mobile />
+              <UserMenu />
             </div>
           ) : (
             <div className="mt-6 flex flex-col gap-3">

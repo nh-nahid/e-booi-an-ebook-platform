@@ -22,12 +22,17 @@ export default function Navbar() {
 
   return (
     <header className="nb-header">
-
       {/* Left */}
       <div className="flex items-center gap-8 lg:gap-10">
         <Link href="/" className="nb-logo">
           <div className="nb-logo-mark">
-            <Image src="/logo.jpeg" width={32} height={32} alt="logo" className="rounded-lg" />
+            <Image
+              src="/logo.jpeg"
+              width={32}
+              height={32}
+              alt="logo"
+              className="rounded-lg"
+            />
           </div>
           <span>
             eBoo<span style={{ color: "#2DBDB6" }}>i</span>
@@ -54,7 +59,10 @@ export default function Navbar() {
       {/* Center */}
       <div className="nb-search">
         <Search className="h-4 w-4" />
-        <Input placeholder="Search books..." className="border-0 shadow-none focus-visible:ring-0" />
+        <Input
+          placeholder="Search books..."
+          className="border-0 shadow-none focus-visible:ring-0"
+        />
       </div>
 
       {/* Right */}
@@ -68,12 +76,12 @@ export default function Navbar() {
         </Link>
 
         {isAuthenticated ? (
-           <>
-    {/* Desktop only */}
-    <div className="hidden md:block">
-      <UserMenu />
-    </div>
-  </>
+          <>
+            {/* Desktop only */}
+            <div className="hidden md:block">
+              <UserMenu />
+            </div>
+          </>
         ) : (
           <div className="nb-desktop items-center gap-1">
             <Link href="/login" className="nb-cta-ghost">

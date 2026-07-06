@@ -31,7 +31,7 @@ export default function RootLayout({
             <AuthProvider>
               <Navbar />
             {children}
-            <Toaster position="top-right" richColors />
+            <Toaster position="bottom-right" richColors />
             </AuthProvider>
           </QueryProvider>
         </ThemeProvider>

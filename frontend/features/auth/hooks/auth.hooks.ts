@@ -44,11 +44,8 @@ export const useProfile = () => {
   return useQuery({
     queryKey: ["profile"],
     queryFn: getProfile,
-
     retry: false,
-
     staleTime: 1000 * 60 * 10,
-
     refetchOnWindowFocus: false,
   });
 };
