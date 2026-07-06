@@ -5,7 +5,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-
+import { useQueryClient } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -38,6 +38,7 @@ import { useAuth } from "@/hooks/use-auth";
 export default function LoginForm() {
   const router = useRouter();
   const { refetch } = useAuth();
+  const queryClient = useQueryClient();
   const [showPassword, setShowPassword] = useState(false);
   const [focused, setFocused] = useState<
     "email" | "password" | null
@@ -59,7 +60,9 @@ export default function LoginForm() {
         toast.success(data.message);
 
         form.reset();
-         refetch();
+        queryClient.invalidateQueries({
+              queryKey: ["profile"],
+            });
         router.push("/");
       },
 

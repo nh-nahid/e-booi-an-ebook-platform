@@ -54,7 +54,11 @@ export const useProfile = () => {
 };
 
 export const useLogout = () => {
-  return useMutation({
+  return useMutation<
+    { message: string },
+    AxiosError<ApiError>,
+    void
+  >({
     mutationFn: logout,
   });
 };

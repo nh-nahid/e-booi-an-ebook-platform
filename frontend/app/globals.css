@@ -208,3 +208,228 @@
         .lf-toggle:hover {
           transform: scale(1.1);
         }
+
+
+/* navbar */
+ @keyframes nbFadeDown {
+          from { opacity: 0; transform: translateY(-10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+
+        .nb-header {
+          position: sticky;
+          top: 0;
+          z-index: 10;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 20px;
+          padding: 14px 20px;
+          background: #fff;
+          border-bottom: 1px solid #E1E5E8;
+          animation: nbFadeDown 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+
+        .nb-logo {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-weight: 800;
+          font-size: 20px;
+          color: #0A0E2A;
+          flex-shrink: 0;
+        }
+        .nb-logo-mark { transition: transform 0.3s ease; }
+        .nb-logo-mark:hover { transform: rotate(-6deg) scale(1.06); }
+
+        .nb-links {
+          display: none;
+          align-items: center;
+          gap: 4px;
+        }
+
+        .nb-link {
+          font-size: 13px;
+          font-weight: 700;
+          color: #6B7280;
+          padding: 6px 16px;
+          border-radius: 16px;
+          transition: background 0.2s ease, color 0.2s ease;
+          white-space: nowrap;
+        }
+        .nb-link:hover {
+          color: #0A0E2A;
+          background: #F7F9FA;
+        }
+        .nb-link.active {
+          color: #0A0E2A;
+          background: #bbdedc;
+        }
+
+        .nb-search {
+          display: none;
+          position: relative;
+          flex: 1;
+          max-width: 380px;
+        }
+        .nb-search input {
+          height: 40px;
+          border-radius: 24px;
+          border: 1px solid #E1E5E8;
+          padding-left: 38px;
+          font-size: 13px;
+          transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .nb-search input:focus-visible {
+          border-color: #2DBDB6;
+          box-shadow: 0 0 0 4px rgba(45,189,182,0.15);
+        }
+        .nb-search svg {
+          position: absolute;
+          left: 13px;
+          top: 50%;
+          transform: translateY(-50%);
+          color: #9AA3AF;
+          pointer-events: none;
+        }
+
+        .nb-icon-btn {
+          width: 38px;
+          height: 38px;
+          border-radius: 50%;
+          display: none;
+          align-items: center;
+          justify-content: center;
+          background: transparent;
+          color: #0A0E2A;
+          border: none;
+          cursor: pointer;
+          transition: background 0.2s ease, transform 0.2s ease;
+        }
+        .nb-icon-btn:hover {
+          background: #E6F7F6;
+          color: #2DBDB6;
+          transform: translateY(-2px);
+        }
+
+        .nb-cta-ghost {
+          font-size: 13px;
+          font-weight: 700;
+          color: #0A0E2A;
+          padding: 8px 18px;
+          border-radius: 24px;
+          background: transparent;
+          border: none;
+          cursor: pointer;
+          transition: background 0.2s ease;
+          display: none;
+        }
+        .nb-cta-ghost:hover { background: #F7F9FA; }
+
+        .nb-cta-primary {
+          display: none;
+          align-items: center;
+          gap: 6px;
+          background: linear-gradient(135deg, #2DBDB6, #1f9d97);
+          color: #fff;
+          border: none;
+          padding: 8px 20px;
+          border-radius: 24px;
+          font-weight: 700;
+          font-size: 13px;
+          cursor: pointer;
+          box-shadow: 0 4px 12px rgba(45,189,182,0.35);
+          transition: transform 0.15s ease, box-shadow 0.25s ease;
+        }
+        .nb-cta-primary:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 18px rgba(45,189,182,0.4);
+        }
+        .nb-cta-primary:active {
+          transform: translateY(0) scale(0.98);
+        }
+
+        .nb-desktop { display: none; }
+
+        @media (min-width: 1024px) {
+          .nb-header { padding: 14px 60px; gap: 32px; }
+          .nb-links { display: flex; }
+          .nb-search { display: block; }
+          .nb-icon-btn { display: flex; }
+          .nb-cta-ghost { display: inline-block; }
+          .nb-cta-primary { display: inline-flex; }
+          .nb-desktop { display: flex; }
+          .nb-mobile-trigger { display: none; }
+        }
+
+
+/* mobile nav */
+@keyframes mnItemIn {
+          from { opacity: 0; transform: translateX(-10px); }
+          to { opacity: 1; transform: translateX(0); }
+        }
+
+        .mn-menu-icon {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+          cursor: pointer;
+          padding: 6px;
+          border: none;
+          background: transparent;
+          border-radius: 8px;
+          transition: background 0.2s ease;
+        }
+        .mn-menu-icon:hover { background: #E6F7F6; }
+        .mn-menu-icon span {
+          width: 22px;
+          height: 2.5px;
+          background: #0A0E2A;
+          border-radius: 2px;
+          transition: transform 0.25s ease, opacity 0.2s ease, background 0.2s ease;
+        }
+        .mn-menu-icon:hover span { background: #2DBDB6; }
+
+        .mn-item {
+          position: relative;
+          color: #6B7280;
+          font-size: 13px;
+          font-weight: 700;
+          transition: color 0.2s ease, background 0.2s ease, transform 0.15s ease;
+          animation: mnItemIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+        .mn-item:hover {
+          background: #E6F7F6 !important;
+          color: #0A0E2A;
+          transform: translateX(3px);
+        }
+        .mn-item.active {
+          background: #E6F7F6;
+          color: #0A0E2A;
+        }
+        .mn-icon {
+          transition: color 0.2s ease;
+        }
+        .mn-item:hover .mn-icon,
+        .mn-item.active .mn-icon {
+          color: #2DBDB6;
+        }
+        .mn-cta-primary {
+          transition: transform 0.15s ease, box-shadow 0.25s ease;
+          box-shadow: 0 4px 12px rgba(45,189,182,0.35);
+        }
+        .mn-cta-primary:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 18px rgba(45,189,182,0.4);
+        }
+        .mn-cta-primary:active {
+          transform: translateY(0) scale(0.98);
+        }
+        .mn-cta-outline {
+          transition: border-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
+        }
+        .mn-cta-outline:hover {
+          transform: translateY(-2px);
+          border-color: #2DBDB6 !important;
+          color: #2DBDB6 !important;
+        }
