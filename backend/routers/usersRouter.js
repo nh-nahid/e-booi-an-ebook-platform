@@ -4,6 +4,7 @@ const {
     addUser,
     getUsers,
     getUser,
+    getProfile,
     updateUser,
     deleteUser,
     loginUser,
@@ -44,6 +45,8 @@ router.post("/login", loginUser);
 // logout user
 router.post("/logout", logoutUser);
 
+// User profile
+router.get( "/profile", checkLogin, getProfile);
 
 // =========================
 // USER ROUTES (PROTECTED)

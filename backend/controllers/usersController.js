@@ -45,6 +45,31 @@ async function getUser(req, res, next) {
     }
 }
 
+// GET PROFILE
+async function getProfile(req, res, next) {
+    try {
+        const user = await User.findById(req.user.id).select("-password");
+
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found",
+            });
+        }
+
+        res.status(200).json({
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+                avatar: user.avatar,
+            },
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
 // =======================
 // ADD USER (REGISTER)
 // =======================
@@ -323,6 +348,7 @@ module.exports = {
     getUsers,
     getUser,
     addUser,
+    getProfile,
     updateUser,
     deleteUser,
     loginUser,
