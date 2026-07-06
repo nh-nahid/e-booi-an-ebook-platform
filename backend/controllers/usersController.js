@@ -6,6 +6,7 @@ const path = require("path");
 const sendEmail = require('../utils/sendEmail');
 const welcomeEmail = require('../emails/templates/welcomeEmail');
 const resetPasswordEmail = require("../emails/templates/resetPasswordEmail");
+const fs = require("fs");
 
 // =======================
 // GET ALL USERS (ADMIN)
@@ -70,6 +71,87 @@ async function getProfile(req, res, next) {
     }
 }
 
+// UPDATE PROFILE
+async function updateProfile(req, res, next) {
+    try {
+        const { name, phone, address } = req.body;
+
+        const user = await User.findById(req.user.id);
+
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found",
+            });
+        }
+
+        user.name = name || user.name;
+        user.phone = phone || user.phone;
+        user.address = address || user.address;
+
+        await user.save();
+
+        res.status(200).json({
+            message: "Profile updated successfully",
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                phone: user.phone,
+                address: user.address,
+                role: user.role,
+                avatar: user.avatar,
+            },
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+// UPDATE AVATAR
+async function updateAvatar(req, res, next) {
+    try {
+        const user = await User.findById(req.user.id);
+
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found",
+            });
+        }
+
+        if (!req.files || req.files.length === 0) {
+            return res.status(400).json({
+                message: "Avatar is required",
+            });
+        }
+
+        if (user.avatar) {
+            const oldAvatar = path.join(
+                __dirname,
+                "..",
+                "public",
+                "uploads",
+                "avatars",
+                user.avatar
+            );
+
+            if (fs.existsSync(oldAvatar)) {
+                fs.unlinkSync(oldAvatar);
+            }
+        }
+
+        user.avatar = req.files[0].filename;
+
+        await user.save();
+
+        res.status(200).json({
+            message: "Avatar updated successfully",
+            avatar: user.avatar,
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
 // =======================
 // ADD USER (REGISTER)
 // =======================
@@ -109,7 +191,7 @@ async function addUser(req, res, next) {
 }
 
 // =======================
-// UPDATE USER
+// UPDATE USER BY ADMIN
 // =======================
 async function updateUser(req, res, next) {
     try {
@@ -343,16 +425,54 @@ async function resetPassword(req, res, next) {
 
 }
 
+// CHANGE PASSWORD
+async function changePassword(req, res, next) {
+    try {
+        const { currentPassword, newPassword } = req.body;
+
+        const user = await User.findById(req.user.id);
+
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found",
+            });
+        }
+
+        const isMatch = await bcrypt.compare(
+            currentPassword,
+            user.password
+        );
+
+        if (!isMatch) {
+            return res.status(400).json({
+                message: "Current password is incorrect",
+            });
+        }
+
+        user.password = await bcrypt.hash(newPassword, 10);
+
+        await user.save();
+
+        res.status(200).json({
+            message: "Password changed successfully",
+        });
+    } catch (error) {
+        next(error);
+    }
+}
 
 module.exports = {
     getUsers,
     getUser,
     addUser,
     getProfile,
+    updateProfile,
+    updateAvatar,
     updateUser,
     deleteUser,
     loginUser,
     logoutUser,
     forgotPassword,
+    changePassword,
     resetPassword
 };

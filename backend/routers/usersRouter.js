@@ -11,6 +11,9 @@ const {
     logoutUser,
     resetPassword,
     forgotPassword,
+    updateProfile,
+    updateAvatar,
+    changePassword,
 } = require("../controllers/usersController");
 
 const { checkLogin, requireRole } = require("../middlewares/common/checkLogin");
@@ -47,6 +50,23 @@ router.post("/logout", logoutUser);
 
 // User profile
 router.get( "/profile", checkLogin, getProfile);
+
+// update profile
+router.put("/profile", checkLogin, updateProfile);
+
+// avatar upload
+router.patch(
+    "/profile/avatar",
+    checkLogin,
+    avatarUpload,
+    updateAvatar);
+
+// change password 
+router.patch(
+    "/change-password",
+    checkLogin,
+    changePassword
+);
 
 // =========================
 // USER ROUTES (PROTECTED)
