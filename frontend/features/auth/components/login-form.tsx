@@ -1,20 +1,75 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Mail, Lock, Eye, EyeOff, ArrowRight, Loader2 } from "lucide-react";
+
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+
+import { useLogin } from "@/features/auth/hooks/auth.hooks";
+import {
+  loginSchema,
+  type LoginPayload,
+} from "@/features/auth/schemas/auth.schema";
+
+import {
+  Mail,
+  Lock,
+  Eye,
+  EyeOff,
+  ArrowRight,
+  Loader2,
+} from "lucide-react";
+import { useAuth } from "@/hooks/use-auth";
 
 export default function LoginForm() {
+  const router = useRouter();
+  const { refetch } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [focused, setFocused] = useState<"email" | "password" | null>(null);
+  const [focused, setFocused] = useState<
+    "email" | "password" | null
+  >(null);
 
-  const handleLogin = () => {
-    setLoading(true);
-    setTimeout(() => setLoading(false), 1600);
+  const form = useForm<LoginPayload>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  const { mutate: login, isPending } = useLogin();
+
+  const onSubmit = (values: LoginPayload) => {
+    login(values, {
+      onSuccess: (data) => {
+        toast.success(data.message);
+
+        form.reset();
+         refetch();
+        router.push("/");
+      },
+
+      onError: (error) => {
+        toast.error(
+          error.response?.data?.message ??
+            "Login failed. Please try again."
+        );
+      },
+    });
   };
 
   return (
@@ -23,152 +78,240 @@ export default function LoginForm() {
       style={{ background: "#F7F9FA" }}
     >
       <Card
-        className="lf-card w-full max-w-md rounded-3xl border shadow-lg"
+        className="relative w-full max-w-md overflow-hidden rounded-3xl border shadow-lg"
         style={{
           borderColor: "#E1E5E8",
           background: "#FFFFFF",
           boxShadow: "0 20px 45px rgba(10,14,42,0.08)",
         }}
       >
-        {/* ambient teal/navy blobs */}
         <div
-          className="lf-blob"
-          style={{ width: 160, height: 160, top: -60, right: -60, background: "#2DBDB6" }}
+          className="absolute rounded-full blur-3xl opacity-20"
+          style={{
+            width: 160,
+            height: 160,
+            top: -60,
+            right: -60,
+            background: "#2DBDB6",
+          }}
         />
+
         <div
-          className="lf-blob"
+          className="absolute rounded-full blur-3xl opacity-20"
           style={{
             width: 140,
             height: 140,
             bottom: -50,
             left: -50,
             background: "#2DBDB6",
-            animationDelay: "1.5s",
           }}
         />
 
-        <CardHeader className="relative pb-2 pt-8">
-          <div
-            className="mb-4 flex items-center gap-2"
-            style={{ animation: "fadeIn 0.6s ease 0.1s both" }}
-          >
-            <Image src="/logo.jpeg" height={32} width={32} alt="logo" />
-           
-            <span className="text-lg font-extrabold" style={{ color: "#0A0E2A" }}>
-              eBook
+        <CardHeader className="pb-2 pt-8">
+          <div className="mb-4 flex items-center gap-2">
+            <Image
+              src="/logo.jpeg"
+              width={36}
+              height={36}
+              alt="eBook Logo"
+              className="rounded-md"
+            />
+
+            <span
+              className="text-lg font-bold"
+              style={{ color: "#0A0E2A" }}
+            >
+              eBooi
             </span>
           </div>
 
           <CardTitle
-            className="text-2xl font-bold"
-            style={{ color: "#0A0E2A", animation: "riseIn 0.5s ease 0.15s both" }}
+            className="text-3xl font-bold"
+            style={{ color: "#0A0E2A" }}
           >
             Welcome back
           </CardTitle>
-          <p
-            className="text-sm"
-            style={{ color: "#6B7280", animation: "riseIn 0.5s ease 0.2s both" }}
-          >
-            Log in to keep reading where you left off.
+
+          <p className="text-sm text-gray-500">
+            Login to continue reading your favorite books.
           </p>
         </CardHeader>
 
-        <CardContent className="relative space-y-4 pb-8 pt-4">
-          <div className="lf-field" style={{ animationDelay: "0.25s" }}>
-            <div className="relative">
-              <Mail
-                className="lf-icon absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2"
-                style={{ color: focused === "email" ? "#2DBDB6" : "#9AA3AF" }}
-              />
-              <Input
-                type="email"
-                placeholder="Email"
-                onFocus={() => setFocused("email")}
-                onBlur={() => setFocused(null)}
-                className="lf-input h-11 rounded-xl pl-9"
-                style={{
-                  borderColor: focused === "email" ? "#2DBDB6" : "#E1E5E8",
-                  boxShadow: focused === "email" ? "0 0 0 4px rgba(45,189,182,0.15)" : "none",
-                }}
-              />
-            </div>
-          </div>
-
-          <div className="lf-field" style={{ animationDelay: "0.32s" }}>
-            <div className="relative">
-              <Lock
-                className="lf-icon absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2"
-                style={{ color: focused === "password" ? "#2DBDB6" : "#9AA3AF" }}
-              />
-              <Input
-                type={showPassword ? "text" : "password"}
-                placeholder="Password"
-                onFocus={() => setFocused("password")}
-                onBlur={() => setFocused(null)}
-                className="lf-input h-11 rounded-xl pl-9 pr-10"
-                style={{
-                  borderColor: focused === "password" ? "#2DBDB6" : "#E1E5E8",
-                  boxShadow: focused === "password" ? "0 0 0 4px rgba(45,189,182,0.15)" : "none",
-                }}
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword((s) => !s)}
-                className="lf-toggle absolute right-3 top-1/2 -translate-y-1/2"
-                style={{ color: "#9AA3AF" }}
-                aria-label={showPassword ? "Hide password" : "Show password"}
-              >
-                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-              </button>
-            </div>
-          </div>
-
-          <div
-            className="flex items-center justify-between text-xs"
-            style={{ animation: "riseIn 0.5s ease 0.38s both" }}
+        <CardContent>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-5"
           >
-            <label className="flex items-center gap-2" style={{ color: "#6B7280" }}>
-              <input type="checkbox" className="h-3.5 w-3.5 accent-[#2DBDB6]" />
-              Remember me
-            </label>
-            <a href="#" className="font-semibold" style={{ color: "#2DBDB6" }}>
-              Forgot password?
-            </a>
-          </div>
+            {/* EMAIL */}
 
-          <div className="lf-field" style={{ animationDelay: "0.44s" }}>
+            <div>
+              <div className="relative">
+                <Mail
+                  className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2"
+                  style={{
+                    color:
+                      focused === "email"
+                        ? "#2DBDB6"
+                        : "#9AA3AF",
+                  }}
+                />
+
+                <Input
+                  type="email"
+                  placeholder="Email"
+                  autoComplete="email"
+                  {...form.register("email")}
+                  onFocus={() => setFocused("email")}
+                  onBlur={() => setFocused(null)}
+                  className="h-11 rounded-xl pl-9"
+                  style={{
+                    borderColor:
+                      focused === "email"
+                        ? "#2DBDB6"
+                        : "#E1E5E8",
+                    boxShadow:
+                      focused === "email"
+                        ? "0 0 0 4px rgba(45,189,182,0.15)"
+                        : "none",
+                  }}
+                />
+              </div>
+
+              {form.formState.errors.email && (
+                <p className="mt-1 text-xs text-red-500">
+                  {form.formState.errors.email.message}
+                </p>
+              )}
+            </div>
+
+            {/* PASSWORD */}
+
+            <div>
+              <div className="relative">
+                <Lock
+                  className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2"
+                  style={{
+                    color:
+                      focused === "password"
+                        ? "#2DBDB6"
+                        : "#9AA3AF",
+                  }}
+                />
+
+                <Input
+                  type={
+                    showPassword
+                      ? "text"
+                      : "password"
+                  }
+                  placeholder="Password"
+                  autoComplete="current-password"
+                  {...form.register("password")}
+                  onFocus={() =>
+                    setFocused("password")
+                  }
+                  onBlur={() => setFocused(null)}
+                  className="h-11 rounded-xl pl-9 pr-10"
+                  style={{
+                    borderColor:
+                      focused === "password"
+                        ? "#2DBDB6"
+                        : "#E1E5E8",
+                    boxShadow:
+                      focused === "password"
+                        ? "0 0 0 4px rgba(45,189,182,0.15)"
+                        : "none",
+                  }}
+                />
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    setShowPassword((prev) => !prev)
+                  }
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700"
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
+                </button>
+              </div>
+
+              {form.formState.errors.password && (
+                <p className="mt-1 text-xs text-red-500">
+                  {form.formState.errors.password.message}
+                </p>
+              )}
+            </div>
+
+               <div className="flex items-center justify-between text-sm">
+              <label className="flex items-center gap-2 text-gray-600">
+                <input
+                  type="checkbox"
+                  className="h-4 w-4 accent-[#2DBDB6]"
+                />
+                Remember me
+              </label>
+
+              <Link
+                href="/forgot-password"
+                className="font-medium text-[#2DBDB6] hover:underline"
+              >
+                Forgot password?
+              </Link>
+            </div>
+
             <Button
-              onClick={handleLogin}
-              disabled={loading}
-              className="lf-btn h-11 w-full rounded-full border-0 text-sm font-semibold text-white"
-              style={{
-                background: "linear-gradient(135deg, #2DBDB6, #1f9d97)",
-                boxShadow: "0 4px 12px rgba(45,189,182,0.35)",
-              }}
+              type="submit"
+              disabled={isPending}
+              className="h-11 w-full rounded-full bg-[#2DBDB6] font-semibold text-white transition-all hover:bg-[#249d97] disabled:cursor-not-allowed disabled:opacity-70"
             >
-              {loading ? (
-                <span className="flex items-center justify-center gap-2">
+              {isPending ? (
+                <span className="flex items-center gap-2">
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  Logging in…
+                  Logging in...
                 </span>
               ) : (
-                <span className="flex items-center justify-center gap-2">
+                <span className="flex items-center gap-2">
                   Login
                   <ArrowRight className="h-4 w-4" />
                 </span>
               )}
             </Button>
-          </div>
 
-          <p
-            className="pt-1 text-center text-xs"
-            style={{ color: "#6B7280", animation: "riseIn 0.5s ease 0.5s both" }}
-          >
-            New here?{" "}
-            <a href="#" className="font-semibold" style={{ color: "#0A0E2A" }}>
-              Create an account
-            </a>
-          </p>
+            <div className="relative py-2">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-200" />
+              </div>
+
+              <div className="relative flex justify-center">
+                <span className="bg-white px-3 text-xs uppercase tracking-wider text-gray-400">
+                  Or
+                </span>
+              </div>
+            </div>
+
+            <Button
+              type="button"
+              variant="outline"
+              disabled
+              className="h-11 w-full rounded-full"
+            >
+              Continue with Google (Coming Soon)
+            </Button>
+
+            <p className="pt-2 text-center text-sm text-gray-600">
+              Don&apos;t have an account?{" "}
+              <Link
+                href="/register"
+                className="font-semibold text-[#2DBDB6] hover:underline"
+              >
+                Create one
+              </Link>
+            </p>
+          </form>
         </CardContent>
       </Card>
     </div>

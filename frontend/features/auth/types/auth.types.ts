@@ -3,6 +3,7 @@ export interface User {
   name: string;
   email: string;
   role: "user" | "admin";
+  avatar: string | null;
 }
 
 export interface LoginResponse {
@@ -12,5 +13,9 @@ export interface LoginResponse {
 
 export interface RegisterResponse {
   message: string;
+  user: User;
+}
+
+export interface ProfileResponse {
   user: User;
 }

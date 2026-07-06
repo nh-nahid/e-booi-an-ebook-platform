@@ -6,6 +6,7 @@ export const ENDPOINTS = {
     FORGOT_PASSWORD: "/users/forgot-password",
     RESET_PASSWORD: "/users/reset-password",
     USERS: "/users",
+    PROFILE: "/users/profile",
     USER_BY_ID: (id: string) => `/users/${id}`,
   },
 
