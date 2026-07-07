@@ -7,6 +7,9 @@ const sendEmail = require('../utils/sendEmail');
 const welcomeEmail = require('../emails/templates/welcomeEmail');
 const resetPasswordEmail = require("../emails/templates/resetPasswordEmail");
 const fs = require("fs");
+const { generateAccessToken, generateRefreshToken} = require("../utils/jwt");
+const { compareToken, hashToken } = require("../utils/token");
+const setRefreshCookie = require("../utils/setRefreshCookie");
 
 // =======================
 // GET ALL USERS (ADMIN)
@@ -289,42 +292,45 @@ async function loginUser(req, res, next) {
 
         if (!user) {
             return res.status(401).json({
-                message: "Invalid credentials",
+                message: "Invalid email or password",
             });
         }
 
-        const isMatch = await bcrypt.compare(password, user.password);
-
-        if (!isMatch) {
-            return res.status(401).json({
-                message: "Invalid credentials",
-            });
-        }
-
-        const token = jwt.sign(
-            {
-                id: user._id,
-                email: user.email,
-                role: user.role,
-            },
-            process.env.JWT_SECRET,
-            { expiresIn: "7d" }
+        const isPasswordMatched = await bcrypt.compare(
+            password,
+            user.password
         );
 
-        res.cookie("token", token, {
-            httpOnly: true,
-            secure: false, // true in production (HTTPS)
-        });
+        if (!isPasswordMatched) {
+            return res.status(401).json({
+                message: "Invalid email or password",
+            });
+        }
 
-        res.status(200).json({
+        // Generate Tokens
+        const accessToken = generateAccessToken(user);
+        const refreshToken = generateRefreshToken(user);
+
+        // Hash & Store Refresh Token
+        user.refreshToken = await hashToken(refreshToken);
+        await user.save();
+
+        // Set Refresh Token Cookie
+        setRefreshCookie(res, refreshToken);
+
+        return res.status(200).json({
+            success: true,
             message: "Login successful",
+            accessToken,
             user: {
                 id: user._id,
                 name: user.name,
                 email: user.email,
                 role: user.role,
+                avatar: user.avatar,
             },
         });
+
     } catch (error) {
         next(error);
     }
@@ -333,13 +339,107 @@ async function loginUser(req, res, next) {
 // =======================
 // LOGOUT USER
 // =======================
-async function logoutUser(req, res) {
-    res.clearCookie("token");
+async function logoutUser(req, res, next) {
+    try {
 
-    res.status(200).json({
-        message: "Logout successful",
-    });
+        const user = await User.findById(req.user.id)
+            .select("+refreshToken");
+
+        if (user) {
+            user.refreshToken = null;
+            await user.save();
+        }
+
+        res.clearCookie("refreshToken", {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite:
+                process.env.NODE_ENV === "production"
+                    ? "none"
+                    : "lax",
+        });
+
+        return res.status(200).json({
+            success: true,
+            message: "Logout successful",
+        });
+
+    } catch (error) {
+        next(error);
+    }
 }
+
+// REFRESH TOKEN
+async function refreshToken(req, res, next) {
+    try {
+        const refreshToken = req.cookies.refreshToken;
+
+        if (!refreshToken) {
+            return res.status(401).json({
+                message: "Refresh token not found",
+            });
+        }
+
+        let decoded;
+
+        try {
+            decoded = jwt.verify(
+                refreshToken,
+                process.env.JWT_REFRESH_SECRET
+            );
+        } catch (error) {
+            return res.status(401).json({
+                message: "Invalid or expired refresh token",
+            });
+        }
+
+        const user = await User.findById(decoded.id)
+            .select("+refreshToken");
+
+        if (!user) {
+            return res.status(401).json({
+                message: "User not found",
+            });
+        }
+
+        const isMatched = await compareToken(
+            refreshToken,
+            user.refreshToken
+        );
+
+        if (!isMatched) {
+            return res.status(401).json({
+                message: "Invalid refresh token",
+            });
+        }
+
+        // Rotate Refresh Token
+        const newAccessToken =
+            generateAccessToken(user);
+
+        const newRefreshToken =
+            generateRefreshToken(user);
+
+        user.refreshToken =
+            await hashToken(newRefreshToken);
+
+        await user.save();
+
+        setRefreshCookie(
+            res,
+            newRefreshToken
+        );
+
+        return res.status(200).json({
+            success: true,
+            accessToken: newAccessToken,
+        });
+
+    } catch (error) {
+        next(error);
+    }
+}
+
 
 // FORGOT PASSWORD
 async function forgotPassword(req, res, next) {
@@ -359,7 +459,7 @@ async function forgotPassword(req, res, next) {
             {
                 id: user._id,
             },
-            process.env.JWT_SECRET,
+            process.env.JWT_ACCESS_SECRET,
             {
                 expiresIn: "15m",
             }
@@ -396,7 +496,7 @@ async function resetPassword(req, res, next) {
 
         const decoded = jwt.verify(
             token,
-            process.env.JWT_SECRET
+            process.env.JWT_ACCESS_SECRET
         );
 
         const hashedPassword =
@@ -472,6 +572,7 @@ module.exports = {
     deleteUser,
     loginUser,
     logoutUser,
+    refreshToken,
     forgotPassword,
     changePassword,
     resetPassword

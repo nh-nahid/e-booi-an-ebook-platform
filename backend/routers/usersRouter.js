@@ -14,6 +14,7 @@ const {
     updateProfile,
     updateAvatar,
     changePassword,
+    refreshToken,
 } = require("../controllers/usersController");
 
 const { checkLogin, requireRole } = require("../middlewares/common/checkLogin");
@@ -46,7 +47,10 @@ router.post(
 router.post("/login", loginUser);
 
 // logout user
-router.post("/logout", logoutUser);
+router.post("/logout", checkLogin, logoutUser);
+
+// Refresh token
+router.post("/refresh-token", refreshToken);
 
 // User profile
 router.get( "/profile", checkLogin, getProfile);
