@@ -35,6 +35,14 @@ export const useUpdateProfile = () => {
       queryClient.invalidateQueries({
         queryKey: PROFILE_QUERY_KEY,
       });
+      toast.success("Profile updated successfully.");
+    },
+
+    onError: (error: AxiosError<{ message?: string }>) => {
+      toast.error(
+        error.response?.data?.message ??
+          "Failed to update profile."
+      );
     },
   });
 };
