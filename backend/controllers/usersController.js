@@ -154,6 +154,48 @@ async function updateAvatar(req, res, next) {
         next(error);
     }
 }
+// DELETE AVATAR
+async function deleteAvatar(req, res, next) {
+    try {
+        const user = await User.findById(req.user.id);
+
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found",
+            });
+        }
+
+        if (!user.avatar) {
+            return res.status(400).json({
+                message: "No avatar found",
+            });
+        }
+
+        const avatarPath = path.join(
+            __dirname,
+            "..",
+            "public",
+            "uploads",
+            "avatars",
+            user.avatar
+        );
+
+        if (fs.existsSync(avatarPath)) {
+            fs.unlinkSync(avatarPath);
+        }
+
+        user.avatar = null;
+
+        await user.save();
+
+        return res.status(200).json({
+            message: "Avatar deleted successfully",
+        });
+
+    } catch (error) {
+        next(error);
+    }
+}
 
 // =======================
 // ADD USER (REGISTER)
@@ -568,6 +610,7 @@ module.exports = {
     getProfile,
     updateProfile,
     updateAvatar,
+    deleteAvatar,
     updateUser,
     deleteUser,
     loginUser,

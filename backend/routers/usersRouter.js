@@ -15,11 +15,12 @@ const {
     updateAvatar,
     changePassword,
     refreshToken,
+    deleteAvatar,
 } = require("../controllers/usersController");
 
 const { checkLogin, requireRole } = require("../middlewares/common/checkLogin");
 
-const avatarUpload = require("../middlewares/users/avatarUpload");
+const { avatarUpload } = require("../middlewares/users/avatarUpload");
 
 const {
     addUserValidators,
@@ -56,7 +57,7 @@ router.post("/refresh-token", refreshToken);
 router.get( "/profile", checkLogin, getProfile);
 
 // update profile
-router.put("/profile", checkLogin, updateProfile);
+router.patch("/profile", checkLogin, updateProfile);
 
 // avatar upload
 router.patch(
@@ -64,6 +65,13 @@ router.patch(
     checkLogin,
     avatarUpload,
     updateAvatar);
+
+// avatar delete
+router.delete(
+    "/profile/avatar",
+    checkLogin,
+    deleteAvatar
+);
 
 // change password 
 router.patch(

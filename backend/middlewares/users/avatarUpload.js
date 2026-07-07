@@ -24,4 +24,6 @@ function avatarUpload(req, res, next) {
     });
 }
 
-module.exports = avatarUpload;
+module.exports = {
+    avatarUpload
+};
