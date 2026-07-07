@@ -8,9 +8,8 @@ import ChangePasswordForm from "@/features/profile/components/change-password-fo
 import ProfileSkeleton from "@/features/profile/components/profile-skeleton";
 
 export default function ProfilePage() {
-  const { data, isLoading, isError, error } = useProfile();
-  console.log("PROFILE RESPONSE:", data);
-  console.log("PROFILE ERROR:", error);
+  const { data, isLoading, isError } = useProfile();
+
   if (isLoading) {
     return <ProfileSkeleton />;
   }

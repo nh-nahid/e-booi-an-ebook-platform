@@ -63,8 +63,8 @@ export const deleteAvatar = async (): Promise<{
 
 export const changePassword = async (
   data: ChangePasswordPayload
-): Promise<ChangePasswordResponse> => {
-  const response = await api.patch<ChangePasswordResponse>(
+) => {
+  const response = await api.patch(
     ENDPOINTS.USER.CHANGE_PASSWORD,
     data
   );

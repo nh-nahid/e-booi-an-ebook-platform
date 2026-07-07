@@ -57,8 +57,7 @@ export default function UserMenu() {
     : "";
 
   const handleLogout = () => {
-    console.log("logout clicked");
-
+    
     logout(undefined, {
       onSuccess: () => {
         clearAccessToken();

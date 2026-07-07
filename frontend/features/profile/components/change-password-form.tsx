@@ -15,12 +15,13 @@ const inputClass =
 export default function ChangePasswordForm() {
   const { mutateAsync: changePassword, isPending } = useChangePassword();
 
-  const [values, setValues] = useState({
-    oldPassword: "",
-    newPassword: "",
-  });
+const [values, setValues] = useState({
+  currentPassword: "",
+  newPassword: "",
+});
+
   const [showPassword, setShowPassword] = useState({
-    oldPassword: false,
+    currentPassword: false,
     newPassword: false,
   });
   const [saved, setSaved] = useState(false);
@@ -39,7 +40,7 @@ export default function ChangePasswordForm() {
       await changePassword(values);
 
       setValues({
-        oldPassword: "",
+        currentPassword: "",
         newPassword: "",
       });
 
@@ -91,9 +92,9 @@ export default function ChangePasswordForm() {
 
             <Input
               id="oldPassword"
-              type={showPassword.oldPassword ? "text" : "password"}
-              value={values.oldPassword}
-              onChange={(e) => updateValue("oldPassword", e.target.value)}
+              type={showPassword.currentPassword ? "text" : "password"}
+              value={values.currentPassword}
+              onChange={(e) => updateValue("currentPassword", e.target.value)}
               placeholder="Current password"
               className={`${inputClass} pr-11`}
             />
@@ -103,7 +104,7 @@ export default function ChangePasswordForm() {
               onClick={() =>
                 setShowPassword((prev) => ({
                   ...prev,
-                  oldPassword: !prev.oldPassword,
+                  currentPassword: !prev.currentPassword,
                 }))
               }
               className="
@@ -114,7 +115,7 @@ export default function ChangePasswordForm() {
     hover:text-[#2DBDB6]
   "
             >
-              {showPassword.oldPassword ? (
+              {showPassword.currentPassword ? (
                 <EyeOff className="h-4 w-4" />
               ) : (
                 <Eye className="h-4 w-4" />
@@ -177,7 +178,7 @@ export default function ChangePasswordForm() {
 
       <Button
         type="submit"
-        disabled={isPending}
+        disabled={isPending || !values.currentPassword || !values.newPassword}
         className="
           mt-6 h-11 w-full rounded-full
           bg-gradient-to-br from-[#2DBDB6] to-[#1f9d97]
