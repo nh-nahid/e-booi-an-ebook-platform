@@ -77,7 +77,7 @@ async function getProfile(req, res, next) {
 // UPDATE PROFILE
 async function updateProfile(req, res, next) {
     try {
-        const { name, phone, address } = req.body;
+        const { name, phone, bio } = req.body;
 
         const user = await User.findById(req.user.id);
 
@@ -87,9 +87,9 @@ async function updateProfile(req, res, next) {
             });
         }
 
-        user.name = name || user.name;
-        user.phone = phone || user.phone;
-        user.address = address || user.address;
+        user.name = name ?? user.name;
+        user.phone = phone ?? user.phone;
+        user.bio = bio ?? user.bio;
 
         await user.save();
 
@@ -100,7 +100,7 @@ async function updateProfile(req, res, next) {
                 name: user.name,
                 email: user.email,
                 phone: user.phone,
-                address: user.address,
+                bio: user.bio,
                 role: user.role,
                 avatar: user.avatar,
             },
