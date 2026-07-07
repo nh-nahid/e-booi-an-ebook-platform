@@ -58,3 +58,11 @@ export const logout = async (): Promise<{ message: string }> => {
 
   return response.data;
 };
+
+export const refreshAccessToken = async (): Promise<{
+  accessToken: string;
+}> => {
+  const response = await api.post(ENDPOINTS.AUTH.REFRESH_TOKEN);
+  return response.data;
+};
+

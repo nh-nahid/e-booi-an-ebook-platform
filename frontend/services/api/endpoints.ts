@@ -7,6 +7,7 @@ export const ENDPOINTS = {
     RESET_PASSWORD: "/users/reset-password",
     USERS: "/users",
     PROFILE: "/users/profile",
+    REFRESH_TOKEN: "/users/refresh-token",
     USER_BY_ID: (id: string) => `/users/${id}`,
   },
 

@@ -3,7 +3,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
-import { login, logout, register, getProfile } from "../api/auth.api";
+import { login, logout, register, getProfile, refreshAccessToken } from "../api/auth.api";
 
 import type {
   LoginResponse,
@@ -14,6 +14,7 @@ import type {
   LoginPayload,
   RegisterPayload,
 } from "../schemas/auth.schema";
+import { getAccessToken } from "@/services/api/token";
 
 interface ApiError {
   message: string;
@@ -40,12 +41,17 @@ export const useRegister = () => {
 };
 
 
-export const useProfile = () => {
+export const useProfile = (enabled: boolean) => {
   return useQuery({
     queryKey: ["profile"],
     queryFn: getProfile,
+
+    enabled: enabled && !!getAccessToken(),
+
     retry: false,
+
     staleTime: 1000 * 60 * 10,
+
     refetchOnWindowFocus: false,
   });
 };
@@ -59,3 +65,4 @@ export const useLogout = () => {
     mutationFn: logout,
   });
 };
+

@@ -2,21 +2,16 @@
 
 import { useState } from "react";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useQueryClient } from "@tanstack/react-query";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 
 import { useLogin } from "@/features/auth/hooks/auth.hooks";
@@ -25,24 +20,16 @@ import {
   type LoginPayload,
 } from "@/features/auth/schemas/auth.schema";
 
-import {
-  Mail,
-  Lock,
-  Eye,
-  EyeOff,
-  ArrowRight,
-  Loader2,
-} from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
+import { setAccessToken } from "@/services/api/token";
+import { ArrowRight, Eye, EyeOff, Loader2, Lock, Mail } from "lucide-react";
 
 export default function LoginForm() {
   const router = useRouter();
   const { refetch } = useAuth();
   const queryClient = useQueryClient();
   const [showPassword, setShowPassword] = useState(false);
-  const [focused, setFocused] = useState<
-    "email" | "password" | null
-  >(null);
+  const [focused, setFocused] = useState<"email" | "password" | null>(null);
 
   const form = useForm<LoginPayload>({
     resolver: zodResolver(loginSchema),
@@ -58,18 +45,18 @@ export default function LoginForm() {
     login(values, {
       onSuccess: (data) => {
         toast.success(data.message);
+        setAccessToken(data.accessToken);
 
         form.reset();
         queryClient.invalidateQueries({
-              queryKey: ["profile"],
-            });
+          queryKey: ["profile"],
+        });
         router.push("/");
       },
 
       onError: (error) => {
         toast.error(
-          error.response?.data?.message ??
-            "Login failed. Please try again."
+          error.response?.data?.message ?? "Login failed. Please try again.",
         );
       },
     });
@@ -120,10 +107,7 @@ export default function LoginForm() {
               className="rounded-md"
             />
 
-            <span
-              className="text-lg font-bold"
-              style={{ color: "#0A0E2A" }}
-            >
+            <span className="text-lg font-bold" style={{ color: "#0A0E2A" }}>
               eBooi
             </span>
           </div>
@@ -141,10 +125,7 @@ export default function LoginForm() {
         </CardHeader>
 
         <CardContent>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-5"
-          >
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
             {/* EMAIL */}
 
             <div>
@@ -152,10 +133,7 @@ export default function LoginForm() {
                 <Mail
                   className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2"
                   style={{
-                    color:
-                      focused === "email"
-                        ? "#2DBDB6"
-                        : "#9AA3AF",
+                    color: focused === "email" ? "#2DBDB6" : "#9AA3AF",
                   }}
                 />
 
@@ -168,10 +146,7 @@ export default function LoginForm() {
                   onBlur={() => setFocused(null)}
                   className="h-11 rounded-xl pl-9"
                   style={{
-                    borderColor:
-                      focused === "email"
-                        ? "#2DBDB6"
-                        : "#E1E5E8",
+                    borderColor: focused === "email" ? "#2DBDB6" : "#E1E5E8",
                     boxShadow:
                       focused === "email"
                         ? "0 0 0 4px rgba(45,189,182,0.15)"
@@ -194,32 +169,20 @@ export default function LoginForm() {
                 <Lock
                   className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2"
                   style={{
-                    color:
-                      focused === "password"
-                        ? "#2DBDB6"
-                        : "#9AA3AF",
+                    color: focused === "password" ? "#2DBDB6" : "#9AA3AF",
                   }}
                 />
 
                 <Input
-                  type={
-                    showPassword
-                      ? "text"
-                      : "password"
-                  }
+                  type={showPassword ? "text" : "password"}
                   placeholder="Password"
                   autoComplete="current-password"
                   {...form.register("password")}
-                  onFocus={() =>
-                    setFocused("password")
-                  }
+                  onFocus={() => setFocused("password")}
                   onBlur={() => setFocused(null)}
                   className="h-11 rounded-xl pl-9 pr-10"
                   style={{
-                    borderColor:
-                      focused === "password"
-                        ? "#2DBDB6"
-                        : "#E1E5E8",
+                    borderColor: focused === "password" ? "#2DBDB6" : "#E1E5E8",
                     boxShadow:
                       focused === "password"
                         ? "0 0 0 4px rgba(45,189,182,0.15)"
@@ -229,9 +192,7 @@ export default function LoginForm() {
 
                 <button
                   type="button"
-                  onClick={() =>
-                    setShowPassword((prev) => !prev)
-                  }
+                  onClick={() => setShowPassword((prev) => !prev)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700"
                 >
                   {showPassword ? (
@@ -249,12 +210,9 @@ export default function LoginForm() {
               )}
             </div>
 
-               <div className="flex items-center justify-between text-sm">
+            <div className="flex items-center justify-between text-sm">
               <label className="flex items-center gap-2 text-gray-600">
-                <input
-                  type="checkbox"
-                  className="h-4 w-4 accent-[#2DBDB6]"
-                />
+                <input type="checkbox" className="h-4 w-4 accent-[#2DBDB6]" />
                 Remember me
               </label>
 

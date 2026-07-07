@@ -25,6 +25,7 @@ import {
 
 import { useAuth } from "@/hooks/use-auth";
 import { useLogout } from "@/features/auth/hooks/auth.hooks";
+import { clearAccessToken } from "@/services/api/token";
 
 export default function UserMenu() {
   const router = useRouter();
@@ -51,27 +52,30 @@ export default function UserMenu() {
   const avatarUrl = user.avatar
     ? `${process.env.NEXT_PUBLIC_API_URL?.replace(
         "/api/v1",
-        ""
+        "",
       )}/uploads/avatars/${user.avatar}`
     : "";
 
   const handleLogout = () => {
-  console.log("logout clicked");
+    console.log("logout clicked");
 
-  logout(undefined, {
-    onSuccess: () => {
-  queryClient.setQueryData(["profile"], null);
+    logout(undefined, {
+      onSuccess: () => {
+        clearAccessToken();
+        queryClient.removeQueries({
+          queryKey: ["profile"],
+        });
 
-  toast.success("Logged out successfully");
+        toast.success("Logged out successfully");
 
-  router.replace("/login");
-},
+        router.replace("/login");
+      },
 
-    onError: (error) => {
-      toast.error(error.response?.data?.message ?? "Logout failed");
-    },
-  });
-};
+      onError: (error) => {
+        toast.error(error.response?.data?.message ?? "Logout failed");
+      },
+    });
+  };
 
   return (
     <DropdownMenu>
@@ -120,10 +124,10 @@ export default function UserMenu() {
 
         {/* LOGOUT */}
         <DropdownMenuItem
-  onClick={handleLogout}
-  disabled={isPending}
-  className="text-red-600"
->
+          onClick={handleLogout}
+          disabled={isPending}
+          className="text-red-600"
+        >
           <LogOut className="mr-2 h-4 w-4" />
           Logout
         </DropdownMenuItem>

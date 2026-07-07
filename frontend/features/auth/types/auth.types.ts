@@ -7,7 +7,9 @@ export interface User {
 }
 
 export interface LoginResponse {
+  success: boolean;
   message: string;
+  accessToken: string;
   user: User;
 }
 
