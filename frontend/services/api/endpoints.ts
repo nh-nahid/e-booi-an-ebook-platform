@@ -11,6 +11,12 @@ export const ENDPOINTS = {
     USER_BY_ID: (id: string) => `/users/${id}`,
   },
 
+  USER: {
+    PROFILE: "/users/profile",
+    PROFILE_AVATAR: "/users/profile/avatar",
+    CHANGE_PASSWORD: "/users/change-password",
+  },
+
   BOOKS: {
     LIST: "/books",
     DETAILS: (id: string) => `/books/${id}`,

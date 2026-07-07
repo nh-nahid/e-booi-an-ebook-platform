@@ -98,17 +98,29 @@ export default function UserMenu() {
         <DropdownMenuSeparator />
 
         {/* NAV ITEMS (FIXED - NO LINK WRAP) */}
-        <DropdownMenuItem onSelect={() => router.push("/profile")}>
+        <DropdownMenuItem
+          onClick={() => {
+            router.push("/profile");
+          }}
+        >
           <User className="mr-2 h-4 w-4" />
           My Profile
         </DropdownMenuItem>
 
-        <DropdownMenuItem onSelect={() => router.push("/library")}>
+        <DropdownMenuItem
+          onClick={() => {
+            router.push("/library");
+          }}
+        >
           <Library className="mr-2 h-4 w-4" />
           My Library
         </DropdownMenuItem>
 
-        <DropdownMenuItem onSelect={() => router.push("/orders")}>
+        <DropdownMenuItem 
+          onClick={() => {
+            router.push("/orders");
+          }}
+        >
           <ShoppingBag className="mr-2 h-4 w-4" />
           Orders
         </DropdownMenuItem>

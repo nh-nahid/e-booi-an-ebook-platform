@@ -26,7 +26,6 @@ import { ArrowRight, Eye, EyeOff, Loader2, Lock, Mail } from "lucide-react";
 
 export default function LoginForm() {
   const router = useRouter();
-  const { refetch } = useAuth();
   const queryClient = useQueryClient();
   const [showPassword, setShowPassword] = useState(false);
   const [focused, setFocused] = useState<"email" | "password" | null>(null);
