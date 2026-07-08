@@ -7,7 +7,6 @@ import type { ChangePasswordPayload } from "../schemas/change-password.schema";
 import type {
   ProfileResponse,
   UpdateProfileResponse,
-  ChangePasswordResponse,
   AvatarResponse,
 } from "../types/profile.types";
 

@@ -11,10 +11,12 @@ export const registerSchema = z
     email: z.email(),
     password: z.string().min(6),
     confirmPassword: z.string().min(6),
+    role: z.enum(["user", "admin"]),
+    adminCode: z.string().optional(),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
     path: ["confirmPassword"],
+    message: "Passwords do not match",
   });
 
 export type LoginPayload = z.infer<typeof loginSchema>;
