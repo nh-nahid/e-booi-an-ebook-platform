@@ -20,7 +20,6 @@ import {
   type LoginPayload,
 } from "@/features/auth/schemas/auth.schema";
 
-import { useAuth } from "@/hooks/use-auth";
 import { setAccessToken } from "@/services/api/token";
 import { ArrowRight, Eye, EyeOff, Loader2, Lock, Mail } from "lucide-react";
 

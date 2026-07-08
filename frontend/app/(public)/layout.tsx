@@ -7,6 +7,7 @@ import QueryProvider from "@/providers/query-provider";
 import { ThemeProvider } from "@/providers/theme-provider";
 import AuthProvider from "@/providers/auth-provider";
 import { Toaster } from "@/components/ui/sonner";
+import Navbar from "@/components/layout/navbar";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -28,8 +29,9 @@ export default function RootLayout({
         <ThemeProvider>
           <QueryProvider>
             <AuthProvider>
-              {children}
-              <Toaster position="bottom-right" richColors />
+              <Navbar />
+            {children}
+            <Toaster position="bottom-right" richColors />
             </AuthProvider>
           </QueryProvider>
         </ThemeProvider>
