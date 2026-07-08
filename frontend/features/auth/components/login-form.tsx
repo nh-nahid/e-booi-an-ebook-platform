@@ -42,14 +42,17 @@ export default function LoginForm() {
 
   const onSubmit = (values: LoginPayload) => {
     login(values, {
-      onSuccess: (data) => {
-        toast.success(data.message);
+      onSuccess: async (data) => {
         setAccessToken(data.accessToken);
 
-        form.reset();
-        queryClient.invalidateQueries({
+        await queryClient.fetchQuery({
           queryKey: ["profile"],
         });
+
+        toast.success(data.message);
+
+        form.reset();
+
         router.push("/");
       },
 

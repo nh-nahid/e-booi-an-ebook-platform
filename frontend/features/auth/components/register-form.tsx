@@ -14,6 +14,12 @@ import {
   KeyRound,
 } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+
+import { useRegister } from "@/features/auth/hooks/auth.hooks";
+
+import type { ApiError } from "@/features/auth/types/api-error";
 
 type Role = "user" | "admin";
 
@@ -35,22 +41,20 @@ const initialValues: RegisterValues = {
   role: "user",
 };
 
-interface RegisterFormProps {
-  onSubmit?: (values: RegisterValues) => Promise<void> | void;
-}
-
-export default function RegisterForm({ onSubmit }: RegisterFormProps) {
+export default function RegisterForm() {
   const [values, setValues] = useState<RegisterValues>(initialValues);
   const [focused, setFocused] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
+  const router = useRouter();
   const isAdmin = values.role === "admin";
+  const { mutate: register, isPending } = useRegister();
 
-  const update = <K extends keyof RegisterValues>(key: K, value: RegisterValues[K]) =>
-    setValues((prev) => ({ ...prev, [key]: value }));
+  const update = <K extends keyof RegisterValues>(
+    key: K,
+    value: RegisterValues[K],
+  ) => setValues((prev) => ({ ...prev, [key]: value }));
 
   const handleRoleChange = (role: Role) => {
     update("role", role);
@@ -59,8 +63,9 @@ export default function RegisterForm({ onSubmit }: RegisterFormProps) {
 
   const iconColor = (key: string) => (focused === key ? "#2DBDB6" : "#9AA3AF");
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
     setError(null);
 
     if (values.password !== values.confirmPassword) {
@@ -73,14 +78,29 @@ export default function RegisterForm({ onSubmit }: RegisterFormProps) {
       return;
     }
 
-    setLoading(true);
-    try {
-      // TODO: wire up to your actual register mutation
-      // await registerUser(values);
-      await onSubmit?.(values);
-    } finally {
-      setLoading(false);
-    }
+    register(
+      {
+        name: values.name,
+        email: values.email,
+        password: values.password,
+        confirmPassword: values.confirmPassword,
+        role: values.role,
+        adminCode: isAdmin ? values.adminCode : undefined,
+      },
+      {
+        onSuccess: (data) => {
+          toast.success(data.message);
+
+          setValues(initialValues);
+
+          router.push("/login");
+        },
+
+        onError: (error: ApiError) => {
+          setError(error.response?.data?.message ?? "Registration failed");
+        },
+      },
+    );
   };
 
   const fieldClass =
@@ -102,8 +122,8 @@ export default function RegisterForm({ onSubmit }: RegisterFormProps) {
       <div className="relative">
         {/* logo */}
         <div className="mb-5 flex items-center gap-2">
-            <Image src='/logo.jpeg' width={32} height={32} alt="Logo"/>
-          
+          <Image src="/logo.jpeg" width={32} height={32} alt="Logo" />
+
           <span className="text-lg font-extrabold text-[#0A0E2A]">
             eBoo<span className="text-[#2DBDB6]">i</span>
           </span>
@@ -153,7 +173,9 @@ export default function RegisterForm({ onSubmit }: RegisterFormProps) {
 
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-[#0A0E2A]">Full Name</label>
+            <label className="text-xs font-semibold text-[#0A0E2A]">
+              Full Name
+            </label>
             <div className="relative">
               <User
                 className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transition-colors"
@@ -168,14 +190,19 @@ export default function RegisterForm({ onSubmit }: RegisterFormProps) {
                 className={fieldClass}
                 style={{
                   borderColor: focused === "name" ? "#2DBDB6" : "#E1E5E8",
-                  boxShadow: focused === "name" ? "0 0 0 4px rgba(45,189,182,0.15)" : "none",
+                  boxShadow:
+                    focused === "name"
+                      ? "0 0 0 4px rgba(45,189,182,0.15)"
+                      : "none",
                 }}
               />
             </div>
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-[#0A0E2A]">Email</label>
+            <label className="text-xs font-semibold text-[#0A0E2A]">
+              Email
+            </label>
             <div className="relative">
               <Mail
                 className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transition-colors"
@@ -191,14 +218,19 @@ export default function RegisterForm({ onSubmit }: RegisterFormProps) {
                 className={fieldClass}
                 style={{
                   borderColor: focused === "email" ? "#2DBDB6" : "#E1E5E8",
-                  boxShadow: focused === "email" ? "0 0 0 4px rgba(45,189,182,0.15)" : "none",
+                  boxShadow:
+                    focused === "email"
+                      ? "0 0 0 4px rgba(45,189,182,0.15)"
+                      : "none",
                 }}
               />
             </div>
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-[#0A0E2A]">Password</label>
+            <label className="text-xs font-semibold text-[#0A0E2A]">
+              Password
+            </label>
             <div className="relative">
               <Lock
                 className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transition-colors"
@@ -214,7 +246,10 @@ export default function RegisterForm({ onSubmit }: RegisterFormProps) {
                 className={`${fieldClass} pr-10`}
                 style={{
                   borderColor: focused === "password" ? "#2DBDB6" : "#E1E5E8",
-                  boxShadow: focused === "password" ? "0 0 0 4px rgba(45,189,182,0.15)" : "none",
+                  boxShadow:
+                    focused === "password"
+                      ? "0 0 0 4px rgba(45,189,182,0.15)"
+                      : "none",
                 }}
               />
               <button
@@ -222,13 +257,19 @@ export default function RegisterForm({ onSubmit }: RegisterFormProps) {
                 onClick={() => setShowPassword((s) => !s)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-[#9AA3AF] transition-transform hover:scale-110"
               >
-                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                {showPassword ? (
+                  <EyeOff className="h-4 w-4" />
+                ) : (
+                  <Eye className="h-4 w-4" />
+                )}
               </button>
             </div>
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-[#0A0E2A]">Confirm Password</label>
+            <label className="text-xs font-semibold text-[#0A0E2A]">
+              Confirm Password
+            </label>
             <div className="relative">
               <Lock
                 className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transition-colors"
@@ -244,7 +285,10 @@ export default function RegisterForm({ onSubmit }: RegisterFormProps) {
                 className={`${fieldClass} pr-10`}
                 style={{
                   borderColor: focused === "confirm" ? "#2DBDB6" : "#E1E5E8",
-                  boxShadow: focused === "confirm" ? "0 0 0 4px rgba(45,189,182,0.15)" : "none",
+                  boxShadow:
+                    focused === "confirm"
+                      ? "0 0 0 4px rgba(45,189,182,0.15)"
+                      : "none",
                 }}
               />
               <button
@@ -252,7 +296,11 @@ export default function RegisterForm({ onSubmit }: RegisterFormProps) {
                 onClick={() => setShowConfirm((s) => !s)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-[#9AA3AF] transition-transform hover:scale-110"
               >
-                {showConfirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                {showConfirm ? (
+                  <EyeOff className="h-4 w-4" />
+                ) : (
+                  <Eye className="h-4 w-4" />
+                )}
               </button>
             </div>
           </div>
@@ -265,7 +313,9 @@ export default function RegisterForm({ onSubmit }: RegisterFormProps) {
             `}
           >
             <div className="min-h-0 space-y-1.5">
-              <label className="text-xs font-semibold text-[#0A0E2A]">Admin Access Code</label>
+              <label className="text-xs font-semibold text-[#0A0E2A]">
+                Admin Access Code
+              </label>
               <div className="relative">
                 <KeyRound
                   className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transition-colors"
@@ -279,9 +329,12 @@ export default function RegisterForm({ onSubmit }: RegisterFormProps) {
                   placeholder="Enter admin invite code"
                   className={fieldClass}
                   style={{
-                    borderColor: focused === "adminCode" ? "#2DBDB6" : "#E1E5E8",
+                    borderColor:
+                      focused === "adminCode" ? "#2DBDB6" : "#E1E5E8",
                     boxShadow:
-                      focused === "adminCode" ? "0 0 0 4px rgba(45,189,182,0.15)" : "none",
+                      focused === "adminCode"
+                        ? "0 0 0 4px rgba(45,189,182,0.15)"
+                        : "none",
                   }}
                 />
               </div>
@@ -299,7 +352,7 @@ export default function RegisterForm({ onSubmit }: RegisterFormProps) {
 
           <button
             type="submit"
-            disabled={loading}
+            disabled={isPending}
             className={`
               group relative h-11 w-full overflow-hidden rounded-full border-0
               font-semibold text-white transition-transform duration-150
@@ -314,7 +367,7 @@ export default function RegisterForm({ onSubmit }: RegisterFormProps) {
           >
             <span className="absolute inset-0 -translate-x-[120%] bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-500 group-hover:translate-x-[120%]" />
             <span className="relative flex items-center justify-center gap-2 text-sm">
-              {loading ? (
+              {isPending ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
                   Creating account...
@@ -330,7 +383,10 @@ export default function RegisterForm({ onSubmit }: RegisterFormProps) {
 
           <p className="pt-1 text-center text-xs text-[#6B7280]">
             Already have an account?{" "}
-            <Link href="/login" className="font-semibold text-[#0A0E2A] hover:text-[#2DBDB6]">
+            <Link
+              href="/login"
+              className="font-semibold text-[#0A0E2A] hover:text-[#2DBDB6]"
+            >
               Log in
             </Link>
           </p>

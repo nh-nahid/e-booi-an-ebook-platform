@@ -34,7 +34,6 @@ export default function UserMenu() {
   const { user, isLoading } = useAuth();
   const { mutate: logout, isPending } = useLogout();
 
-  // 🔥 SAFE LOADING STATE (prevents crash)
   if (isLoading) {
     return <div className="h-9 w-9 rounded-full bg-gray-200 animate-pulse" />;
   }
@@ -57,12 +56,11 @@ export default function UserMenu() {
     : "";
 
   const handleLogout = () => {
-    
     logout(undefined, {
       onSuccess: () => {
         clearAccessToken();
-        queryClient.removeQueries({
-          queryKey: ["profile"],
+        queryClient.setQueryData(["profile"], {
+          user: null,
         });
 
         toast.success("Logged out successfully");
@@ -115,7 +113,7 @@ export default function UserMenu() {
           My Library
         </DropdownMenuItem>
 
-        <DropdownMenuItem 
+        <DropdownMenuItem
           onClick={() => {
             router.push("/orders");
           }}
