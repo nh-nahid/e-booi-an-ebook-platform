@@ -204,20 +204,42 @@ async function deleteAvatar(req, res, next) {
 // =======================
 async function addUser(req, res, next) {
   try {
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    const {
+      name,
+      email,
+      password,
+      role = "user",
+      adminCode,
+    } = req.body;
+
+    if (role === "admin") {
+      if (!adminCode) {
+        return res.status(400).json({
+          message: "Admin access code is required.",
+        });
+      }
+
+      if (adminCode !== process.env.ADMIN_ACCESS_CODE) {
+        return res.status(403).json({
+          message: "Invalid admin access code.",
+        });
+      }
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     const file = req.files?.[0];
     const filename = file ? file.filename : null;
 
     const newUser = new User({
-      ...req.body,
-      avatar: filename,
+      name,
+      email,
       password: hashedPassword,
+      role,
+      avatar: filename,
     });
 
     await newUser.save();
-
-    console.log("User saved");
 
     await sendEmail({
       to: newUser.email,
@@ -225,13 +247,10 @@ async function addUser(req, res, next) {
       html: welcomeEmail(newUser),
     });
 
-    console.log("Email sent");
-
-    res.status(201).json({
+    return res.status(201).json({
       message: "User registered successfully",
     });
   } catch (error) {
-    console.log(error);
     next(error);
   }
 }
