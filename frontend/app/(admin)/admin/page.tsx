@@ -12,6 +12,7 @@ import {
   useSales,
   useTopBooks,
 } from "@/features/admin/hooks/admin.hooks";
+import AdminLoading from "./loading";
 
 export default function AdminDashboardPage() {
   const { data: dashboard, isLoading: dashboardLoading } = useDashboard();
@@ -22,9 +23,7 @@ export default function AdminDashboardPage() {
 
   if (dashboardLoading || salesLoading || topBooksLoading) {
     return (
-      <div className="py-20 text-center">
-        Loading dashboard...
-      </div>
+      <AdminLoading/>
     );
   }
 
