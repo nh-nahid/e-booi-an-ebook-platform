@@ -80,4 +80,31 @@ export interface TopBook {
   sold: number;
 }
 
+
+export interface Book {
+  _id: string;
+  title: string;
+  author: string;
+  description: string;
+  category: string;
+  price: number;
+  coverImage: string;
+  pdfFile: string;
+  bookType: "digital" | "physical";
+  stock: number;
+  isPublished: boolean;
+  uploadedBy: string;
+  createdAt: string;
+  updatedAt: string;
+  averageRating: number;
+  reviewCount: number;
+}
+
+export interface BooksResponse {
+  total: number;
+  page: number;
+  totalPages: number;
+  books: Book[];
+}
+
 export type TopBooksResponse = TopBook[];

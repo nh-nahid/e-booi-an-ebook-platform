@@ -4,52 +4,25 @@ import Image from "next/image";
 import { Edit, Trash2, Eye } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import type { Book } from "@/features/admin/types/admin.types";
 
-type Book = {
-  id: string;
-  cover: string;
-  title: string;
-  author: string;
-  category: string;
-  bookType: "digital" | "physical";
-  price: number;
-  stock: number;
-};
+interface BooksTableProps {
+  books: Book[];
+  total: number;
+  page: number;
+  totalPages: number;
+  onPageChange?: (page: number) => void;
+}
 
-const books: Book[] = [
-  {
-    id: "1",
-    cover: "/book-placeholder.png",
-    title: "Atomic Habits",
-    author: "James Clear",
-    category: "Self Development",
-    bookType: "physical",
-    price: 650,
-    stock: 25,
-  },
-  {
-    id: "2",
-    cover: "/book-placeholder.png",
-    title: "Deep Work",
-    author: "Cal Newport",
-    category: "Productivity",
-    bookType: "digital",
-    price: 420,
-    stock: 999,
-  },
-  {
-    id: "3",
-    cover: "/book-placeholder.png",
-    title: "Clean Code",
-    author: "Robert C. Martin",
-    category: "Programming",
-    bookType: "physical",
-    price: 850,
-    stock: 12,
-  },
-];
+export default function BooksTable({
+  books,
+  total,
+  page,
+  totalPages,
+  onPageChange,
+}: BooksTableProps) {
+  const imageBaseUrl = process.env.NEXT_PUBLIC_API_URL?.replace("/api/v1", "");
 
-export default function BooksTable() {
   return (
     <div className="overflow-hidden rounded-2xl border border-[#E1E5E8] bg-white shadow-sm">
       <div className="border-b border-[#E1E5E8] px-6 py-5">
@@ -63,7 +36,7 @@ export default function BooksTable() {
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[1000px]">
+        <table className="w-full min-w-[1100px]">
           <thead className="bg-[#F8FAFB]">
             <tr className="text-left text-sm font-semibold text-[#0A0E2A]">
               <th className="px-6 py-4">Cover</th>
@@ -73,6 +46,8 @@ export default function BooksTable() {
               <th className="px-6 py-4">Type</th>
               <th className="px-6 py-4">Price</th>
               <th className="px-6 py-4">Stock</th>
+              <th className="px-6 py-4">Rating</th>
+              <th className="px-6 py-4">Status</th>
               <th className="px-6 py-4 text-center">Actions</th>
             </tr>
           </thead>
@@ -80,12 +55,16 @@ export default function BooksTable() {
           <tbody>
             {books.map((book) => (
               <tr
-                key={book.id}
-                className="border-t border-[#EEF1F2] transition-colors hover:bg-[#FAFCFC]"
+                key={book._id}
+                className="border-t border-[#EEF1F2] transition hover:bg-[#FAFCFC]"
               >
                 <td className="px-6 py-4">
                   <Image
-                    src={book.cover}
+                    src={
+                      book.coverImage
+                        ? `${imageBaseUrl}/uploads/covers/${book.coverImage}`
+                        : "/book-placeholder.png"
+                    }
                     alt={book.title}
                     width={56}
                     height={80}
@@ -99,11 +78,11 @@ export default function BooksTable() {
                   </div>
 
                   <div className="mt-1 text-xs text-gray-500">
-                    #{book.id}
+                    #{book._id.slice(-6)}
                   </div>
                 </td>
 
-                <td className="px-6 py-4 text-gray-700">
+                <td className="px-6 py-4">
                   {book.author}
                 </td>
 
@@ -134,6 +113,8 @@ export default function BooksTable() {
                     className={`font-semibold ${
                       book.stock > 10
                         ? "text-green-600"
+                        : book.stock > 0
+                        ? "text-yellow-600"
                         : "text-red-600"
                     }`}
                   >
@@ -142,11 +123,29 @@ export default function BooksTable() {
                 </td>
 
                 <td className="px-6 py-4">
+                  ⭐ {book.averageRating ?? 0}
+                  <div className="text-xs text-gray-500">
+                    ({book.reviewCount ?? 0})
+                  </div>
+                </td>
+
+                <td className="px-6 py-4">
+                  <span
+                    className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                      book.isPublished
+                        ? "bg-green-100 text-green-700"
+                        : "bg-red-100 text-red-700"
+                    }`}
+                  >
+                    {book.isPublished ? "Published" : "Draft"}
+                  </span>
+                </td>
+
+                <td className="px-6 py-4">
                   <div className="flex justify-center gap-2">
                     <Button
                       size="icon"
                       variant="outline"
-                      className="h-9 w-9"
                     >
                       <Eye className="h-4 w-4" />
                     </Button>
@@ -154,7 +153,6 @@ export default function BooksTable() {
                     <Button
                       size="icon"
                       variant="outline"
-                      className="h-9 w-9"
                     >
                       <Edit className="h-4 w-4 text-[#2DBDB6]" />
                     </Button>
@@ -162,7 +160,7 @@ export default function BooksTable() {
                     <Button
                       size="icon"
                       variant="outline"
-                      className="h-9 w-9 border-red-200 hover:bg-red-50"
+                      className="border-red-200 hover:bg-red-50"
                     >
                       <Trash2 className="h-4 w-4 text-red-500" />
                     </Button>
@@ -174,7 +172,7 @@ export default function BooksTable() {
             {books.length === 0 && (
               <tr>
                 <td
-                  colSpan={8}
+                  colSpan={10}
                   className="py-16 text-center text-gray-500"
                 >
                   No books found.
@@ -187,12 +185,21 @@ export default function BooksTable() {
 
       <div className="flex items-center justify-between border-t border-[#E1E5E8] px-6 py-4">
         <p className="text-sm text-gray-500">
-          Showing <span className="font-semibold">1–3</span> of{" "}
-          <span className="font-semibold">3</span> books
+          Showing{" "}
+          <span className="font-semibold">
+            {books.length === 0 ? 0 : (page - 1) * books.length + 1}–
+            {(page - 1) * books.length + books.length}
+          </span>{" "}
+          of <span className="font-semibold">{total}</span> books
         </p>
 
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm">
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={page === 1}
+            onClick={() => onPageChange?.(page - 1)}
+          >
             Previous
           </Button>
 
@@ -200,10 +207,15 @@ export default function BooksTable() {
             size="sm"
             className="bg-[#2DBDB6] hover:bg-[#249d97]"
           >
-            1
+            {page}
           </Button>
 
-          <Button variant="outline" size="sm">
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={page === totalPages}
+            onClick={() => onPageChange?.(page + 1)}
+          >
             Next
           </Button>
         </div>

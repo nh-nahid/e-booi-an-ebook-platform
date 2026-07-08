@@ -5,6 +5,7 @@ import type {
   DashboardResponse,
   SalesResponse,
   TopBooksResponse,
+  BooksResponse,
 } from "../types/admin.types";
 
 export const getDashboard = async (): Promise<DashboardResponse> => {
@@ -19,5 +20,13 @@ export const getSales = async (): Promise<SalesResponse> => {
 
 export const getTopBooks = async (): Promise<TopBooksResponse> => {
   const { data } = await api.get(ENDPOINTS.ADMIN.TOP_BOOKS);
+  return data;
+};
+
+export const getBooks = async (page = 1, limit = 10) => {
+  const { data } = await api.get(
+    `${ENDPOINTS.BOOKS.LIST}?page=${page}&limit=${limit}`
+  );
+
   return data;
 };

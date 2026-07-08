@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 import {
+    getBooks,
   getDashboard,
   getSales,
   getTopBooks,
@@ -22,4 +23,10 @@ export const useTopBooks = () =>
   useQuery({
     queryKey: ["admin-top-books"],
     queryFn: getTopBooks,
+  });
+
+export const useBooks = (page: number) =>
+  useQuery({
+    queryKey: ["books", page],
+    queryFn: () => getBooks(page),
   });
