@@ -3,7 +3,12 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 
-export type OrderStatus = "pending" | "processing" | "completed" | "cancelled";
+export type OrderStatus =
+  | "pending"
+  | "processing"
+  | "shipped"
+  | "delivered"
+  | "cancelled";
 
 export interface Order {
   id: string;
@@ -21,7 +26,8 @@ interface RecentOrdersProps {
 const STATUS_STYLES: Record<OrderStatus, string> = {
   pending: "bg-amber-50 text-amber-600",
   processing: "bg-[#E6F7F6] text-[#1f9d97]",
-  completed: "bg-emerald-50 text-emerald-600",
+  shipped: "bg-[#f5f7e6] text-[#1f669d]",
+  delivered: "bg-emerald-50 text-emerald-600",
   cancelled: "bg-red-50 text-red-600",
 };
 

@@ -1,0 +1,83 @@
+// features/admin/types/admin.types.ts
+
+export interface DashboardStatistics {
+  totalUsers: number;
+  totalBooks: number;
+  totalOrders: number;
+  pendingOrders: number;
+  deliveredOrders: number;
+  totalRevenue: number;
+}
+
+export interface ShippingAddress {
+  fullName: string;
+  phone: string;
+  address: string;
+  city: string;
+  postalCode: string;
+}
+
+export interface OrderItem {
+  _id: string;
+  book: string;
+  quantity: number;
+  price: number;
+  bookType: "digital" | "physical";
+}
+
+export interface RecentOrder {
+  _id: string;
+  user: string | null;
+
+  shippingAddress: ShippingAddress;
+
+  items: OrderItem[];
+
+  totalAmount: number;
+  discountAmount: number;
+  finalAmount: number;
+
+  orderStatus: "pending" | "processing" | "shipped" | "delivered" | "cancelled";
+
+  paymentStatus: "pending" | "paid" | "failed";
+
+  paymentMethod: string;
+
+  transactionId: string | null;
+
+  coupon: string | null;
+
+  invoiceNumber?: string;
+  invoiceUrl?: string;
+
+  paidAt: string | null;
+
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface DashboardResponse {
+  statistics: DashboardStatistics;
+  recentOrders: RecentOrder[];
+}
+
+
+export interface SalesItem {
+  _id: {
+    month: number;
+    year: number;
+  };
+
+  totalSales: number;
+  totalOrders: number;
+}
+
+export type SalesResponse = SalesItem[];
+
+
+export interface TopBook {
+  _id: string;
+  sold: number;
+}
+
+export type TopBooksResponse = TopBook[];

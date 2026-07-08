@@ -1,4 +1,4 @@
-import { BookOpen, Users, ShoppingBag, DollarSign } from "lucide-react";
+"use client";
 
 import StatCard from "@/features/admin/components/stat-card";
 import SalesChart from "@/features/admin/components/sales-chart";
@@ -7,168 +7,117 @@ import RecentOrders from "@/features/admin/components/recent-orders";
 import LatestUsers from "@/features/admin/components/latest-users";
 import TopBooks from "@/features/admin/components/top-books";
 
-// TODO: replace all of this with real data fetching (server actions / API calls)
-const salesData = [
-  { label: "Mon", sales: 4200 },
-  { label: "Tue", sales: 5100 },
-  { label: "Wed", sales: 3800 },
-  { label: "Thu", sales: 6200 },
-  { label: "Fri", sales: 7400 },
-  { label: "Sat", sales: 8900 },
-  { label: "Sun", sales: 6700 },
-];
-
-const categoryData = [
-  { name: "Novel", value: 420 },
-  { name: "Religious", value: 260 },
-  { name: "Science", value: 180 },
-  { name: "Business", value: 140 },
-  { name: "Literature", value: 95 },
-  { name: "Education", value: 60 },
-];
-
-const recentOrders = [
-  {
-    id: "10234",
-    customerName: "Rahim Ahmed",
-    bookTitle: "The Silent Ocean",
-    amount: 450,
-    status: "completed" as const,
-    date: "Jul 07",
-  },
-  {
-    id: "10233",
-    customerName: "Fatima Khan",
-    bookTitle: "Letters from Dhaka",
-    amount: 320,
-    status: "processing" as const,
-    date: "Jul 07",
-  },
-  {
-    id: "10232",
-    customerName: "Karim Hasan",
-    bookTitle: "The Last Chapter",
-    amount: 610,
-    status: "pending" as const,
-    date: "Jul 06",
-  },
-  {
-    id: "10231",
-    customerName: "Nusrat Jahan",
-    bookTitle: "Whispers of Time",
-    amount: 275,
-    status: "cancelled" as const,
-    date: "Jul 06",
-  },
-];
-
-const latestUsers = [
-  {
-    id: "u1",
-    name: "Tanvir Islam",
-    email: "tanvir@example.com",
-    joinedAt: "2h ago",
-  },
-  {
-    id: "u2",
-    name: "Sadia Rahman",
-    email: "sadia@example.com",
-    joinedAt: "5h ago",
-  },
-  {
-    id: "u3",
-    name: "Arif Chowdhury",
-    email: "arif@example.com",
-    joinedAt: "1d ago",
-    role: "admin" as const,
-  },
-  { id: "u4", name: "Mim Akter", email: "mim@example.com", joinedAt: "2d ago" },
-];
-
-const topBooks = [
-  {
-    id: "b1",
-    title: "The Silent Ocean",
-    author: "Ayesha Noor",
-    sales: 320,
-    rating: 4.8,
-  },
-  {
-    id: "b2",
-    title: "Letters from Dhaka",
-    author: "Rafiq Islam",
-    sales: 275,
-    rating: 4.6,
-  },
-  {
-    id: "b3",
-    title: "The Last Chapter",
-    author: "Nadia Hossain",
-    sales: 240,
-    rating: 4.5,
-  },
-  {
-    id: "b4",
-    title: "Whispers of Time",
-    author: "Kamal Uddin",
-    sales: 198,
-    rating: 4.3,
-  },
-];
+import {
+  useDashboard,
+  useSales,
+  useTopBooks,
+} from "@/features/admin/hooks/admin.hooks";
 
 export default function AdminDashboardPage() {
+  const { data: dashboard, isLoading: dashboardLoading } = useDashboard();
+
+  const { data: sales, isLoading: salesLoading } = useSales();
+
+  const { data: topBooks, isLoading: topBooksLoading } = useTopBooks();
+
+  if (dashboardLoading || salesLoading || topBooksLoading) {
+    return (
+      <div className="py-20 text-center">
+        Loading dashboard...
+      </div>
+    );
+  }
+
+  const statistics = dashboard?.statistics;
+
+  const salesData =
+    sales?.map((item) => ({
+      label: `${item._id.month}/${item._id.year}`,
+      sales: item.totalSales,
+    })) ?? [];
+
   return (
     <div className="space-y-6">
-      {/* Stat cards */}
+      {/* ================= Stats ================= */}
+
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <StatCard
           label="Total Revenue"
-          value="৳ 4,52,300"
+          value={`৳ ${statistics?.totalRevenue ?? 0}`}
           icon="dollar"
-          trend={12.4}
           accent="teal"
         />
 
         <StatCard
           label="Total Books"
-          value="1,156"
+          value={statistics?.totalBooks ?? 0}
           icon="book"
-          trend={4.1}
           accent="teal"
         />
 
         <StatCard
           label="Total Users"
-          value="8,924"
+          value={statistics?.totalUsers ?? 0}
           icon="users"
-          trend={8.7}
           accent="teal"
         />
 
         <StatCard
           label="Total Orders"
-          value="2,341"
+          value={statistics?.totalOrders ?? 0}
           icon="shopping"
-          trend={-2.3}
           accent="teal"
         />
       </div>
 
-      {/* Charts */}
+      {/* ================= Charts ================= */}
+
       <div className="grid gap-4 lg:grid-cols-[1fr_360px]">
         <SalesChart data={salesData} />
-        <DashboardChart data={categoryData} />
+
+        {/* Replace when backend provides category analytics */}
+        <DashboardChart data={[]} />
       </div>
 
-      {/* Widgets */}
+      {/* ================= Widgets ================= */}
+
       <div className="grid gap-4 lg:grid-cols-3">
         <div className="lg:col-span-2">
-          <RecentOrders orders={recentOrders} />
+          <RecentOrders
+            orders={
+              dashboard?.recentOrders.map((order) => ({
+                id: order._id,
+                customerName: order.shippingAddress.fullName,
+                bookTitle:
+                  order.items.length > 0
+                    ? `${order.items.length} Book${
+                        order.items.length > 1 ? "s" : ""
+                      }`
+                    : "-",
+                amount: order.finalAmount,
+                status: order.orderStatus,
+                date: new Date(order.createdAt).toLocaleDateString(),
+              })) ?? []
+            }
+          />
         </div>
-        <LatestUsers users={latestUsers} />
+
+        {/* Backend doesn't return latest users yet */}
+        <LatestUsers users={[]} />
       </div>
 
-      <TopBooks books={topBooks} />
+      {/* Backend currently returns only book id + sold */}
+      <TopBooks
+        books={
+          topBooks?.map((book) => ({
+            id: book._id,
+            title: book._id,
+            author: "-",
+            sales: book.sold,
+            rating: 0,
+          })) ?? []
+        }
+      />
     </div>
   );
 }
