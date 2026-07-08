@@ -13,9 +13,16 @@ export interface LoginResponse {
   user: User;
 }
 
+export interface RegisterRequest {
+  name: string;
+  email: string;
+  password: string;
+  role: "user" | "admin";
+  adminCode?: string;
+}
+
 export interface RegisterResponse {
   message: string;
-  user: User;
 }
 
 export interface ProfileResponse {

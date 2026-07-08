@@ -1,6 +1,7 @@
+import axios from "axios";
+
 import { api } from "@/services/api/api";
 import { ENDPOINTS } from "@/services/api/endpoints";
-import axios from "axios";
 
 import type {
   LoginPayload,
@@ -35,9 +36,12 @@ export const register = async (
   return response.data;
 };
 
-export const getProfile = async () => {
+export const getProfile = async (): Promise<ProfileResponse | null> => {
   try {
-    const response = await api.get(ENDPOINTS.AUTH.PROFILE);
+    const response = await api.get<ProfileResponse>(
+      ENDPOINTS.AUTH.PROFILE
+    );
+
     return response.data;
   } catch (error) {
     if (
@@ -60,9 +64,13 @@ export const logout = async (): Promise<{ message: string }> => {
 };
 
 export const refreshAccessToken = async (): Promise<{
+  success: boolean;
   accessToken: string;
 }> => {
-  const response = await api.post(ENDPOINTS.AUTH.REFRESH_TOKEN);
+  const response = await api.post<{
+    success: boolean;
+    accessToken: string;
+  }>(ENDPOINTS.AUTH.REFRESH_TOKEN);
+
   return response.data;
 };
-

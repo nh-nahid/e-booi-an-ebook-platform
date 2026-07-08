@@ -36,10 +36,10 @@ export const useRegister = () => {
     AxiosError<ApiError>,
     RegisterPayload
   >({
+    mutationKey: ["register"],
     mutationFn: register,
   });
 };
-
 
 export const useProfile = (enabled: boolean) => {
   return useQuery({
