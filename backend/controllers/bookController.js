@@ -27,40 +27,55 @@ async function addBook(req, res, next) {
 
 // get all books
 async function getBooks(req, res, next) {
-    try {
-        const page = Number(req.query.page) || 1;
-        const limit = Number(req.query.limit) || 10;
-        const skip = (page - 1) * limit;
+  try {
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
 
-        const query = {};
+    const {
+      search,
+      category,
+      bookType,
+      status,
+    } = req.query;
 
-        if (req.query.search) {
-            query.title = {
-                $regex: req.query.search,
-                $options: "i",
-            };
-        }
+    const query = {};
 
-        if (req.query.category) {
-            query.category = req.query.category;
-        }
-
-        const total = await Book.countDocuments(query);
-
-        const books = await Book.find(query)
-            .sort("-createdAt")
-            .skip(skip)
-            .limit(limit);
-
-        res.json({
-            total,
-            page,
-            totalPages: Math.ceil(total / limit),
-            books,
-        });
-    } catch (error) {
-        next(error);
+    if (search) {
+      query.title = {
+        $regex: search,
+        $options: "i",
+      };
     }
+
+    if (category) {
+      query.category = category;
+    }
+
+    if (bookType) {
+      query.bookType = bookType;
+    }
+
+    if (status) {
+      query.isPublished = status === "published";
+    }
+
+    const total = await Book.countDocuments(query);
+
+    const books = await Book.find(query)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    res.json({
+      total,
+      page,
+      totalPages: Math.ceil(total / limit),
+      books,
+    });
+  } catch (error) {
+    next(error);
+  }
 }
 
 // get single book
