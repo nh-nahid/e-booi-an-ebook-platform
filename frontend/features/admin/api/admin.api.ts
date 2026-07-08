@@ -23,10 +23,17 @@ export const getTopBooks = async (): Promise<TopBooksResponse> => {
   return data;
 };
 
-export const getBooks = async (page = 1, limit = 10) => {
-  const { data } = await api.get(
-    `${ENDPOINTS.BOOKS.LIST}?page=${page}&limit=${limit}`
-  );
+export async function getBooks(params: {
+  page: number;
+  search?: string;
+  category?: string;
+  bookType?: string;
+  status?: string;
+}) {
+
+  const { data } = await api.get(ENDPOINTS.BOOKS.LIST, {
+    params,
+  });
 
   return data;
-};
+}

@@ -1,35 +1,99 @@
-import { Plus, Search } from "lucide-react";
+"use client";
 
-import { Button } from "@/components/ui/button";
+import { Search } from "lucide-react";
+
 import { Input } from "@/components/ui/input";
 
-const booksFilter = () => {
-    return (
-        <div className="rounded-2xl border bg-white p-5">
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <div className="relative">
-            <Search className="absolute left-3 top-3.5 h-4 w-4 text-gray-400" />
+interface BooksFilterProps {
+  search: string;
+  category: string;
+  bookType: string;
+  status: string;
 
-            <Input
-              placeholder="Search books..."
-              className="pl-9"
-            />
-          </div>
+  onSearchChange: (value: string) => void;
+  onCategoryChange: (value: string) => void;
+  onBookTypeChange: (value: string) => void;
+  onStatusChange: (value: string) => void;
+}
 
-          <select className="h-10 rounded-md border px-3">
-            <option>All Categories</option>
-          </select>
+export default function BooksFilter({
+  search,
+  category,
+  bookType,
+  status,
+  onSearchChange,
+  onCategoryChange,
+  onBookTypeChange,
+  onStatusChange,
+}: BooksFilterProps) {
+  return (
+    <div className="rounded-2xl border border-[#E1E5E8] bg-white p-5">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        {/* Search */}
 
-          <select className="h-10 rounded-md border px-3">
-            <option>All Types</option>
-          </select>
+        <div className="relative">
+          <Search className="absolute left-3 top-3.5 h-4 w-4 text-gray-400" />
 
-          <select className="h-10 rounded-md border px-3">
-            <option>All Status</option>
-          </select>
+          <Input
+            placeholder="Search books..."
+            value={search}
+            onChange={(e) => onSearchChange(e.target.value)}
+            className="pl-9"
+          />
         </div>
-      </div>
-    );
-};
 
-export default booksFilter;
+        {/* Category */}
+
+        <select
+          value={category}
+          onChange={(e) => onCategoryChange(e.target.value)}
+          className="h-10 rounded-md border border-[#E1E5E8] px-3"
+        >
+          <option value="">All Categories</option>
+
+          <option value="Novel">Novel</option>
+
+          <option value="Science">Science</option>
+
+          <option value="Business">Business</option>
+
+          <option value="Education">Education</option>
+
+          <option value="Religious">Religious</option>
+
+          <option value="Programming">Programming</option>
+
+          <option value="Self Development">Self Development</option>
+        </select>
+
+        {/* Type */}
+
+        <select
+          value={bookType}
+          onChange={(e) => onBookTypeChange(e.target.value)}
+          className="h-10 rounded-md border border-[#E1E5E8] px-3"
+        >
+          <option value="">All Types</option>
+
+          <option value="digital">Digital</option>
+
+          <option value="physical">Physical</option>
+        </select>
+
+        {/* Status */}
+
+        <select
+          value={status}
+          onChange={(e) => onStatusChange(e.target.value)}
+          className="h-10 rounded-md border border-[#E1E5E8] px-3"
+        >
+          <option value="">All Status</option>
+
+          <option value="published">Published</option>
+
+          <option value="draft">Draft</option>
+        </select>
+      </div>
+    </div>
+  );
+}

@@ -25,8 +25,15 @@ export const useTopBooks = () =>
     queryFn: getTopBooks,
   });
 
-export const useBooks = (page: number) =>
-  useQuery({
-    queryKey: ["books", page],
-    queryFn: () => getBooks(page),
+export function useBooks(params: {
+  page: number;
+  search?: string;
+  category?: string;
+  bookType?: string;
+  status?: string;
+}) {
+  return useQuery({
+    queryKey: ["books", params],
+    queryFn: () => getBooks(params),
   });
+}

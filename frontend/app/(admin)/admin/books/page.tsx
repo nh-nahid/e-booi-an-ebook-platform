@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import { Plus } from "lucide-react";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 
@@ -10,11 +10,22 @@ import BooksTable from "@/features/admin/components/books/books-table";
 import { useBooks } from "@/features/admin/hooks/admin.hooks";
 
 import BooksLoading from "./loading";
+import { useDebounce } from "@/hooks/use-debounce";
 
 export default function AdminBooksPage() {
   const [page, setPage] = useState(1);
-
-  const { data, isLoading, isError } = useBooks(page);
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("");
+  const [bookType, setBookType] = useState("");
+  const [status, setStatus] = useState("");
+  const debouncedSearch = useDebounce(search, 500);
+  const { data, isLoading, isError } = useBooks({
+    page,
+    search: debouncedSearch,
+    category,
+    bookType,
+    status,
+  });
 
   if (isLoading) {
     return <BooksLoading />;
@@ -55,7 +66,28 @@ export default function AdminBooksPage() {
       </div>
 
       {/* Filters */}
-      <BooksFilter />
+      <BooksFilter
+        search={search}
+        category={category}
+        bookType={bookType}
+        status={status}
+        onSearchChange={(value) => {
+          setSearch(value);
+          setPage(1);
+        }}
+        onCategoryChange={(value) => {
+          setCategory(value);
+          setPage(1);
+        }}
+        onBookTypeChange={(value) => {
+          setBookType(value);
+          setPage(1);
+        }}
+        onStatusChange={(value) => {
+          setStatus(value);
+          setPage(1);
+        }}
+      />
 
       {/* Table */}
       <BooksTable
