@@ -26,7 +26,7 @@ interface RecentOrdersProps {
 const STATUS_STYLES: Record<OrderStatus, string> = {
   pending: "bg-amber-50 text-amber-600",
   processing: "bg-[#E6F7F6] text-[#1f9d97]",
-  shipped: "bg-[#f5f7e6] text-[#1f669d]",
+  shipped: "bg-[#f3f7e6] text-[#5a9d1f]",
   delivered: "bg-emerald-50 text-emerald-600",
   cancelled: "bg-red-50 text-red-600",
 };

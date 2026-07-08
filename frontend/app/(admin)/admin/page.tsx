@@ -1,11 +1,11 @@
 "use client";
 
-import StatCard from "@/features/admin/components/stat-card";
-import SalesChart from "@/features/admin/components/sales-chart";
-import DashboardChart from "@/features/admin/components/dashboard-chart";
-import RecentOrders from "@/features/admin/components/recent-orders";
-import LatestUsers from "@/features/admin/components/latest-users";
-import TopBooks from "@/features/admin/components/top-books";
+import StatCard from "@/features/admin/components/dashboard/stat-card";
+import SalesChart from "@/features/admin/components/dashboard/sales-chart";
+import DashboardChart from "@/features/admin/components/dashboard/dashboard-chart";
+import RecentOrders from "@/features/admin/components/dashboard/recent-orders";
+import LatestUsers from "@/features/admin/components/dashboard/latest-users";
+import TopBooks from "@/features/admin/components/dashboard/top-books";
 
 import {
   useDashboard,
