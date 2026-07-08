@@ -37,39 +37,87 @@ async function getBooks(req, res, next) {
       category,
       bookType,
       status,
+      sort = "newest",
     } = req.query;
 
     const query = {};
 
+    // Search by title, author or category
     if (search) {
-      query.title = {
-        $regex: search,
-        $options: "i",
-      };
+      query.$or = [
+        {
+          title: {
+            $regex: search,
+            $options: "i",
+          },
+        },
+        {
+          author: {
+            $regex: search,
+            $options: "i",
+          },
+        },
+        {
+          category: {
+            $regex: search,
+            $options: "i",
+          },
+        },
+      ];
     }
 
+    // Category filter
     if (category) {
       query.category = category;
     }
 
+    // Digital / Physical
     if (bookType) {
       query.bookType = bookType;
     }
 
+    // Published / Draft
     if (status) {
       query.isPublished = status === "published";
+    }
+
+    // Sorting
+    let sortOption = { createdAt: -1 };
+
+    switch (sort) {
+      case "oldest":
+        sortOption = { createdAt: 1 };
+        break;
+
+      case "price-low":
+        sortOption = { price: 1 };
+        break;
+
+      case "price-high":
+        sortOption = { price: -1 };
+        break;
+
+      case "title":
+        sortOption = { title: 1 };
+        break;
+
+      case "newest":
+      default:
+        sortOption = { createdAt: -1 };
+        break;
     }
 
     const total = await Book.countDocuments(query);
 
     const books = await Book.find(query)
-      .sort({ createdAt: -1 })
+      .sort(sortOption)
       .skip(skip)
       .limit(limit);
 
-    res.json({
+    res.status(200).json({
       total,
       page,
+      limit,
       totalPages: Math.ceil(total / limit),
       books,
     });
