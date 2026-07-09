@@ -6,6 +6,7 @@ import { Edit, Trash2, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { Book } from "@/features/admin/types/admin.types";
 import BookDialog, { BookFormValues } from "./BookDialog";
+import BookViewDialog from "./BookViewDialog";
 
 interface BooksTableProps {
   books: Book[];
@@ -14,10 +15,7 @@ interface BooksTableProps {
   totalPages: number;
   onPageChange?: (page: number) => void;
 
-  onUpdate: (
-    id: string,
-    values: BookFormValues
-  ) => Promise<void>;
+  onUpdate: (id: string, values: BookFormValues) => Promise<void>;
 
   onDelete: (id: string) => Promise<void>;
 }
@@ -29,7 +27,7 @@ export default function BooksTable({
   totalPages,
   onPageChange,
   onUpdate,
-  onDelete
+  onDelete,
 }: BooksTableProps) {
   const imageBaseUrl = process.env.NEXT_PUBLIC_API_URL?.replace("/api/v1", "");
 
@@ -151,9 +149,14 @@ export default function BooksTable({
 
                 <td className="px-4 py-4 lg:px-6">
                   <div className="flex justify-center gap-2">
-                    <Button size="icon" variant="outline">
-                      <Eye className="h-4 w-4" />
-                    </Button>
+                    <BookViewDialog
+                      book={book}
+                      trigger={
+                        <Button size="icon" variant="outline">
+                          <Eye className="h-4 w-4" />
+                        </Button>
+                      }
+                    />
 
                     <BookDialog
                       mode="edit"
@@ -183,13 +186,13 @@ export default function BooksTable({
                     />
 
                     <Button
-  size="icon"
-  variant="outline"
-  className="border-red-200 hover:bg-red-50"
-  onClick={() => onDelete(book._id)}
->
-  <Trash2 className="h-4 w-4 text-red-500" />
-</Button>
+                      size="icon"
+                      variant="outline"
+                      className="border-red-200 hover:bg-red-50"
+                      onClick={() => onDelete(book._id)}
+                    >
+                      <Trash2 className="h-4 w-4 text-red-500" />
+                    </Button>
                   </div>
                 </td>
               </tr>
