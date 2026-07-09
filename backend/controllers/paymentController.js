@@ -7,7 +7,7 @@ const Coupon = require("../models/Coupon");
 const sendEmail = require("../utils/sendEmail");
 
 const paymentEmail = require("../emails/templates/paymentEmail");
-const digitalBookEmail = require("../emails/templates/digitalBookEmail");
+const DigitalBookEmail = require("../emails/templates/DigitalBookEmail");
 const generateInvoice = require("../utils/generateInvoice");
 
 // ======================
@@ -195,21 +195,21 @@ async function paymentSuccess(req, res, next) {
             );
         }
 
-        // Send digital books email
-        const digitalBooks = order.items
+        // Send Digital books email
+        const DigitalBooks = order.items
             .filter(
                 item =>
                     item.book &&
-                    item.book.bookType === "digital"
+                    item.book.bookType === "Digital"
             )
             .map(item => item.book);
 
-        if (digitalBooks.length > 0) {
+        if (DigitalBooks.length > 0) {
             try {
                 await sendEmail({
                     to: user.email,
                     subject: "Your Digital Books",
-                    html: digitalBookEmail(user, digitalBooks),
+                    html: DigitalBookEmail(user, DigitalBooks),
                 });
             } catch (emailError) {
                 console.log(

@@ -43,7 +43,7 @@ router.get(
     getLibrary
 );
 
-// Download purchased digital book
+// Download purchased Digital book
 router.get(
     "/download/:bookId",
     checkLogin,

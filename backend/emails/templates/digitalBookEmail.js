@@ -1,7 +1,7 @@
 const header = require("../layouts/header");
 const footer = require("../layouts/footer");
 
-function digitalBookEmail(user, books) {
+function DigitalBookEmail(user, books) {
     
     const FRONTEND_URL = process.env.FRONTEND_URL;
 
@@ -49,7 +49,7 @@ function digitalBookEmail(user, books) {
                 <h2>Hello ${user.name} 👋</h2>
 
                 <p>
-                    Your purchased digital books are now available.
+                    Your purchased Digital books are now available.
                 </p>
 
                 <ul>
@@ -68,4 +68,4 @@ function digitalBookEmail(user, books) {
     `;
 }
 
-module.exports = digitalBookEmail;
+module.exports = DigitalBookEmail;

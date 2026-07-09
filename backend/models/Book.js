@@ -29,7 +29,7 @@ const bookSchema = new mongoose.Schema(
     },
     bookType: {
       type: String,
-      enum: ["physical", "digital"],
+      enum: ["Physical", "Digital"],
       required: true,
     },
     pdfFile: {

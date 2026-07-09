@@ -24,7 +24,7 @@ const orderSchema = new mongoose.Schema(
 
         bookType: {
           type: String,
-          enum: ["physical", "digital"],
+          enum: ["Physical", "Digital"],
         },
       },
     ],

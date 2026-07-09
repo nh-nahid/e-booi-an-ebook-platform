@@ -46,7 +46,7 @@ async function createOrder(req, res, next) {
 
       totalAmount += item.quantity * book.price;
 
-      if (book.bookType === "physical") {
+      if (book.bookType === "Physical") {
         if (book.stock < item.quantity) {
           return res.status(400).json({
             message: `${book.title} is out of stock`,
@@ -54,7 +54,7 @@ async function createOrder(req, res, next) {
         }
       }
 
-      if (book.bookType === "digital") {
+      if (book.bookType === "Digital") {
         hasDigital = true;
       }
     }
@@ -63,7 +63,7 @@ async function createOrder(req, res, next) {
     if (paymentMethod === "cod" && hasDigital) {
       return res.status(400).json({
         message:
-          "Cash on Delivery is not allowed for digital books",
+          "Cash on Delivery is not allowed for Digital books",
       });
     }
 
@@ -152,7 +152,7 @@ async function createOrder(req, res, next) {
 
     // Reduce stock
     for (const item of cartItems) {
-      if (item.book.bookType === "physical") {
+      if (item.book.bookType === "Physical") {
         item.book.stock -= item.quantity;
         await item.book.save();
       }
@@ -227,7 +227,7 @@ async function updateOrderStatus(req, res, next) {
   }
 }
 
-// download digital books
+// download Digital books
 async function downloadBook(req, res, next) {
   try {
     const order = await Order.findOne({
@@ -246,9 +246,9 @@ async function downloadBook(req, res, next) {
       (item) => item.book._id.toString() === req.params.bookId,
     );
 
-    if (item.book.bookType !== "digital") {
+    if (item.book.bookType !== "Digital") {
       return res.status(400).json({
-        message: "Not a digital book",
+        message: "Not a Digital book",
       });
     }
 
@@ -275,7 +275,7 @@ async function updatePaymentStatus(req, res, next) {
   }
 }
 
-// user digital library
+// user Digital library
 async function getLibrary(req, res, next) {
   try {
     const orders = await Order.find({
@@ -287,7 +287,7 @@ async function getLibrary(req, res, next) {
 
     orders.forEach((order) => {
       order.items.forEach((item) => {
-        if (item.book.bookType === "digital") {
+        if (item.book.bookType === "Digital") {
           books.push(item.book);
         }
       });
