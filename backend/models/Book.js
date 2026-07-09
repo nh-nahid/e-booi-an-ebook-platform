@@ -34,7 +34,9 @@ const bookSchema = new mongoose.Schema(
     },
     pdfFile: {
       type: String,
-      required: true,
+      required: function () {
+        return this.bookType === "Digital";
+      },
     },
     stock: {
       type: Number,
