@@ -46,7 +46,7 @@ export interface BookFormValues {
   pages: string;
   price: string;
   stock: string;
-  bookType: "physical" | "digital";
+  bookType: "Physical" | "Digital";
   status: "published" | "draft";
   description: string;
 
@@ -62,7 +62,7 @@ const initialValues: BookFormValues = {
   isbn: "",
   price: "",
   stock: "",
-  bookType: "physical",
+  bookType: "Physical",
   status: "draft",
   description: "",
   cover: null,
@@ -130,7 +130,7 @@ export default function BookDialog({
       return;
     }
 
-    if (mode === "create" && values.bookType === "digital" && !values.pdf) {
+    if (mode === "create" && values.bookType === "Digital" && !values.pdf) {
       setError("Please upload the PDF for a digital book.");
       return;
     }
@@ -384,13 +384,13 @@ export default function BookDialog({
                 </SelectTrigger>
 
                 <SelectContent>
-                  <SelectItem value="physical">Physical</SelectItem>
-                  <SelectItem value="digital">Digital</SelectItem>
+                  <SelectItem value="Physical">Physical</SelectItem>
+                  <SelectItem value="Digital">Digital</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
-            {values.bookType === "digital" && (
+            {values.bookType === "Digital" && (
               <div className="space-y-2">
                 <Label>PDF File</Label>
 

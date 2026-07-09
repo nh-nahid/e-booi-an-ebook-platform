@@ -51,19 +51,19 @@ export default function BooksFilter({
         >
           <option value="">All Categories</option>
 
-          <option value="Novel">Novel</option>
+          <option value="Novel">উপন্যাস</option>
 
-          <option value="Science">Science</option>
+          <option value="Science">বিজ্ঞান</option>
 
-          <option value="Business">Business</option>
+          <option value="Business">ব্যবসা</option>
 
-          <option value="Education">Education</option>
+          <option value="Education">শিক্ষা</option>
 
-          <option value="Religious">Religious</option>
+          <option value="Religious">ধর্মীয়</option>
 
-          <option value="Programming">Programming</option>
+          <option value="Programming">প্রোগ্রামিং</option>
 
-          <option value="Self Development">Self Development</option>
+          <option value="Self Development">আত্ন উন্নয়ন</option>
         </select>
 
         {/* Type */}
@@ -75,9 +75,9 @@ export default function BooksFilter({
         >
           <option value="">All Types</option>
 
-          <option value="digital">Digital</option>
+          <option value="Digital">Digital</option>
 
-          <option value="physical">Physical</option>
+          <option value="Physical">Physical</option>
         </select>
 
         {/* Status */}

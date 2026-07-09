@@ -22,7 +22,7 @@ export interface OrderItem {
   book: string;
   quantity: number;
   price: number;
-  bookType: "digital" | "physical";
+  bookType: "Digital" | "Physical";
 }
 
 export interface RecentOrder {
@@ -100,7 +100,7 @@ export interface Book {
   coverImage: string;
   pdfFile: string;
 
-  bookType: "digital" | "physical";
+  bookType: "Digital" | "Physical";
   isPublished: boolean;
 
   uploadedBy: string;

@@ -101,7 +101,7 @@ export default function BooksTable({
                 <td className="px-4 py-4 lg:px-6">
                   <span
                     className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                      book.bookType === "digital"
+                      book.bookType === "Digital"
                         ? "bg-blue-100 text-blue-700"
                         : "bg-orange-100 text-orange-700"
                     }`}
@@ -253,7 +253,7 @@ export default function BooksTable({
 
                 <span
                   className={`rounded-full px-2.5 py-1 text-xs font-semibold ${
-                    book.bookType === "digital"
+                    book.bookType === "Digital"
                       ? "bg-blue-100 text-blue-700"
                       : "bg-orange-100 text-orange-700"
                   }`}
