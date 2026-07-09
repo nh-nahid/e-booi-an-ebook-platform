@@ -1,6 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import {
+  createBook,
     getBooks,
   getDashboard,
   getSales,
@@ -35,5 +36,20 @@ export function useBooks(params: {
   return useQuery({
     queryKey: ["books", params],
     queryFn: () => getBooks(params),
+  });
+}
+
+
+export function useCreateBook() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: createBook,
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["books"],
+      });
+    },
   });
 }

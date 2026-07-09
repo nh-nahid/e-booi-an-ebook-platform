@@ -37,3 +37,14 @@ export async function getBooks(params: {
 
   return data;
 }
+
+
+export async function createBook(formData: FormData) {
+  const { data } = await api.post(ENDPOINTS.BOOKS.CREATE, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+
+  return data;
+}

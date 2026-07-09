@@ -1,10 +1,10 @@
 "use client";
 
-import StatCard from "@/features/admin/components/dashboard/stat-card";
-import SalesChart from "@/features/admin/components/dashboard/sales-chart";
 import DashboardChart from "@/features/admin/components/dashboard/dashboard-chart";
-import RecentOrders from "@/features/admin/components/dashboard/recent-orders";
 import LatestUsers from "@/features/admin/components/dashboard/latest-users";
+import RecentOrders from "@/features/admin/components/dashboard/recent-orders";
+import SalesChart from "@/features/admin/components/dashboard/sales-chart";
+import StatCard from "@/features/admin/components/dashboard/stat-card";
 import TopBooks from "@/features/admin/components/dashboard/top-books";
 
 import {
@@ -22,9 +22,7 @@ export default function AdminDashboardPage() {
   const { data: topBooks, isLoading: topBooksLoading } = useTopBooks();
 
   if (dashboardLoading || salesLoading || topBooksLoading) {
-    return (
-      <AdminLoading/>
-    );
+    return <AdminLoading />;
   }
 
   const statistics = dashboard?.statistics;

@@ -7,10 +7,13 @@ import { Button } from "@/components/ui/button";
 
 import BooksFilter from "@/features/admin/components/books/books-filter";
 import BooksTable from "@/features/admin/components/books/books-table";
-import { useBooks } from "@/features/admin/hooks/admin.hooks";
+import { useBooks, useCreateBook } from "@/features/admin/hooks/admin.hooks";
 
 import BooksLoading from "./loading";
 import { useDebounce } from "@/hooks/use-debounce";
+import AddBookDialog, { BookFormValues } from "@/features/admin/components/books/add-book-dialog";
+import { createBook } from "@/features/admin/api/admin.api";
+import { toast } from "sonner";
 
 export default function AdminBooksPage() {
   const [page, setPage] = useState(1);
@@ -19,6 +22,7 @@ export default function AdminBooksPage() {
   const [bookType, setBookType] = useState("");
   const [status, setStatus] = useState("");
   const debouncedSearch = useDebounce(search, 500);
+  const createBookMutation = useCreateBook();
   const { data, isLoading, isError } = useBooks({
     page,
     search: debouncedSearch,
@@ -26,6 +30,52 @@ export default function AdminBooksPage() {
     bookType,
     status,
   });
+
+
+const handleCreateBook = async (values: BookFormValues) => {
+  const formData = new FormData();
+
+  formData.append("title", values.title);
+  formData.append("author", values.author);
+  formData.append("category", values.category);
+  formData.append("publisher", values.publisher);
+  formData.append("isbn", values.isbn);
+  formData.append("language", values.language);
+  formData.append("publicationDate", values.publicationDate);
+  formData.append("pages", values.pages);
+  formData.append("price", values.price);
+  formData.append("stock", values.stock);
+  formData.append("bookType", values.bookType);
+  formData.append("description", values.description);
+
+  formData.append(
+    "isPublished",
+    String(values.status === "published")
+  );
+
+if (values.cover) {
+  formData.append("coverImage", values.cover);
+}
+
+if (values.pdf) {
+  formData.append("pdfFile", values.pdf);
+}
+
+  try {
+    await createBookMutation.mutateAsync(formData);
+
+    toast.success("Book added successfully.");
+  } catch (error: any) {
+    toast.error(
+      error?.response?.data?.message ??
+        "Failed to create book."
+    );
+
+    throw error;
+  }
+};
+
+
 
   if (isLoading) {
     return <BooksLoading />;
@@ -59,10 +109,7 @@ export default function AdminBooksPage() {
           </p>
         </div>
 
-        <Button className="bg-[#2DBDB6] hover:bg-[#249d97]">
-          <Plus className="mr-2 h-4 w-4" />
-          Add New Book
-        </Button>
+        <AddBookDialog onCreate={handleCreateBook} />
       </div>
 
       {/* Filters */}
