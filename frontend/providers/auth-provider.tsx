@@ -23,6 +23,7 @@ import {
 } from "@/services/api/token";
 
 import type { User } from "@/features/auth/types/auth.types";
+import Loading from "@/app/loading";
 
 interface AuthContextType {
   user: User | null;
@@ -77,6 +78,10 @@ export default function AuthProvider({
     isLoading: !initialized || isLoading,
     refetch,
   };
+
+if (!initialized) {
+  return <Loading/>; 
+}
 
   return (
     <AuthContext.Provider value={value}>

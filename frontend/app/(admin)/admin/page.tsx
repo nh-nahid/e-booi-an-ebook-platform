@@ -72,8 +72,7 @@ export default function AdminDashboardPage() {
       <div className="grid gap-4 lg:grid-cols-[1fr_360px]">
         <SalesChart data={salesData} />
 
-        {/* Replace when backend provides category analytics */}
-        <DashboardChart data={[]} />
+        <DashboardChart data={dashboard?.categoryAnalytics || []} />
       </div>
 
       {/* ================= Widgets ================= */}
@@ -99,20 +98,36 @@ export default function AdminDashboardPage() {
           />
         </div>
 
-        {/* Backend doesn't return latest users yet */}
-        <LatestUsers users={[]} />
+        <LatestUsers
+          users={
+            dashboard?.latestUsers.map((user) => ({
+              id: user._id,
+              name: user.name,
+              email: user.email,
+              avatar: user.avatar,
+              joinedAt: new Date(user.createdAt).toLocaleDateString(),
+            })) ?? []
+          }
+        />
       </div>
 
-      {/* Backend currently returns only book id + sold */}
       <TopBooks
         books={
           topBooks?.map((book) => ({
             id: book._id,
-            title: book._id,
-            author: "-",
+
+            title: book.title,
+
+            author: book.author,
+
             sales: book.sold,
+
             rating: 0,
-          })) ?? []
+
+            coverUrl: book.coverImage
+        ? `${process.env.NEXT_PUBLIC_API_URL?.replace("/api/v1", "")}/uploads/books/${book.coverImage}`
+        : undefined,
+    })) ?? []
         }
       />
     </div>

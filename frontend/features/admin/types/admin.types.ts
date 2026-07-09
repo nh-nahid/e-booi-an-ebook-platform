@@ -56,11 +56,81 @@ export interface RecentOrder {
   updatedAt: string;
 }
 
-export interface DashboardResponse {
-  statistics: DashboardStatistics;
-  recentOrders: RecentOrder[];
+export interface CategoryAnalytics {
+  name: string;
+  value: number;
 }
 
+export interface LatestUser {
+  _id: string;
+  name: string;
+  email: string;
+  avatar?: string;
+  createdAt: string;
+}
+
+export interface DashboardResponse {
+  statistics: {
+    totalUsers: number;
+    totalBooks: number;
+    totalOrders: number;
+    pendingOrders: number;
+    deliveredOrders: number;
+    totalRevenue: number;
+  };
+
+  recentOrders: Order[];
+
+  categoryAnalytics: CategoryAnalytics[];
+
+  latestUsers: LatestUser[];
+}
+
+
+export interface Order {
+  _id: string;
+
+  user?: {
+    _id: string;
+    name: string;
+    email: string;
+  } | null;
+
+  shippingAddress: {
+    fullName: string;
+    phone: string;
+    address: string;
+    city: string;
+    postalCode: string;
+  };
+
+  items: {
+    book: string;
+    quantity: number;
+    price: number;
+    bookType: "Digital" | "Physical";
+  }[];
+
+  totalAmount: number;
+  finalAmount: number;
+
+  orderStatus:
+    | "pending"
+    | "processing"
+    | "shipped"
+    | "delivered"
+    | "cancelled";
+
+  paymentStatus:
+    | "pending"
+    | "paid"
+    | "failed";
+
+  paymentMethod: string;
+
+  createdAt: string;
+  updatedAt: string;
+}
 
 export interface SalesItem {
   _id: {
@@ -74,12 +144,15 @@ export interface SalesItem {
 
 export type SalesResponse = SalesItem[];
 
-
 export interface TopBook {
   _id: string;
   sold: number;
-}
 
+  title: string;
+  author: string;
+  coverImage?: string;
+  price: number;
+}
 
 export interface Book {
   _id: string;

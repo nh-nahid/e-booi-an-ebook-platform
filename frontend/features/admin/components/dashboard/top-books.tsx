@@ -17,6 +17,8 @@ interface TopBooksProps {
 }
 
 export default function TopBooks({ books }: TopBooksProps) {
+  console.log(books);
+  
   return (
     <div className="rounded-2xl border border-[#E1E5E8] bg-white p-5">
       <div className="mb-4 flex items-center justify-between">
