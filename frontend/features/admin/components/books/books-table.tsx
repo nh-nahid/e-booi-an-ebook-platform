@@ -5,6 +5,7 @@ import { Edit, Trash2, Eye } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import type { Book } from "@/features/admin/types/admin.types";
+import BookDialog, { BookFormValues } from "./BookDialog";
 
 interface BooksTableProps {
   books: Book[];
@@ -12,6 +13,13 @@ interface BooksTableProps {
   page: number;
   totalPages: number;
   onPageChange?: (page: number) => void;
+
+  onUpdate: (
+    id: string,
+    values: BookFormValues
+  ) => Promise<void>;
+
+  onDelete: (id: string) => Promise<void>;
 }
 
 export default function BooksTable({
@@ -20,6 +28,8 @@ export default function BooksTable({
   page,
   totalPages,
   onPageChange,
+  onUpdate,
+  onDelete
 }: BooksTableProps) {
   const imageBaseUrl = process.env.NEXT_PUBLIC_API_URL?.replace("/api/v1", "");
 
@@ -112,8 +122,8 @@ export default function BooksTable({
                       book.stock > 10
                         ? "text-green-600"
                         : book.stock > 0
-                        ? "text-yellow-600"
-                        : "text-red-600"
+                          ? "text-yellow-600"
+                          : "text-red-600"
                     }`}
                   >
                     {book.stock}
@@ -145,17 +155,41 @@ export default function BooksTable({
                       <Eye className="h-4 w-4" />
                     </Button>
 
-                    <Button size="icon" variant="outline">
-                      <Edit className="h-4 w-4 text-[#2DBDB6]" />
-                    </Button>
+                    <BookDialog
+                      mode="edit"
+                      initialValues={{
+                        title: book.title,
+                        author: book.author,
+                        category: book.category,
+                        publisher: book.publisher,
+                        isbn: book.isbn,
+                        language: book.language,
+                        publicationDate: book.publicationDate,
+                        pages: String(book.pages),
+                        price: String(book.price),
+                        stock: String(book.stock),
+                        bookType: book.bookType,
+                        status: book.isPublished ? "published" : "draft",
+                        description: book.description,
+                      }}
+                      onSubmit={(values: BookFormValues) =>
+                        onUpdate(book._id, values)
+                      }
+                      trigger={
+                        <Button size="icon" variant="outline">
+                          <Edit className="h-4 w-4 text-[#2DBDB6]" />
+                        </Button>
+                      }
+                    />
 
                     <Button
-                      size="icon"
-                      variant="outline"
-                      className="border-red-200 hover:bg-red-50"
-                    >
-                      <Trash2 className="h-4 w-4 text-red-500" />
-                    </Button>
+  size="icon"
+  variant="outline"
+  className="border-red-200 hover:bg-red-50"
+  onClick={() => onDelete(book._id)}
+>
+  <Trash2 className="h-4 w-4 text-red-500" />
+</Button>
                   </div>
                 </td>
               </tr>
@@ -235,8 +269,8 @@ export default function BooksTable({
                     book.stock > 10
                       ? "text-green-600"
                       : book.stock > 0
-                      ? "text-yellow-600"
-                      : "text-red-600"
+                        ? "text-yellow-600"
+                        : "text-red-600"
                   }`}
                 >
                   Stock: {book.stock}
@@ -269,9 +303,7 @@ export default function BooksTable({
         ))}
 
         {books.length === 0 && (
-          <div className="py-16 text-center text-gray-500">
-            No books found.
-          </div>
+          <div className="py-16 text-center text-gray-500">No books found.</div>
         )}
       </div>
 

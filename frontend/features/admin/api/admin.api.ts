@@ -48,3 +48,25 @@ export async function createBook(formData: FormData) {
 
   return data;
 }
+
+export async function updateBook(id: string, formData: FormData) {
+  const { data } = await api.put(
+    ENDPOINTS.BOOKS.UPDATE(id),
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+
+  return data;
+}
+
+export async function deleteBook(id: string) {
+  const { data } = await api.delete(
+    ENDPOINTS.BOOKS.DELETE(id)
+  );
+
+  return data;
+}

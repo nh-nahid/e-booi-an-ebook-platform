@@ -2,10 +2,12 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import {
   createBook,
+    deleteBook,
     getBooks,
   getDashboard,
   getSales,
   getTopBooks,
+  updateBook,
 } from "../api/admin.api";
 
 export const useDashboard = () =>
@@ -45,6 +47,41 @@ export function useCreateBook() {
 
   return useMutation({
     mutationFn: createBook,
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["books"],
+      });
+    },
+  });
+}
+
+
+export function useUpdateBook() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      id,
+      formData,
+    }: {
+      id: string;
+      formData: FormData;
+    }) => updateBook(id, formData),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["books"],
+      });
+    },
+  });
+}
+
+export function useDeleteBook() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: deleteBook,
 
     onSuccess: () => {
       queryClient.invalidateQueries({

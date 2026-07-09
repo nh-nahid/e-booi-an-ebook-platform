@@ -86,20 +86,31 @@ export interface Book {
   title: string;
   author: string;
   description: string;
+
   category: string;
+  publisher: string;
+  isbn: string;
+  language: string;
+  publicationDate: string;
+  pages: number;
+
   price: number;
+  stock: number;
+
   coverImage: string;
   pdfFile: string;
+
   bookType: "digital" | "physical";
-  stock: number;
   isPublished: boolean;
+
   uploadedBy: string;
-  createdAt: string;
-  updatedAt: string;
+
   averageRating: number;
   reviewCount: number;
-}
 
+  createdAt: string;
+  updatedAt: string;
+}
 export interface BooksResponse {
   total: number;
   page: number;

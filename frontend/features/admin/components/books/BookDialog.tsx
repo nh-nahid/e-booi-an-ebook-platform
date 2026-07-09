@@ -2,6 +2,7 @@
 
 import { ImagePlus, Loader2, Plus, X } from "lucide-react";
 import { useRef, useState } from "react";
+import type { ReactElement } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -71,15 +72,26 @@ const initialValues: BookFormValues = {
   pdf: null,
 };
 
-interface AddBookDialogProps {
-  onCreate?: (values: BookFormValues) => Promise<void> | void;
+interface BookDialogProps {
+  mode?: "create" | "edit";
+  initialValues?: Partial<BookFormValues>;
+  trigger?: ReactElement;
+  onSubmit: (values: BookFormValues) => Promise<void>;
 }
 
-export default function AddBookDialog({ onCreate }: AddBookDialogProps) {
+export default function BookDialog({
+  mode = "create",
+  initialValues: defaultValues,
+  trigger,
+  onSubmit,
+}: BookDialogProps) {
   const fileRef = useRef<HTMLInputElement>(null);
 
   const [open, setOpen] = useState(false);
-  const [values, setValues] = useState<BookFormValues>(initialValues);
+  const [values, setValues] = useState<BookFormValues>({
+    ...initialValues,
+    ...defaultValues,
+  });
   const [coverPreview, setCoverPreview] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -90,7 +102,11 @@ export default function AddBookDialog({ onCreate }: AddBookDialogProps) {
   ) => setValues((prev) => ({ ...prev, [key]: value }));
 
   const resetForm = () => {
-    setValues(initialValues);
+    setValues({
+      ...initialValues,
+      ...defaultValues,
+    });
+
     setCoverPreview("");
     setError(null);
   };
@@ -109,28 +125,26 @@ export default function AddBookDialog({ onCreate }: AddBookDialogProps) {
       setError("Title and author are required.");
       return;
     }
-    if (!values.cover) {
-  setError("Cover image is required.");
-  return;
-}
+    if (mode === "create" && !values.cover) {
+      setError("Cover image is required.");
+      return;
+    }
 
-if (values.bookType === "digital" && !values.pdf) {
-  setError("Please upload the PDF for a digital book.");
-  return;
-}
+    if (mode === "create" && values.bookType === "digital" && !values.pdf) {
+      setError("Please upload the PDF for a digital book.");
+      return;
+    }
 
     setLoading(true);
+
     try {
-      // TODO: wire up to your actual create-book mutation
-      // await createBook(values);
-      await onCreate?.(values);
+      await onSubmit(values);
       setOpen(false);
       resetForm();
     } finally {
       setLoading(false);
     }
   };
-
   return (
     <Dialog
       open={open}
@@ -141,25 +155,28 @@ if (values.bookType === "digital" && !values.pdf) {
     >
       <DialogTrigger
         render={
-          <Button
-            className="
-        group relative overflow-hidden rounded-full border-0 font-semibold text-white
-        bg-gradient-to-br from-[#2DBDB6] to-[#1f9d97]
-      "
-          />
+          trigger ?? (
+            <Button className="bg-gradient-to-br from-[#2DBDB6] to-[#1f9d97] text-white" />
+          )
         }
       >
-        <Plus className="mr-2 h-4 w-4" />
-        Add New Book
+        {!trigger && (
+          <>
+            <Plus className="mr-2 h-4 w-4" />
+            Add New Book
+          </>
+        )}
       </DialogTrigger>
 
       <DialogContent className="max-h-[90vh] overflow-y-auto rounded-3xl border-[#E1E5E8] sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold text-[#0A0E2A]">
-            Add New Book
+            {mode === "create" ? "Add New Book" : "Edit Book"}
           </DialogTitle>
           <DialogDescription className="text-sm text-[#6B7280]">
-            Fill in the details below to add a new book to your catalog.
+            {mode === "create"
+              ? "Fill in the details below to add a new book to your catalog."
+              : "Update the book information below and save your changes."}
           </DialogDescription>
         </DialogHeader>
 
@@ -279,7 +296,11 @@ if (values.bookType === "digital" && !values.pdf) {
               </Label>
               <Select
                 value={values.category}
-                onValueChange={(v) => update("category", v)}
+                onValueChange={(v) => {
+                  if (v) {
+                    update("category", v);
+                  }
+                }}
               >
                 <SelectTrigger className="h-11 rounded-xl border-[#E1E5E8] focus:ring-4 focus:ring-[#2DBDB6]/15">
                   <SelectValue placeholder="Select category" />
