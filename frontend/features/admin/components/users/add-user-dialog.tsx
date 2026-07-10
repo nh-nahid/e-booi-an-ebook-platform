@@ -49,8 +49,10 @@ export default function AddUserDialog({ onCreate }: AddUserDialogProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const update = <K extends keyof NewUserValues>(key: K, value: NewUserValues[K]) =>
-    setValues((prev) => ({ ...prev, [key]: value }));
+  const update = <K extends keyof NewUserValues>(
+    key: K,
+    value: NewUserValues[K],
+  ) => setValues((prev) => ({ ...prev, [key]: value }));
 
   const resetForm = () => {
     setValues(initialValues);
@@ -61,7 +63,11 @@ export default function AddUserDialog({ onCreate }: AddUserDialogProps) {
     e.preventDefault();
     setError(null);
 
-    if (!values.name.trim() || !values.email.trim() || !values.password.trim()) {
+    if (
+      !values.name.trim() ||
+      !values.email.trim() ||
+      !values.password.trim()
+    ) {
       setError("Name, email, and password are required.");
       return;
     }
@@ -86,18 +92,19 @@ export default function AddUserDialog({ onCreate }: AddUserDialogProps) {
         if (!next) resetForm();
       }}
     >
-      <DialogTrigger asChild>
+      <DialogTrigger>
         <Button
           className="
-            group relative overflow-hidden rounded-full border-0 font-semibold text-white
-            bg-gradient-to-br from-[#2DBDB6] to-[#1f9d97]
-            shadow-[0_4px_12px_rgba(45,189,182,0.35)]
-            transition-transform duration-150
-            hover:-translate-y-0.5 hover:shadow-[0_8px_18px_rgba(45,189,182,0.4)]
-            active:translate-y-0 active:scale-[0.98]
-          "
+      group relative overflow-hidden rounded-full border-0 font-semibold text-white
+      bg-gradient-to-br from-[#2DBDB6] to-[#1f9d97]
+      shadow-[0_4px_12px_rgba(45,189,182,0.35)]
+      transition-transform duration-150
+      hover:-translate-y-0.5 hover:shadow-[0_8px_18px_rgba(45,189,182,0.4)]
+      active:translate-y-0 active:scale-[0.98]
+    "
         >
           <span className="absolute inset-0 -translate-x-[120%] bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-500 group-hover:translate-x-[120%]" />
+
           <span className="relative flex items-center">
             <Plus className="mr-2 h-4 w-4" />
             Add New User
@@ -107,7 +114,9 @@ export default function AddUserDialog({ onCreate }: AddUserDialogProps) {
 
       <DialogContent className="rounded-3xl border-[#E1E5E8] sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold text-[#0A0E2A]">Add New User</DialogTitle>
+          <DialogTitle className="text-xl font-bold text-[#0A0E2A]">
+            Add New User
+          </DialogTitle>
           <DialogDescription className="text-sm text-[#6B7280]">
             Create a new user or admin account manually.
           </DialogDescription>
@@ -115,7 +124,10 @@ export default function AddUserDialog({ onCreate }: AddUserDialogProps) {
 
         <form onSubmit={handleSubmit} className="mt-2 space-y-4">
           <div className="space-y-1.5">
-            <Label htmlFor="name" className="text-xs font-semibold text-[#0A0E2A]">
+            <Label
+              htmlFor="name"
+              className="text-xs font-semibold text-[#0A0E2A]"
+            >
               Full Name
             </Label>
             <Input
@@ -128,7 +140,10 @@ export default function AddUserDialog({ onCreate }: AddUserDialogProps) {
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="email" className="text-xs font-semibold text-[#0A0E2A]">
+            <Label
+              htmlFor="email"
+              className="text-xs font-semibold text-[#0A0E2A]"
+            >
               Email
             </Label>
             <Input
@@ -143,8 +158,12 @@ export default function AddUserDialog({ onCreate }: AddUserDialogProps) {
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-1.5">
-              <Label htmlFor="phone" className="text-xs font-semibold text-[#0A0E2A]">
-                Phone <span className="font-normal text-[#9AA3AF]">(optional)</span>
+              <Label
+                htmlFor="phone"
+                className="text-xs font-semibold text-[#0A0E2A]"
+              >
+                Phone{" "}
+                <span className="font-normal text-[#9AA3AF]">(optional)</span>
               </Label>
               <Input
                 id="phone"
@@ -156,8 +175,15 @@ export default function AddUserDialog({ onCreate }: AddUserDialogProps) {
             </div>
 
             <div className="space-y-1.5">
-              <Label className="text-xs font-semibold text-[#0A0E2A]">Role</Label>
-              <Select value={values.role} onValueChange={(v) => update("role", v as NewUserValues["role"])}>
+              <Label className="text-xs font-semibold text-[#0A0E2A]">
+                Role
+              </Label>
+              <Select
+                value={values.role}
+                onValueChange={(v) =>
+                  update("role", v as NewUserValues["role"])
+                }
+              >
                 <SelectTrigger className="h-11 rounded-xl border-[#E1E5E8] focus:ring-4 focus:ring-[#2DBDB6]/15">
                   <SelectValue />
                 </SelectTrigger>
@@ -170,7 +196,10 @@ export default function AddUserDialog({ onCreate }: AddUserDialogProps) {
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="password" className="text-xs font-semibold text-[#0A0E2A]">
+            <Label
+              htmlFor="password"
+              className="text-xs font-semibold text-[#0A0E2A]"
+            >
               Temporary Password
             </Label>
             <Input
