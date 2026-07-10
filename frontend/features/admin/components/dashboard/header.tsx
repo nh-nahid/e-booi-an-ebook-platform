@@ -2,15 +2,10 @@
 
 import { Bell } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import {
-  User,
-  Settings,
-  LogOut,
-  ChevronsUpDown,
-} from "lucide-react";
+import { User, Settings, LogOut, ChevronsUpDown } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-
+import { useLogout } from "@/features/auth/hooks/auth.hooks";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,6 +13,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { queryClient } from "@/lib/query-client";
+import { clearAccessToken } from "@/services/api/token";
+import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 
 const PAGE_TITLES: Record<string, string> = {
   "/admin": "Dashboard",
@@ -52,9 +51,27 @@ export default function AdminHeader({
     .slice(0, 2)
     .toUpperCase();
 
+  const queryClient = useQueryClient();
+  const { mutate: logout, isPending } = useLogout();
+
   const handleLogout = () => {
-    // TODO: Implement logout
-    router.push("/login");
+    logout(undefined, {
+      onSuccess: () => {
+        clearAccessToken();
+
+        queryClient.setQueryData(["profile"], {
+          user: null,
+        });
+
+        toast.success("Logged out successfully");
+
+        router.replace("/login");
+      },
+
+      onError: (error) => {
+        toast.error(error.response?.data?.message ?? "Logout failed");
+      },
+    });
   };
 
   return (
@@ -100,9 +117,7 @@ export default function AdminHeader({
           <DropdownMenuContent align="end" className="w-56">
             <div className="p-2">
               <p className="font-semibold">{adminName}</p>
-              <p className="text-xs text-muted-foreground">
-                Administrator
-              </p>
+              <p className="text-xs text-muted-foreground">Administrator</p>
             </div>
 
             <DropdownMenuSeparator />
@@ -121,6 +136,7 @@ export default function AdminHeader({
 
             <DropdownMenuItem
               onClick={handleLogout}
+              disabled={isPending}
               className="text-red-600 focus:text-red-600"
             >
               <LogOut className="mr-2 h-4 w-4" />

@@ -42,18 +42,22 @@ export default function LoginForm() {
   const onSubmit = (values: LoginPayload) => {
     login(values, {
       onSuccess: async (data) => {
-        setAccessToken(data.accessToken);
+  setAccessToken(data.accessToken);
 
-        await queryClient.fetchQuery({
-          queryKey: ["profile"],
-        });
+  await queryClient.fetchQuery({
+    queryKey: ["profile"],
+  });
 
-        toast.success(data.message);
+  toast.success(data.message);
 
-        form.reset();
+  form.reset();
 
-        router.push("/");
-      },
+  if (data.user.role === "admin") {
+    router.replace("/admin");
+  } else {
+    router.replace("/");
+  }
+},
 
       onError: (error) => {
         toast.error(
