@@ -192,3 +192,35 @@ export interface BooksResponse {
 }
 
 export type TopBooksResponse = TopBook[];
+
+
+export interface User {
+  _id: string;
+
+  name: string;
+  email: string;
+
+  avatar?: string;
+  bio?: string;
+  phone?: string;
+
+  role: "user" | "admin";
+
+  isVerified: boolean;
+  isBlocked: boolean;
+
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AdminUser extends User {
+  status: "active" | "suspended";
+  ordersCount?: number;
+  booksOwned?: number;
+  joinedAt: string;
+}
+
+export interface UsersResponse {
+  message: string;
+  data: User[];
+}

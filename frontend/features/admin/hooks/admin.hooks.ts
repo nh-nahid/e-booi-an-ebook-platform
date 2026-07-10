@@ -1,14 +1,26 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import {
-  createBook,
-    deleteBook,
-    getBooks,
   getDashboard,
   getSales,
   getTopBooks,
+
+  // Books
+  getBooks,
+  createBook,
   updateBook,
+  deleteBook,
+
+  // Users
+  getUsers,
+  createUser,
+  updateUser,
+  deleteUser,
 } from "../api/admin.api";
+
+// ==============================
+// Dashboard
+// ==============================
 
 export const useDashboard = () =>
   useQuery({
@@ -28,6 +40,10 @@ export const useTopBooks = () =>
     queryFn: getTopBooks,
   });
 
+// ==============================
+// Books
+// ==============================
+
 export function useBooks(params: {
   page: number;
   search?: string;
@@ -40,7 +56,6 @@ export function useBooks(params: {
     queryFn: () => getBooks(params),
   });
 }
-
 
 export function useCreateBook() {
   const queryClient = useQueryClient();
@@ -55,7 +70,6 @@ export function useCreateBook() {
     },
   });
 }
-
 
 export function useUpdateBook() {
   const queryClient = useQueryClient();
@@ -86,6 +100,70 @@ export function useDeleteBook() {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["books"],
+      });
+    },
+  });
+}
+
+// ==============================
+// Users
+// ==============================
+
+export function useUsers(params: {
+  page: number;
+  search?: string;
+  role?: string;
+  status?: string;
+}) {
+  return useQuery({
+    queryKey: ["users", params],
+    queryFn: () => getUsers(params),
+  });
+}
+
+export function useCreateUser() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: createUser,
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["users"],
+      });
+    },
+  });
+}
+
+export function useUpdateUser() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      id,
+      formData,
+    }: {
+      id: string;
+      formData: FormData;
+    }) => updateUser(id, formData),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["users"],
+      });
+    },
+  });
+}
+
+export function useDeleteUser() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: deleteUser,
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["users"],
       });
     },
   });

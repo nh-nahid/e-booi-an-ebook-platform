@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 
-
 import { useUsers } from "@/features/admin/hooks/admin.hooks";
 import { useDebounce } from "@/hooks/use-debounce";
 
@@ -33,18 +32,32 @@ export default function AdminUsersPage() {
   if (isError || !data) {
     return (
       <div className="rounded-2xl border border-red-200 bg-red-50 p-8 text-center">
-        <h2 className="text-lg font-semibold text-red-600">Failed to load users</h2>
-        <p className="mt-2 text-sm text-gray-600">Please refresh the page and try again.</p>
+        <h2 className="text-lg font-semibold text-red-600">
+          Failed to load users
+        </h2>
+        <p className="mt-2 text-sm text-gray-600">
+          Please refresh the page and try again.
+        </p>
       </div>
     );
   }
+
+  const formattedUsers = data.data.map((user) => ({
+  ...user,
+  status: "active" as const,
+  ordersCount: 0,
+  booksOwned: 0,
+  joinedAt: new Date(user.createdAt).toLocaleDateString(),
+}));
 
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-center">
         <div>
-          <h1 className="text-3xl font-bold text-[#0A0E2A]">Users Management</h1>
+          <h1 className="text-3xl font-bold text-[#0A0E2A]">
+            Users Management
+          </h1>
           <p className="mt-1 text-sm text-gray-500">
             Manage all registered users and admins in your bookstore.
           </p>
@@ -79,17 +92,15 @@ export default function AdminUsersPage() {
 
       {/* Table */}
       <UsersTable
-        users={data.users}
-        total={data.total}
-        page={data.page}
-        totalPages={data.totalPages}
+        users={formattedUsers}
+        total={data.data.length}
+        page={1}
+        totalPages={1}
         onPageChange={setPage}
         onEdit={(user) => {
-          // TODO: open an edit dialog / navigate to edit view
-          console.log("edit", user);
+          console.log(user);
         }}
         onDelete={async (user) => {
-          // TODO: call your delete-user mutation, then refetch
           await refetch();
         }}
       />

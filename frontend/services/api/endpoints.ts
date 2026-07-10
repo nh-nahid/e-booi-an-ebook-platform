@@ -5,16 +5,21 @@ export const ENDPOINTS = {
     LOGOUT: "/users/logout",
     FORGOT_PASSWORD: "/users/forgot-password",
     RESET_PASSWORD: "/users/reset-password",
-    USERS: "/users",
-    PROFILE: "/users/profile",
     REFRESH_TOKEN: "/users/refresh-token",
-    USER_BY_ID: (id: string) => `/users/${id}`,
   },
 
   USER: {
     PROFILE: "/users/profile",
     PROFILE_AVATAR: "/users/profile/avatar",
     CHANGE_PASSWORD: "/users/change-password",
+  },
+
+  USERS: {
+    LIST: "/users",
+    REGISTER: "/users/register",
+    DETAILS: (id: string) => `/users/${id}`,
+    UPDATE: (id: string) => `/users/${id}`,
+    DELETE: (id: string) => `/users/${id}`,
   },
 
   BOOKS: {
