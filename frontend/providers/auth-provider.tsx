@@ -30,9 +30,12 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   refetch: UseQueryResult["refetch"];
+  refreshAuth: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
+
+
 
 export default function AuthProvider({
   children,
@@ -72,12 +75,17 @@ export default function AuthProvider({
     refetch,
   } = useProfile(initialized);
 
-  const value: AuthContextType = {
-    user: data?.user ?? null,
-    isAuthenticated: !!data?.user,
-    isLoading: !initialized || isLoading,
-    refetch,
-  };
+  const refreshAuth = async () => {
+  await refetch();
+};
+
+const value: AuthContextType = {
+  user: data?.user ?? null,
+  isAuthenticated: !!data?.user,
+  isLoading: !initialized || isLoading,
+  refetch,
+  refreshAuth,
+};
 
 if (!initialized) {
   return <Loading/>; 

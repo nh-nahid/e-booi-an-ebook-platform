@@ -22,12 +22,15 @@ import {
 
 import { setAccessToken } from "@/services/api/token";
 import { ArrowRight, Eye, EyeOff, Loader2, Lock, Mail } from "lucide-react";
+import { getProfile } from "../api/auth.api";
+import { useAuth } from "@/hooks/use-auth";
 
 export default function LoginForm() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const [showPassword, setShowPassword] = useState(false);
   const [focused, setFocused] = useState<"email" | "password" | null>(null);
+  const { refreshAuth } = useAuth();
 
   const form = useForm<LoginPayload>({
     resolver: zodResolver(loginSchema),
@@ -42,22 +45,21 @@ export default function LoginForm() {
   const onSubmit = (values: LoginPayload) => {
     login(values, {
       onSuccess: async (data) => {
-  setAccessToken(data.accessToken);
+        setAccessToken(data.accessToken);
+        
+        await refreshAuth();
 
-  await queryClient.fetchQuery({
-    queryKey: ["profile"],
-  });
+        await queryClient.fetchQuery({
+          queryKey: ["profile"],
+          queryFn: getProfile,
+        });
 
-  toast.success(data.message);
+        toast.success(data.message);
 
-  form.reset();
+        form.reset();
 
-  if (data.user.role === "admin") {
-    router.replace("/admin");
-  } else {
-    router.replace("/");
-  }
-},
+        router.replace(data.user.role === "admin" ? "/admin" : "/");
+      },
 
       onError: (error) => {
         toast.error(
