@@ -7,7 +7,7 @@ const Coupon = require("../models/Coupon");
 const sendEmail = require("../utils/sendEmail");
 
 const paymentEmail = require("../emails/templates/paymentEmail");
-const DigitalBookEmail = require("../emails/templates/DigitalBookEmail");
+const DigitalBookEmail = require("../emails/templates/digitalBookEmail");
 const generateInvoice = require("../utils/generateInvoice");
 
 // ======================
