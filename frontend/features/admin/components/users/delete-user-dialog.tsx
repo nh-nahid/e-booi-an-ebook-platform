@@ -13,22 +13,24 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
-import type { UserDetails } from "./view-user-dialog";
+import type { AdminUser } from "../../types/admin.types";
 
 interface DeleteUserDialogProps {
-  user: UserDetails;
-  onConfirm?: (user: UserDetails) => Promise<void> | void;
+  user: AdminUser;
+  onConfirm?: (user: AdminUser) => Promise<void> | void;
 }
 
-export default function DeleteUserDialog({ user, onConfirm }: DeleteUserDialogProps) {
+export default function DeleteUserDialog({
+  user,
+  onConfirm,
+}: DeleteUserDialogProps) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleDelete = async () => {
     setLoading(true);
+
     try {
-      // TODO: wire up to your actual delete-user mutation
-      // await deleteUser(user.id);
       await onConfirm?.(user);
       setOpen(false);
     } finally {
@@ -54,11 +56,16 @@ export default function DeleteUserDialog({ user, onConfirm }: DeleteUserDialogPr
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-50">
             <AlertTriangle className="h-6 w-6 text-red-600" />
           </div>
+
           <DialogTitle className="text-center text-lg font-bold text-[#0A0E2A]">
             Delete this user?
           </DialogTitle>
+
           <DialogDescription className="text-center text-sm text-[#6B7280]">
-            You're about to remove <span className="font-semibold text-[#0A0E2A]">{user.name}</span>{" "}
+            You&apos;re about to remove{" "}
+            <span className="font-semibold text-[#0A0E2A]">
+              {user.name}
+            </span>{" "}
             ({user.email}). This action can&apos;t be undone.
           </DialogDescription>
         </DialogHeader>
@@ -67,7 +74,10 @@ export default function DeleteUserDialog({ user, onConfirm }: DeleteUserDialogPr
           <Button
             onClick={handleDelete}
             disabled={loading}
-            className="w-full rounded-full border-0 bg-red-600 font-semibold text-white hover:bg-red-700"
+            className="
+              w-full rounded-full border-0 bg-red-600
+              font-semibold text-white hover:bg-red-700
+            "
           >
             {loading ? (
               <span className="flex items-center justify-center gap-2">
@@ -83,7 +93,10 @@ export default function DeleteUserDialog({ user, onConfirm }: DeleteUserDialogPr
             type="button"
             variant="outline"
             onClick={() => setOpen(false)}
-            className="w-full rounded-full border-[#E1E5E8] font-semibold text-[#0A0E2A]"
+            className="
+              w-full rounded-full border-[#E1E5E8]
+              font-semibold text-[#0A0E2A]
+            "
           >
             Cancel
           </Button>
