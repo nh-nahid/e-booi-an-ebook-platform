@@ -122,7 +122,7 @@ export default function AdminHeader({
 
             <DropdownMenuSeparator />
 
-            <DropdownMenuItem onClick={() => router.push("/admin/profile")}>
+            <DropdownMenuItem onClick={() => router.push("/profile")}>
               <User className="mr-2 h-4 w-4" />
               Profile
             </DropdownMenuItem>
