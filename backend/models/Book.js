@@ -59,6 +59,19 @@ const bookSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    isFeatured: {
+      type: Boolean,
+      default: false,
+    },
+
+    isPreOrder: {
+      type: Boolean,
+      default: false,
+    },
+    sold: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,

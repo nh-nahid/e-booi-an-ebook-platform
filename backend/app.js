@@ -15,6 +15,7 @@ const adminRouter = require("./routers/adminRouter");
 const reviewRouter = require("./routers/reviewRouter");
 const wishlistRouter = require("./routers/wishlistRouter");
 const couponRouter = require("./routers/couponRouter");
+const homeRouter = require("./routers/homeRouter");
 
 const {
   notFoundHandler,
@@ -31,7 +32,7 @@ app.use(
   cors({
     origin: process.env.FRONTEND_URL,
     credentials: true,
-  })
+  }),
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -43,6 +44,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
 // routing setup
+app.use("/api/v1/home", homeRouter);
 app.use("/api/v1/users", usersRouter);
 app.use("/api/v1/books", booksRouter);
 app.use("/api/v1/cart", cartRouter);

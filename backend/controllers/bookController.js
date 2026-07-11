@@ -61,10 +61,21 @@ async function getBooks(req, res, next) {
 
     const skip = (page - 1) * limit;
 
-    const { search, category, bookType, status, sort = "newest" } = req.query;
+    const {
+      search,
+      category,
+      bookType,
+      status,
+      minPrice,
+      maxPrice,
+      featured,
+      preOrder,
+      sort = "newest",
+    } = req.query;
 
     const query = {};
 
+    // Search
     if (search) {
       query.$or = [
         {
@@ -88,50 +99,116 @@ async function getBooks(req, res, next) {
       ];
     }
 
-    if (category) query.category = category;
+    // Multiple Category Filter
+    if (category) {
+      const categories = category.split(",");
 
-    if (bookType) query.bookType = bookType;
+      query.category = {
+        $in: categories,
+      };
+    }
 
-    if (status) query.isPublished = status === "published";
+    // Book Type
+    if (bookType) {
+      query.bookType = bookType;
+    }
 
+    // Featured Books
+    if (featured === "true") {
+      query.isFeatured = true;
+    }
+
+    if (preOrder === "true") {
+      query.isPreOrder = true;
+    }
+
+    // Publish Status
+    if (status) {
+      query.isPublished = status === "published";
+    }
+
+    // Price Range
+    if (minPrice || maxPrice) {
+      query.price = {};
+
+      if (minPrice) {
+        query.price.$gte = Number(minPrice);
+      }
+
+      if (maxPrice) {
+        query.price.$lte = Number(maxPrice);
+      }
+    }
+
+    // Sorting
     let sortOption = {
       createdAt: -1,
     };
 
     switch (sort) {
+      case "latest":
+      case "newest":
+        sortOption = {
+          createdAt: -1,
+        };
+        break;
+
       case "oldest":
-        sortOption = { createdAt: 1 };
+        sortOption = {
+          createdAt: 1,
+        };
         break;
 
       case "price-low":
-        sortOption = { price: 1 };
+        sortOption = {
+          price: 1,
+        };
         break;
 
       case "price-high":
-        sortOption = { price: -1 };
+        sortOption = {
+          price: -1,
+        };
         break;
 
       case "title":
-        sortOption = { title: 1 };
+        sortOption = {
+          title: 1,
+        };
+        break;
+
+      case "best-selling":
+        sortOption = {
+          sold: -1,
+        };
         break;
 
       default:
-        sortOption = { createdAt: -1 };
+        sortOption = {
+          createdAt: -1,
+        };
     }
 
-    const total = await Book.countDocuments(query);
+    
+    const [books, total, categories] = await Promise.all([
+      Book.find(query).sort(sortOption).skip(skip).limit(limit),
 
-    const books = await Book.find(query)
-      .sort(sortOption)
-      .skip(skip)
-      .limit(limit);
+      Book.countDocuments(query),
 
-    res.json({
-      total,
-      page,
-      limit,
-      totalPages: Math.ceil(total / limit),
-      books,
+      Book.distinct("category"),
+    ]);
+
+    res.status(200).json({
+      success: true,
+      message: "Books fetched successfully",
+      data: {
+        books,
+        categories,
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      },
     });
   } catch (err) {
     next(err);
