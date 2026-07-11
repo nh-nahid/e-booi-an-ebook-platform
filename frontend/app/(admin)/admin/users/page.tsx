@@ -73,13 +73,13 @@ export default function AdminUsersPage() {
     );
   }
 
-const formattedUsers = data.data.map((user) => ({
-  ...user,
-  status: user.status,
-  ordersCount: user.ordersCount ?? 0,
-  booksOwned: user.booksOwned ?? 0,
-  joinedAt: new Date(user.createdAt).toLocaleDateString(),
-}));
+  const formattedUsers = data.data.map((user) => ({
+    ...user,
+    status: user.status,
+    ordersCount: user.ordersCount ?? 0,
+    booksOwned: user.booksOwned ?? 0,
+    joinedAt: new Date(user.createdAt).toLocaleDateString(),
+  }));
 
   return (
     <div className="space-y-6">
@@ -138,9 +138,9 @@ const formattedUsers = data.data.map((user) => ({
       {/* Users Table */}
       <UsersTable
         users={formattedUsers}
-        total={formattedUsers.length}
-        page={page}
-        totalPages={1}
+        total={data.pagination.total}
+        page={data.pagination.page}
+        totalPages={data.pagination.totalPages}
         onPageChange={setPage}
         updateLoading={updateUserMutation.isPending}
         onUpdate={async (id, values) => {

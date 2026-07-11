@@ -205,9 +205,11 @@ export interface User {
   phone?: string;
 
   role: "user" | "admin";
-  status: "active" | "suspended";
 
   isVerified: boolean;
+  isBlocked: boolean;
+
+  status?: "active" | "suspended";
 
   createdAt: string;
   updatedAt: string;
@@ -219,9 +221,18 @@ export interface AdminUser extends User {
   joinedAt?: string;
 }
 
+
+export interface UsersPagination {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
 export interface UsersResponse {
   message: string;
   data: AdminUser[];
+  pagination: UsersPagination;
 }
 
 export interface NewUserValues {
