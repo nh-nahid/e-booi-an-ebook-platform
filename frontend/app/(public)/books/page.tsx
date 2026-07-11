@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import SiteFooter from "@/components/layout/site-footer";
 import { useSearchParams } from "next/navigation";
@@ -29,38 +29,11 @@ export default function BooksPage() {
   const [view, setView] = useState<"grid" | "list">("grid");
   const searchParams = useSearchParams();
 
- const [featured, setFeatured] = useState(
-  searchParams.get("featured") === "true"
-);
-const [preOrder, setPreOrder] = useState(
-  searchParams.get("preOrder") === "true"
-);
+  const featured = searchParams.get("featured") === "true";
 
-const SORT_OPTIONS = [
-  "newest",
-  "oldest",
-  "price-low",
-  "price-high",
-  "title",
-  "latest",
-  "best-selling",
-] as const;
+  const preOrder = searchParams.get("preOrder") === "true";
 
-type SortType = (typeof SORT_OPTIONS)[number];
-
-  const [filters, setFilters] = useState(initialFilters);
-
-  const [page, setPage] = useState(1);
-
-  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-
-
-
-
-const getInitialSort = () => {
-  const value = searchParams.get("sort");
-
-  const allowedSorts = [
+  const SORT_OPTIONS = [
     "newest",
     "oldest",
     "price-low",
@@ -68,52 +41,73 @@ const getInitialSort = () => {
     "title",
     "latest",
     "best-selling",
-  ];
+  ] as const;
 
-  return allowedSorts.includes(value || "")
-    ? (value as
-        | "newest"
-        | "oldest"
-        | "price-low"
-        | "price-high"
-        | "title"
-        | "latest"
-        | "best-selling")
-    : "newest";
-};
+  type SortType = (typeof SORT_OPTIONS)[number];
 
-const [sort, setSort] = useState(getInitialSort);
+  const urlSort = searchParams.get("sort");
+
+  const initialSort: SortType =
+    urlSort && SORT_OPTIONS.includes(urlSort as SortType)
+      ? (urlSort as SortType)
+      : "newest";
+
+  const [sort, setSort] = useState<SortType>(initialSort);
+
+  const [filters, setFilters] = useState(initialFilters);
+
+  const [page, setPage] = useState(1);
+
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+
+  const getInitialSort = () => {
+    const value = searchParams.get("sort");
+
+    const allowedSorts = [
+      "newest",
+      "oldest",
+      "price-low",
+      "price-high",
+      "title",
+      "latest",
+      "best-selling",
+    ];
+
+    return allowedSorts.includes(value || "")
+      ? (value as
+          | "newest"
+          | "oldest"
+          | "price-low"
+          | "price-high"
+          | "title"
+          | "latest"
+          | "best-selling")
+      : "newest";
+  };
+
   const bookParams = {
-  page,
-  limit: PAGE_SIZE,
+    page,
+    limit: PAGE_SIZE,
 
-  search: search || undefined,
+    search: search || undefined,
 
-  category:
-    filters.categories.length > 0
-      ? filters.categories.join(",")
-      : undefined,
+    category:
+      filters.categories.length > 0 ? filters.categories.join(",") : undefined,
 
-  bookType: filters.bookType || undefined,
+    bookType: filters.bookType || undefined,
 
-  minPrice:
-    filters.minPrice > 0
-      ? filters.minPrice
-      : undefined,
+    minPrice: filters.minPrice > 0 ? filters.minPrice : undefined,
 
-  maxPrice:
-    filters.maxPrice > 0
-      ? filters.maxPrice
-      : undefined,
+    maxPrice: filters.maxPrice > 0 ? filters.maxPrice : undefined,
 
-  featured: featured || undefined,
+    featured: featured || undefined,
 
-  preOrder: preOrder || undefined,
+    preOrder: preOrder || undefined,
 
-  sort,
-};
-console.log("BOOK PARAMS =>", bookParams);
-const { data, isLoading } = useBooks(bookParams);
+    sort,
+  };
+  console.log("BOOK PARAMS =>", bookParams);
+  const { data, isLoading } = useBooks(bookParams);
 
   const handleFilterChange = (next: typeof initialFilters) => {
     setFilters(next);
@@ -124,15 +118,6 @@ const { data, isLoading } = useBooks(bookParams);
     setFilters(initialFilters);
     setPage(1);
   };
-
-useEffect(() => {
-  setFeatured(searchParams.get("featured") === "true");
-
-  setPreOrder(searchParams.get("preOrder") === "true");
-
-  setPage(1);
-
-}, [searchParams]);
 
   return (
     <div className="min-h-screen bg-[#F7F9FA]">
@@ -151,16 +136,16 @@ useEffect(() => {
 
           <div className="min-w-0 space-y-5">
             <BooksToolbar
-  sort={sort}
-  onSortChange={(value) => {
-    setSort(value as typeof sort);
-    setPage(1);
-  }}
-  view={view}
-  onViewChange={setView}
-  resultCount={data?.total ?? 0}
-  onOpenMobileFilters={() => setMobileFiltersOpen(true)}
-/>
+              sort={sort}
+              onSortChange={(value) => {
+                setSort(value as typeof sort);
+                setPage(1);
+              }}
+              view={view}
+              onViewChange={setView}
+              resultCount={data?.total ?? 0}
+              onOpenMobileFilters={() => setMobileFiltersOpen(true)}
+            />
 
             <BooksGrid
               books={data?.books ?? []}
@@ -182,6 +167,7 @@ useEffect(() => {
       <MobileFiltersSheet
         open={mobileFiltersOpen}
         onClose={() => setMobileFiltersOpen(false)}
+        categories={data?.categories ?? []}
         filters={filters}
         onChange={handleFilterChange}
         onClear={handleClearFilters}
