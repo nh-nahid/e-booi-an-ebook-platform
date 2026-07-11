@@ -45,6 +45,12 @@ const UserSchema = new mongoose.Schema(
       default: "user",
     },
 
+    status: {
+      type: String,
+      enum: ["active", "suspended"],
+      default: "active",
+    },
+
     refreshToken: {
       type: String,
       default: null,
@@ -52,7 +58,7 @@ const UserSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 const User = mongoose.model("User", UserSchema);

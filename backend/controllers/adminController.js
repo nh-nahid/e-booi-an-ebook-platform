@@ -204,17 +204,16 @@ async function getTopBooks(req, res, next) {
 async function getUsers(req, res, next) {
   try {
     const {
-      page = 1,
-      limit = 10,
-      search = "",
-      role = "all",
+      search,
+      role,
+      status,
     } = req.query;
 
-    const query = {};
+    const filter = {};
 
     // Search by name or email
-    if (search.trim()) {
-      query.$or = [
+    if (search) {
+      filter.$or = [
         {
           name: {
             $regex: search,
@@ -230,32 +229,25 @@ async function getUsers(req, res, next) {
       ];
     }
 
-    // Filter by role
-    if (role !== "all") {
-      query.role = role;
+    // Role filter
+    if (role) {
+      filter.role = role;
     }
 
-    const currentPage = Number(page);
-    const perPage = Number(limit);
+    // Status filter
+    if (status) {
+      filter.status = status;
+    }
 
-    const total = await User.countDocuments(query);
-
-    const users = await User.find(query)
+    const users = await User.find(filter)
       .select("-password -refreshToken")
-      .sort({ createdAt: -1 })
-      .skip((currentPage - 1) * perPage)
-      .limit(perPage);
+      .sort({
+        createdAt: -1,
+      });
 
     res.status(200).json({
       message: "Users fetched successfully",
       data: users,
-
-      pagination: {
-        page: currentPage,
-        limit: perPage,
-        total,
-        totalPages: Math.ceil(total / perPage),
-      },
     });
   } catch (error) {
     next(error);
@@ -265,7 +257,15 @@ async function getUsers(req, res, next) {
 // get single user
 async function getUser(req, res, next) {
   try {
-    const user = await User.findById(req.params.id)
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        message: "Invalid user ID",
+      });
+    }
+
+    const user = await User.findById(id)
       .select("-password -refreshToken");
 
     if (!user) {
