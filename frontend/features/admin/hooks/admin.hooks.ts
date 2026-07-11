@@ -11,11 +11,11 @@ import {
   updateBook,
   deleteBook,
 
-  // Users
-  getUsers,
-  createUser,
-  updateUser,
-  deleteUser,
+  // Admin Users
+  getAdminUsers,
+  createAdminUser,
+  updateAdminUser,
+  deleteAdminUser,
 } from "../api/admin.api";
 
 // ==============================
@@ -106,10 +106,10 @@ export function useDeleteBook() {
 }
 
 // ==============================
-// Users
+// Admin Users
 // ==============================
 
-export function useUsers(params: {
+export function useAdminUsers(params: {
   page: number;
   search?: string;
   role?: string;
@@ -117,15 +117,15 @@ export function useUsers(params: {
 }) {
   return useQuery({
     queryKey: ["users", params],
-    queryFn: () => getUsers(params),
+    queryFn: () => getAdminUsers(params),
   });
 }
 
-export function useCreateUser() {
+export function useCreateAdminUser() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: createUser,
+    mutationFn: createAdminUser,
 
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -135,7 +135,7 @@ export function useCreateUser() {
   });
 }
 
-export function useUpdateUser() {
+export function useUpdateAdminUser() {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -145,7 +145,7 @@ export function useUpdateUser() {
     }: {
       id: string;
       formData: FormData;
-    }) => updateUser(id, formData),
+    }) => updateAdminUser(id, formData),
 
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -155,11 +155,11 @@ export function useUpdateUser() {
   });
 }
 
-export function useDeleteUser() {
+export function useDeleteAdminUser() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: deleteUser,
+    mutationFn: deleteAdminUser,
 
     onSuccess: () => {
       queryClient.invalidateQueries({

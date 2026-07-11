@@ -224,3 +224,11 @@ export interface UsersResponse {
   message: string;
   data: User[];
 }
+
+export interface NewUserValues {
+  name: string;
+  email: string;
+  phone: string;
+  password: string;
+  role: "user" | "admin";
+}

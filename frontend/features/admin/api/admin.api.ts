@@ -6,7 +6,8 @@ import type {
   SalesResponse,
   TopBooksResponse,
   BooksResponse,
-  UsersResponse, // <-- add
+  UsersResponse,
+  NewUserValues, // <-- add
 } from "../types/admin.types";
 
 // ==============================
@@ -139,6 +140,79 @@ export async function updateUser(
 export async function deleteUser(id: string) {
   const { data } = await api.delete(
     ENDPOINTS.USERS.DELETE(id)
+  );
+
+  return data;
+}
+
+// ==============================
+// Users (Admin)
+// ==============================
+
+export async function getAdminUsers(params: {
+  page: number;
+  search?: string;
+  role?: string;
+  status?: string;
+}): Promise<UsersResponse> {
+  const { data } = await api.get(
+    ENDPOINTS.ADMIN.USERS,
+    { params }
+  );
+
+  return data;
+}
+
+export async function createAdminUser(values: NewUserValues) {
+  const formData = new FormData();
+
+  formData.append("name", values.name);
+  formData.append("email", values.email);
+  formData.append("password", values.password);
+  formData.append("phone", values.phone);
+  formData.append("role", values.role);
+
+  if (values.bio) {
+    formData.append("bio", values.bio);
+  }
+
+  if (values.avatar) {
+    formData.append("avatar", values.avatar);
+  }
+
+  const { data } = await api.post(
+    ENDPOINTS.ADMIN.USERS,
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+
+  return data;
+}
+
+export async function updateAdminUser(
+  id: string,
+  formData: FormData
+) {
+  const { data } = await api.put(
+    `${ENDPOINTS.ADMIN.USERS}/${id}`,
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+
+  return data;
+}
+
+export async function deleteAdminUser(id: string) {
+  const { data } = await api.delete(
+    `${ENDPOINTS.ADMIN.USERS}/${id}`
   );
 
   return data;

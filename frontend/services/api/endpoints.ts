@@ -80,5 +80,6 @@ export const ENDPOINTS = {
     DASHBOARD: "/admin/dashboard",
     SALES: "/admin/sales",
     TOP_BOOKS: "/admin/top-books",
+    USERS: "/admin/users",
   },
 } as const;

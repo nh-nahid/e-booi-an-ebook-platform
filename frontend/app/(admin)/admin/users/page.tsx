@@ -1,14 +1,19 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "sonner";
 
-import { useUsers } from "@/features/admin/hooks/admin.hooks";
+import {
+  useAdminUsers,
+  useCreateAdminUser,
+} from "@/features/admin/hooks/admin.hooks";
 import { useDebounce } from "@/hooks/use-debounce";
 
 import UsersLoading from "./loading";
 import AddUserDialog from "@/features/admin/components/users/add-user-dialog";
 import UsersFilter from "@/features/admin/components/users/users-filter";
 import UsersTable from "@/features/admin/components/users/users-table";
+import { AxiosError } from "axios";
 
 export default function AdminUsersPage() {
   const [page, setPage] = useState(1);
@@ -18,12 +23,14 @@ export default function AdminUsersPage() {
 
   const debouncedSearch = useDebounce(search, 500);
 
-  const { data, isLoading, isError, refetch } = useUsers({
+  const { data, isLoading, isError } = useAdminUsers({
     page,
     search: debouncedSearch,
     role,
     status,
   });
+
+  const createUserMutation = useCreateAdminUser();
 
   if (isLoading) {
     return <UsersLoading />;
@@ -43,12 +50,12 @@ export default function AdminUsersPage() {
   }
 
   const formattedUsers = data.data.map((user) => ({
-  ...user,
-  status: "active" as const,
-  ordersCount: 0,
-  booksOwned: 0,
-  joinedAt: new Date(user.createdAt).toLocaleDateString(),
-}));
+    ...user,
+    status: "active" as const,
+    ordersCount: 0,
+    booksOwned: 0,
+    joinedAt: new Date(user.createdAt).toLocaleDateString(),
+  }));
 
   return (
     <div className="space-y-6">
@@ -65,8 +72,20 @@ export default function AdminUsersPage() {
 
         <AddUserDialog
           onCreate={async (values) => {
-            // TODO: call your create-user mutation, then refetch
-            await refetch();
+            try {
+              await createUserMutation.mutateAsync(values);
+              toast.success("User created successfully");
+            } catch (error: unknown) {
+              const axiosError = error as AxiosError<{
+                message: string;
+              }>;
+
+              toast.error(
+                axiosError.response?.data?.message ?? "Failed to create user",
+              );
+
+              throw error;
+            }
           }}
         />
       </div>
@@ -90,18 +109,18 @@ export default function AdminUsersPage() {
         }}
       />
 
-      {/* Table */}
+      {/* Users Table */}
       <UsersTable
         users={formattedUsers}
-        total={data.data.length}
-        page={1}
+        total={formattedUsers.length}
+        page={page}
         totalPages={1}
         onPageChange={setPage}
         onEdit={(user) => {
           console.log(user);
         }}
-        onDelete={async (user) => {
-          await refetch();
+        onDelete={(user) => {
+          console.log(user);
         }}
       />
     </div>
