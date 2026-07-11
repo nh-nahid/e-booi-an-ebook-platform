@@ -232,3 +232,12 @@ export interface NewUserValues {
   password: string;
   role: "user" | "admin";
 }
+
+export interface UpdateUserValues {
+  name: string;
+  email: string;
+  phone: string;
+  role: "user" | "admin";
+  password: string;
+  avatar: File | null;
+}

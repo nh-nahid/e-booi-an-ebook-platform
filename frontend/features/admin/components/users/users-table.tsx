@@ -7,6 +7,7 @@ import ViewUserDialog from "./view-user-dialog";
 import Pagination from "./pagination";
 import { AdminUser } from "../../types/admin.types";
 import Image from "next/image";
+import EditUserDialog, { EditAdminUserValues } from "./edit-user-dialog";
 
 interface UsersTableProps {
   users: AdminUser[];
@@ -14,7 +15,11 @@ interface UsersTableProps {
   page: number;
   totalPages: number;
   onPageChange: (page: number) => void;
-  onEdit?: (user: AdminUser) => void;
+
+  onUpdate?: (id: string, values: EditAdminUserValues) => Promise<void>;
+
+  updateLoading?: boolean;
+
   onDelete?: (user: AdminUser) => Promise<void> | void;
 }
 
@@ -24,15 +29,15 @@ export default function UsersTable({
   page,
   totalPages,
   onPageChange,
-  onEdit,
+  onUpdate,
+  updateLoading = false,
   onDelete,
 }: UsersTableProps) {
   const imageBaseUrl = process.env.NEXT_PUBLIC_API_URL?.replace("/api/v1", "");
-
-const avatarSrc = (user: AdminUser) =>
-  user.avatar
-    ? `${imageBaseUrl}/uploads/avatars/${user.avatar}`
-    : "/avatar-placeholder.png";
+  const avatarSrc = (user: AdminUser) =>
+    user.avatar
+      ? `${imageBaseUrl}/uploads/avatars/${user.avatar}`
+      : "/avatar-placeholder.png";
 
   return (
     <div className="rounded-2xl border border-[#E1E5E8] bg-white p-5">
@@ -140,13 +145,11 @@ const avatarSrc = (user: AdminUser) =>
                     <div className="flex items-center justify-end gap-1">
                       <ViewUserDialog user={user} />
 
-                      <button
-                        onClick={() => onEdit?.(user)}
-                        className="flex h-8 w-8 items-center justify-center rounded-full text-[#6B7280] transition-all duration-200 hover:bg-[#E6F7F6] hover:text-[#2DBDB6]"
-                        aria-label="Edit user"
-                      >
-                        <Pencil className="h-4 w-4" />
-                      </button>
+                      <EditUserDialog
+                        user={user}
+                        loading={updateLoading}
+                        onUpdate={onUpdate}
+                      />
 
                       <DeleteUserDialog user={user} onConfirm={onDelete} />
                     </div>

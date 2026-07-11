@@ -1,11 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { AxiosError } from "axios";
 import { toast } from "sonner";
 
 import {
   useAdminUsers,
   useCreateAdminUser,
+  useDeleteAdminUser,
+  useUpdateAdminUser,
 } from "@/features/admin/hooks/admin.hooks";
 import { useDebounce } from "@/hooks/use-debounce";
 
@@ -13,7 +16,7 @@ import UsersLoading from "./loading";
 import AddUserDialog from "@/features/admin/components/users/add-user-dialog";
 import UsersFilter from "@/features/admin/components/users/users-filter";
 import UsersTable from "@/features/admin/components/users/users-table";
-import { AxiosError } from "axios";
+import { AdminUser } from "@/features/admin/types/admin.types";
 
 export default function AdminUsersPage() {
   const [page, setPage] = useState(1);
@@ -31,6 +34,27 @@ export default function AdminUsersPage() {
   });
 
   const createUserMutation = useCreateAdminUser();
+  const deleteUserMutation = useDeleteAdminUser();
+  const updateUserMutation = useUpdateAdminUser();
+
+  const handleDelete = async (user: AdminUser) => {
+  try {
+    await deleteUserMutation.mutateAsync(user._id);
+
+    toast.success("User deleted successfully");
+  } catch (error) {
+    const axiosError = error as AxiosError<{
+      message: string;
+    }>;
+
+    toast.error(
+      axiosError.response?.data?.message ??
+        "Failed to delete user"
+    );
+
+    throw error;
+  }
+};
 
   if (isLoading) {
     return <UsersLoading />;
@@ -42,6 +66,7 @@ export default function AdminUsersPage() {
         <h2 className="text-lg font-semibold text-red-600">
           Failed to load users
         </h2>
+
         <p className="mt-2 text-sm text-gray-600">
           Please refresh the page and try again.
         </p>
@@ -65,6 +90,7 @@ export default function AdminUsersPage() {
           <h1 className="text-3xl font-bold text-[#0A0E2A]">
             Users Management
           </h1>
+
           <p className="mt-1 text-sm text-gray-500">
             Manage all registered users and admins in your bookstore.
           </p>
@@ -74,6 +100,7 @@ export default function AdminUsersPage() {
           onCreate={async (values) => {
             try {
               await createUserMutation.mutateAsync(values);
+
               toast.success("User created successfully");
             } catch (error: unknown) {
               const axiosError = error as AxiosError<{
@@ -116,12 +143,23 @@ export default function AdminUsersPage() {
         page={page}
         totalPages={1}
         onPageChange={setPage}
-        onEdit={(user) => {
-          console.log(user);
+        updateLoading={updateUserMutation.isPending}
+        onUpdate={async (id, values) => {
+          const formData = new FormData();
+
+          formData.append("name", values.name);
+          formData.append("email", values.email);
+          formData.append("phone", values.phone);
+          formData.append("role", values.role);
+
+          await updateUserMutation.mutateAsync({
+            id,
+            formData,
+          });
+
+          toast.success("User updated successfully");
         }}
-        onDelete={(user) => {
-          console.log(user);
-        }}
+        onDelete={handleDelete}
       />
     </div>
   );
