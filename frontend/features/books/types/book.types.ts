@@ -6,6 +6,7 @@ export interface Book {
   category: string;
   price: number;
   coverImage: string;
+  coverUrl?: string;
   bookType: "Digital" | "Physical";
 
   pdfFile: string | null;
@@ -30,20 +31,26 @@ export interface GetBooksParams {
   limit?: number;
 
   search?: string;
+
   category?: string;
+
   bookType?: "Digital" | "Physical";
 
   minPrice?: number;
+
   maxPrice?: number;
 
-  status?: "published" | "draft";
+  featured?: boolean;
+  preOrder?: boolean;
 
   sort?:
     | "newest"
     | "oldest"
     | "price-low"
     | "price-high"
-    | "title";
+    | "title"
+    | "latest"
+    | "best-selling";
 }
 
 export interface BooksData {

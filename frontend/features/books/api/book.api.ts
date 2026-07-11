@@ -10,12 +10,16 @@ import type {
 export const getBooks = async (
   params: GetBooksParams
 ): Promise<BooksData> => {
+
+  console.log("BOOK QUERY PARAMS:", params);
+
   const { data } = await api.get<BooksResponse>(
     ENDPOINTS.BOOKS.GET_BOOKS,
     {
       params,
     }
   );
+
 
   return data.data;
 };

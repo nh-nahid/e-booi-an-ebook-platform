@@ -39,7 +39,7 @@ export default function BooksToolbar({
               <span className="font-semibold text-[#0A0E2A]">
                 {resultCount ?? 0}
               </span>{" "}
-              বই পাওয়া গেছে
+              টি বই পাওয়া গেছে
             </p>
       </div>
 

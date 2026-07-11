@@ -2,24 +2,22 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Heart, Flame, Clock, Star } from "lucide-react";
+import { Heart, Flame, Clock, Star, ShoppingCart } from "lucide-react";
 
 import type { Book } from "../types/home.types";
+import Image from "next/image";
 
 interface BookCardProps {
   book: Book;
   index?: number;
 }
 
-export default function BookCard({
-  book,
-  index = 0,
-}: BookCardProps) {
+export default function BookCard({ book, index = 0 }: BookCardProps) {
   const [liked, setLiked] = useState(false);
 
   const imageUrl = `${process.env.NEXT_PUBLIC_API_URL?.replace(
     "/api/v1",
-    ""
+    "",
   )}/uploads/books/${book.coverImage}`;
 
   return (
@@ -40,9 +38,11 @@ export default function BookCard({
           group-hover:shadow-[0_14px_28px_rgba(10,14,42,0.14)]
         "
       >
-        <img
+        <Image
+          fill
           src={imageUrl}
           alt={book.title}
+          unoptimized
           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
 
@@ -85,18 +85,19 @@ export default function BookCard({
       </div>
 
       <div className="mt-2 space-y-1">
-        <h3 className="line-clamp-2 text-sm font-bold text-[#0A0E2A]">
+        <h3
+          className="
+    line-clamp-2 h-10
+    text-sm font-bold text-[#0A0E2A]
+  "
+        >
           {book.title}
         </h3>
 
-        <p className="truncate text-xs text-[#6B7280]">
-          {book.author}
-        </p>
+        <p className="truncate text-xs text-[#6B7280]">{book.author}</p>
 
         <div className="flex items-center justify-between">
-          <span className="font-semibold text-[#2DBDB6]">
-            ৳ {book.price}
-          </span>
+          <span className="font-semibold text-[#2DBDB6]">৳ {book.price}</span>
 
           <span className="flex items-center gap-1 text-xs text-[#6B7280]">
             <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
@@ -108,6 +109,29 @@ export default function BookCard({
         <span className="inline-block rounded-full bg-[#F3F4F6] px-2 py-1 text-[10px] font-medium text-[#6B7280]">
           {book.bookType}
         </span>
+
+        {/* Add Cart */}
+        <button
+          type="button"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            console.log("Add to cart:", book._id);
+          }}
+          className="
+      mt-2 flex w-full items-center justify-center gap-1.5
+      rounded-full bg-[#2DBDB6]
+      px-3 py-2
+      text-[11px] font-bold text-white cursor-pointer
+      transition-all duration-200
+      hover:bg-[#1f9d97]
+      active:scale-95
+    "
+        >
+          <ShoppingCart className="h-3.5 w-3.5" />
+          Add to Cart
+        </button>
       </div>
     </Link>
   );
