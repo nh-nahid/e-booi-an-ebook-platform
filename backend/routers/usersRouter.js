@@ -48,7 +48,7 @@ router.post(
 router.post("/login", loginUser);
 
 // logout user
-router.post("/logout", checkLogin, logoutUser);
+router.post("/logout", logoutUser);
 
 // Refresh token
 router.post("/refresh-token", refreshToken);

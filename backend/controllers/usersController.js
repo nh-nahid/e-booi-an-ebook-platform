@@ -399,23 +399,33 @@ async function loginUser(req, res, next) {
 // =======================
 async function logoutUser(req, res, next) {
   try {
-    const user = await User.findById(req.user.id).select("+refreshToken");
+    const refreshToken = req.cookies.refreshToken;
 
-    if (user) {
-      user.refreshToken = null;
-      await user.save();
+    if (refreshToken) {
+      const user = await User.findOne({
+        refreshToken,
+      }).select("+refreshToken");
+
+      if (user) {
+        user.refreshToken = null;
+        await user.save();
+      }
     }
 
     res.clearCookie("refreshToken", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      sameSite:
+        process.env.NODE_ENV === "production"
+          ? "none"
+          : "lax",
     });
 
     return res.status(200).json({
       success: true,
       message: "Logout successful",
     });
+
   } catch (error) {
     next(error);
   }
