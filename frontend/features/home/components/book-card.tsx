@@ -100,7 +100,7 @@ export default function BookCard({
 
           <span className="flex items-center gap-1 text-xs text-[#6B7280]">
             <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-            {book.averageRating.toFixed(1)}
+            {book.averageRating?.toFixed(1)}
             <span>({book.reviewCount})</span>
           </span>
         </div>

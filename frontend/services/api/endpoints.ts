@@ -24,7 +24,7 @@ export const ENDPOINTS = {
   },
 
   BOOKS: {
-    LIST: "/books",
+    GET_BOOKS: "/books",
     DETAILS: (id: string) => `/books/${id}`,
     CREATE: "/books",
     UPDATE: (id: string) => `/books/${id}`,

@@ -95,15 +95,15 @@ export default function SiteFooter() {
           <div className="flex flex-col gap-3 text-sm text-[#A7B0C8]">
             <div className="flex items-center gap-2">
               <Mail className="h-4 w-4 shrink-0 text-[#2DBDB6]" />
-              support@eBooi.com
+              support@e-booi.com
             </div>
             <div className="flex items-center gap-2">
               <Phone className="h-4 w-4 shrink-0 text-[#2DBDB6]" />
-              +৮৮০ ১৭XX XXXXXX
+              +880 1728171519
             </div>
             <div className="flex items-center gap-2">
               <MapPin className="h-4 w-4 shrink-0 text-[#2DBDB6]" />
-              বরিশাল, বাংলাদেশ
+              মেহেরপুর, খুলনা, বাংলাদেশ
             </div>
           </div>
         </div>
