@@ -203,13 +203,59 @@ async function getTopBooks(req, res, next) {
 // get all users
 async function getUsers(req, res, next) {
   try {
-    const users = await User.find()
+    const {
+      page = 1,
+      limit = 10,
+      search = "",
+      role = "all",
+    } = req.query;
+
+    const query = {};
+
+    // Search by name or email
+    if (search.trim()) {
+      query.$or = [
+        {
+          name: {
+            $regex: search,
+            $options: "i",
+          },
+        },
+        {
+          email: {
+            $regex: search,
+            $options: "i",
+          },
+        },
+      ];
+    }
+
+    // Filter by role
+    if (role !== "all") {
+      query.role = role;
+    }
+
+    const currentPage = Number(page);
+    const perPage = Number(limit);
+
+    const total = await User.countDocuments(query);
+
+    const users = await User.find(query)
       .select("-password -refreshToken")
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .skip((currentPage - 1) * perPage)
+      .limit(perPage);
 
     res.status(200).json({
       message: "Users fetched successfully",
       data: users,
+
+      pagination: {
+        page: currentPage,
+        limit: perPage,
+        total,
+        totalPages: Math.ceil(total / perPage),
+      },
     });
   } catch (error) {
     next(error);
