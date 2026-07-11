@@ -1,31 +1,39 @@
-"use client";
+import Navbar from "@/components/layout/navbar";
+import SiteFooter from "@/components/layout/site-footer";
+import BookSection from "@/features/home/components/book-section";
+import CategorySection from "@/features/home/components/category-section";
+import HeroSection from "@/features/home/components/hero-section";
+import PreOrderSection from "@/features/home/components/preorder-section";
 
-import { useAuth } from "@/hooks/use-auth";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import Loading from "../loading";
+
+// TODO: replace with real data fetching
+const TOP_BOOKS: Book[] = [
+  { id: "1", title: "বইয়ের নাম ০১", price: 250, badge: "popular" },
+  { id: "2", title: "বইয়ের নাম ০২", price: 320, badge: "popular" },
+  { id: "3", title: "বইয়ের নাম ০৩", price: 180 },
+  { id: "4", title: "বইয়ের নাম ০৪", price: 410 },
+  { id: "5", title: "বইয়ের নাম ০৫", price: 290 },
+];
+
+const ALL_BOOKS: Book[] = [
+  { id: "6", title: "বইয়ের নাম ০৬", price: 210 },
+  { id: "7", title: "বইয়ের নাম ০৭", price: 330 },
+  { id: "8", title: "বইয়ের নাম ০৮", price: 175 },
+  { id: "9", title: "বইয়ের নাম ০৯", price: 299 },
+  { id: "10", title: "বইয়ের নাম ১০", price: 360 },
+];
 
 export default function HomePage() {
-  const router = useRouter();
-  const { user, isLoading } = useAuth();
-
-  useEffect(() => {
-    if (!isLoading && user?.role === "admin") {
-      router.replace("/admin");
-    }
-  }, [user, isLoading, router]);
-
-  if (isLoading) {
-    return <Loading />
-  }
-
-  if (user?.role === "admin") {
-    return null;
-  }
-
   return (
-    <main className="flex h-screen items-center justify-center">
-      <h1 className="text-4xl font-bold">Welcome to E-Booi 📚</h1>
-    </main>
+    <div className="min-h-screen bg-[#F7F9FA]">
+
+      <HeroSection />
+      <CategorySection />
+      <BookSection title="Top Books" href="/books?sort=top" books={TOP_BOOKS} />
+      <BookSection title="All Book" href="/books" books={ALL_BOOKS} />
+      <PreOrderSection />
+
+      <SiteFooter />
+    </div>
   );
 }

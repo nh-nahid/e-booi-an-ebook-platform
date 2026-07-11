@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-
+import { Inter, Hind_Siliguri } from "next/font/google";
 import "./globals.css";
 
 import QueryProvider from "@/providers/query-provider";
@@ -10,6 +9,14 @@ import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({
   subsets: ["latin"],
+  variable: "--font-inter",
+  weight: ["400", "500", "600", "700"],
+});
+
+const banglaFont = Hind_Siliguri({
+  subsets: ["bengali"],
+  variable: "--font-bangla",
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -23,8 +30,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
+    <html lang="bn" suppressHydrationWarning>
+      <body className={`${inter.variable} ${banglaFont.variable}`}>
         <ThemeProvider>
           <QueryProvider>
             <AuthProvider>
