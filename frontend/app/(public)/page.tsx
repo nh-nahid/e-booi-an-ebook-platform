@@ -14,14 +14,14 @@ export default async function HomePage() {
     <div className="min-h-screen bg-[#F7F9FA]">
       <HeroSection statistics={homeData.statistics} />
 
-      {/* <CategorySection categories={homeData.categories} />
+       <CategorySection categories={homeData.categories} />
 
       <BookSection
         title="Featured Books"
         href="/books?featured=true"
         books={homeData.featuredBooks}
       />
-
+{/*
       <BookSection
         title="Latest Books"
         href="/books?sort=latest"
