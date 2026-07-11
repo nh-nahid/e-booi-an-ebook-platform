@@ -28,9 +28,9 @@ export default function AdminUsersPage() {
 
   const { data, isLoading, isError } = useAdminUsers({
     page,
-    search: debouncedSearch,
-    role,
-    status,
+    search: debouncedSearch.trim() || undefined,
+    role: role === "all" ? undefined : role,
+    status: status === "all" ? undefined : status,
   });
 
   const createUserMutation = useCreateAdminUser();
@@ -38,23 +38,22 @@ export default function AdminUsersPage() {
   const updateUserMutation = useUpdateAdminUser();
 
   const handleDelete = async (user: AdminUser) => {
-  try {
-    await deleteUserMutation.mutateAsync(user._id);
+    try {
+      await deleteUserMutation.mutateAsync(user._id);
 
-    toast.success("User deleted successfully");
-  } catch (error) {
-    const axiosError = error as AxiosError<{
-      message: string;
-    }>;
+      toast.success("User deleted successfully");
+    } catch (error) {
+      const axiosError = error as AxiosError<{
+        message: string;
+      }>;
 
-    toast.error(
-      axiosError.response?.data?.message ??
-        "Failed to delete user"
-    );
+      toast.error(
+        axiosError.response?.data?.message ?? "Failed to delete user",
+      );
 
-    throw error;
-  }
-};
+      throw error;
+    }
+  };
 
   if (isLoading) {
     return <UsersLoading />;
@@ -74,13 +73,13 @@ export default function AdminUsersPage() {
     );
   }
 
-  const formattedUsers = data.data.map((user) => ({
-    ...user,
-    status: "active" as const,
-    ordersCount: 0,
-    booksOwned: 0,
-    joinedAt: new Date(user.createdAt).toLocaleDateString(),
-  }));
+const formattedUsers = data.data.map((user) => ({
+  ...user,
+  status: user.status,
+  ordersCount: user.ordersCount ?? 0,
+  booksOwned: user.booksOwned ?? 0,
+  joinedAt: new Date(user.createdAt).toLocaleDateString(),
+}));
 
   return (
     <div className="space-y-6">

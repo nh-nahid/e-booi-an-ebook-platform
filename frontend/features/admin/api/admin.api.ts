@@ -155,38 +155,35 @@ export async function getAdminUsers(params: {
   role?: string;
   status?: string;
 }): Promise<UsersResponse> {
-  const { data } = await api.get(
-    ENDPOINTS.ADMIN.USERS,
-    { params }
-  );
+  const queryParams = {
+    page: params.page,
+    ...(params.search?.trim() && {
+      search: params.search.trim(),
+    }),
+    ...(params.role && {
+      role: params.role,
+    }),
+    ...(params.status && {
+      status: params.status,
+    }),
+  };
+
+  const { data } = await api.get(ENDPOINTS.ADMIN.USERS, {
+    params: queryParams,
+  });
 
   return data;
 }
 
 export async function createAdminUser(values: NewUserValues) {
-  const formData = new FormData();
-
-  formData.append("name", values.name);
-  formData.append("email", values.email);
-  formData.append("password", values.password);
-  formData.append("phone", values.phone);
-  formData.append("role", values.role);
-
-  if (values.bio) {
-    formData.append("bio", values.bio);
-  }
-
-  if (values.avatar) {
-    formData.append("avatar", values.avatar);
-  }
-
   const { data } = await api.post(
     ENDPOINTS.ADMIN.USERS,
-    formData,
     {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
+      name: values.name,
+      email: values.email,
+      password: values.password,
+      phone: values.phone,
+      role: values.role,
     }
   );
 

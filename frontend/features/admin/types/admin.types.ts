@@ -205,24 +205,23 @@ export interface User {
   phone?: string;
 
   role: "user" | "admin";
+  status: "active" | "suspended";
 
   isVerified: boolean;
-  isBlocked: boolean;
 
   createdAt: string;
   updatedAt: string;
 }
 
 export interface AdminUser extends User {
-  status: "active" | "suspended";
   ordersCount?: number;
   booksOwned?: number;
-  joinedAt: string;
+  joinedAt?: string;
 }
 
 export interface UsersResponse {
   message: string;
-  data: User[];
+  data: AdminUser[];
 }
 
 export interface NewUserValues {
