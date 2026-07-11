@@ -30,7 +30,10 @@ export const ENDPOINTS = {
     UPDATE: (id: string) => `/books/${id}`,
     DELETE: (id: string) => `/books/${id}`,
   },
-
+  HOME: {
+    GET_HOME: "/home",
+  },
+  
   CART: {
     GET: "/cart",
     ADD: "/cart",

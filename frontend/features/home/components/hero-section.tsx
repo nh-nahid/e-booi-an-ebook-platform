@@ -2,8 +2,14 @@
 
 import Link from "next/link";
 import { Search, ArrowRight, BookOpen, Sparkles } from "lucide-react";
+import { Statistics } from "../types/home.types";
 
-export default function HeroSection() {
+interface StatisticsSectionProps {
+  statistics: Statistics;
+}
+export default function StatisticsSection({
+  statistics,
+}: StatisticsSectionProps) {
   return (
     <section className="relative overflow-hidden bg-white">
       <style>{`
@@ -35,7 +41,7 @@ export default function HeroSection() {
           <div className="relative z-10 text-center lg:text-left">
             <span className="inline-flex animate-in fade-in slide-in-from-bottom-1 items-center gap-1.5 rounded-full bg-[#E6F7F6] px-4 py-1.5 text-xs font-bold text-[#0A0E2A] duration-500">
               <Sparkles className="h-3.5 w-3.5 text-[#2DBDB6]" />
-              ১০,০০০+ বই আপনার অপেক্ষায়
+              {statistics.totalBooks}+ বই আপনার অপেক্ষায়
             </span>
 
             <h1 className="mt-5 animate-in fade-in slide-in-from-bottom-2 text-3xl font-extrabold leading-tight text-[#0A0E2A] duration-500 [animation-delay:100ms] sm:text-4xl lg:text-5xl">
