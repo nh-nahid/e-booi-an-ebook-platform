@@ -32,6 +32,10 @@ export interface GetBooksParams {
   search?: string;
   category?: string;
   bookType?: "Digital" | "Physical";
+
+  minPrice?: number;
+  maxPrice?: number;
+
   status?: "published" | "draft";
 
   sort?:
@@ -42,10 +46,17 @@ export interface GetBooksParams {
     | "title";
 }
 
-export interface BooksResponse {
+export interface BooksData {
+  books: Book[];
+  categories: string[];
   total: number;
   page: number;
   limit: number;
   totalPages: number;
-  books: Book[];
+}
+
+export interface BooksResponse {
+  success: boolean;
+  message: string;
+  data: BooksData;
 }

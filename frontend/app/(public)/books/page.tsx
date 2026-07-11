@@ -6,15 +6,19 @@ import SiteFooter from "@/components/layout/site-footer";
 
 import { useBooks } from "@/features/books/hooks/use-book";
 
-import BooksFilters from "@/features/books/components/books-filters";
+import BooksFilters, {
+  BooksFilterState,
+} from "@/features/books/components/books-filters";
 import BooksGrid from "@/features/books/components/books-grid";
 import BooksToolbar from "@/features/books/components/books-toolbar";
 import MobileFiltersSheet from "@/features/books/components/mobile-filters-sheet";
 import Pagination from "@/features/books/components/pagination";
 
-const initialFilters = {
+const initialFilters: BooksFilterState = {
   categories: [],
-  bookTypes: [],
+  bookType: "",
+  minPrice: 0,
+  maxPrice: 0,
 };
 
 const PAGE_SIZE = 12;
@@ -34,14 +38,12 @@ export default function BooksPage() {
     page,
     limit: PAGE_SIZE,
     search: search || undefined,
-    category: filters.categories[0] || undefined,
-    bookType: filters.bookTypes[0] || undefined,
-    sort: sort as
-      | "newest"
-      | "oldest"
-      | "price-low"
-      | "price-high"
-      | "title",
+    category:
+      filters.categories.length > 0 ? filters.categories.join(",") : undefined,
+    bookType: filters.bookType || undefined,
+    minPrice: filters.minPrice || undefined,
+    maxPrice: filters.maxPrice || undefined,
+    sort: sort as "newest" | "oldest" | "price-low" | "price-high" | "title",
   });
 
   const handleFilterChange = (next: typeof initialFilters) => {
@@ -61,6 +63,7 @@ export default function BooksPage() {
           <aside className="hidden lg:block">
             <div className="sticky top-24">
               <BooksFilters
+                categories={data?.categories ?? []}
                 filters={filters}
                 onChange={handleFilterChange}
                 onClear={handleClearFilters}
@@ -70,11 +73,6 @@ export default function BooksPage() {
 
           <div className="min-w-0 space-y-5">
             <BooksToolbar
-              search={search}
-              onSearchChange={(value) => {
-                setSearch(value);
-                setPage(1);
-              }}
               sort={sort}
               onSortChange={(value) => {
                 setSort(value);
@@ -83,17 +81,8 @@ export default function BooksPage() {
               view={view}
               onViewChange={setView}
               resultCount={data?.total ?? 0}
-              onOpenMobileFilters={() =>
-                setMobileFiltersOpen(true)
-              }
+              onOpenMobileFilters={() => setMobileFiltersOpen(true)}
             />
-
-            <p className="text-xs text-[#6B7280]">
-              <span className="font-semibold text-[#0A0E2A]">
-                {data?.total ?? 0}
-              </span>{" "}
-              বই পাওয়া গেছে
-            </p>
 
             <BooksGrid
               books={data?.books ?? []}
