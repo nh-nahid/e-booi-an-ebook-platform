@@ -21,7 +21,7 @@ export default async function HomePage() {
         href="/books?featured=true"
         books={homeData.featuredBooks}
       />
-{/*
+
       <BookSection
         title="Latest Books"
         href="/books?sort=latest"
@@ -34,7 +34,7 @@ export default async function HomePage() {
         books={homeData.bestSellingBooks}
       />
 
-      <PreOrderSection books={homeData.preOrderBooks} /> */}
+      <PreOrderSection books={homeData.preOrderBooks} />
 
       <SiteFooter />
     </div>
