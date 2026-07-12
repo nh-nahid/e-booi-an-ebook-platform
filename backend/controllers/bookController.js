@@ -189,7 +189,6 @@ async function getBooks(req, res, next) {
         };
     }
 
-    
     const [books, total, categories] = await Promise.all([
       Book.find(query).sort(sortOption).skip(skip).limit(limit),
 
@@ -218,7 +217,10 @@ async function getBooks(req, res, next) {
 // get single book
 async function getBook(req, res, next) {
   try {
-    const book = await Book.findById(req.params.id);
+    const book = await Book.findById(req.params.id).populate(
+      "uploadedBy",
+      "name",
+    );
 
     if (!book) {
       return res.status(404).json({
@@ -226,7 +228,11 @@ async function getBook(req, res, next) {
       });
     }
 
-    res.json(book);
+    res.json({
+      success: true,
+      message: "Book fetched successfully",
+      data: book,
+    });
   } catch (err) {
     next(err);
   }

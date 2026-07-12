@@ -53,7 +53,11 @@ async function getReviews(req, res, next) {
             .populate("user", "name avatar")
             .sort({ createdAt: -1 });
 
-        res.json(reviews);
+        res.status(200).json({
+  success: true,
+  message: "Reviews fetched successfully",
+  data: reviews,
+});
     } catch (error) {
         next(error);
     }
@@ -155,8 +159,7 @@ async function updateBookRating(bookId) {
     await Book.findByIdAndUpdate(
         bookId,
         {
-            averageRating:
-                average.toFixed(1),
+            averageRating: Number(average.toFixed(1)),
             reviewCount: count,
         }
     );
