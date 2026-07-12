@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { Flame, Clock, ZoomIn } from "lucide-react";
+import Image from "next/image";
 
 interface BookGalleryProps {
   title: string;
@@ -40,7 +41,7 @@ export default function BookGallery({
   return (
     <div className="animate-in fade-in slide-in-from-left-2 duration-500">
       <div
-  className="
+        className="
     group relative mx-auto aspect-[3/4]
     w-full max-w-[340px]
     overflow-hidden rounded-2xl
@@ -48,9 +49,11 @@ export default function BookGallery({
     bg-gradient-to-br from-[#dfe7ea] to-[#cfd8db]
     shadow-[0_10px_30px_rgba(10,14,42,0.08)]
   "
->
+      >
         {hasImages && (
-          <img
+          <Image
+            fill
+            unoptimized
             src={imageUrls[active]}
             alt={title}
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
@@ -99,7 +102,9 @@ export default function BookGallery({
                 }
               `}
             >
-              <img
+              <Image
+                fill
+                unoptimized
                 src={img}
                 alt={`${title} ${i + 1}`}
                 className="h-full w-full object-cover"

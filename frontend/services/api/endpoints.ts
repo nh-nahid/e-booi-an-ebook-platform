@@ -35,12 +35,12 @@ export const ENDPOINTS = {
     GET_HOME: "/home",
   },
   
-  CART: {
-    GET: "/cart",
-    ADD: "/cart",
-    REMOVE: (id: string) => `/cart/${id}`,
-    CLEAR: "/cart",
-  },
+CART: {
+  GET_CART: "/cart",
+  ADD_TO_CART: "/cart",
+  REMOVE_FROM_CART: (id: string) => `/cart/${id}`,
+  CLEAR_CART: "/cart",
+},
 
   ORDERS: {
     CREATE: "/orders",
