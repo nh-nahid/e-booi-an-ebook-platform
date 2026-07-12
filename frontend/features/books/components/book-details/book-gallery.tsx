@@ -40,13 +40,15 @@ export default function BookGallery({
   return (
     <div className="animate-in fade-in slide-in-from-left-2 duration-500">
       <div
-        className="
-          group relative aspect-[3/4] w-full overflow-hidden rounded-2xl
-          border border-[#E1E5E8]
-          bg-gradient-to-br from-[#dfe7ea] to-[#cfd8db]
-          shadow-[0_10px_30px_rgba(10,14,42,0.08)]
-        "
-      >
+  className="
+    group relative mx-auto aspect-[3/4]
+    w-full max-w-[340px]
+    overflow-hidden rounded-2xl
+    border border-[#E1E5E8]
+    bg-gradient-to-br from-[#dfe7ea] to-[#cfd8db]
+    shadow-[0_10px_30px_rgba(10,14,42,0.08)]
+  "
+>
         {hasImages && (
           <img
             src={imageUrls[active]}

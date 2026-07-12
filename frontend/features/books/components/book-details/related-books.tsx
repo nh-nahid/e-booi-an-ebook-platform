@@ -1,4 +1,5 @@
 import BookSection from "@/features/home/components/book-section";
+import { Book } from "../../types/book.types";
 
 
 interface RelatedBooksProps {
