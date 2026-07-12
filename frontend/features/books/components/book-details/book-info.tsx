@@ -61,35 +61,33 @@ export default function BookInfo({
       ? Math.round(100 - (book.price / book.originalPrice) * 100)
       : 0;
 
-const handleAddToCart = async () => {
-  setAdding(true);
+  const handleAddToCart = async () => {
+    setAdding(true);
 
-  try {
-    await onAddToCart?.(quantity);
+    try {
+      await onAddToCart?.(quantity);
 
-    setAdded(true);
+      setAdded(true);
 
-    toast.success("বইটি কার্টে যোগ করা হয়েছে");
-  } catch (error: unknown) {
-    if (isAxiosError<ApiError>(error)) {
-      if (error.response?.status === 401) {
-        toast.error("প্রথমে লগইন করুন");
-        router.push("/login");
+      toast.success("বইটি কার্টে যোগ করা হয়েছে");
+    } catch (error: unknown) {
+      if (isAxiosError<ApiError>(error)) {
+        if (error.response?.status === 401) {
+          toast.error("প্রথমে লগইন করুন");
+          router.push("/login");
+          return;
+        }
+
+        toast.error(error.response?.data?.message ?? "কার্টে যোগ করা যায়নি");
+
         return;
       }
 
-      toast.error(
-        error.response?.data?.message ?? "কার্টে যোগ করা যায়নি"
-      );
-
-      return;
+      toast.error("কার্টে যোগ করা যায়নি");
+    } finally {
+      setAdding(false);
     }
-
-    toast.error("কার্টে যোগ করা যায়নি");
-  } finally {
-    setAdding(false);
-  }
-};
+  };
 
   return (
     <div className="animate-in fade-in slide-in-from-right-2 duration-500 [animation-delay:100ms]">
@@ -168,7 +166,14 @@ const handleAddToCart = async () => {
         <div className="flex items-center rounded-full border border-[#E1E5E8]">
           <button
             onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-            className="flex h-11 w-11 items-center justify-center text-[#0A0E2A] transition-colors hover:text-[#2DBDB6]"
+            disabled={adding || quantity <= 1}
+            className="
+      flex h-11 w-11 items-center justify-center
+      text-[#0A0E2A]
+      transition-colors hover:text-[#2DBDB6]
+      disabled:cursor-not-allowed
+      disabled:opacity-40
+    "
           >
             <Minus className="h-3.5 w-3.5" />
           </button>
@@ -176,26 +181,31 @@ const handleAddToCart = async () => {
             {quantity}
           </span>
           <button
-            onClick={() =>
-              setQuantity((q) => Math.min(book.stock || 99, q + 1))
-            }
-            className="flex h-11 w-11 items-center justify-center text-[#0A0E2A] transition-colors hover:text-[#2DBDB6]"
+            onClick={() => setQuantity((q) => Math.min(book.stock, q + 1))}
+            disabled={adding || quantity >= book.stock}
+            className="
+      flex h-11 w-11 items-center justify-center
+      text-[#0A0E2A]
+      transition-colors hover:text-[#2DBDB6]
+      disabled:cursor-not-allowed
+      disabled:opacity-40
+    "
           >
             <Plus className="h-3.5 w-3.5" />
           </button>
         </div>
 
         <button
-  onClick={() => {
-    if (added) {
-      router.push("/cart");
-      return;
-    }
+          onClick={() => {
+            if (added) {
+              router.push("/cart");
+              return;
+            }
 
-    handleAddToCart();
-  }}
-  disabled={adding || (!added && book.stock === 0)}
-  className="
+            handleAddToCart();
+          }}
+          disabled={adding || (!added && book.stock === 0)}
+          className="
     group relative flex h-11 flex-1 min-w-[160px] items-center justify-center gap-2
     overflow-hidden rounded-full border-0 bg-gradient-to-br from-[#2DBDB6] to-[#1f9d97]
     px-6 text-sm font-bold text-white shadow-[0_4px_12px_rgba(45,189,182,0.35)]
@@ -203,27 +213,27 @@ const handleAddToCart = async () => {
     hover:shadow-[0_8px_18px_rgba(45,189,182,0.4)]
     active:translate-y-0 active:scale-[0.98] disabled:opacity-50
   "
->
-  <span className="absolute inset-0 -translate-x-[120%] bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-500 group-hover:translate-x-[120%]" />
+        >
+          <span className="absolute inset-0 -translate-x-[120%] bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-500 group-hover:translate-x-[120%]" />
 
-  <span className="relative flex items-center gap-2">
-    {added ? (
-      <>
-        <ShoppingCart className="h-4 w-4" />
-        কার্টে যান
-      </>
-    ) : (
-      <>
-        <ShoppingCart className="h-4 w-4" />
-        {adding
-          ? "যোগ করা হচ্ছে..."
-          : isPreOrder
-            ? "প্রি-অর্ডার করুন"
-            : "কার্টে যোগ করুন"}
-      </>
-    )}
-  </span>
-</button>
+          <span className="relative flex items-center gap-2">
+            {added ? (
+              <>
+                <ShoppingCart className="h-4 w-4" />
+                কার্টে যান
+              </>
+            ) : (
+              <>
+                <ShoppingCart className="h-4 w-4" />
+                {adding
+                  ? "যোগ করা হচ্ছে..."
+                  : isPreOrder
+                    ? "প্রি-অর্ডার করুন"
+                    : "কার্টে যোগ করুন"}
+              </>
+            )}
+          </span>
+        </button>
 
         <button
           onClick={() => setLiked((v) => !v)}

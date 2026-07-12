@@ -119,12 +119,12 @@ export default function BookDetailPage() {
               bookType: book.bookType === "Digital" ? "digital" : "physical",
               status: book.isPreOrder ? "pre-order" : "published",
             }}
-             onAddToCart={async (quantity) => {
-    await addToCartMutation.mutateAsync({
-      bookId: book._id,
-      quantity,
-    });
-  }}
+            onAddToCart={async (quantity) => {
+              await addToCartMutation.mutateAsync({
+                bookId: book._id,
+                quantity,
+              });
+            }}
             onBuyNow={async (qty) => {
               console.log("Buy now", book._id, qty);
             }}
