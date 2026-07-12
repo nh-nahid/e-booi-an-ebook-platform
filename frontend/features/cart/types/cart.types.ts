@@ -1,3 +1,5 @@
+import { CartItemData } from "../components/cart-item";
+
 export interface CartBook {
   _id: string;
   title: string;
@@ -45,4 +47,17 @@ export interface CartResponse {
 export interface CartActionResponse {
   success: boolean;
   message: string;
+}
+
+export interface CartItemProps {
+  item: CartItemData;
+  index?: number;
+  onQuantityChange: (
+    id: string,
+    quantity: number
+  ) => void;
+  onRemove: (
+    id: string
+  ) => void;
+  updating?: boolean;
 }

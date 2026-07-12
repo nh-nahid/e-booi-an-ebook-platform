@@ -21,6 +21,7 @@ interface CartItemProps {
   index?: number;
   onQuantityChange: (id: string, quantity: number) => void;
   onRemove: (id: string) => void;
+  updating?: boolean;
 }
 
 export default function CartItem({
@@ -28,16 +29,15 @@ export default function CartItem({
   index = 0,
   onQuantityChange,
   onRemove,
+  updating = false,
 }: CartItemProps) {
-  
- const baseUrl = process.env.NEXT_PUBLIC_API_URL?.replace("/api/v1", "");
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL?.replace("/api/v1", "");
 
-const imageUrl = !item.coverUrl
-  ? "/placeholder-book.png"
-  : item.coverUrl.startsWith("http")
-    ? item.coverUrl
-    : `${baseUrl}/uploads/books/${item.coverUrl}`;
-
+  const imageUrl = !item.coverUrl
+    ? "/placeholder-book.png"
+    : item.coverUrl.startsWith("http")
+      ? item.coverUrl
+      : `${baseUrl}/uploads/books/${item.coverUrl}`;
 
   return (
     <div
@@ -91,7 +91,7 @@ const imageUrl = !item.coverUrl
               onClick={() =>
                 onQuantityChange(item.id, Math.max(1, item.quantity - 1))
               }
-              disabled={item.bookType === "Digital"}
+              disabled={updating || item.bookType === "Digital"}
               className="flex h-9 w-9 items-center justify-center text-[#0A0E2A] transition-colors hover:text-[#2DBDB6] disabled:opacity-40"
             >
               <Minus className="h-3.5 w-3.5" />
@@ -105,10 +105,10 @@ const imageUrl = !item.coverUrl
               onClick={() =>
                 onQuantityChange(
                   item.id,
-                  Math.min(item.stock, item.quantity + 1)
+                  Math.min(item.stock, item.quantity + 1),
                 )
               }
-              disabled={item.bookType === "Digital"}
+              disabled={updating || item.bookType === "Digital"}
               className="flex h-9 w-9 items-center justify-center text-[#0A0E2A] transition-colors hover:text-[#2DBDB6] disabled:opacity-40"
             >
               <Plus className="h-3.5 w-3.5" />
@@ -120,13 +120,11 @@ const imageUrl = !item.coverUrl
               ৳ {(item.price * item.quantity).toLocaleString()}
             </p>
 
-            {item.originalPrice &&
-              item.originalPrice > item.price && (
-                <p className="text-xs text-[#9AA3AF] line-through">
-                  ৳{" "}
-                  {(item.originalPrice * item.quantity).toLocaleString()}
-                </p>
-              )}
+            {item.originalPrice && item.originalPrice > item.price && (
+              <p className="text-xs text-[#9AA3AF] line-through">
+                ৳ {(item.originalPrice * item.quantity).toLocaleString()}
+              </p>
+            )}
           </div>
         </div>
       </div>

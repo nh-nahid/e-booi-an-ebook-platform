@@ -34,7 +34,9 @@ export const updateCartQuantity = async (
 };
 
 export const removeCartItem = async (id: string) => {
-  await api.delete(`${ENDPOINTS.CART.REMOVE_FROM_CART}/${id}`);
+  await api.delete(
+    ENDPOINTS.CART.REMOVE_FROM_CART(id)
+  );
 };
 
 export const clearCart = async () => {

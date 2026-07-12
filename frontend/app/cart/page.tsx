@@ -208,6 +208,7 @@ const handleClearCart = () => {
                   index={index}
                   onQuantityChange={handleQuantityChange}
                   onRemove={handleRemove}
+                  updating={updateMutation.isPending}
                 />
               ))}
             </div>
