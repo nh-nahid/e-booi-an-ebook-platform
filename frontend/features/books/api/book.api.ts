@@ -7,8 +7,6 @@ import type {
     BooksData,
   BooksResponse,
   GetBooksParams,
-  Review,
-  ReviewResponse,
 } from "../types/book.types";
 
 export const getBooks = async (
@@ -53,14 +51,6 @@ export const getRelatedBooks = async (
   );
 };
 
-export const getBookReviews = async (
-  bookId: string
-): Promise<Review[]> => {
-  const { data } = await api.get<ReviewResponse>(
-    ENDPOINTS.REVIEWS.GET_REVIEWS(bookId)
-  );
 
-  return data.data;
-};
 
 

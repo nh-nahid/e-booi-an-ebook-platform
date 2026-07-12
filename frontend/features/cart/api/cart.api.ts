@@ -1,14 +1,14 @@
 import { api } from "@/services/api/api";
-import { AddToCartPayload, CartItem, CartResponse } from "../types/cart.types";
+import { AddToCartPayload, CartItem, CartResponse, } from "../types/cart.types";
 import { ENDPOINTS } from "@/services/api/endpoints";
 
 // cart api
 export const getCart = async (): Promise<CartItem[]> => {
-  const { data } = await api.get<CartItem[]>(
+  const { data } = await api.get<CartResponse>(
     ENDPOINTS.CART.GET_CART
   );
 
-  return data;
+  return data.data;
 };
 
 export const addToCart = async (
@@ -22,20 +22,10 @@ export const addToCart = async (
   return data;
 };
 
-export const removeFromCart = async (
-  id: string
-): Promise<CartResponse> => {
-  const { data } = await api.delete<CartResponse>(
-    ENDPOINTS.CART.REMOVE_FROM_CART(id)
-  );
-
-  return data;
+export const removeCartItem = async (id: string) => {
+  await api.delete(`${ENDPOINTS.CART.REMOVE_FROM_CART}/${id}`);
 };
 
-export const clearCart = async (): Promise<CartResponse> => {
-  const { data } = await api.delete<CartResponse>(
-    ENDPOINTS.CART.CLEAR_CART
-  );
-
-  return data;
+export const clearCart = async () => {
+  await api.delete(ENDPOINTS.CART.CLEAR_CART);
 };

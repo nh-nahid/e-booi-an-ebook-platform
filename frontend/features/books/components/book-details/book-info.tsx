@@ -1,8 +1,21 @@
 "use client";
 
 import { useState } from "react";
-import { Star, Heart, ShoppingCart, Minus, Plus, Share2, Check, Truck, ShieldCheck } from "lucide-react";
-
+import {
+  Star,
+  Heart,
+  ShoppingCart,
+  Minus,
+  Plus,
+  Share2,
+  Check,
+  Truck,
+  ShieldCheck,
+} from "lucide-react";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/hooks/use-auth";
+import { isAxiosError } from "axios";
 export interface BookInfoData {
   id: string;
   title: string;
@@ -25,12 +38,22 @@ interface BookInfoProps {
   onAddToCart?: (quantity: number) => Promise<void> | void;
   onBuyNow?: (quantity: number) => Promise<void> | void;
 }
+interface ApiError {
+  message: string;
+}
 
-export default function BookInfo({ book, onAddToCart, onBuyNow }: BookInfoProps) {
+export default function BookInfo({
+  book,
+  onAddToCart,
+  onBuyNow,
+}: BookInfoProps) {
   const [quantity, setQuantity] = useState(1);
   const [liked, setLiked] = useState(false);
   const [adding, setAdding] = useState(false);
   const [added, setAdded] = useState(false);
+
+  const { user } = useAuth();
+  const router = useRouter();
 
   const isPreOrder = book.status === "pre-order";
   const discount =
@@ -38,16 +61,35 @@ export default function BookInfo({ book, onAddToCart, onBuyNow }: BookInfoProps)
       ? Math.round(100 - (book.price / book.originalPrice) * 100)
       : 0;
 
-  const handleAddToCart = async () => {
-    setAdding(true);
-    try {
-      await onAddToCart?.(quantity);
-      setAdded(true);
-      setTimeout(() => setAdded(false), 1800);
-    } finally {
-      setAdding(false);
+const handleAddToCart = async () => {
+  setAdding(true);
+
+  try {
+    await onAddToCart?.(quantity);
+
+    setAdded(true);
+
+    toast.success("বইটি কার্টে যোগ করা হয়েছে");
+  } catch (error: unknown) {
+    if (isAxiosError<ApiError>(error)) {
+      if (error.response?.status === 401) {
+        toast.error("প্রথমে লগইন করুন");
+        router.push("/login");
+        return;
+      }
+
+      toast.error(
+        error.response?.data?.message ?? "কার্টে যোগ করা যায়নি"
+      );
+
+      return;
     }
-  };
+
+    toast.error("কার্টে যোগ করা যায়নি");
+  } finally {
+    setAdding(false);
+  }
+};
 
   return (
     <div className="animate-in fade-in slide-in-from-right-2 duration-500 [animation-delay:100ms]">
@@ -59,7 +101,8 @@ export default function BookInfo({ book, onAddToCart, onBuyNow }: BookInfoProps)
         {book.title}
       </h1>
       <p className="mt-1 text-sm text-[#6B7280]">
-        লেখক: <span className="font-semibold text-[#0A0E2A]">{book.author}</span>
+        লেখক:{" "}
+        <span className="font-semibold text-[#0A0E2A]">{book.author}</span>
       </p>
 
       {typeof book.rating === "number" && (
@@ -76,9 +119,13 @@ export default function BookInfo({ book, onAddToCart, onBuyNow }: BookInfoProps)
               />
             ))}
           </div>
-          <span className="text-sm font-semibold text-[#0A0E2A]">{book.rating.toFixed(1)}</span>
+          <span className="text-sm font-semibold text-[#0A0E2A]">
+            {book.rating.toFixed(1)}
+          </span>
           {typeof book.reviewCount === "number" && (
-            <span className="text-sm text-[#9AA3AF]">({book.reviewCount} রিভিউ)</span>
+            <span className="text-sm text-[#9AA3AF]">
+              ({book.reviewCount} রিভিউ)
+            </span>
           )}
         </div>
       )}
@@ -101,11 +148,19 @@ export default function BookInfo({ book, onAddToCart, onBuyNow }: BookInfoProps)
 
       <p
         className={`mt-2 flex items-center gap-1.5 text-sm font-semibold ${
-          isPreOrder ? "text-[#0A0E2A]" : book.stock > 0 ? "text-emerald-600" : "text-red-600"
+          isPreOrder
+            ? "text-[#0A0E2A]"
+            : book.stock > 0
+              ? "text-emerald-600"
+              : "text-red-600"
         }`}
       >
         <Check className="h-4 w-4" />
-        {isPreOrder ? "প্রি-অর্ডার উপলব্ধ" : book.stock > 0 ? `স্টকে আছে (${book.stock} কপি)` : "স্টক নেই"}
+        {isPreOrder
+          ? "প্রি-অর্ডার উপলব্ধ"
+          : book.stock > 0
+            ? `স্টকে আছে (${book.stock} কপি)`
+            : "স্টক নেই"}
       </p>
 
       {/* quantity + actions */}
@@ -117,9 +172,13 @@ export default function BookInfo({ book, onAddToCart, onBuyNow }: BookInfoProps)
           >
             <Minus className="h-3.5 w-3.5" />
           </button>
-          <span className="w-8 text-center text-sm font-bold text-[#0A0E2A]">{quantity}</span>
+          <span className="w-8 text-center text-sm font-bold text-[#0A0E2A]">
+            {quantity}
+          </span>
           <button
-            onClick={() => setQuantity((q) => Math.min(book.stock || 99, q + 1))}
+            onClick={() =>
+              setQuantity((q) => Math.min(book.stock || 99, q + 1))
+            }
             className="flex h-11 w-11 items-center justify-center text-[#0A0E2A] transition-colors hover:text-[#2DBDB6]"
           >
             <Plus className="h-3.5 w-3.5" />
@@ -127,32 +186,44 @@ export default function BookInfo({ book, onAddToCart, onBuyNow }: BookInfoProps)
         </div>
 
         <button
-          onClick={handleAddToCart}
-          disabled={adding || book.stock === 0}
-          className="
-            group relative flex h-11 flex-1 min-w-[160px] items-center justify-center gap-2
-            overflow-hidden rounded-full border-0 bg-gradient-to-br from-[#2DBDB6] to-[#1f9d97]
-            px-6 text-sm font-bold text-white shadow-[0_4px_12px_rgba(45,189,182,0.35)]
-            transition-transform duration-150 hover:-translate-y-0.5
-            hover:shadow-[0_8px_18px_rgba(45,189,182,0.4)]
-            active:translate-y-0 active:scale-[0.98] disabled:opacity-50
-          "
-        >
-          <span className="absolute inset-0 -translate-x-[120%] bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-500 group-hover:translate-x-[120%]" />
-          <span className="relative flex items-center gap-2">
-            {added ? (
-              <>
-                <Check className="h-4 w-4" />
-                কার্টে যোগ হয়েছে
-              </>
-            ) : (
-              <>
-                <ShoppingCart className="h-4 w-4" />
-                {isPreOrder ? "প্রি-অর্ডার করুন" : "কার্টে যোগ করুন"}
-              </>
-            )}
-          </span>
-        </button>
+  onClick={() => {
+    if (added) {
+      router.push("/cart");
+      return;
+    }
+
+    handleAddToCart();
+  }}
+  disabled={adding || (!added && book.stock === 0)}
+  className="
+    group relative flex h-11 flex-1 min-w-[160px] items-center justify-center gap-2
+    overflow-hidden rounded-full border-0 bg-gradient-to-br from-[#2DBDB6] to-[#1f9d97]
+    px-6 text-sm font-bold text-white shadow-[0_4px_12px_rgba(45,189,182,0.35)]
+    transition-transform duration-150 hover:-translate-y-0.5
+    hover:shadow-[0_8px_18px_rgba(45,189,182,0.4)]
+    active:translate-y-0 active:scale-[0.98] disabled:opacity-50
+  "
+>
+  <span className="absolute inset-0 -translate-x-[120%] bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-500 group-hover:translate-x-[120%]" />
+
+  <span className="relative flex items-center gap-2">
+    {added ? (
+      <>
+        <ShoppingCart className="h-4 w-4" />
+        কার্টে যান
+      </>
+    ) : (
+      <>
+        <ShoppingCart className="h-4 w-4" />
+        {adding
+          ? "যোগ করা হচ্ছে..."
+          : isPreOrder
+            ? "প্রি-অর্ডার করুন"
+            : "কার্টে যোগ করুন"}
+      </>
+    )}
+  </span>
+</button>
 
         <button
           onClick={() => setLiked((v) => !v)}
@@ -180,11 +251,15 @@ export default function BookInfo({ book, onAddToCart, onBuyNow }: BookInfoProps)
       <div className="mt-6 grid grid-cols-2 gap-3 rounded-2xl bg-[#F7F9FA] p-4">
         <div className="flex items-center gap-2">
           <Truck className="h-4 w-4 text-[#2DBDB6]" />
-          <span className="text-xs font-semibold text-[#6B7280]">দ্রুত ডেলিভারি</span>
+          <span className="text-xs font-semibold text-[#6B7280]">
+            দ্রুত ডেলিভারি
+          </span>
         </div>
         <div className="flex items-center gap-2">
           <ShieldCheck className="h-4 w-4 text-[#2DBDB6]" />
-          <span className="text-xs font-semibold text-[#6B7280]">১০০% অরিজিনাল</span>
+          <span className="text-xs font-semibold text-[#6B7280]">
+            ১০০% অরিজিনাল
+          </span>
         </div>
       </div>
     </div>

@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 
-import { getBook, getBookReviews, getBooks, getRelatedBooks } from "../api/book.api";
+import { getBook, getBooks, getRelatedBooks } from "../api/book.api";
 import type { GetBooksParams } from "../types/book.types";
 
 export const useBooks = (params: GetBooksParams) => {
@@ -33,10 +33,3 @@ export const useRelatedBooks = (
   });
 };
 
-export const useBookReviews = (bookId?: string) => {
-  return useQuery({
-    queryKey: ["book-reviews", bookId],
-    queryFn: () => getBookReviews(bookId!),
-    enabled: !!bookId,
-  });
-};

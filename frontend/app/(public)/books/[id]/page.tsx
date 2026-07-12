@@ -4,7 +4,7 @@ import { useParams } from "next/navigation";
 
 import SiteFooter from "@/components/layout/site-footer";
 
-import { useBook, useBookReviews, useRelatedBooks } from "@/features/books/hooks/use-book";
+import { useBook, useRelatedBooks } from "@/features/books/hooks/use-book";
 
 import Breadcrumb from "@/features/books/components/book-details/breadcrumb";
 import BookGallery from "@/features/books/components/book-details/book-gallery";
@@ -13,21 +13,22 @@ import BookTabs from "@/features/books/components/book-details/book-tabs";
 import ReviewList from "@/features/books/components/book-details/review-list";
 import RelatedBooks from "@/features/books/components/book-details/related-books";
 import Loading from "@/app/loading";
+import { useBookReviews } from "@/features/reviews/hooks/use-review";
+import { useAddToCart } from "@/features/cart/hooks/use-cart";
 
 export default function BookDetailPage() {
   const params = useParams();
 
   const { data: book, isLoading } = useBook(params.id as string);
   const { data: relatedBooks = [] } = useRelatedBooks(
-  book?.category,
-  book?._id
-);
-const { data: reviews = [] } = useBookReviews(book?._id);
+    book?.category,
+    book?._id,
+  );
+  const { data: reviews = [] } = useBookReviews(book?._id);
+  const addToCartMutation = useAddToCart();
 
   if (isLoading) {
-    return (
-      <Loading/>
-    );
+    return <Loading />;
   }
 
   if (!book) {
@@ -118,9 +119,12 @@ const { data: reviews = [] } = useBookReviews(book?._id);
               bookType: book.bookType === "Digital" ? "digital" : "physical",
               status: book.isPreOrder ? "pre-order" : "published",
             }}
-            onAddToCart={async (qty) => {
-              console.log("Add to cart", book._id, qty);
-            }}
+             onAddToCart={async (quantity) => {
+    await addToCartMutation.mutateAsync({
+      bookId: book._id,
+      quantity,
+    });
+  }}
             onBuyNow={async (qty) => {
               console.log("Buy now", book._id, qty);
             }}
@@ -131,11 +135,8 @@ const { data: reviews = [] } = useBookReviews(book?._id);
           description={book.description}
           details={bookDetails}
           reviewsSlot={
-    <ReviewList
-      reviews={reviews}
-      averageRating={book.averageRating}
-    />
-  }
+            <ReviewList reviews={reviews} averageRating={book.averageRating} />
+          }
         />
       </div>
 

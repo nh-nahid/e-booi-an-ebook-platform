@@ -20,7 +20,7 @@ const banglaFont = Hind_Siliguri({
 });
 
 export const metadata: Metadata = {
-  title: "E-Booi | An Ebook Platform",
+  title: "E-Booi | ই-বই",
   description: "Modern Online Book Store",
 };
 
