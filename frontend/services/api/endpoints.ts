@@ -60,12 +60,12 @@ CART: {
     CANCEL: "/payment/cancel",
   },
 
-  COUPONS: {
-    LIST: "/coupons",
-    CREATE: "/coupons",
-    DELETE: (id: string) => `/coupons/${id}`,
-    APPLY: "/coupons/apply",
-  },
+COUPON: {
+  CREATE: "/coupons",
+  GET_ALL: "/coupons",
+  DELETE: (id: string) => `/coupons/${id}`,
+  APPLY: "/coupons/apply",
+},
 
 REVIEWS: {
   GET_REVIEWS: (bookId: string) => `/reviews/book/${bookId}`,

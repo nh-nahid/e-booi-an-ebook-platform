@@ -21,16 +21,23 @@ export default function OrderSummary({
   onCheckout,
 }: OrderSummaryProps) {
   const [promoCode, setPromoCode] = useState("");
-  const [promoStatus, setPromoStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [promoStatus, setPromoStatus] = useState<
+    "idle" | "loading" | "success" | "error"
+  >("idle");
   const [checkingOut, setCheckingOut] = useState(false);
 
   const total = Math.max(0, subtotal - discount + deliveryFee);
 
   const handleApplyPromo = async () => {
     if (!promoCode.trim()) return;
+
+    if (promoStatus === "success") return;
+
     setPromoStatus("loading");
+
     try {
       const success = (await onApplyPromo?.(promoCode)) ?? false;
+
       setPromoStatus(success ? "success" : "error");
     } catch {
       setPromoStatus("error");
@@ -71,21 +78,27 @@ export default function OrderSummary({
           </div>
           <button
             onClick={handleApplyPromo}
-            disabled={promoStatus === "loading"}
+            disabled={promoStatus === "loading" || promoStatus === "success"}
             className="shrink-0 rounded-full border border-[#0A0E2A] px-4 text-xs font-bold text-[#0A0E2A] transition-colors hover:bg-[#0A0E2A] hover:text-white"
           >
             {promoStatus === "loading" ? (
               <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            ) : promoStatus === "success" ? (
+              "প্রয়োগ হয়েছে"
             ) : (
               "প্রয়োগ করুন"
             )}
           </button>
         </div>
         {promoStatus === "success" && (
-          <p className="mt-1.5 text-xs font-semibold text-emerald-600">প্রোমো কোড প্রয়োগ হয়েছে!</p>
+          <p className="mt-1.5 text-xs font-semibold text-emerald-600">
+            প্রোমো কোড প্রয়োগ হয়েছে!
+          </p>
         )}
         {promoStatus === "error" && (
-          <p className="mt-1.5 text-xs font-semibold text-red-600">কোডটি সঠিক নয়।</p>
+          <p className="mt-1.5 text-xs font-semibold text-red-600">
+            কোডটি সঠিক নয়।
+          </p>
         )}
       </div>
 
@@ -93,13 +106,17 @@ export default function OrderSummary({
       <div className="mt-5 space-y-2.5 border-t border-[#F1F3F5] pt-4 text-sm">
         <div className="flex items-center justify-between">
           <span className="text-[#6B7280]">সাবটোটাল ({itemCount} আইটেম)</span>
-          <span className="font-semibold text-[#0A0E2A]">৳ {subtotal.toLocaleString()}</span>
+          <span className="font-semibold text-[#0A0E2A]">
+            ৳ {subtotal.toLocaleString()}
+          </span>
         </div>
 
         {discount > 0 && (
           <div className="flex items-center justify-between">
             <span className="text-[#6B7280]">ছাড়</span>
-            <span className="font-semibold text-emerald-600">- ৳ {discount.toLocaleString()}</span>
+            <span className="font-semibold text-emerald-600">
+              - ৳ {discount.toLocaleString()}
+            </span>
           </div>
         )}
 
@@ -113,7 +130,9 @@ export default function OrderSummary({
 
       <div className="mt-4 flex items-center justify-between border-t border-[#F1F3F5] pt-4">
         <span className="text-sm font-bold text-[#0A0E2A]">সর্বমোট</span>
-        <span className="text-xl font-extrabold text-[#0A0E2A]">৳ {total.toLocaleString()}</span>
+        <span className="text-xl font-extrabold text-[#0A0E2A]">
+          ৳ {total.toLocaleString()}
+        </span>
       </div>
 
       <button

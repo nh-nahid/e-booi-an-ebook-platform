@@ -23,6 +23,7 @@ import { useAuth } from "@/hooks/use-auth";
 import Loading from "@/app/loading";
 import { toast } from "sonner";
 import { isAxiosError } from "axios";
+import { useApplyCoupon } from "@/features/coupon/hooks/use-coupon";
 
 export default function CartPage() {
 const router = useRouter();
@@ -35,6 +36,7 @@ const removeMutation = useRemoveCartItem();
 const clearMutation = useClearCart();
 const updateMutation = useUpdateCartQuantity();
 const [appliedDiscount, setAppliedDiscount] = useState(0);
+const applyCouponMutation = useApplyCoupon();
 
 useEffect(() => {
   if (!authLoading && !user) {
@@ -151,16 +153,34 @@ const handleClearCart = () => {
   });
 };
 
-  const handleApplyPromo = async (code: string) => {
-    if (code.trim().toUpperCase() === "EBOOI10") {
-      setAppliedDiscount(Math.round(subtotal * 0.1));
-      return true;
-    }
+const handleApplyPromo = async (code: string) => {
+  try {
+    const response =
+      await applyCouponMutation.mutateAsync({
+        code,
+        amount: subtotal,
+      });
 
+    setAppliedDiscount(response.discount);
+
+    toast.success("কুপন সফলভাবে প্রয়োগ হয়েছে");
+
+    return true;
+  } catch (error) {
     setAppliedDiscount(0);
 
+    if (isAxiosError(error)) {
+      toast.error(
+        error.response?.data?.message ??
+          "কুপন প্রয়োগ করা যায়নি"
+      );
+    } else {
+      toast.error("কুপন প্রয়োগ করা যায়নি");
+    }
+
     return false;
-  };
+  }
+};
 
   const handleCheckout = () => {
     router.push("/checkout");
