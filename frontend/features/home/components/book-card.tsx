@@ -130,7 +130,7 @@ export default function BookCard({ book, index = 0 }: BookCardProps) {
     "
         >
           <ShoppingCart className="h-3.5 w-3.5" />
-          Add to Cart
+          কার্টে যোগ করুন
         </button>
       </div>
     </Link>

@@ -67,12 +67,12 @@ export const ENDPOINTS = {
     APPLY: "/coupons/apply",
   },
 
-  REVIEWS: {
-    LIST: (bookId: string) => `/reviews/book/${bookId}`,
-    CREATE: (bookId: string) => `/reviews/book/${bookId}`,
-    UPDATE: (id: string) => `/reviews/${id}`,
-    DELETE: (id: string) => `/reviews/${id}`,
-  },
+REVIEWS: {
+  GET_REVIEWS: (bookId: string) => `/reviews/book/${bookId}`,
+  ADD_REVIEW: (bookId: string) => `/reviews/book/${bookId}`,
+  UPDATE_REVIEW: (id: string) => `/reviews/${id}`,
+  DELETE_REVIEW: (id: string) => `/reviews/${id}`,
+},
 
   WISHLIST: {
     GET: "/wishlist",

@@ -3,10 +3,11 @@
 import { useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-import SectionHeader from "../components/section-header";
-import BookCard from "../components/book-card";
+
 
 import type { Book } from "../types/home.types";
+import SectionHeader from "./section-header";
+import BookCard from "./book-card";
 
 interface BookSectionProps {
   title: string;

@@ -125,15 +125,16 @@ export default function BooksGrid({
                       e.preventDefault();
                       e.stopPropagation();
 
-                      console.log("Add to cart:", book._id);
                     }}
-                    className=" flex items-center gap-2 rounded-full bg-[#2DBDB6]
-                            px-4 py-2
-                            text-xs font-semibold text-white
-                            transition-colors hover:bg-[#1f9d97]"
+                    className="
+    flex items-center gap-2 rounded-full
+    bg-[#2DBDB6] px-4 py-2
+    text-xs font-semibold text-white
+    transition-colors hover:bg-[#1f9d97]
+  "
                   >
                     <ShoppingCart className="h-4 w-4" />
-                    Add to Cart
+                    <span>কার্টে যোগ করুন</span>
                   </button>
                 </div>
               </div>

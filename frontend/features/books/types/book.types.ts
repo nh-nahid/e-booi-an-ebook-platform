@@ -4,12 +4,15 @@ export interface Book {
   author: string;
   description: string;
   category: string;
+
   price: number;
   coverImage: string;
   coverUrl?: string;
+
   bookType: "Digital" | "Physical";
 
   pdfFile: string | null;
+
   stock: number;
   sold: number;
 
@@ -37,7 +40,6 @@ export interface GetBooksParams {
   bookType?: "Digital" | "Physical";
 
   minPrice?: number;
-
   maxPrice?: number;
 
   featured?: boolean;
@@ -66,4 +68,35 @@ export interface BooksResponse {
   success: boolean;
   message: string;
   data: BooksData;
+}
+
+/* ---------- Single Book ---------- */
+
+export interface BookResponse {
+  success: boolean;
+  message: string;
+  data: Book;
+}
+
+
+export interface Review {
+  _id: string;
+
+  rating: number;
+  comment: string;
+
+  createdAt: string;
+  updatedAt: string;
+
+  user: {
+    _id: string;
+    name: string;
+    avatar?: string;
+  };
+}
+
+export interface ReviewResponse {
+  success: boolean;
+  message: string;
+  data: Review[];
 }
