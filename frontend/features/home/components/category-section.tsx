@@ -22,7 +22,7 @@ export default function CategorySection({
 }: CategorySectionProps) {
   return (
     <section className="container mx-auto px-5 py-8 sm:px-10 lg:px-[60px]">
-      <SectionHeader title="All Category" href="/categories" />
+      <SectionHeader title="All Category" href="/books" />
 
       <div className="flex gap-3.5 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:gap-4">
         {categories.map((category, index) => (
