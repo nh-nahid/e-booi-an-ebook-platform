@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import { Star } from "lucide-react";
+import { Review } from "@/features/reviews/types/review.type";
 
-import type { Review } from "../../types/book.types";
 
 interface ReviewListProps {
   reviews: Review[];
