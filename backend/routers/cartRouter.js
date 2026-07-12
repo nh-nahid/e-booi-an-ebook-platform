@@ -5,6 +5,7 @@ const {
     getCart,
     removeFromCart,
     clearCart,
+    updateCartQuantity,
 } = require("../controllers/cartController");
 
 const { checkLogin } = require("../middlewares/common/checkLogin");
@@ -16,6 +17,8 @@ router.use(checkLogin);
 router.get("/", getCart);
 
 router.post("/", addToCart);
+
+router.put("/:id", updateCartQuantity);
 
 router.delete("/:id", removeFromCart);
 
