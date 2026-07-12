@@ -15,11 +15,14 @@ import {
   useCart,
   useClearCart,
   useRemoveCartItem,
+  useUpdateCartQuantity,
 } from "@/features/cart/hooks/use-cart";
 
 import { useAuth } from "@/hooks/use-auth";
 
 import Loading from "@/app/loading";
+import { toast } from "sonner";
+import { isAxiosError } from "axios";
 
 export default function CartPage() {
 const router = useRouter();
@@ -30,7 +33,7 @@ const { data: cart = [], isLoading } = useCart();
 
 const removeMutation = useRemoveCartItem();
 const clearMutation = useClearCart();
-
+const updateMutation = useUpdateCartQuantity();
 const [appliedDiscount, setAppliedDiscount] = useState(0);
 
 useEffect(() => {
@@ -83,21 +86,70 @@ const deliveryFee =
     ? 60
     : 0;
 
-  const handleQuantityChange = (
-    id: string,
-    quantity: number
-  ) => {
-    // TODO
-    console.log(id, quantity);
-  };
+const handleQuantityChange = (
+  id: string,
+  quantity: number
+) => {
+  updateMutation.mutate(
+    {
+      id,
+      quantity,
+    },
+    {
+      onSuccess: () => {
+        toast.success("কার্ট আপডেট হয়েছে");
+      },
+      onError: (error) => {
+        if (isAxiosError(error)) {
+          toast.error(
+            error.response?.data?.message ||
+              "কার্ট আপডেট করা যায়নি"
+          );
+        } else {
+          toast.error("কার্ট আপডেট করা যায়নি");
+        }
+      },
+    }
+  );
+};
 
-  const handleRemove = (id: string) => {
-    removeMutation.mutate(id);
-  };
 
-  const handleClearCart = () => {
-    clearMutation.mutate();
-  };
+const handleRemove = (id: string) => {
+  removeMutation.mutate(id, {
+    onSuccess: () => {
+      toast.success("বইটি কার্ট থেকে সরানো হয়েছে");
+    },
+    onError: (error) => {
+      if (isAxiosError(error)) {
+        toast.error(
+          error.response?.data?.message ||
+            "বই সরানো যায়নি"
+        );
+      } else {
+        toast.error("বই সরানো যায়নি");
+      }
+    },
+  });
+};
+
+
+const handleClearCart = () => {
+  clearMutation.mutate(undefined, {
+    onSuccess: () => {
+      toast.success("কার্ট খালি করা হয়েছে");
+    },
+    onError: (error) => {
+      if (isAxiosError(error)) {
+        toast.error(
+          error.response?.data?.message ||
+            "কার্ট খালি করা যায়নি"
+        );
+      } else {
+        toast.error("কার্ট খালি করা যায়নি");
+      }
+    },
+  });
+};
 
   const handleApplyPromo = async (code: string) => {
     if (code.trim().toUpperCase() === "EBOOI10") {

@@ -22,6 +22,17 @@ export const addToCart = async (
   return data;
 };
 
+export const updateCartQuantity = async (
+  id: string,
+  quantity: number
+) => {
+  const { data } = await api.put(`/cart/${id}`, {
+    quantity,
+  });
+
+  return data;
+};
+
 export const removeCartItem = async (id: string) => {
   await api.delete(`${ENDPOINTS.CART.REMOVE_FROM_CART}/${id}`);
 };
