@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import SiteFooter from "@/components/layout/site-footer";
 import { useSearchParams } from "next/navigation";
@@ -13,8 +13,6 @@ import BooksGrid from "@/features/books/components/books-grid";
 import BooksToolbar from "@/features/books/components/books-toolbar";
 import MobileFiltersSheet from "@/features/books/components/mobile-filters-sheet";
 import Pagination from "@/features/books/components/pagination";
-import { useSearchStore } from "@/stores/search-store";
-import { useDebounce } from "@/hooks/use-debounce";
 
 const initialFilters: BooksFilterState = {
   categories: [],
@@ -31,8 +29,7 @@ export default function BooksPage() {
 
   const featured = searchParams.get("featured") === "true";
   const preOrder = searchParams.get("preOrder") === "true";
-  const search = useSearchStore((state) => state.search);
-  const debouncedSearch = useDebounce(search, 500);
+  const search = searchParams.get("search")?.trim() || "";
 
   const SORT_OPTIONS = [
     "newest",
@@ -66,7 +63,7 @@ const bookParams = {
   page,
   limit: PAGE_SIZE,
 
-  search: debouncedSearch || undefined,
+  search: search || undefined,
 
   category:
     filters.categories.length > 0
@@ -103,6 +100,14 @@ const bookParams = {
     setFilters(initialFilters);
     setPage(1);
   };
+
+useEffect(() => {
+  setPage(1);
+}, [search, featured, preOrder]);
+
+useEffect(() => {
+  setSort(initialSort);
+}, [initialSort]);
 
   return (
     <div className="min-h-screen bg-[#F7F9FA]">

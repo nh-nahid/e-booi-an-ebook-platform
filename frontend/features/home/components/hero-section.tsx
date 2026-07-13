@@ -1,28 +1,39 @@
 "use client";
 
+import { ArrowRight, BookOpen, Search, Sparkles } from "lucide-react";
 import Link from "next/link";
-import { Search, ArrowRight, BookOpen, Sparkles } from "lucide-react";
-import { Statistics } from "../types/home.types";
 import { useRouter } from "next/navigation";
-import { useSearchStore } from "@/stores/search-store";
+import { useEffect, useRef, useState } from "react";
+import { Statistics } from "../types/home.types";
+
 import { useDebounce } from "@/hooks/use-debounce";
-import { useEffect } from "react";
 
 interface StatisticsSectionProps {
   statistics: Statistics;
 }
-export default function StatisticsSection({
-  statistics,
-}: StatisticsSectionProps) {
+
+export default function StatisticsSection({ statistics }: StatisticsSectionProps) {
   const router = useRouter();
-  const { search, setSearch } = useSearchStore();
-  const debouncedSearch = useDebounce(search, 500);
+  const [keyword, setKeyword] = useState("");
+  const isTypingRef = useRef(false);
+  const debouncedKeyword = useDebounce(keyword, 500);
+
+  const handleSearch = () => {
+    const value = keyword.trim();
+    if (!value) return;
+    router.push(`/books?search=${encodeURIComponent(value)}`);
+  };
 
   useEffect(() => {
-    if (!debouncedSearch.trim()) return;
+    if (!isTypingRef.current) return;
+    isTypingRef.current = false;
 
-    router.push("/books");
-  }, [debouncedSearch, router]);
+    const value = debouncedKeyword.trim();
+    if (value) {
+      router.push(`/books?search=${encodeURIComponent(value)}`);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedKeyword]);
 
   return (
     <section className="relative overflow-hidden bg-white">
@@ -74,23 +85,39 @@ export default function StatisticsSection({
               <div className="relative">
                 <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#9AA3AF]" />
                 <input
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  placeholder="বইয়ের নাম বা লেখক খুঁজুন..."
-                  className="
+   value={keyword}
+        onChange={(e) => {
+          isTypingRef.current = true;
+          setKeyword(e.target.value);
+        }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            handleSearch();
+          }
+        }}
+        placeholder="বইয়ের নাম বা লেখক খুঁজুন..."
+  className="
     h-13 w-full rounded-full border border-[#E1E5E8] bg-white py-3.5 pl-11 pr-32
-    text-sm text-[#0A0E2A] shadow-[0_10px_25px_rgba(10,14,42,0.06)] outline-none
-    transition-all duration-200 placeholder:text-[#9AA3AF]
-    focus:border-[#2DBDB6] focus:shadow-[0_0_0_4px_rgba(45,189,182,0.15)]
+    text-sm text-[#0A0E2A] shadow-[0_10px_25px_rgba(10,14,42,0.06)]
+    outline-none transition-all duration-200
+    placeholder:text-[#9AA3AF]
+    focus:border-[#2DBDB6]
+    focus:shadow-[0_0_0_4px_rgba(45,189,182,0.15)]
   "
-                />
+/>
+
                 <button
+                onClick={handleSearch}
                   className="
-                    group absolute right-1.5 top-1/2 flex h-10 -translate-y-1/2 items-center gap-1.5
-                    overflow-hidden rounded-full bg-gradient-to-br from-[#2DBDB6] to-[#1f9d97] px-4
-                    text-xs font-bold text-white shadow-[0_4px_12px_rgba(45,189,182,0.35)]
-                    transition-transform duration-150 hover:-translate-y-1/2 hover:scale-105 active:scale-95
-                  "
+    group absolute right-1.5 top-1/2 flex h-10 -translate-y-1/2
+    items-center gap-1.5 overflow-hidden rounded-full
+    bg-gradient-to-br from-[#2DBDB6] to-[#1f9d97]
+    px-4 text-xs font-bold text-white
+    shadow-[0_4px_12px_rgba(45,189,182,0.35)]
+    transition-transform duration-150
+    hover:-translate-y-1/2 hover:scale-105
+    active:scale-95
+  "
                 >
                   খুঁজুন
                 </button>
