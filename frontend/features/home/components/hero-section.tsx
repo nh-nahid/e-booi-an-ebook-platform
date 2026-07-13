@@ -3,6 +3,10 @@
 import Link from "next/link";
 import { Search, ArrowRight, BookOpen, Sparkles } from "lucide-react";
 import { Statistics } from "../types/home.types";
+import { useRouter } from "next/navigation";
+import { useSearchStore } from "@/stores/search-store";
+import { useDebounce } from "@/hooks/use-debounce";
+import { useEffect } from "react";
 
 interface StatisticsSectionProps {
   statistics: Statistics;
@@ -10,6 +14,16 @@ interface StatisticsSectionProps {
 export default function StatisticsSection({
   statistics,
 }: StatisticsSectionProps) {
+  const router = useRouter();
+  const { search, setSearch } = useSearchStore();
+  const debouncedSearch = useDebounce(search, 500);
+
+  useEffect(() => {
+    if (!debouncedSearch.trim()) return;
+
+    router.push("/books");
+  }, [debouncedSearch, router]);
+
   return (
     <section className="relative overflow-hidden bg-white">
       <style>{`
@@ -60,13 +74,15 @@ export default function StatisticsSection({
               <div className="relative">
                 <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#9AA3AF]" />
                 <input
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
                   placeholder="বইয়ের নাম বা লেখক খুঁজুন..."
                   className="
-                    h-13 w-full rounded-full border border-[#E1E5E8] bg-white py-3.5 pl-11 pr-32
-                    text-sm text-[#0A0E2A] shadow-[0_10px_25px_rgba(10,14,42,0.06)] outline-none
-                    transition-all duration-200 placeholder:text-[#9AA3AF]
-                    focus:border-[#2DBDB6] focus:shadow-[0_0_0_4px_rgba(45,189,182,0.15)]
-                  "
+    h-13 w-full rounded-full border border-[#E1E5E8] bg-white py-3.5 pl-11 pr-32
+    text-sm text-[#0A0E2A] shadow-[0_10px_25px_rgba(10,14,42,0.06)] outline-none
+    transition-all duration-200 placeholder:text-[#9AA3AF]
+    focus:border-[#2DBDB6] focus:shadow-[0_0_0_4px_rgba(45,189,182,0.15)]
+  "
                 />
                 <button
                   className="
