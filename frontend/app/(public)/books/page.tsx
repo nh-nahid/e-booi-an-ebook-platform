@@ -13,6 +13,8 @@ import BooksGrid from "@/features/books/components/books-grid";
 import BooksToolbar from "@/features/books/components/books-toolbar";
 import MobileFiltersSheet from "@/features/books/components/mobile-filters-sheet";
 import Pagination from "@/features/books/components/pagination";
+import { useSearchStore } from "@/stores/search-store";
+import { useDebounce } from "@/hooks/use-debounce";
 
 const initialFilters: BooksFilterState = {
   categories: [],
@@ -24,14 +26,13 @@ const initialFilters: BooksFilterState = {
 const PAGE_SIZE = 12;
 
 export default function BooksPage() {
-  const [search, setSearch] = useState("");
-
   const [view, setView] = useState<"grid" | "list">("grid");
   const searchParams = useSearchParams();
 
   const featured = searchParams.get("featured") === "true";
-
   const preOrder = searchParams.get("preOrder") === "true";
+  const search = useSearchStore((state) => state.search);
+  const debouncedSearch = useDebounce(search, 500);
 
   const SORT_OPTIONS = [
     "newest",
@@ -60,53 +61,37 @@ export default function BooksPage() {
 
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
-  const getInitialSort = () => {
-    const value = searchParams.get("sort");
 
-    const allowedSorts = [
-      "newest",
-      "oldest",
-      "price-low",
-      "price-high",
-      "title",
-      "latest",
-      "best-selling",
-    ];
+const bookParams = {
+  page,
+  limit: PAGE_SIZE,
 
-    return allowedSorts.includes(value || "")
-      ? (value as
-          | "newest"
-          | "oldest"
-          | "price-low"
-          | "price-high"
-          | "title"
-          | "latest"
-          | "best-selling")
-      : "newest";
-  };
+  search: debouncedSearch || undefined,
 
-  const bookParams = {
-    page,
-    limit: PAGE_SIZE,
+  category:
+    filters.categories.length > 0
+      ? filters.categories.join(",")
+      : undefined,
 
-    search: search || undefined,
+  bookType: filters.bookType || undefined,
 
-    category:
-      filters.categories.length > 0 ? filters.categories.join(",") : undefined,
+  minPrice:
+    filters.minPrice > 0
+      ? filters.minPrice
+      : undefined,
 
-    bookType: filters.bookType || undefined,
+  maxPrice:
+    filters.maxPrice > 0
+      ? filters.maxPrice
+      : undefined,
 
-    minPrice: filters.minPrice > 0 ? filters.minPrice : undefined,
+  featured: featured || undefined,
 
-    maxPrice: filters.maxPrice > 0 ? filters.maxPrice : undefined,
+  preOrder: preOrder || undefined,
 
-    featured: featured || undefined,
+  sort,
+};
 
-    preOrder: preOrder || undefined,
-
-    sort,
-  };
-  console.log("BOOK PARAMS =>", bookParams);
   const { data, isLoading } = useBooks(bookParams);
 
   const handleFilterChange = (next: typeof initialFilters) => {

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { Heart, Search, ShoppingCart } from "lucide-react";
 
@@ -14,11 +14,24 @@ import MobileNav from "./mobile-nav";
 import UserMenu from "./user-menu";
 import { NAV_LINKS } from "./nav-links";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import { useDebounce } from "@/hooks/use-debounce";
+import { useSearchStore } from "@/stores/search-store";
 
 export default function Navbar() {
   const pathname = usePathname();
-
+  const { search, setSearch } = useSearchStore();
+  const debouncedSearch = useDebounce(search, 500);
   const { isAuthenticated } = useAuth();
+  const router = useRouter();
+
+useEffect(() => {
+  if (!debouncedSearch.trim()) return;
+
+  if (pathname !== "/books") {
+    router.push("/books");
+  }
+}, [debouncedSearch, pathname, router]);
 
   return (
     <header className="nb-header">
@@ -58,8 +71,24 @@ export default function Navbar() {
 
       {/* Center */}
       <div className="nb-search">
-        <Search className="h-4 w-4" />
+        <button
+          onClick={() => {
+            if (!search.trim()) return;
+
+            router.push(`/books?search=${encodeURIComponent(search.trim())}`);
+          }}
+        >
+          <Search className="h-4 w-4 cursor-pointer" />
+        </button>
+
         <Input
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && search.trim()) {
+              router.push(`/books?search=${encodeURIComponent(search.trim())}`);
+            }
+          }}
           placeholder="Search books..."
           className="border-0 shadow-none focus-visible:ring-0"
         />
