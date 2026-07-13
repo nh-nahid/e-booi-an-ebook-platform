@@ -9,7 +9,12 @@ import BooksTable from "@/features/admin/components/books/books-table";
 import AddBookDialog, {
   BookFormValues,
 } from "@/features/admin/components/books/BookDialog";
-import { useBooks, useCreateBook, useDeleteBook, useUpdateBook } from "@/features/admin/hooks/admin.hooks";
+import {
+  useBooks,
+  useCreateBook,
+  useDeleteBook,
+  useUpdateBook,
+} from "@/features/admin/hooks/admin.hooks";
 
 import BooksLoading from "./loading";
 import { useDebounce } from "@/hooks/use-debounce";
@@ -35,7 +40,7 @@ export default function AdminBooksPage() {
     bookType,
     status,
   });
-
+  console.log("Books API Response:", data);
   const handleCreateBook = async (values: BookFormValues) => {
     const formData = new FormData();
 
@@ -77,76 +82,64 @@ export default function AdminBooksPage() {
     }
   };
 
-const handleUpdateBook = async (
-  id: string,
-  values: BookFormValues
-) => {
-  const formData = new FormData();
+  const handleUpdateBook = async (id: string, values: BookFormValues) => {
+    const formData = new FormData();
 
-  formData.append("title", values.title);
-  formData.append("author", values.author);
-  formData.append("category", values.category);
-  formData.append("publisher", values.publisher);
-  formData.append("isbn", values.isbn);
-  formData.append("language", values.language);
-  formData.append("publicationDate", values.publicationDate);
-  formData.append("pages", values.pages);
-  formData.append("price", values.price);
-  formData.append("stock", values.stock);
-  formData.append("bookType", values.bookType);
-  formData.append("description", values.description);
+    formData.append("title", values.title);
+    formData.append("author", values.author);
+    formData.append("category", values.category);
+    formData.append("publisher", values.publisher);
+    formData.append("isbn", values.isbn);
+    formData.append("language", values.language);
+    formData.append("publicationDate", values.publicationDate);
+    formData.append("pages", values.pages);
+    formData.append("price", values.price);
+    formData.append("stock", values.stock);
+    formData.append("bookType", values.bookType);
+    formData.append("description", values.description);
 
-  formData.append(
-    "isPublished",
-    String(values.status === "published")
-  );
+    formData.append("isPublished", String(values.status === "published"));
 
-  // Optional during update
-  if (values.cover) {
-    formData.append("coverImage", values.cover);
-  }
-
-  if (values.pdf) {
-    formData.append("pdfFile", values.pdf);
-  }
-
-  try {
-    await updateBookMutation.mutateAsync({
-      id,
-      formData,
-    });
-
-    toast.success("Book updated successfully.");
-  } catch (error: unknown) {
-    if (axios.isAxiosError(error)) {
-      toast.error(
-        error.response?.data?.message ??
-          "Failed to update book."
-      );
-    } else {
-      toast.error("Something went wrong.");
+    // Optional during update
+    if (values.cover) {
+      formData.append("coverImage", values.cover);
     }
 
-    throw error;
-  }
-};
-
-const handleDeleteBook = async (id: string) => {
-  try {
-    await deleteBookMutation.mutateAsync(id);
-
-    toast.success("Book deleted successfully.");
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      toast.error(
-        error.response?.data?.message ??
-          "Failed to delete book."
-      );
-    } else {
-      toast.error("Something went wrong.");
+    if (values.pdf) {
+      formData.append("pdfFile", values.pdf);
     }
-  }
-};
+
+    try {
+      await updateBookMutation.mutateAsync({
+        id,
+        formData,
+      });
+
+      toast.success("Book updated successfully.");
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data?.message ?? "Failed to update book.");
+      } else {
+        toast.error("Something went wrong.");
+      }
+
+      throw error;
+    }
+  };
+
+  const handleDeleteBook = async (id: string) => {
+    try {
+      await deleteBookMutation.mutateAsync(id);
+
+      toast.success("Book deleted successfully.");
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data?.message ?? "Failed to delete book.");
+      } else {
+        toast.error("Something went wrong.");
+      }
+    }
+  };
 
   if (isLoading) {
     return <BooksLoading />;
@@ -206,10 +199,10 @@ const handleDeleteBook = async (id: string) => {
       />
 
       <BooksTable
-        books={data.books}
-        total={data.total}
-        page={data.page}
-        totalPages={data.totalPages}
+        books={data.data.books}
+        total={data.data.total}
+        page={data.data.page}
+        totalPages={data.data.totalPages}
         onPageChange={setPage}
         onUpdate={handleUpdateBook}
         onDelete={handleDeleteBook}

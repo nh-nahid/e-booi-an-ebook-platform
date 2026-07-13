@@ -1,11 +1,15 @@
 "use client";
 
-import { Bell } from "lucide-react";
+import { Bell, User, Settings, LogOut, ChevronsUpDown } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import { User, Settings, LogOut, ChevronsUpDown } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useAuth } from "@/hooks/use-auth";
 import { useLogout } from "@/features/auth/hooks/auth.hooks";
+import { clearAccessToken } from "@/services/api/token";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,10 +17,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { queryClient } from "@/lib/query-client";
-import { clearAccessToken } from "@/services/api/token";
-import { toast } from "sonner";
-import { useQueryClient } from "@tanstack/react-query";
 
 const PAGE_TITLES: Record<string, string> = {
   "/admin": "Dashboard",
@@ -28,39 +28,49 @@ const PAGE_TITLES: Record<string, string> = {
   "/admin/publishers": "Publishers",
 };
 
-interface AdminHeaderProps {
-  adminName?: string;
-  avatarUrl?: string;
-  notificationCount?: number;
-}
-
-export default function AdminHeader({
-  adminName = "Admin",
-  avatarUrl = "",
-  notificationCount = 0,
-}: AdminHeaderProps) {
-  const pathname = usePathname();
+export default function AdminHeader() {
   const router = useRouter();
+  const pathname = usePathname();
+  const queryClient = useQueryClient();
+
+  const { user, isLoading } = useAuth();
+  const { mutate: logout, isPending } = useLogout();
+
+  if (isLoading) {
+    return (
+      <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b border-[#E1E5E8] bg-white/90 px-6 backdrop-blur">
+        <div className="h-6 w-40 animate-pulse rounded bg-gray-200" />
+        <div className="h-10 w-10 animate-pulse rounded-full bg-gray-200" />
+      </header>
+    );
+  }
+
+  if (!user) return null;
 
   const title = PAGE_TITLES[pathname] ?? "Admin";
+  const notificationCount = 0;
 
-  const initials = adminName
+  const initials = user.name
     .split(" ")
     .map((w) => w[0])
     .join("")
     .slice(0, 2)
     .toUpperCase();
 
-  const queryClient = useQueryClient();
-  const { mutate: logout, isPending } = useLogout();
+  const avatarUrl = user.avatar
+    ? `${process.env.NEXT_PUBLIC_API_URL?.replace(
+        "/api/v1",
+        "",
+      )}/uploads/avatars/${user.avatar}`
+    : "";
 
   const handleLogout = () => {
     logout(undefined, {
       onSuccess: () => {
         clearAccessToken();
 
-        queryClient.setQueryData(["profile"], {
-          user: null,
+        queryClient.removeQueries({
+          queryKey: ["profile"],
         });
 
         toast.success("Logged out successfully");
@@ -90,7 +100,7 @@ export default function AdminHeader({
       </div>
 
       <div className="flex items-center gap-3">
-        <button className="relative flex h-10 w-10 items-center justify-center rounded-full hover:bg-[#E6F7F6]">
+        <button className="relative flex h-10 w-10 items-center justify-center rounded-full transition hover:bg-[#E6F7F6]">
           <Bell className="h-5 w-5" />
 
           {notificationCount > 0 && (
@@ -108,7 +118,7 @@ export default function AdminHeader({
             </Avatar>
 
             <span className="hidden text-sm font-semibold sm:block">
-              {adminName}
+              {user.name}
             </span>
 
             <ChevronsUpDown className="h-4 w-4 text-gray-500" />
@@ -116,8 +126,8 @@ export default function AdminHeader({
 
           <DropdownMenuContent align="end" className="w-56">
             <div className="p-2">
-              <p className="font-semibold">{adminName}</p>
-              <p className="text-xs text-muted-foreground">Administrator</p>
+              <p className="font-semibold">{user.name}</p>
+              <p className="text-xs text-muted-foreground">{user.email}</p>
             </div>
 
             <DropdownMenuSeparator />

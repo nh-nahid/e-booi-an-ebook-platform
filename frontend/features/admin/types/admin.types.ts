@@ -171,7 +171,7 @@ export interface Book {
   stock: number;
 
   coverImage: string;
-  pdfFile: string;
+  pdfFile: string | null;
 
   bookType: "Digital" | "Physical";
   isPublished: boolean;
