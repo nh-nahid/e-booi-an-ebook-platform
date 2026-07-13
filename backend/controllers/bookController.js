@@ -76,23 +76,25 @@ async function getBooks(req, res, next) {
     const query = {};
 
     // Search
-    if (search) {
+    if (search?.trim()) {
+      const keyword = search.trim();
+
       query.$or = [
         {
           title: {
-            $regex: search,
+            $regex: keyword,
             $options: "i",
           },
         },
         {
           author: {
-            $regex: search,
+            $regex: keyword,
             $options: "i",
           },
         },
         {
           category: {
-            $regex: search,
+            $regex: keyword,
             $options: "i",
           },
         },

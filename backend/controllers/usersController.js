@@ -212,6 +212,7 @@ async function addUser(req, res, next) {
       adminCode,
     } = req.body;
 
+    // Validate admin access
     if (role === "admin") {
       if (!adminCode) {
         return res.status(400).json({
@@ -226,12 +227,24 @@ async function addUser(req, res, next) {
       }
     }
 
+    // Check if user already exists
+    const existingUser = await User.findOne({ email });
+
+    if (existingUser) {
+      return res.status(409).json({
+        message: "User already exists with this email.",
+      });
+    }
+
+    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // Avatar upload (optional)
     const file = req.files?.[0];
     const filename = file ? file.filename : null;
 
-    const newUser = new User({
+    // Create user
+    const newUser = await User.create({
       name,
       email,
       password: hashedPassword,
@@ -239,21 +252,36 @@ async function addUser(req, res, next) {
       avatar: filename,
     });
 
-    await newUser.save();
-
-    await sendEmail({
-      to: newUser.email,
-      subject: "Welcome to Book Store",
-      html: welcomeEmail(newUser),
-    });
+    // Send welcome email (do not fail registration if email fails)
+    try {
+      await sendEmail({
+        to: newUser.email,
+        subject: "Welcome to Book Store",
+        html: welcomeEmail(newUser),
+      });
+    } catch (emailError) {
+      console.error("Failed to send welcome email:");
+      console.error(emailError);
+    }
 
     return res.status(201).json({
+      success: true,
       message: "User registered successfully",
+      data: {
+        id: newUser._id,
+        name: newUser.name,
+        email: newUser.email,
+        role: newUser.role,
+      },
     });
   } catch (error) {
     next(error);
   }
 }
+
+module.exports = {
+  addUser,
+};
 
 // =======================
 // UPDATE USER BY ADMIN
