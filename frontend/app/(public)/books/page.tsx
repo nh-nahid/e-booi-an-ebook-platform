@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import SiteFooter from "@/components/layout/site-footer";
 import { useSearchParams } from "next/navigation";
@@ -23,6 +23,18 @@ const initialFilters: BooksFilterState = {
 
 const PAGE_SIZE = 12;
 
+const SORT_OPTIONS = [
+  "newest",
+  "oldest",
+  "price-low",
+  "price-high",
+  "title",
+  "latest",
+  "best-selling",
+] as const;
+
+type SortType = (typeof SORT_OPTIONS)[number];
+
 export default function BooksPage() {
   const [view, setView] = useState<"grid" | "list">("grid");
   const searchParams = useSearchParams();
@@ -31,63 +43,73 @@ export default function BooksPage() {
   const preOrder = searchParams.get("preOrder") === "true";
   const search = searchParams.get("search")?.trim() || "";
 
-  const SORT_OPTIONS = [
-    "newest",
-    "oldest",
-    "price-low",
-    "price-high",
-    "title",
-    "latest",
-    "best-selling",
-  ] as const;
-
-  type SortType = (typeof SORT_OPTIONS)[number];
-
   const urlSort = searchParams.get("sort");
-
   const initialSort: SortType =
     urlSort && SORT_OPTIONS.includes(urlSort as SortType)
       ? (urlSort as SortType)
       : "newest";
 
   const [sort, setSort] = useState<SortType>(initialSort);
-
   const [filters, setFilters] = useState(initialFilters);
-
   const [page, setPage] = useState(1);
-
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
+  // --- Render-time state adjustment ---
+  // "Previous value" is tracked in STATE (not a ref), because reading
+  // ref.current during render is no longer allowed under the
+  // react-hooks/refs rule (needed for React Compiler compatibility).
+  // Reading state during render is always safe. If the tracked value
+  // differs from last render, we reset dependent state right here —
+  // React detects the state update during render and immediately
+  // re-renders before committing, so there's no visible flash and no
+  // extra effect-driven render pass.
 
-const bookParams = {
-  page,
-  limit: PAGE_SIZE,
+  const [prevSearchKey, setPrevSearchKey] = useState({
+    search,
+    featured,
+    preOrder,
+  });
 
-  search: search || undefined,
+  const searchKeyChanged =
+    prevSearchKey.search !== search ||
+    prevSearchKey.featured !== featured ||
+    prevSearchKey.preOrder !== preOrder;
 
-  category:
-    filters.categories.length > 0
-      ? filters.categories.join(",")
-      : undefined,
+  if (searchKeyChanged) {
+    setPrevSearchKey({ search, featured, preOrder });
+    setPage(1);
+  }
 
-  bookType: filters.bookType || undefined,
+  const [prevInitialSort, setPrevInitialSort] = useState(initialSort);
 
-  minPrice:
-    filters.minPrice > 0
-      ? filters.minPrice
-      : undefined,
+  if (prevInitialSort !== initialSort) {
+    setPrevInitialSort(initialSort);
+    setSort(initialSort);
+  }
 
-  maxPrice:
-    filters.maxPrice > 0
-      ? filters.maxPrice
-      : undefined,
+  // --- end render-time adjustment ---
 
-  featured: featured || undefined,
+  const bookParams = {
+    page,
+    limit: PAGE_SIZE,
 
-  preOrder: preOrder || undefined,
+    search: search || undefined,
 
-  sort,
-};
+    category:
+      filters.categories.length > 0 ? filters.categories.join(",") : undefined,
+
+    bookType: filters.bookType || undefined,
+
+    minPrice: filters.minPrice > 0 ? filters.minPrice : undefined,
+
+    maxPrice: filters.maxPrice > 0 ? filters.maxPrice : undefined,
+
+    featured: featured || undefined,
+
+    preOrder: preOrder || undefined,
+
+    sort,
+  };
 
   const { data, isLoading } = useBooks(bookParams);
 
@@ -100,14 +122,6 @@ const bookParams = {
     setFilters(initialFilters);
     setPage(1);
   };
-
-useEffect(() => {
-  setPage(1);
-}, [search, featured, preOrder]);
-
-useEffect(() => {
-  setSort(initialSort);
-}, [initialSort]);
 
   return (
     <div className="min-h-screen bg-[#F7F9FA]">
@@ -137,11 +151,7 @@ useEffect(() => {
               onOpenMobileFilters={() => setMobileFiltersOpen(true)}
             />
 
-            <BooksGrid
-              books={data?.books ?? []}
-              view={view}
-              loading={isLoading}
-            />
+            <BooksGrid books={data?.books ?? []} view={view} loading={isLoading} />
 
             <Pagination
               page={page}
