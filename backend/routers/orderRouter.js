@@ -4,6 +4,7 @@ const {
     createOrder,
     getMyOrders,
     getOrders,
+    getOrderById,
     updateOrderStatus,
     downloadBook,
     updatePaymentStatus,
@@ -55,6 +56,13 @@ router.get(
     "/:id/invoice",
     checkLogin,
     downloadInvoice
+);
+
+// Get single order (owner or admin)
+router.get(
+    "/:id",
+    checkLogin,
+    getOrderById
 );
 
 // =======================

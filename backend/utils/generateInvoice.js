@@ -15,6 +15,39 @@ const COLORS = {
 
 const PAGE_MARGIN = 50;
 
+// ---- Fonts ----
+// PDFKit's built-in "Helvetica"/"Helvetica-Bold" only cover Latin glyphs —
+// they contain no Bengali characters at all, so any Bangla text silently
+// fails to render. Noto Sans Bengali (the script-specific Noto build) has
+// the opposite problem: it only ships Bengali + digits, with NO Latin
+// alphabet at all, so English labels disappear instead.
+// Hind Siliguri covers full Latin (A-Z/a-z) AND Bengali in one font, so
+// we use it everywhere for both scripts.
+const FONT_REGULAR_PATH = path.join(
+  __dirname,
+  "fonts",
+  "HindSiliguri-Regular.ttf",
+);
+const FONT_BOLD_PATH = path.join(
+  __dirname,
+  "fonts",
+  "HindSiliguri-Bold.ttf",
+);
+
+const FONT_REGULAR = "Bengali";
+const FONT_BOLD = "Bengali-Bold";
+
+function registerFonts(doc) {
+  if (!fs.existsSync(FONT_REGULAR_PATH) || !fs.existsSync(FONT_BOLD_PATH)) {
+    throw new Error(
+      `Missing Bengali font files. Expected:\n${FONT_REGULAR_PATH}\n${FONT_BOLD_PATH}`,
+    );
+  }
+
+  doc.registerFont(FONT_REGULAR, FONT_REGULAR_PATH);
+  doc.registerFont(FONT_BOLD, FONT_BOLD_PATH);
+}
+
 function generateInvoice(order, user) {
   return new Promise((resolve, reject) => {
     const invoiceNumber = `INV-${Date.now()}`;
@@ -34,6 +67,13 @@ function generateInvoice(order, user) {
     const doc = new PDFDocument({ size: "A4", margin: PAGE_MARGIN });
     const stream = fs.createWriteStream(filePath);
     doc.pipe(stream);
+
+    try {
+      registerFonts(doc);
+    } catch (err) {
+      reject(err);
+      return;
+    }
 
     const pageWidth = doc.page.width - PAGE_MARGIN * 2;
 
@@ -59,32 +99,30 @@ function generateInvoice(order, user) {
 // ---------- Sections ----------
 
 function drawHeader(doc, invoiceNumber, pageWidth) {
-  const top = PAGE_MARGIN;
-
   // Colored header band
   doc.rect(0, 0, doc.page.width, 110).fill(COLORS.primary);
 
   doc
     .fillColor(COLORS.white)
-    .font("Helvetica-Bold")
+    .font(FONT_BOLD)
     .fontSize(24)
     .text("E-Booi", PAGE_MARGIN, 32);
 
   doc
-    .font("Helvetica")
+    .font(FONT_REGULAR)
     .fontSize(10)
     .fillColor("#C9D4E3")
     .text("Your trusted online bookstore", PAGE_MARGIN, 62);
 
   // Invoice label on the right
   doc
-    .font("Helvetica-Bold")
+    .font(FONT_BOLD)
     .fontSize(18)
     .fillColor(COLORS.accent)
     .text("INVOICE", PAGE_MARGIN, 30, { width: pageWidth, align: "right" });
 
   doc
-    .font("Helvetica")
+    .font(FONT_REGULAR)
     .fontSize(10)
     .fillColor(COLORS.white)
     .text(invoiceNumber, PAGE_MARGIN, 56, { width: pageWidth, align: "right" })
@@ -102,19 +140,19 @@ function drawPartiesBlock(doc, order, user, pageWidth) {
 
   // Bill To
   doc
-    .font("Helvetica-Bold")
+    .font(FONT_BOLD)
     .fontSize(10)
     .fillColor(COLORS.muted)
     .text("BILL TO", PAGE_MARGIN, startY);
 
   doc
-    .font("Helvetica-Bold")
+    .font(FONT_BOLD)
     .fontSize(12)
     .fillColor(COLORS.text)
     .text(user.name, PAGE_MARGIN, startY + 14);
 
   doc
-    .font("Helvetica")
+    .font(FONT_REGULAR)
     .fontSize(10)
     .fillColor(COLORS.muted)
     .text(user.email, PAGE_MARGIN, startY + 30);
@@ -123,13 +161,13 @@ function drawPartiesBlock(doc, order, user, pageWidth) {
   const rightX = PAGE_MARGIN + colWidth;
 
   doc
-    .font("Helvetica-Bold")
+    .font(FONT_BOLD)
     .fontSize(10)
     .fillColor(COLORS.muted)
     .text("ORDER DETAILS", rightX, startY, { width: colWidth, align: "right" });
 
   doc
-    .font("Helvetica")
+    .font(FONT_REGULAR)
     .fontSize(10)
     .fillColor(COLORS.text)
     .text(`Order ID: ${order._id}`, rightX, startY + 14, {
@@ -166,7 +204,7 @@ function drawItemsTable(doc, order, pageWidth) {
 
   // Table header
   doc.rect(PAGE_MARGIN, y, pageWidth, rowHeight).fill(COLORS.primary);
-  doc.fillColor(COLORS.white).font("Helvetica-Bold").fontSize(10);
+  doc.fillColor(COLORS.white).font(FONT_BOLD).fontSize(10);
   doc.text("BOOK TITLE", colTitle.x + 10, y + 9, { width: colTitle.w - 10 });
   doc.text("QTY", colQty.x, y + 9, { width: colQty.w, align: "center" });
   doc.text("PRICE", colPrice.x, y + 9, { width: colPrice.w, align: "right" });
@@ -178,7 +216,7 @@ function drawItemsTable(doc, order, pageWidth) {
   y += rowHeight;
 
   // Table rows
-  doc.font("Helvetica").fontSize(10);
+  doc.font(FONT_REGULAR).fontSize(10);
 
   order.items.forEach((item, idx) => {
     const lineTotal = (item.price || 0) * (item.quantity || 1);
@@ -188,7 +226,7 @@ function drawItemsTable(doc, order, pageWidth) {
       doc.rect(PAGE_MARGIN, y, pageWidth, rowHeight).fill(COLORS.rowAlt);
     }
 
-    doc.fillColor(COLORS.text);
+    doc.font(FONT_REGULAR).fillColor(COLORS.text);
     doc.text(item.book.title, colTitle.x + 10, y + 9, {
       width: colTitle.w - 20,
       ellipsis: true,
@@ -238,7 +276,7 @@ function drawTotals(doc, order, pageWidth) {
 
   function row(label, value, opts = {}) {
     doc
-      .font(opts.bold ? "Helvetica-Bold" : "Helvetica")
+      .font(opts.bold ? FONT_BOLD : FONT_REGULAR)
       .fontSize(opts.size || 10)
       .fillColor(opts.color || COLORS.text)
       .text(label, boxX, y, { width: boxWidth - 90 })
@@ -279,7 +317,7 @@ function drawFooter(doc, order, pageWidth) {
     .stroke();
 
   doc
-    .font("Helvetica")
+    .font(FONT_REGULAR)
     .fontSize(9)
     .fillColor(COLORS.muted)
     .text(
@@ -288,10 +326,7 @@ function drawFooter(doc, order, pageWidth) {
       y + 12,
       { width: pageWidth, align: "center" },
     )
-    .text(`Transaction ID: ${order.transactionId}`, PAGE_MARGIN, y + 26, {
-      width: pageWidth,
-      align: "center",
-    });
+    
 }
 
 module.exports = generateInvoice;

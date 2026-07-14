@@ -3,6 +3,8 @@ const SSLCommerzPayment = require("sslcommerz-lts");
 const Order = require("../models/Order");
 const User = require("../models/User");
 const Coupon = require("../models/Coupon");
+const Cart = require("../models/Cart");
+const Book = require("../models/Book");
 
 const sendEmail = require("../utils/sendEmail");
 
@@ -15,9 +17,7 @@ const generateInvoice = require("../utils/generateInvoice");
 // ======================
 async function initiatePayment(req, res, next) {
     try {
-        const order = await Order.findById(
-            req.params.id
-        )
+        const order = await Order.findById(req.params.id)
             .populate("user")
             .populate("coupon");
 
@@ -35,69 +35,60 @@ async function initiatePayment(req, res, next) {
 
         const customer = order.user;
 
+        // Digital-only orders have no shippingAddress — fall back to the
+        // customer's account details so SSLCommerz's required customer
+        // fields are never undefined.
+        const hasShipping = Boolean(order.shippingAddress?.fullName);
+
         const data = {
-            total_amount:
-                order.finalAmount || order.totalAmount,
-
+            total_amount: order.finalAmount || order.totalAmount,
             currency: "BDT",
-
             tran_id: order._id.toString(),
 
-            success_url:
-                `${process.env.BACKEND_URL}/api/v1/payment/success`,
+            success_url: `${process.env.BACKEND_URL}/api/v1/payment/success`,
+            fail_url: `${process.env.BACKEND_URL}/api/v1/payment/fail`,
+            cancel_url: `${process.env.BACKEND_URL}/api/v1/payment/cancel`,
+            ipn_url: `${process.env.BACKEND_URL}/api/v1/payment/ipn`,
 
-            fail_url:
-                `${process.env.BACKEND_URL}/api/v1/payment/fail`,
-
-            cancel_url:
-                `${process.env.BACKEND_URL}/api/v1/payment/cancel`,
-
-            ipn_url:
-                `${process.env.BACKEND_URL}/api/v1/payment/ipn`,
-
-            shipping_method: "Courier",
+            shipping_method: hasShipping ? "Courier" : "NO",
 
             product_name: "Book Purchase",
-
             product_category: "Books",
-
             product_profile: "general",
 
             // Shipping Information
-            ship_name:
-                order.shippingAddress.fullName,
+            ship_name: hasShipping
+                ? order.shippingAddress.fullName
+                : customer?.name || "Customer",
 
-            ship_add1:
-                order.shippingAddress.address,
+            ship_add1: hasShipping ? order.shippingAddress.address : "N/A",
 
-            ship_city:
-                order.shippingAddress.city,
+            ship_city: hasShipping ? order.shippingAddress.city : "N/A",
 
-            ship_postcode:
-                order.shippingAddress.postalCode ||
-                "0000",
+            ship_postcode: hasShipping
+                ? order.shippingAddress.postalCode || "0000"
+                : "0000",
 
             ship_country: "Bangladesh",
 
-            ship_phone:
-                order.shippingAddress.phone,
+            ship_phone: hasShipping
+                ? order.shippingAddress.phone
+                : customer?.phone || "01700000000",
 
             // Customer Information
-            cus_name:
-                order.shippingAddress.fullName,
+            cus_name: hasShipping
+                ? order.shippingAddress.fullName
+                : customer?.name || "Customer",
 
-            cus_email:
-                customer?.email ||
-                "customer@example.com",
+            cus_email: customer?.email || "customer@example.com",
 
-            cus_phone:
-                order.shippingAddress.phone,
+            cus_phone: hasShipping
+                ? order.shippingAddress.phone
+                : customer?.phone || "01700000000",
 
-            cus_add1:
-                order.shippingAddress.address,
+            cus_add1: hasShipping ? order.shippingAddress.address : "N/A",
 
-            cus_city:
-                order.shippingAddress.city,
+            cus_city: hasShipping ? order.shippingAddress.city : "N/A",
 
             cus_country: "Bangladesh",
         };
@@ -110,22 +101,16 @@ async function initiatePayment(req, res, next) {
 
         const apiResponse = await sslcz.init(data);
 
-        if (
-            !apiResponse ||
-            !apiResponse.GatewayPageURL
-        ) {
+        if (!apiResponse || !apiResponse.GatewayPageURL) {
             return res.status(500).json({
-                message:
-                    "Payment gateway failed to initialize",
+                message: "Payment gateway failed to initialize",
                 debug: apiResponse,
             });
         }
 
         return res.json({
-            gatewayURL:
-                apiResponse.GatewayPageURL,
+            gatewayURL: apiResponse.GatewayPageURL,
         });
-
     } catch (error) {
         console.log(error);
         next(error);
@@ -152,7 +137,7 @@ async function paymentSuccess(req, res, next) {
         // Prevent duplicate callback processing
         if (order.paymentStatus === "paid") {
             return res.redirect(
-                `${process.env.FRONTEND_URL}/payment-success`
+                `${process.env.FRONTEND_URL}/payment-success?orderId=${order._id}`
             );
         }
 
@@ -169,6 +154,21 @@ async function paymentSuccess(req, res, next) {
                 },
             });
         }
+
+        // Reduce stock now that payment is confirmed — deferred from
+        // createOrder for gateway payments so a failed/abandoned payment
+        // never permanently reduces inventory for a sale that never happened.
+        for (const item of order.items) {
+            if (item.book && item.book.bookType === "Physical") {
+                await Book.findByIdAndUpdate(item.book._id, {
+                    $inc: { stock: -item.quantity },
+                });
+            }
+        }
+
+        // Clear cart now that payment is confirmed — deferred from
+        // createOrder for the same reason as stock above.
+        await Cart.deleteMany({ user: order.user });
 
         // Customer
         const user = await User.findById(order.user);
@@ -189,20 +189,13 @@ async function paymentSuccess(req, res, next) {
                 html: paymentEmail(user, order, bank_tran_id),
             });
         } catch (emailError) {
-            console.log(
-                "Payment email failed:",
-                emailError.message
-            );
+            console.log("Payment email failed:", emailError.message);
         }
 
         // Send Digital books email
         const DigitalBooks = order.items
-            .filter(
-                item =>
-                    item.book &&
-                    item.book.bookType === "Digital"
-            )
-            .map(item => item.book);
+            .filter((item) => item.book && item.book.bookType === "Digital")
+            .map((item) => item.book);
 
         if (DigitalBooks.length > 0) {
             try {
@@ -212,15 +205,12 @@ async function paymentSuccess(req, res, next) {
                     html: DigitalBookEmail(user, DigitalBooks),
                 });
             } catch (emailError) {
-                console.log(
-                    "Digital email failed:",
-                    emailError.message
-                );
+                console.log("Digital email failed:", emailError.message);
             }
         }
 
         res.redirect(
-            `${process.env.FRONTEND_URL}/payment-success`
+            `${process.env.FRONTEND_URL}/payment-success?orderId=${order._id}`
         );
     } catch (error) {
         next(error);
@@ -231,8 +221,9 @@ async function paymentSuccess(req, res, next) {
 // PAYMENT FAILED
 // ======================
 async function paymentFail(req, res) {
+    const { tran_id } = req.body;
     res.redirect(
-        `${process.env.FRONTEND_URL}/payment-failed`
+        `${process.env.FRONTEND_URL}/payment-failed?orderId=${tran_id ?? ""}`
     );
 }
 
@@ -240,8 +231,9 @@ async function paymentFail(req, res) {
 // PAYMENT CANCELLED
 // ======================
 async function paymentCancel(req, res) {
+    const { tran_id } = req.body;
     res.redirect(
-        `${process.env.FRONTEND_URL}/payment-cancel`
+        `${process.env.FRONTEND_URL}/payment-cancel?orderId=${tran_id ?? ""}`
     );
 }
 
