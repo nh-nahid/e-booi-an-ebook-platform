@@ -1,218 +1,305 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import { Mail, ArrowRight, Loader2, Check, Clock } from "lucide-react";
-import Image from "next/image";
+import { Fragment, useEffect, useState } from "react";
+import { Search, ChevronDown, ChevronUp, Package, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
-// Set your real launch date/time here
-const LAUNCH_DATE = new Date("2026-09-01T00:00:00");
+import { useAdminOrders, useUpdateAdminOrderStatus } from "@/features/admin/hooks/admin.hooks";
+import type { Order } from "@/features/admin/types/admin.types";
 
-function getTimeLeft(target: Date) {
-  const diff = Math.max(0, target.getTime() - Date.now());
+const ORDER_STATUSES: Order["orderStatus"][] = [
+  "pending",
+  "processing",
+  "shipped",
+  "delivered",
+  "cancelled",
+];
 
-  return {
-    days: Math.floor(diff / (1000 * 60 * 60 * 24)),
-    hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
-    minutes: Math.floor((diff / (1000 * 60)) % 60),
-    seconds: Math.floor((diff / 1000) % 60),
-  };
+const PAYMENT_STATUSES: Order["paymentStatus"][] = ["pending", "paid", "failed"];
+
+const STATUS_STYLES: Record<Order["orderStatus"], string> = {
+  pending: "bg-[#FEF3C7] text-[#92400E]",
+  processing: "bg-[#E6F7F6] text-[#0A0E2A]",
+  shipped: "bg-[#DBEAFE] text-[#1E40AF]",
+  delivered: "bg-[#DCFCE7] text-[#166534]",
+  cancelled: "bg-[#FEE2E2] text-[#991B1B]",
+};
+
+const PAYMENT_STYLES: Record<Order["paymentStatus"], string> = {
+  pending: "bg-[#FEF3C7] text-[#92400E]",
+  paid: "bg-[#DCFCE7] text-[#166534]",
+  failed: "bg-[#FEE2E2] text-[#991B1B]",
+};
+
+function formatDate(iso: string) {
+  return new Date(iso).toLocaleDateString("en-US", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
 }
 
-export default function ComingSoonPage() {
-  const [timeLeft, setTimeLeft] = useState(() => getTimeLeft(LAUNCH_DATE));
-  const [email, setEmail] = useState("");
-  const [focused, setFocused] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [subscribed, setSubscribed] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+function formatMoney(amount: number) {
+  return `৳${amount.toLocaleString("en-BD")}`;
+}
 
+export default function AdminOrdersPage() {
+  const [page, setPage] = useState(1);
+  const [searchInput, setSearchInput] = useState("");
+  const [search, setSearch] = useState("");
+  const [orderStatus, setOrderStatus] = useState<Order["orderStatus"] | "">("");
+  const [paymentStatus, setPaymentStatus] = useState<Order["paymentStatus"] | "">("");
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+
+  // Debounce search input -> actual query param
   useEffect(() => {
-    const timer = setInterval(() => setTimeLeft(getTimeLeft(LAUNCH_DATE)), 1000);
-    return () => clearInterval(timer);
-  }, []);
+    const timer = setTimeout(() => {
+      setSearch(searchInput);
+      setPage(1);
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [searchInput]);
 
-  const handleSubscribe = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
+  const { data, isLoading, isError } = useAdminOrders({
+    page,
+    search,
+    orderStatus: orderStatus || undefined,
+    paymentStatus: paymentStatus || undefined,
+  });
 
-    if (!/^\S+@\S+\.\S+$/.test(email)) {
-      setError("Please enter a valid email address.");
-      return;
-    }
+  const updateStatus = useUpdateAdminOrderStatus();
 
-    setLoading(true);
-    try {
-      // TODO: wire up to your actual notify-me mutation
-      // await subscribeToLaunch(email);
-      await new Promise((r) => setTimeout(r, 900));
-      setSubscribed(true);
-    } finally {
-      setLoading(false);
-    }
+  const handleStatusChange = (id: string, next: Order["orderStatus"]) => {
+    updateStatus.mutate(
+      { id, orderStatus: next },
+      {
+        onSuccess: () => toast.success("Order status updated"),
+        onError: () => toast.error("Couldn't update order status. Try again."),
+      }
+    );
   };
 
-  const units: { label: string; value: number }[] = [
-    { label: "Days", value: timeLeft.days },
-    { label: "Hours", value: timeLeft.hours },
-    { label: "Minutes", value: timeLeft.minutes },
-    { label: "Seconds", value: timeLeft.seconds },
-  ];
+  const orders = data?.data ?? [];
+  const pagination = data?.pagination;
 
   return (
-    <div className="relative -m-6 flex min-h-screen items-center justify-center overflow-hidden bg-[#F7F9FA] -mt-15 px-4 py-16">
-      <style>{`
-        @keyframes csFloat {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          50% { transform: translate(16px, -18px) scale(1.06); }
-        }
-        @keyframes csFloatSlow {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          50% { transform: translate(-14px, 14px) scale(1.04); }
-        }
-        @keyframes csFadeUp {
-          from { opacity: 0; transform: translateY(16px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes csPulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.55; }
-        }
-        .cs-blob-a { animation: csFloat 8s ease-in-out infinite; }
-        .cs-blob-b { animation: csFloatSlow 10s ease-in-out infinite; }
-        .cs-fade { animation: csFadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
-      `}</style>
-
-      {/* ambient blobs */}
-      <div className="cs-blob-a pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-[#2DBDB6] opacity-[0.14] blur-3xl" />
-      <div className="cs-blob-b pointer-events-none absolute -bottom-28 -right-16 h-80 w-80 rounded-full bg-[#0A0E2A] opacity-[0.08] blur-3xl" />
-
-      <div className="relative z-10 flex w-full max-w-lg flex-col items-center text-center">
-        {/* logo */}
-        <div className="cs-fade mb-6 flex items-center gap-2" style={{ animationDelay: "0s" }}>
-          <Image src="/logo.jpeg" width={32} height={32} alt="Logo" />
-          <span className="text-xl font-extrabold text-[#0A0E2A]">
-            eBoo<span className="text-[#2DBDB6]">i</span>
-          </span>
+    <div className="mx-auto max-w-6xl px-4 py-8">
+      <div className="mb-6 flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-extrabold text-[#0A0E2A]">Orders</h1>
+          <p className="mt-1 text-sm text-[#6B7280]">
+            {pagination ? `${pagination.total} total orders` : "Loading orders…"}
+          </p>
         </div>
-
-        {/* badge */}
-        <span
-          className="cs-fade mb-4 flex items-center gap-1.5 rounded-full bg-[#E6F7F6] px-4 py-1.5 text-xs font-bold text-[#0A0E2A]"
-          style={{ animationDelay: "0.05s" }}
-        >
-          <Clock className="h-3.5 w-3.5 text-[#2DBDB6]" />
-          Launching Soon
-        </span>
-
-        <h1
-          className="cs-fade text-3xl font-extrabold leading-tight text-[#0A0E2A] sm:text-4xl"
-          style={{ animationDelay: "0.1s" }}
-        >
-          Something great is
-          <br />
-          on its way.
-        </h1>
-
-        <p
-          className="cs-fade mt-3 max-w-sm text-sm text-[#6B7280] sm:text-base"
-          style={{ animationDelay: "0.15s" }}
-        >
-          We&apos;re putting the final touches on this page. Leave your email and
-          we&apos;ll let you know the moment it&apos;s live.
-        </p>
-
-        {/* countdown */}
-        <div
-          className="cs-fade mt-8 grid grid-cols-4 gap-2 sm:gap-3"
-          style={{ animationDelay: "0.2s" }}
-        >
-          {units.map((unit) => (
-            <div
-              key={unit.label}
-              className="flex w-16 flex-col items-center rounded-2xl border border-[#E1E5E8] bg-white py-3 shadow-[0_8px_20px_rgba(10,14,42,0.05)] sm:w-20"
-            >
-              <span
-                className="text-xl font-extrabold text-[#0A0E2A] sm:text-2xl"
-                style={{ animation: "csPulse 2s ease-in-out infinite" }}
-              >
-                {String(unit.value).padStart(2, "0")}
-              </span>
-              <span className="mt-0.5 text-[10px] font-semibold uppercase tracking-wide text-[#9AA3AF]">
-                {unit.label}
-              </span>
-            </div>
-          ))}
-        </div>
-
-        {/* subscribe form */}
-        <div className="cs-fade mt-9 w-full" style={{ animationDelay: "0.25s" }}>
-          {subscribed ? (
-            <div className="flex items-center justify-center gap-2 rounded-full bg-[#E6F7F6] px-5 py-3 text-sm font-semibold text-[#0A0E2A]">
-              <Check className="h-4 w-4 text-[#2DBDB6]" />
-              You&apos;re on the list — we&apos;ll email you at launch.
-            </div>
-          ) : (
-            <form onSubmit={handleSubscribe} className="flex flex-col gap-2 sm:flex-row">
-              <div className="relative flex-1">
-                <Mail
-                  className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 transition-colors"
-                  style={{ color: focused ? "#2DBDB6" : "#9AA3AF" }}
-                />
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  onFocus={() => setFocused(true)}
-                  onBlur={() => setFocused(false)}
-                  placeholder="you@example.com"
-                  className="h-12 w-full rounded-full border pl-10 pr-4 text-sm text-[#0A0E2A] outline-none transition-all duration-200 placeholder:text-[#9AA3AF]"
-                  style={{
-                    borderColor: focused ? "#2DBDB6" : "#E1E5E8",
-                    boxShadow: focused ? "0 0 0 4px rgba(45,189,182,0.15)" : "none",
-                  }}
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled={loading}
-                className="
-                  group relative flex h-12 shrink-0 items-center justify-center gap-2
-                  overflow-hidden rounded-full border-0 bg-gradient-to-br from-[#2DBDB6] to-[#1f9d97]
-                  px-6 text-sm font-bold text-white shadow-[0_4px_12px_rgba(45,189,182,0.35)]
-                  transition-transform duration-150
-                  hover:-translate-y-0.5 hover:shadow-[0_8px_18px_rgba(45,189,182,0.4)]
-                  active:translate-y-0 active:scale-[0.98]
-                  disabled:opacity-70
-                "
-              >
-                <span className="absolute inset-0 -translate-x-[120%] bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-500 group-hover:translate-x-[120%]" />
-                <span className="relative flex items-center gap-2">
-                  {loading ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <>
-                      Notify Me
-                      <ArrowRight className="h-4 w-4" />
-                    </>
-                  )}
-                </span>
-              </button>
-            </form>
-          )}
-
-          {error && <p className="mt-2 text-xs font-medium text-red-600">{error}</p>}
-        </div>
-
-        <Link
-          href="/admin"
-          className="cs-fade mt-8 text-xs font-semibold text-[#6B7280] transition-colors hover:text-[#2DBDB6]"
-          style={{ animationDelay: "0.3s" }}
-        >
-          ← Back to homepage
-        </Link>
       </div>
+
+      {/* Filters */}
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#9AA3AF]" />
+          <input
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            placeholder="Search by invoice, transaction ID, or customer"
+            className="h-10 w-full rounded-lg border border-[#E1E5E8] pl-9 pr-3 text-sm text-[#0A0E2A] outline-none focus:border-[#2DBDB6]"
+          />
+        </div>
+
+        <select
+          value={orderStatus}
+          onChange={(e) => {
+            setOrderStatus(e.target.value as Order["orderStatus"] | "");
+            setPage(1);
+          }}
+          className="h-10 rounded-lg border border-[#E1E5E8] px-3 text-sm text-[#0A0E2A] outline-none focus:border-[#2DBDB6]"
+        >
+          <option value="">All order statuses</option>
+          {ORDER_STATUSES.map((s) => (
+            <option key={s} value={s}>
+              {s[0].toUpperCase() + s.slice(1)}
+            </option>
+          ))}
+        </select>
+
+        <select
+          value={paymentStatus}
+          onChange={(e) => {
+            setPaymentStatus(e.target.value as Order["paymentStatus"] | "");
+            setPage(1);
+          }}
+          className="h-10 rounded-lg border border-[#E1E5E8] px-3 text-sm text-[#0A0E2A] outline-none focus:border-[#2DBDB6]"
+        >
+          <option value="">All payment statuses</option>
+          {PAYMENT_STATUSES.map((s) => (
+            <option key={s} value={s}>
+              {s[0].toUpperCase() + s.slice(1)}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Table */}
+      <div className="overflow-hidden rounded-xl border border-[#E1E5E8] bg-white">
+        {isLoading ? (
+          <div className="flex items-center justify-center gap-2 py-16 text-sm text-[#6B7280]">
+            <Loader2 className="h-4 w-4 animate-spin" />
+            Loading orders…
+          </div>
+        ) : isError ? (
+          <div className="py-16 text-center text-sm text-red-600">
+            Couldn&apos;t load orders. Refresh to try again.
+          </div>
+        ) : orders.length === 0 ? (
+          <div className="flex flex-col items-center gap-2 py-16 text-[#6B7280]">
+            <Package className="h-8 w-8 text-[#9AA3AF]" />
+            <p className="text-sm">No orders match these filters.</p>
+          </div>
+        ) : (
+          <table className="w-full text-left text-sm">
+            <thead className="border-b border-[#E1E5E8] bg-[#F7F9FA] text-xs uppercase tracking-wide text-[#9AA3AF]">
+              <tr>
+                <th className="w-8 px-4 py-3" />
+                <th className="px-4 py-3">Customer</th>
+                <th className="px-4 py-3">Date</th>
+                <th className="px-4 py-3">Total</th>
+                <th className="px-4 py-3">Payment</th>
+                <th className="px-4 py-3">Payment status</th>
+                <th className="px-4 py-3">Order status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {orders.map((order) => {
+                const isExpanded = expandedId === order._id;
+                const isUpdatingThisRow =
+                  updateStatus.isPending && updateStatus.variables?.id === order._id;
+
+                return (
+                  <Fragment key={order._id}>
+                    <tr
+                      className="cursor-pointer border-b border-[#E1E5E8] last:border-0 hover:bg-[#F7F9FA]"
+                      onClick={() => setExpandedId(isExpanded ? null : order._id)}
+                    >
+                      <td className="px-4 py-3 text-[#9AA3AF]">
+                        {isExpanded ? (
+                          <ChevronUp className="h-4 w-4" />
+                        ) : (
+                          <ChevronDown className="h-4 w-4" />
+                        )}
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="font-medium text-[#0A0E2A]">
+                          {order.user?.name ?? "Deleted user"}
+                        </div>
+                        <div className="text-xs text-[#9AA3AF]">{order.user?.email}</div>
+                      </td>
+                      <td className="px-4 py-3 text-[#6B7280]">{formatDate(order.createdAt)}</td>
+                      <td className="px-4 py-3 font-medium text-[#0A0E2A]">
+                        {formatMoney(order.finalAmount)}
+                      </td>
+                      <td className="px-4 py-3 capitalize text-[#6B7280]">{order.paymentMethod}</td>
+                      <td className="px-4 py-3">
+                        <span
+                          className={`rounded-full px-2.5 py-1 text-xs font-semibold capitalize ${PAYMENT_STYLES[order.paymentStatus]}`}
+                        >
+                          {order.paymentStatus}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3" onClick={(e) => e.stopPropagation()}>
+                        <div className="flex items-center gap-2">
+                          <select
+                            value={order.orderStatus}
+                            disabled={isUpdatingThisRow}
+                            onChange={(e) =>
+                              handleStatusChange(order._id, e.target.value as Order["orderStatus"])
+                            }
+                            className={`rounded-full border-0 px-2.5 py-1 text-xs font-semibold capitalize outline-none disabled:opacity-60 ${STATUS_STYLES[order.orderStatus]}`}
+                          >
+                            {ORDER_STATUSES.map((s) => (
+                              <option key={s} value={s}>
+                                {s[0].toUpperCase() + s.slice(1)}
+                              </option>
+                            ))}
+                          </select>
+                          {isUpdatingThisRow && (
+                            <Loader2 className="h-3.5 w-3.5 animate-spin text-[#9AA3AF]" />
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+
+                    {isExpanded && (
+                      <tr className="border-b border-[#E1E5E8] bg-[#F7F9FA]/60 last:border-0">
+                        <td colSpan={7} className="px-4 py-4">
+                          <div className="grid gap-6 sm:grid-cols-2">
+                            <div>
+                              <h4 className="mb-2 text-xs font-bold uppercase tracking-wide text-[#9AA3AF]">
+                                Shipping
+                              </h4>
+                              {order.shippingAddress?.fullName ? (
+                                <div className="space-y-0.5 text-sm text-[#0A0E2A]">
+                                  <p>{order.shippingAddress.fullName}</p>
+                                  <p className="text-[#6B7280]">{order.shippingAddress.phone}</p>
+                                  <p className="text-[#6B7280]">
+                                    {order.shippingAddress.address}, {order.shippingAddress.city}{" "}
+                                    {order.shippingAddress.postalCode}
+                                  </p>
+                                </div>
+                              ) : (
+                                <p className="text-sm text-[#9AA3AF]">Digital order — no shipping</p>
+                              )}
+                            </div>
+
+                            <div>
+                              <h4 className="mb-2 text-xs font-bold uppercase tracking-wide text-[#9AA3AF]">
+                                Items
+                              </h4>
+                              <ul className="space-y-1 text-sm text-[#0A0E2A]">
+                                {order.items.map((item, i) => (
+                                  <li key={i} className="flex justify-between">
+                                    <span>
+                                      {item.quantity}× {item.bookType}
+                                    </span>
+                                    <span className="text-[#6B7280]">{formatMoney(item.price)}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </Fragment>
+                );
+              })}
+            </tbody>
+          </table>
+        )}
+      </div>
+
+      {/* Pagination */}
+      {pagination && pagination.totalPages > 1 && (
+        <div className="mt-4 flex items-center justify-between text-sm text-[#6B7280]">
+          <span>
+            Page {pagination.page} of {pagination.totalPages}
+          </span>
+          <div className="flex gap-2">
+            <button
+              disabled={page <= 1}
+              onClick={() => setPage((p) => p - 1)}
+              className="rounded-lg border border-[#E1E5E8] px-3 py-1.5 font-medium text-[#0A0E2A] disabled:opacity-40"
+            >
+              Previous
+            </button>
+            <button
+              disabled={page >= pagination.totalPages}
+              onClick={() => setPage((p) => p + 1)}
+              className="rounded-lg border border-[#E1E5E8] px-3 py-1.5 font-medium text-[#0A0E2A] disabled:opacity-40"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

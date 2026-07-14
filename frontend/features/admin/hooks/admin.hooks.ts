@@ -16,7 +16,10 @@ import {
   createAdminUser,
   updateAdminUser,
   deleteAdminUser,
+  updateAdminOrderStatus,
+  getAdminOrders,
 } from "../api/admin.api";
+import { AdminOrdersParams, Order } from "../types/admin.types";
 
 // ==============================
 // Dashboard
@@ -165,6 +168,37 @@ export function useDeleteAdminUser() {
       queryClient.invalidateQueries({
         queryKey: ["users"],
       });
+    },
+  });
+}
+
+
+// ==============================
+// Orders (Admin)
+// ==============================
+
+export function useAdminOrders(params: AdminOrdersParams) {
+  return useQuery({
+    queryKey: ["admin-orders", params],
+    queryFn: () => getAdminOrders(params),
+  });
+}
+
+export function useUpdateAdminOrderStatus() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      id,
+      orderStatus,
+    }: {
+      id: string;
+      orderStatus: Order["orderStatus"];
+    }) => updateAdminOrderStatus(id, orderStatus),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-orders"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-dashboard"] });
     },
   });
 }

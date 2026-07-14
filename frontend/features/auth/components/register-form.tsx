@@ -356,7 +356,7 @@ export default function RegisterForm() {
             className={`
               group relative h-11 w-full overflow-hidden rounded-full border-0
               font-semibold text-white transition-transform duration-150
-              hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98]
+              hover:-translate-y-0.5 cursor-pointer active:translate-y-0 active:scale-[0.98]
               disabled:opacity-70
               ${
                 isAdmin

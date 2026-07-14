@@ -83,13 +83,13 @@ export default function AdminDashboardPage() {
             orders={
               dashboard?.recentOrders.map((order) => ({
                 id: order._id,
-                customerName: order.shippingAddress.fullName,
-                bookTitle:
-                  order.items.length > 0
-                    ? `${order.items.length} Book${
-                        order.items.length > 1 ? "s" : ""
-                      }`
-                    : "-",
+                customerName:
+                  order.shippingAddress?.fullName ||
+                  order.user?.name ||
+                  "Unknown User",
+                bookTitle: order.items?.length
+                  ? `${order.items.length} Book${order.items.length > 1 ? "s" : ""}`
+                  : "-",
                 amount: order.finalAmount,
                 status: order.orderStatus,
                 date: new Date(order.createdAt).toLocaleDateString(),
@@ -125,9 +125,9 @@ export default function AdminDashboardPage() {
             rating: 0,
 
             coverUrl: book.coverImage
-        ? `${process.env.NEXT_PUBLIC_API_URL?.replace("/api/v1", "")}/uploads/books/${book.coverImage}`
-        : undefined,
-    })) ?? []
+              ? `${process.env.NEXT_PUBLIC_API_URL?.replace("/api/v1", "")}/uploads/books/${book.coverImage}`
+              : undefined,
+          })) ?? []
         }
       />
     </div>

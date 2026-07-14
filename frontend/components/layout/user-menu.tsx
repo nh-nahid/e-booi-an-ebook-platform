@@ -95,7 +95,7 @@ export default function UserMenu() {
         <DropdownMenuSeparator />
 
         {/* NAV ITEMS (FIXED - NO LINK WRAP) */}
-        <DropdownMenuItem
+        <DropdownMenuItem className="cursor-pointer"
           onClick={() => {
             router.push("/profile");
           }}
@@ -104,7 +104,7 @@ export default function UserMenu() {
           My Profile
         </DropdownMenuItem>
 
-        <DropdownMenuItem
+        <DropdownMenuItem className="cursor-pointer"
           onClick={() => {
             router.push("/library");
           }}
@@ -113,7 +113,7 @@ export default function UserMenu() {
           My Library
         </DropdownMenuItem>
 
-        <DropdownMenuItem
+        <DropdownMenuItem className="cursor-pointer"
           onClick={() => {
             router.push("/orders");
           }}
@@ -123,7 +123,7 @@ export default function UserMenu() {
         </DropdownMenuItem>
 
         {user.role === "admin" && (
-          <DropdownMenuItem onSelect={() => router.push("/admin")}>
+          <DropdownMenuItem onSelect={() => router.push("/admin")} className="cursor-pointer">
             <Shield className="mr-2 h-4 w-4" />
             Dashboard
           </DropdownMenuItem>
@@ -135,7 +135,7 @@ export default function UserMenu() {
         <DropdownMenuItem
           onClick={handleLogout}
           disabled={isPending}
-          className="text-red-600"
+          className="text-red-600 cursor-pointer"
         >
           <LogOut className="mr-2 h-4 w-4" />
           Logout

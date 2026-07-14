@@ -251,3 +251,25 @@ export interface UpdateUserValues {
   password: string;
   avatar: File | null;
 }
+
+
+
+export interface OrdersPagination {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
+export interface OrdersResponse {
+  message: string;
+  data: Order[];
+  pagination: OrdersPagination;
+}
+
+export interface AdminOrdersParams {
+  page: number;
+  search?: string;
+  orderStatus?: Order["orderStatus"];
+  paymentStatus?: Order["paymentStatus"];
+}

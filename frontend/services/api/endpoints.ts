@@ -50,8 +50,9 @@ ORDERS: {
     INVOICE: (id: string) => `/orders/${id}/invoice`,
     DETAILS: (id: string) => `/orders/${id}`,
     LIST: "/orders",
-    UPDATE_STATUS: (id: string) => `/orders/${id}/status`,
-    UPDATE_PAYMENT: (id: string) => `/orders/${id}/payment`,
+    ADMIN_ALL: "/orders",                              
+    ADMIN_STATUS: (id: string) => `/orders/${id}/status`,   
+    ADMIN_PAYMENT: (id: string) => `/orders/${id}/payment`,
   },
 
   PAYMENT: {
@@ -81,10 +82,10 @@ REVIEWS: {
     REMOVE: (bookId: string) => `/wishlist/${bookId}`,
   },
 
-  ADMIN: {
-    DASHBOARD: "/admin/dashboard",
-    SALES: "/admin/sales",
-    TOP_BOOKS: "/admin/top-books",
-    USERS: "/admin/users",
-  },
+ADMIN: {
+  DASHBOARD: "/admin/dashboard",
+  SALES: "/admin/sales",
+  TOP_BOOKS: "/admin/top-books",
+  USERS: "/admin/users",
+},
 } as const;

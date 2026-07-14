@@ -7,7 +7,10 @@ import type {
   TopBooksResponse,
   BooksResponse,
   UsersResponse,
-  NewUserValues, // <-- add
+  NewUserValues,
+  Order,
+  AdminOrdersParams,
+  OrdersResponse, // <-- add
 } from "../types/admin.types";
 
 // ==============================
@@ -211,6 +214,39 @@ export async function deleteAdminUser(id: string) {
   const { data } = await api.delete(
     `${ENDPOINTS.ADMIN.USERS}/${id}`
   );
+
+  return data;
+}
+
+
+// ==============================
+// Orders (Admin)
+// ==============================
+
+export async function getAdminOrders(
+  params: AdminOrdersParams
+): Promise<OrdersResponse> {
+  const queryParams = {
+    page: params.page,
+    ...(params.search?.trim() && { search: params.search.trim() }),
+    ...(params.orderStatus && { orderStatus: params.orderStatus }),
+    ...(params.paymentStatus && { paymentStatus: params.paymentStatus }),
+  };
+
+  const { data } = await api.get(ENDPOINTS.ORDERS.ADMIN_ALL, {
+    params: queryParams,
+  });
+
+  return data;
+}
+
+export async function updateAdminOrderStatus(
+  id: string,
+  orderStatus: Order["orderStatus"]
+) {
+  const { data } = await api.patch(ENDPOINTS.ORDERS.ADMIN_STATUS(id), {
+    orderStatus,
+  });
 
   return data;
 }
