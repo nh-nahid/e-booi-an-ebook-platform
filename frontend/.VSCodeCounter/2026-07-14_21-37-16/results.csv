@@ -1,0 +1,180 @@
+"filename", "language", "JSON", "Markdown", "TypeScript", "JSON with Comments", "TypeScript JSX", "SVG", "JavaScript", "PostCSS", "comment", "blank", "total"
+"f:\e-booi-an-ebook-platform\frontend\AGENTS.md", "Markdown", 0, 2, 0, 0, 0, 0, 0, 0, 2, 2, 6
+"f:\e-booi-an-ebook-platform\frontend\CLAUDE.md", "Markdown", 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 2
+"f:\e-booi-an-ebook-platform\frontend\README.md", "Markdown", 0, 23, 0, 0, 0, 0, 0, 0, 0, 14, 37
+"f:\e-booi-an-ebook-platform\frontend\app\(admin)\admin\authors\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 189, 0, 0, 0, 8, 22, 219
+"f:\e-booi-an-ebook-platform\frontend\app\(admin)\admin\books\loading.tsx", "TypeScript JSX", 0, 0, 0, 0, 77, 0, 0, 0, 17, 18, 112
+"f:\e-booi-an-ebook-platform\frontend\app\(admin)\admin\books\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 179, 0, 0, 0, 1, 33, 213
+"f:\e-booi-an-ebook-platform\frontend\app\(admin)\admin\categories\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 189, 0, 0, 0, 8, 22, 219
+"f:\e-booi-an-ebook-platform\frontend\app\(admin)\admin\layout.tsx", "TypeScript JSX", 0, 0, 0, 0, 34, 0, 0, 0, 3, 12, 49
+"f:\e-booi-an-ebook-platform\frontend\app\(admin)\admin\loading.tsx", "TypeScript JSX", 0, 0, 0, 0, 121, 0, 0, 0, 6, 18, 145
+"f:\e-booi-an-ebook-platform\frontend\app\(admin)\admin\orders\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 278, 0, 0, 0, 4, 24, 306
+"f:\e-booi-an-ebook-platform\frontend\app\(admin)\admin\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 107, 0, 0, 0, 3, 26, 136
+"f:\e-booi-an-ebook-platform\frontend\app\(admin)\admin\publishers\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 189, 0, 0, 0, 8, 22, 219
+"f:\e-booi-an-ebook-platform\frontend\app\(admin)\admin\users\loading.tsx", "TypeScript JSX", 0, 0, 0, 0, 30, 0, 0, 0, 0, 5, 35
+"f:\e-booi-an-ebook-platform\frontend\app\(admin)\admin\users\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 136, 0, 0, 0, 3, 27, 166
+"f:\e-booi-an-ebook-platform\frontend\app\(auth)\login\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 15, 0, 0, 0, 0, 5, 20
+"f:\e-booi-an-ebook-platform\frontend\app\(auth)\register\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 15, 0, 0, 0, 0, 5, 20
+"f:\e-booi-an-ebook-platform\frontend\app\(private)\cart\layout.tsx", "TypeScript JSX", 0, 0, 0, 0, 20, 0, 0, 0, 0, 3, 23
+"f:\e-booi-an-ebook-platform\frontend\app\(private)\cart\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 231, 0, 0, 0, 5, 36, 272
+"f:\e-booi-an-ebook-platform\frontend\app\(private)\checkout\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 208, 0, 0, 0, 5, 46, 259
+"f:\e-booi-an-ebook-platform\frontend\app\(private)\library\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 118, 0, 0, 0, 0, 17, 135
+"f:\e-booi-an-ebook-platform\frontend\app\(private)\offers\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 193, 0, 0, 0, 8, 23, 224
+"f:\e-booi-an-ebook-platform\frontend\app\(private)\orders\[id]\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 318, 0, 0, 0, 0, 38, 356
+"f:\e-booi-an-ebook-platform\frontend\app\(private)\orders\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 69, 0, 0, 0, 0, 11, 80
+"f:\e-booi-an-ebook-platform\frontend\app\(private)\payment-success\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 178, 0, 0, 0, 0, 27, 205
+"f:\e-booi-an-ebook-platform\frontend\app\(public)\books\[id]\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 126, 0, 0, 0, 0, 17, 143
+"f:\e-booi-an-ebook-platform\frontend\app\(public)\books\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 131, 0, 0, 0, 10, 36, 177
+"f:\e-booi-an-ebook-platform\frontend\app\(public)\layout.tsx", "TypeScript JSX", 0, 0, 0, 0, 18, 0, 0, 0, 0, 3, 21
+"f:\e-booi-an-ebook-platform\frontend\app\(public)\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 34, 0, 0, 0, 0, 10, 44
+"f:\e-booi-an-ebook-platform\frontend\app\(user)\profile\layout.tsx", "TypeScript JSX", 0, 0, 0, 0, 18, 0, 0, 0, 0, 3, 21
+"f:\e-booi-an-ebook-platform\frontend\app\(user)\profile\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 87, 0, 0, 0, 2, 15, 104
+"f:\e-booi-an-ebook-platform\frontend\app\globals.css", "PostCSS", 0, 0, 0, 0, 0, 0, 0, 516, 2, 23, 541
+"f:\e-booi-an-ebook-platform\frontend\app\layout.tsx", "TypeScript JSX", 0, 0, 0, 0, 43, 0, 0, 0, 0, 5, 48
+"f:\e-booi-an-ebook-platform\frontend\app\loading.tsx", "TypeScript JSX", 0, 0, 0, 0, 20, 0, 0, 0, 2, 1, 23
+"f:\e-booi-an-ebook-platform\frontend\app\not-found.tsx", "TypeScript JSX", 0, 0, 0, 0, 8, 0, 0, 0, 0, 3, 11
+"f:\e-booi-an-ebook-platform\frontend\app\shop\layout.tsx", "TypeScript JSX", 0, 0, 0, 0, 18, 0, 0, 0, 0, 3, 21
+"f:\e-booi-an-ebook-platform\frontend\app\shop\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 9
+"f:\e-booi-an-ebook-platform\frontend\app\wishlist\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 193, 0, 0, 0, 8, 23, 224
+"f:\e-booi-an-ebook-platform\frontend\components.json", "JSON", 25, 0, 0, 0, 0, 0, 0, 0, 0, 1, 26
+"f:\e-booi-an-ebook-platform\frontend\components\layout\desktop-nav.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"f:\e-booi-an-ebook-platform\frontend\components\layout\mobile-nav.tsx", "TypeScript JSX", 0, 0, 0, 0, 99, 0, 0, 0, 5, 17, 121
+"f:\e-booi-an-ebook-platform\frontend\components\layout\nav-links.ts", "TypeScript", 0, 0, 51, 0, 0, 0, 0, 0, 0, 4, 55
+"f:\e-booi-an-ebook-platform\frontend\components\layout\navbar.tsx", "TypeScript JSX", 0, 0, 0, 0, 149, 0, 0, 0, 6, 26, 181
+"f:\e-booi-an-ebook-platform\frontend\components\layout\site-footer.tsx", "TypeScript JSX", 0, 0, 0, 0, 110, 0, 0, 0, 0, 8, 118
+"f:\e-booi-an-ebook-platform\frontend\components\layout\user-menu.tsx", "TypeScript JSX", 0, 0, 0, 0, 118, 0, 0, 0, 4, 25, 147
+"f:\e-booi-an-ebook-platform\frontend\components\search\search-cleanup.tsx", "TypeScript JSX", 0, 0, 0, 0, 14, 0, 0, 0, 1, 4, 19
+"f:\e-booi-an-ebook-platform\frontend\components\ui\avatar.tsx", "TypeScript JSX", 0, 0, 0, 0, 100, 0, 0, 0, 0, 10, 110
+"f:\e-booi-an-ebook-platform\frontend\components\ui\badge.tsx", "TypeScript JSX", 0, 0, 0, 0, 48, 0, 0, 0, 0, 5, 53
+"f:\e-booi-an-ebook-platform\frontend\components\ui\button.tsx", "TypeScript JSX", 0, 0, 0, 0, 56, 0, 0, 0, 0, 5, 61
+"f:\e-booi-an-ebook-platform\frontend\components\ui\card.tsx", "TypeScript JSX", 0, 0, 0, 0, 94, 0, 0, 0, 0, 10, 104
+"f:\e-booi-an-ebook-platform\frontend\components\ui\dialog.tsx", "TypeScript JSX", 0, 0, 0, 0, 144, 0, 0, 0, 0, 14, 158
+"f:\e-booi-an-ebook-platform\frontend\components\ui\dropdown-menu.tsx", "TypeScript JSX", 0, 0, 0, 0, 250, 0, 0, 0, 0, 19, 269
+"f:\e-booi-an-ebook-platform\frontend\components\ui\input.tsx", "TypeScript JSX", 0, 0, 0, 0, 17, 0, 0, 0, 0, 4, 21
+"f:\e-booi-an-ebook-platform\frontend\components\ui\label.tsx", "TypeScript JSX", 0, 0, 0, 0, 16, 0, 0, 0, 0, 5, 21
+"f:\e-booi-an-ebook-platform\frontend\components\ui\select.tsx", "TypeScript JSX", 0, 0, 0, 0, 188, 0, 0, 0, 0, 14, 202
+"f:\e-booi-an-ebook-platform\frontend\components\ui\sheet.tsx", "TypeScript JSX", 0, 0, 0, 0, 122, 0, 0, 0, 0, 14, 136
+"f:\e-booi-an-ebook-platform\frontend\components\ui\skeleton.tsx", "TypeScript JSX", 0, 0, 0, 0, 11, 0, 0, 0, 0, 3, 14
+"f:\e-booi-an-ebook-platform\frontend\components\ui\sonner.tsx", "TypeScript JSX", 0, 0, 0, 0, 45, 0, 0, 0, 0, 5, 50
+"f:\e-booi-an-ebook-platform\frontend\components\ui\table.tsx", "TypeScript JSX", 0, 0, 0, 0, 105, 0, 0, 0, 0, 12, 117
+"f:\e-booi-an-ebook-platform\frontend\components\ui\textarea.tsx", "TypeScript JSX", 0, 0, 0, 0, 15, 0, 0, 0, 0, 4, 19
+"f:\e-booi-an-ebook-platform\frontend\constants\index.ts", "TypeScript", 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1
+"f:\e-booi-an-ebook-platform\frontend\eslint.config.mjs", "JavaScript", 0, 0, 0, 0, 0, 0, 14, 0, 2, 3, 19
+"f:\e-booi-an-ebook-platform\frontend\features\admin\api\admin.api.ts", "TypeScript", 0, 0, 197, 0, 0, 0, 0, 0, 15, 41, 253
+"f:\e-booi-an-ebook-platform\frontend\features\admin\components\books\BookDialog.tsx", "TypeScript JSX", 0, 0, 0, 0, 454, 0, 0, 0, 2, 38, 494
+"f:\e-booi-an-ebook-platform\frontend\features\admin\components\books\BookViewDialog.tsx", "TypeScript JSX", 0, 0, 0, 0, 172, 0, 0, 0, 6, 34, 212
+"f:\e-booi-an-ebook-platform\frontend\features\admin\components\books\books-filter.tsx", "TypeScript JSX", 0, 0, 0, 0, 71, 0, 0, 0, 4, 25, 100
+"f:\e-booi-an-ebook-platform\frontend\features\admin\components\books\books-table.tsx", "TypeScript JSX", 0, 0, 0, 0, 308, 0, 0, 0, 2, 40, 350
+"f:\e-booi-an-ebook-platform\frontend\features\admin\components\dashboard\dashboard-chart.tsx", "TypeScript JSX", 0, 0, 0, 0, 72, 0, 0, 0, 0, 12, 84
+"f:\e-booi-an-ebook-platform\frontend\features\admin\components\dashboard\header.tsx", "TypeScript JSX", 0, 0, 0, 0, 131, 0, 0, 0, 0, 29, 160
+"f:\e-booi-an-ebook-platform\frontend\features\admin\components\dashboard\latest-users.tsx", "TypeScript JSX", 0, 0, 0, 0, 83, 0, 0, 0, 0, 10, 93
+"f:\e-booi-an-ebook-platform\frontend\features\admin\components\dashboard\recent-orders.tsx", "TypeScript JSX", 0, 0, 0, 0, 85, 0, 0, 0, 0, 8, 93
+"f:\e-booi-an-ebook-platform\frontend\features\admin\components\dashboard\sales-chart.tsx", "TypeScript JSX", 0, 0, 0, 0, 82, 0, 0, 0, 0, 8, 90
+"f:\e-booi-an-ebook-platform\frontend\features\admin\components\dashboard\sidebar.tsx", "TypeScript JSX", 0, 0, 0, 0, 80, 0, 0, 0, 3, 9, 92
+"f:\e-booi-an-ebook-platform\frontend\features\admin\components\dashboard\stat-card.tsx", "TypeScript JSX", 0, 0, 0, 0, 92, 0, 0, 0, 0, 10, 102
+"f:\e-booi-an-ebook-platform\frontend\features\admin\components\dashboard\top-books.tsx", "TypeScript JSX", 0, 0, 0, 0, 68, 0, 0, 0, 0, 10, 78
+"f:\e-booi-an-ebook-platform\frontend\features\admin\components\users\add-user-dialog.tsx", "TypeScript JSX", 0, 0, 0, 0, 281, 0, 0, 0, 0, 39, 320
+"f:\e-booi-an-ebook-platform\frontend\features\admin\components\users\delete-user-dialog.tsx", "TypeScript JSX", 0, 0, 0, 0, 94, 0, 0, 0, 0, 13, 107
+"f:\e-booi-an-ebook-platform\frontend\features\admin\components\users\edit-user-dialog.tsx", "TypeScript JSX", 0, 0, 0, 0, 173, 0, 0, 0, 1, 34, 208
+"f:\e-booi-an-ebook-platform\frontend\features\admin\components\users\pagination.tsx", "TypeScript JSX", 0, 0, 0, 0, 77, 0, 0, 0, 0, 15, 92
+"f:\e-booi-an-ebook-platform\frontend\features\admin\components\users\users-filter.tsx", "TypeScript JSX", 0, 0, 0, 0, 83, 0, 0, 0, 0, 9, 92
+"f:\e-booi-an-ebook-platform\frontend\features\admin\components\users\users-table.tsx", "TypeScript JSX", 0, 0, 0, 0, 155, 0, 0, 0, 0, 19, 174
+"f:\e-booi-an-ebook-platform\frontend\features\admin\components\users\view-user-dialog.tsx", "TypeScript JSX", 0, 0, 0, 0, 139, 0, 0, 0, 0, 26, 165
+"f:\e-booi-an-ebook-platform\frontend\features\admin\hooks\admin.hooks.ts", "TypeScript", 0, 0, 155, 0, 0, 0, 0, 0, 14, 35, 204
+"f:\e-booi-an-ebook-platform\frontend\features\admin\types\admin.types.ts", "TypeScript", 0, 0, 210, 0, 0, 0, 0, 0, 1, 64, 275
+"f:\e-booi-an-ebook-platform\frontend\features\auth\api\auth.api.ts", "TypeScript", 0, 0, 62, 0, 0, 0, 0, 0, 0, 14, 76
+"f:\e-booi-an-ebook-platform\frontend\features\auth\components\login-form.tsx", "TypeScript JSX", 0, 0, 0, 0, 248, 0, 0, 0, 2, 38, 288
+"f:\e-booi-an-ebook-platform\frontend\features\auth\components\register-form.tsx", "TypeScript JSX", 0, 0, 0, 0, 360, 0, 0, 0, 4, 34, 398
+"f:\e-booi-an-ebook-platform\frontend\features\auth\hooks\auth.hooks.ts", "TypeScript", 0, 0, 54, 0, 0, 0, 0, 0, 0, 15, 69
+"f:\e-booi-an-ebook-platform\frontend\features\auth\schemas\auth.schema.ts", "TypeScript", 0, 0, 20, 0, 0, 0, 0, 0, 0, 3, 23
+"f:\e-booi-an-ebook-platform\frontend\features\auth\types\api-error.ts", "TypeScript", 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 7
+"f:\e-booi-an-ebook-platform\frontend\features\auth\types\auth.types.ts", "TypeScript", 0, 0, 26, 0, 0, 0, 0, 0, 0, 4, 30
+"f:\e-booi-an-ebook-platform\frontend\features\books\api\book.api.ts", "TypeScript", 0, 0, 43, 0, 0, 0, 0, 0, 0, 14, 57
+"f:\e-booi-an-ebook-platform\frontend\features\books\components\book-details\book-gallery.tsx", "TypeScript JSX", 0, 0, 0, 0, 104, 0, 0, 0, 1, 14, 119
+"f:\e-booi-an-ebook-platform\frontend\features\books\components\book-details\book-info.tsx", "TypeScript JSX", 0, 0, 0, 0, 218, 0, 0, 0, 7, 24, 249
+"f:\e-booi-an-ebook-platform\frontend\features\books\components\book-details\book-tabs.tsx", "TypeScript JSX", 0, 0, 0, 0, 52, 0, 0, 0, 0, 9, 61
+"f:\e-booi-an-ebook-platform\frontend\features\books\components\book-details\breadcrumb.tsx", "TypeScript JSX", 0, 0, 0, 0, 28, 0, 0, 0, 0, 3, 31
+"f:\e-booi-an-ebook-platform\frontend\features\books\components\book-details\related-books.tsx", "TypeScript JSX", 0, 0, 0, 0, 9, 0, 0, 0, 0, 5, 14
+"f:\e-booi-an-ebook-platform\frontend\features\books\components\book-details\review-list.tsx", "TypeScript JSX", 0, 0, 0, 0, 117, 0, 0, 0, 0, 16, 133
+"f:\e-booi-an-ebook-platform\frontend\features\books\components\books-filters.tsx", "TypeScript JSX", 0, 0, 0, 0, 167, 0, 0, 0, 3, 21, 191
+"f:\e-booi-an-ebook-platform\frontend\features\books\components\books-grid.tsx", "TypeScript JSX", 0, 0, 0, 0, 176, 0, 0, 0, 0, 24, 200
+"f:\e-booi-an-ebook-platform\frontend\features\books\components\books-hero.tsx", "TypeScript JSX", 0, 0, 0, 0, 28, 0, 0, 0, 0, 6, 34
+"f:\e-booi-an-ebook-platform\frontend\features\books\components\books-toolbar.tsx", "TypeScript JSX", 0, 0, 0, 0, 90, 0, 0, 0, 5, 8, 103
+"f:\e-booi-an-ebook-platform\frontend\features\books\components\mobile-filters-sheet.tsx", "TypeScript JSX", 0, 0, 0, 0, 54, 0, 0, 0, 0, 9, 63
+"f:\e-booi-an-ebook-platform\frontend\features\books\components\pagination.tsx", "TypeScript JSX", 0, 0, 0, 0, 73, 0, 0, 0, 0, 11, 84
+"f:\e-booi-an-ebook-platform\frontend\features\books\hooks\use-book.ts", "TypeScript", 0, 0, 29, 0, 0, 0, 0, 0, 0, 7, 36
+"f:\e-booi-an-ebook-platform\frontend\features\books\types\book.types.ts", "TypeScript", 0, 0, 59, 0, 0, 0, 0, 0, 1, 24, 84
+"f:\e-booi-an-ebook-platform\frontend\features\cart\api\cart.api.ts", "TypeScript", 0, 0, 35, 0, 0, 0, 0, 0, 1, 8, 44
+"f:\e-booi-an-ebook-platform\frontend\features\cart\components\cart-item.tsx", "TypeScript JSX", 0, 0, 0, 0, 118, 0, 0, 0, 0, 16, 134
+"f:\e-booi-an-ebook-platform\frontend\features\cart\components\empty-cart.tsx", "TypeScript JSX", 0, 0, 0, 0, 31, 0, 0, 0, 0, 4, 35
+"f:\e-booi-an-ebook-platform\frontend\features\cart\components\order-summary.tsx", "TypeScript JSX", 0, 0, 0, 0, 148, 0, 0, 0, 2, 19, 169
+"f:\e-booi-an-ebook-platform\frontend\features\cart\hooks\use-cart.ts", "TypeScript", 0, 0, 91, 0, 0, 0, 0, 0, 0, 20, 111
+"f:\e-booi-an-ebook-platform\frontend\features\cart\types\cart.types.ts", "TypeScript", 0, 0, 55, 0, 0, 0, 0, 0, 0, 8, 63
+"f:\e-booi-an-ebook-platform\frontend\features\checkout\api\checkout.api.ts", "TypeScript", 0, 0, 24, 0, 0, 0, 0, 0, 0, 5, 29
+"f:\e-booi-an-ebook-platform\frontend\features\checkout\components\checkout-items-summary.tsx", "TypeScript JSX", 0, 0, 0, 0, 65, 0, 0, 0, 0, 9, 74
+"f:\e-booi-an-ebook-platform\frontend\features\checkout\components\empty-checkout.tsx", "TypeScript JSX", 0, 0, 0, 0, 45, 0, 0, 0, 0, 5, 50
+"f:\e-booi-an-ebook-platform\frontend\features\checkout\components\order-total-card.tsx", "TypeScript JSX", 0, 0, 0, 0, 88, 0, 0, 0, 0, 13, 101
+"f:\e-booi-an-ebook-platform\frontend\features\checkout\components\payment-methods.tsx", "TypeScript JSX", 0, 0, 0, 0, 90, 0, 0, 0, 2, 10, 102
+"f:\e-booi-an-ebook-platform\frontend\features\checkout\components\shipping-address-form.tsx", "TypeScript JSX", 0, 0, 0, 0, 89, 0, 0, 0, 0, 11, 100
+"f:\e-booi-an-ebook-platform\frontend\features\checkout\hooks\use-checkout.ts", "TypeScript", 0, 0, 15, 0, 0, 0, 0, 0, 0, 3, 18
+"f:\e-booi-an-ebook-platform\frontend\features\checkout\types\checkout.types.ts", "TypeScript", 0, 0, 56, 0, 0, 0, 0, 0, 3, 10, 69
+"f:\e-booi-an-ebook-platform\frontend\features\coupon\api\coupon.api.ts", "TypeScript", 0, 0, 12, 0, 0, 0, 0, 0, 0, 2, 14
+"f:\e-booi-an-ebook-platform\frontend\features\coupon\hooks\use-coupon.ts", "TypeScript", 0, 0, 6, 0, 0, 0, 0, 0, 0, 1, 7
+"f:\e-booi-an-ebook-platform\frontend\features\coupon\types\coupon.types.ts", "TypeScript", 0, 0, 14, 0, 0, 0, 0, 0, 0, 2, 16
+"f:\e-booi-an-ebook-platform\frontend\features\home\api\home.api.ts", "TypeScript", 0, 0, 9, 0, 0, 0, 0, 0, 0, 3, 12
+"f:\e-booi-an-ebook-platform\frontend\features\home\components\book-card.tsx", "TypeScript JSX", 0, 0, 0, 0, 174, 0, 0, 0, 3, 31, 208
+"f:\e-booi-an-ebook-platform\frontend\features\home\components\book-section.tsx", "TypeScript JSX", 0, 0, 0, 0, 55, 0, 0, 0, 0, 11, 66
+"f:\e-booi-an-ebook-platform\frontend\features\home\components\category-section.tsx", "TypeScript JSX", 0, 0, 0, 0, 56, 0, 0, 0, 0, 7, 63
+"f:\e-booi-an-ebook-platform\frontend\features\home\components\hero-section.tsx", "TypeScript JSX", 0, 0, 0, 0, 156, 0, 0, 0, 5, 20, 181
+"f:\e-booi-an-ebook-platform\frontend\features\home\components\preorder-section.tsx", "TypeScript JSX", 0, 0, 0, 0, 21, 0, 0, 0, 0, 5, 26
+"f:\e-booi-an-ebook-platform\frontend\features\home\components\section-header.tsx", "TypeScript JSX", 0, 0, 0, 0, 22, 0, 0, 0, 0, 4, 26
+"f:\e-booi-an-ebook-platform\frontend\features\home\hooks\home.hooks.ts", "TypeScript", 0, 0, 8, 0, 0, 0, 0, 0, 0, 2, 10
+"f:\e-booi-an-ebook-platform\frontend\features\home\types\home.types.ts", "TypeScript", 0, 0, 56, 0, 0, 0, 0, 0, 0, 12, 68
+"f:\e-booi-an-ebook-platform\frontend\features\library\api\library.api.ts", "TypeScript", 0, 0, 7, 0, 0, 0, 0, 0, 0, 2, 9
+"f:\e-booi-an-ebook-platform\frontend\features\library\hooks\use-library.ts", "TypeScript", 0, 0, 7, 0, 0, 0, 0, 0, 0, 1, 8
+"f:\e-booi-an-ebook-platform\frontend\features\library\types\library.types.ts", "TypeScript", 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 8
+"f:\e-booi-an-ebook-platform\frontend\features\orders\api\orders.api.ts", "TypeScript", 0, 0, 43, 0, 0, 0, 0, 0, 0, 7, 50
+"f:\e-booi-an-ebook-platform\frontend\features\orders\components\order-card.tsx", "TypeScript JSX", 0, 0, 0, 0, 176, 0, 0, 0, 0, 19, 195
+"f:\e-booi-an-ebook-platform\frontend\features\orders\hooks\use-orders.ts", "TypeScript", 0, 0, 28, 0, 0, 0, 0, 0, 0, 6, 34
+"f:\e-booi-an-ebook-platform\frontend\features\orders\types\orders.types.ts", "TypeScript", 0, 0, 35, 0, 0, 0, 0, 0, 0, 4, 39
+"f:\e-booi-an-ebook-platform\frontend\features\profile\api\profile.api.ts", "TypeScript", 0, 0, 55, 0, 0, 0, 0, 0, 0, 17, 72
+"f:\e-booi-an-ebook-platform\frontend\features\profile\components\change-password-form.tsx", "TypeScript JSX", 0, 0, 0, 0, 184, 0, 0, 0, 0, 24, 208
+"f:\e-booi-an-ebook-platform\frontend\features\profile\components\profile-card.tsx", "TypeScript JSX", 0, 0, 0, 0, 280, 0, 0, 0, 9, 45, 334
+"f:\e-booi-an-ebook-platform\frontend\features\profile\components\profile-form.tsx", "TypeScript JSX", 0, 0, 0, 0, 256, 0, 0, 0, 4, 100, 360
+"f:\e-booi-an-ebook-platform\frontend\features\profile\components\profile-skeleton.tsx", "TypeScript JSX", 0, 0, 0, 0, 50, 0, 0, 0, 2, 38, 90
+"f:\e-booi-an-ebook-platform\frontend\features\profile\hooks\profile.hooks.ts", "TypeScript", 0, 0, 83, 0, 0, 0, 0, 0, 0, 25, 108
+"f:\e-booi-an-ebook-platform\frontend\features\profile\schemas\change-password.schema.ts", "TypeScript", 0, 0, 12, 0, 0, 0, 0, 0, 0, 3, 15
+"f:\e-booi-an-ebook-platform\frontend\features\profile\schemas\update-profile.schema.ts", "TypeScript", 0, 0, 8, 0, 0, 0, 0, 0, 0, 2, 10
+"f:\e-booi-an-ebook-platform\frontend\features\profile\types\profile.types.ts", "TypeScript", 0, 0, 33, 0, 0, 0, 0, 0, 0, 14, 47
+"f:\e-booi-an-ebook-platform\frontend\features\reviews\api\review.api.ts", "TypeScript", 0, 0, 11, 0, 0, 0, 0, 0, 0, 2, 13
+"f:\e-booi-an-ebook-platform\frontend\features\reviews\hooks\use-review.ts", "TypeScript", 0, 0, 9, 0, 0, 0, 0, 0, 0, 1, 10
+"f:\e-booi-an-ebook-platform\frontend\features\reviews\types\review.type.ts", "TypeScript", 0, 0, 17, 0, 0, 0, 0, 0, 0, 6, 23
+"f:\e-booi-an-ebook-platform\frontend\hooks\use-auth.ts", "TypeScript", 0, 0, 5, 0, 0, 0, 0, 0, 0, 2, 7
+"f:\e-booi-an-ebook-platform\frontend\hooks\use-debounce.ts", "TypeScript", 0, 0, 12, 0, 0, 0, 0, 0, 0, 5, 17
+"f:\e-booi-an-ebook-platform\frontend\lib\query-client.ts", "TypeScript", 0, 0, 14, 0, 0, 0, 0, 0, 0, 1, 15
+"f:\e-booi-an-ebook-platform\frontend\lib\utils.ts", "TypeScript", 0, 0, 5, 0, 0, 0, 0, 0, 0, 2, 7
+"f:\e-booi-an-ebook-platform\frontend\middleware.ts", "TypeScript", 0, 0, 13, 0, 0, 0, 0, 0, 1, 5, 19
+"f:\e-booi-an-ebook-platform\frontend\next.config.ts", "TypeScript", 0, 0, 25, 0, 0, 0, 0, 0, 1, 1, 27
+"f:\e-booi-an-ebook-platform\frontend\package-lock.json", "JSON", 10619, 0, 0, 0, 0, 0, 0, 0, 0, 1, 10620
+"f:\e-booi-an-ebook-platform\frontend\package.json", "JSON", 50, 0, 0, 0, 0, 0, 0, 0, 0, 1, 51
+"f:\e-booi-an-ebook-platform\frontend\postcss.config.mjs", "JavaScript", 0, 0, 0, 0, 0, 0, 6, 0, 0, 2, 8
+"f:\e-booi-an-ebook-platform\frontend\providers\auth-provider.tsx", "TypeScript JSX", 0, 0, 0, 0, 85, 0, 0, 0, 0, 26, 111
+"f:\e-booi-an-ebook-platform\frontend\providers\query-provider.tsx", "TypeScript JSX", 0, 0, 0, 0, 16, 0, 0, 0, 0, 3, 19
+"f:\e-booi-an-ebook-platform\frontend\providers\theme-provider.tsx", "TypeScript JSX", 0, 0, 0, 0, 19, 0, 0, 0, 0, 2, 21
+"f:\e-booi-an-ebook-platform\frontend\public\file.svg", "SVG", 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1
+"f:\e-booi-an-ebook-platform\frontend\public\globe.svg", "SVG", 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1
+"f:\e-booi-an-ebook-platform\frontend\public\next.svg", "SVG", 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1
+"f:\e-booi-an-ebook-platform\frontend\public\vercel.svg", "SVG", 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1
+"f:\e-booi-an-ebook-platform\frontend\public\window.svg", "SVG", 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1
+"f:\e-booi-an-ebook-platform\frontend\services\api\api.ts", "TypeScript", 0, 0, 8, 0, 0, 0, 0, 0, 0, 1, 9
+"f:\e-booi-an-ebook-platform\frontend\services\api\axios.ts", "TypeScript", 0, 0, 113, 0, 0, 0, 0, 0, 13, 33, 159
+"f:\e-booi-an-ebook-platform\frontend\services\api\endpoints.ts", "TypeScript", 0, 0, 81, 0, 0, 0, 0, 0, 0, 11, 92
+"f:\e-booi-an-ebook-platform\frontend\services\api\token.ts", "TypeScript", 0, 0, 8, 0, 0, 0, 0, 0, 0, 3, 11
+"f:\e-booi-an-ebook-platform\frontend\stores\search-store.ts", "TypeScript", 0, 0, 11, 0, 0, 0, 0, 0, 0, 2, 13
+"f:\e-booi-an-ebook-platform\frontend\tsconfig.json", "JSON with Comments", 0, 0, 0, 34, 0, 0, 0, 0, 0, 1, 35
+"f:\e-booi-an-ebook-platform\frontend\types\api.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"f:\e-booi-an-ebook-platform\frontend\types\auth.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"f:\e-booi-an-ebook-platform\frontend\types\book.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"f:\e-booi-an-ebook-platform\frontend\types\cart.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"f:\e-booi-an-ebook-platform\frontend\types\order.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"Total", "-", 10694, 26, 1946, 34, 11948, 5, 20, 516, 240, 2307, 27736

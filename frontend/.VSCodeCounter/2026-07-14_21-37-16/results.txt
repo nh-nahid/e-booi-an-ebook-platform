@@ -1,0 +1,315 @@
+Date : 2026-07-14 21:37:16
+Directory : f:\e-booi-an-ebook-platform\frontend
+Total : 178 files,  25189 codes, 240 comments, 2307 blanks, all 27736 lines
+
+Languages
++--------------------+------------+------------+------------+------------+------------+
+| language           | files      | code       | comment    | blank      | total      |
++--------------------+------------+------------+------------+------------+------------+
+| TypeScript JSX     |        108 |     11,948 |        184 |      1,796 |     13,928 |
+| JSON               |          3 |     10,694 |          0 |          3 |     10,697 |
+| TypeScript         |         55 |      1,946 |         50 |        462 |      2,458 |
+| PostCSS            |          1 |        516 |          2 |         23 |        541 |
+| JSON with Comments |          1 |         34 |          0 |          1 |         35 |
+| Markdown           |          3 |         26 |          2 |         17 |         45 |
+| JavaScript         |          2 |         20 |          2 |          5 |         27 |
+| SVG                |          5 |          5 |          0 |          0 |          5 |
++--------------------+------------+------------+------------+------------+------------+
+
+Directories
++-----------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                          | files      | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                             |        178 |     25,189 |        240 |      2,307 |     27,736 |
+| . (Files)                                                                                     |         11 |     10,812 |          6 |         32 |     10,850 |
+| app                                                                                           |         34 |      4,115 |        103 |        582 |      4,800 |
+| app (Files)                                                                                   |          4 |        587 |          4 |         32 |        623 |
+| app\(admin)                                                                                   |         11 |      1,529 |         61 |        229 |      1,819 |
+| app\(admin)\admin                                                                             |         11 |      1,529 |         61 |        229 |      1,819 |
+| app\(admin)\admin (Files)                                                                     |          3 |        262 |         12 |         56 |        330 |
+| app\(admin)\admin\authors                                                                     |          1 |        189 |          8 |         22 |        219 |
+| app\(admin)\admin\books                                                                       |          2 |        256 |         18 |         51 |        325 |
+| app\(admin)\admin\categories                                                                  |          1 |        189 |          8 |         22 |        219 |
+| app\(admin)\admin\orders                                                                      |          1 |        278 |          4 |         24 |        306 |
+| app\(admin)\admin\publishers                                                                  |          1 |        189 |          8 |         22 |        219 |
+| app\(admin)\admin\users                                                                       |          2 |        166 |          3 |         32 |        201 |
+| app\(auth)                                                                                    |          2 |         30 |          0 |         10 |         40 |
+| app\(auth)\login                                                                              |          1 |         15 |          0 |          5 |         20 |
+| app\(auth)\register                                                                           |          1 |         15 |          0 |          5 |         20 |
+| app\(private)                                                                                 |          8 |      1,335 |         18 |        201 |      1,554 |
+| app\(private)\cart                                                                            |          2 |        251 |          5 |         39 |        295 |
+| app\(private)\checkout                                                                        |          1 |        208 |          5 |         46 |        259 |
+| app\(private)\library                                                                         |          1 |        118 |          0 |         17 |        135 |
+| app\(private)\offers                                                                          |          1 |        193 |          8 |         23 |        224 |
+| app\(private)\orders                                                                          |          2 |        387 |          0 |         49 |        436 |
+| app\(private)\orders (Files)                                                                  |          1 |         69 |          0 |         11 |         80 |
+| app\(private)\orders\[id]                                                                     |          1 |        318 |          0 |         38 |        356 |
+| app\(private)\payment-success                                                                 |          1 |        178 |          0 |         27 |        205 |
+| app\(public)                                                                                  |          4 |        309 |         10 |         66 |        385 |
+| app\(public) (Files)                                                                          |          2 |         52 |          0 |         13 |         65 |
+| app\(public)\books                                                                            |          2 |        257 |         10 |         53 |        320 |
+| app\(public)\books (Files)                                                                    |          1 |        131 |         10 |         36 |        177 |
+| app\(public)\books\[id]                                                                       |          1 |        126 |          0 |         17 |        143 |
+| app\(user)                                                                                    |          2 |        105 |          2 |         18 |        125 |
+| app\(user)\profile                                                                            |          2 |        105 |          2 |         18 |        125 |
+| app\shop                                                                                      |          2 |         27 |          0 |          3 |         30 |
+| app\wishlist                                                                                  |          1 |        193 |          8 |         23 |        224 |
+| components                                                                                    |         21 |      1,752 |         16 |        209 |      1,977 |
+| components\layout                                                                             |          6 |        527 |         15 |         81 |        623 |
+| components\search                                                                             |          1 |         14 |          1 |          4 |         19 |
+| components\ui                                                                                 |         14 |      1,211 |          0 |        124 |      1,335 |
+| constants                                                                                     |          1 |          1 |          0 |          0 |          1 |
+| features                                                                                      |         89 |      8,127 |        102 |      1,388 |      9,617 |
+| features\admin                                                                                |         22 |      3,262 |         48 |        528 |      3,838 |
+| features\admin\api                                                                            |          1 |        197 |         15 |         41 |        253 |
+| features\admin\components                                                                     |         19 |      2,700 |         18 |        388 |      3,106 |
+| features\admin\components\books                                                               |          4 |      1,005 |         14 |        137 |      1,156 |
+| features\admin\components\dashboard                                                           |          8 |        693 |          3 |         96 |        792 |
+| features\admin\components\users                                                               |          7 |      1,002 |          1 |        155 |      1,158 |
+| features\admin\hooks                                                                          |          1 |        155 |         14 |         35 |        204 |
+| features\admin\types                                                                          |          1 |        210 |          1 |         64 |        275 |
+| features\auth                                                                                 |          7 |        777 |          6 |        108 |        891 |
+| features\auth\api                                                                             |          1 |         62 |          0 |         14 |         76 |
+| features\auth\components                                                                      |          2 |        608 |          6 |         72 |        686 |
+| features\auth\hooks                                                                           |          1 |         54 |          0 |         15 |         69 |
+| features\auth\schemas                                                                         |          1 |         20 |          0 |          3 |         23 |
+| features\auth\types                                                                           |          2 |         33 |          0 |          4 |         37 |
+| features\books                                                                                |         15 |      1,247 |         17 |        195 |      1,459 |
+| features\books\api                                                                            |          1 |         43 |          0 |         14 |         57 |
+| features\books\components                                                                     |         12 |      1,116 |         16 |        150 |      1,282 |
+| features\books\components (Files)                                                             |          6 |        588 |          8 |         79 |        675 |
+| features\books\components\book-details                                                        |          6 |        528 |          8 |         71 |        607 |
+| features\books\hooks                                                                          |          1 |         29 |          0 |          7 |         36 |
+| features\books\types                                                                          |          1 |         59 |          1 |         24 |         84 |
+| features\cart                                                                                 |          6 |        478 |          3 |         75 |        556 |
+| features\cart\api                                                                             |          1 |         35 |          1 |          8 |         44 |
+| features\cart\components                                                                      |          3 |        297 |          2 |         39 |        338 |
+| features\cart\hooks                                                                           |          1 |         91 |          0 |         20 |        111 |
+| features\cart\types                                                                           |          1 |         55 |          0 |          8 |         63 |
+| features\checkout                                                                             |          8 |        472 |          5 |         66 |        543 |
+| features\checkout\api                                                                         |          1 |         24 |          0 |          5 |         29 |
+| features\checkout\components                                                                  |          5 |        377 |          2 |         48 |        427 |
+| features\checkout\hooks                                                                       |          1 |         15 |          0 |          3 |         18 |
+| features\checkout\types                                                                       |          1 |         56 |          3 |         10 |         69 |
+| features\coupon                                                                               |          3 |         32 |          0 |          5 |         37 |
+| features\coupon\api                                                                           |          1 |         12 |          0 |          2 |         14 |
+| features\coupon\hooks                                                                         |          1 |          6 |          0 |          1 |          7 |
+| features\coupon\types                                                                         |          1 |         14 |          0 |          2 |         16 |
+| features\home                                                                                 |          9 |        557 |          8 |         95 |        660 |
+| features\home\api                                                                             |          1 |          9 |          0 |          3 |         12 |
+| features\home\components                                                                      |          6 |        484 |          8 |         78 |        570 |
+| features\home\hooks                                                                           |          1 |          8 |          0 |          2 |         10 |
+| features\home\types                                                                           |          1 |         56 |          0 |         12 |         68 |
+| features\library                                                                              |          3 |         22 |          0 |          3 |         25 |
+| features\library\api                                                                          |          1 |          7 |          0 |          2 |          9 |
+| features\library\hooks                                                                        |          1 |          7 |          0 |          1 |          8 |
+| features\library\types                                                                        |          1 |          8 |          0 |          0 |          8 |
+| features\orders                                                                               |          4 |        282 |          0 |         36 |        318 |
+| features\orders\api                                                                           |          1 |         43 |          0 |          7 |         50 |
+| features\orders\components                                                                    |          1 |        176 |          0 |         19 |        195 |
+| features\orders\hooks                                                                         |          1 |         28 |          0 |          6 |         34 |
+| features\orders\types                                                                         |          1 |         35 |          0 |          4 |         39 |
+| features\profile                                                                              |          9 |        961 |         15 |        268 |      1,244 |
+| features\profile\api                                                                          |          1 |         55 |          0 |         17 |         72 |
+| features\profile\components                                                                   |          4 |        770 |         15 |        207 |        992 |
+| features\profile\hooks                                                                        |          1 |         83 |          0 |         25 |        108 |
+| features\profile\schemas                                                                      |          2 |         20 |          0 |          5 |         25 |
+| features\profile\types                                                                        |          1 |         33 |          0 |         14 |         47 |
+| features\reviews                                                                              |          3 |         37 |          0 |          9 |         46 |
+| features\reviews\api                                                                          |          1 |         11 |          0 |          2 |         13 |
+| features\reviews\hooks                                                                        |          1 |          9 |          0 |          1 |         10 |
+| features\reviews\types                                                                        |          1 |         17 |          0 |          6 |         23 |
+| hooks                                                                                         |          2 |         17 |          0 |          7 |         24 |
+| lib                                                                                           |          2 |         19 |          0 |          3 |         22 |
+| providers                                                                                     |          3 |        120 |          0 |         31 |        151 |
+| public                                                                                        |          5 |          5 |          0 |          0 |          5 |
+| services                                                                                      |          4 |        210 |         13 |         48 |        271 |
+| services\api                                                                                  |          4 |        210 |         13 |         48 |        271 |
+| stores                                                                                        |          1 |         11 |          0 |          2 |         13 |
+| types                                                                                         |          5 |          0 |          0 |          5 |          5 |
++-----------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-----------------------------------------------------------------------------------------------+--------------------+------------+------------+------------+------------+
+| filename                                                                                      | language           | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------------------------------+--------------------+------------+------------+------------+------------+
+| f:\e-booi-an-ebook-platform\frontend\AGENTS.md                                                | Markdown           |          2 |          2 |          2 |          6 |
+| f:\e-booi-an-ebook-platform\frontend\CLAUDE.md                                                | Markdown           |          1 |          0 |          1 |          2 |
+| f:\e-booi-an-ebook-platform\frontend\README.md                                                | Markdown           |         23 |          0 |         14 |         37 |
+| f:\e-booi-an-ebook-platform\frontend\app\(admin)\admin\authors\page.tsx                       | TypeScript JSX     |        189 |          8 |         22 |        219 |
+| f:\e-booi-an-ebook-platform\frontend\app\(admin)\admin\books\loading.tsx                      | TypeScript JSX     |         77 |         17 |         18 |        112 |
+| f:\e-booi-an-ebook-platform\frontend\app\(admin)\admin\books\page.tsx                         | TypeScript JSX     |        179 |          1 |         33 |        213 |
+| f:\e-booi-an-ebook-platform\frontend\app\(admin)\admin\categories\page.tsx                    | TypeScript JSX     |        189 |          8 |         22 |        219 |
+| f:\e-booi-an-ebook-platform\frontend\app\(admin)\admin\layout.tsx                             | TypeScript JSX     |         34 |          3 |         12 |         49 |
+| f:\e-booi-an-ebook-platform\frontend\app\(admin)\admin\loading.tsx                            | TypeScript JSX     |        121 |          6 |         18 |        145 |
+| f:\e-booi-an-ebook-platform\frontend\app\(admin)\admin\orders\page.tsx                        | TypeScript JSX     |        278 |          4 |         24 |        306 |
+| f:\e-booi-an-ebook-platform\frontend\app\(admin)\admin\page.tsx                               | TypeScript JSX     |        107 |          3 |         26 |        136 |
+| f:\e-booi-an-ebook-platform\frontend\app\(admin)\admin\publishers\page.tsx                    | TypeScript JSX     |        189 |          8 |         22 |        219 |
+| f:\e-booi-an-ebook-platform\frontend\app\(admin)\admin\users\loading.tsx                      | TypeScript JSX     |         30 |          0 |          5 |         35 |
+| f:\e-booi-an-ebook-platform\frontend\app\(admin)\admin\users\page.tsx                         | TypeScript JSX     |        136 |          3 |         27 |        166 |
+| f:\e-booi-an-ebook-platform\frontend\app\(auth)\login\page.tsx                                | TypeScript JSX     |         15 |          0 |          5 |         20 |
+| f:\e-booi-an-ebook-platform\frontend\app\(auth)\register\page.tsx                             | TypeScript JSX     |         15 |          0 |          5 |         20 |
+| f:\e-booi-an-ebook-platform\frontend\app\(private)\cart\layout.tsx                            | TypeScript JSX     |         20 |          0 |          3 |         23 |
+| f:\e-booi-an-ebook-platform\frontend\app\(private)\cart\page.tsx                              | TypeScript JSX     |        231 |          5 |         36 |        272 |
+| f:\e-booi-an-ebook-platform\frontend\app\(private)\checkout\page.tsx                          | TypeScript JSX     |        208 |          5 |         46 |        259 |
+| f:\e-booi-an-ebook-platform\frontend\app\(private)\library\page.tsx                           | TypeScript JSX     |        118 |          0 |         17 |        135 |
+| f:\e-booi-an-ebook-platform\frontend\app\(private)\offers\page.tsx                            | TypeScript JSX     |        193 |          8 |         23 |        224 |
+| f:\e-booi-an-ebook-platform\frontend\app\(private)\orders\[id]\page.tsx                       | TypeScript JSX     |        318 |          0 |         38 |        356 |
+| f:\e-booi-an-ebook-platform\frontend\app\(private)\orders\page.tsx                            | TypeScript JSX     |         69 |          0 |         11 |         80 |
+| f:\e-booi-an-ebook-platform\frontend\app\(private)\payment-success\page.tsx                   | TypeScript JSX     |        178 |          0 |         27 |        205 |
+| f:\e-booi-an-ebook-platform\frontend\app\(public)\books\[id]\page.tsx                         | TypeScript JSX     |        126 |          0 |         17 |        143 |
+| f:\e-booi-an-ebook-platform\frontend\app\(public)\books\page.tsx                              | TypeScript JSX     |        131 |         10 |         36 |        177 |
+| f:\e-booi-an-ebook-platform\frontend\app\(public)\layout.tsx                                  | TypeScript JSX     |         18 |          0 |          3 |         21 |
+| f:\e-booi-an-ebook-platform\frontend\app\(public)\page.tsx                                    | TypeScript JSX     |         34 |          0 |         10 |         44 |
+| f:\e-booi-an-ebook-platform\frontend\app\(user)\profile\layout.tsx                            | TypeScript JSX     |         18 |          0 |          3 |         21 |
+| f:\e-booi-an-ebook-platform\frontend\app\(user)\profile\page.tsx                              | TypeScript JSX     |         87 |          2 |         15 |        104 |
+| f:\e-booi-an-ebook-platform\frontend\app\globals.css                                          | PostCSS            |        516 |          2 |         23 |        541 |
+| f:\e-booi-an-ebook-platform\frontend\app\layout.tsx                                           | TypeScript JSX     |         43 |          0 |          5 |         48 |
+| f:\e-booi-an-ebook-platform\frontend\app\loading.tsx                                          | TypeScript JSX     |         20 |          2 |          1 |         23 |
+| f:\e-booi-an-ebook-platform\frontend\app\not-found.tsx                                        | TypeScript JSX     |          8 |          0 |          3 |         11 |
+| f:\e-booi-an-ebook-platform\frontend\app\shop\layout.tsx                                      | TypeScript JSX     |         18 |          0 |          3 |         21 |
+| f:\e-booi-an-ebook-platform\frontend\app\shop\page.tsx                                        | TypeScript JSX     |          9 |          0 |          0 |          9 |
+| f:\e-booi-an-ebook-platform\frontend\app\wishlist\page.tsx                                    | TypeScript JSX     |        193 |          8 |         23 |        224 |
+| f:\e-booi-an-ebook-platform\frontend\components.json                                          | JSON               |         25 |          0 |          1 |         26 |
+| f:\e-booi-an-ebook-platform\frontend\components\layout\desktop-nav.tsx                        | TypeScript JSX     |          0 |          0 |          1 |          1 |
+| f:\e-booi-an-ebook-platform\frontend\components\layout\mobile-nav.tsx                         | TypeScript JSX     |         99 |          5 |         17 |        121 |
+| f:\e-booi-an-ebook-platform\frontend\components\layout\nav-links.ts                           | TypeScript         |         51 |          0 |          4 |         55 |
+| f:\e-booi-an-ebook-platform\frontend\components\layout\navbar.tsx                             | TypeScript JSX     |        149 |          6 |         26 |        181 |
+| f:\e-booi-an-ebook-platform\frontend\components\layout\site-footer.tsx                        | TypeScript JSX     |        110 |          0 |          8 |        118 |
+| f:\e-booi-an-ebook-platform\frontend\components\layout\user-menu.tsx                          | TypeScript JSX     |        118 |          4 |         25 |        147 |
+| f:\e-booi-an-ebook-platform\frontend\components\search\search-cleanup.tsx                     | TypeScript JSX     |         14 |          1 |          4 |         19 |
+| f:\e-booi-an-ebook-platform\frontend\components\ui\avatar.tsx                                 | TypeScript JSX     |        100 |          0 |         10 |        110 |
+| f:\e-booi-an-ebook-platform\frontend\components\ui\badge.tsx                                  | TypeScript JSX     |         48 |          0 |          5 |         53 |
+| f:\e-booi-an-ebook-platform\frontend\components\ui\button.tsx                                 | TypeScript JSX     |         56 |          0 |          5 |         61 |
+| f:\e-booi-an-ebook-platform\frontend\components\ui\card.tsx                                   | TypeScript JSX     |         94 |          0 |         10 |        104 |
+| f:\e-booi-an-ebook-platform\frontend\components\ui\dialog.tsx                                 | TypeScript JSX     |        144 |          0 |         14 |        158 |
+| f:\e-booi-an-ebook-platform\frontend\components\ui\dropdown-menu.tsx                          | TypeScript JSX     |        250 |          0 |         19 |        269 |
+| f:\e-booi-an-ebook-platform\frontend\components\ui\input.tsx                                  | TypeScript JSX     |         17 |          0 |          4 |         21 |
+| f:\e-booi-an-ebook-platform\frontend\components\ui\label.tsx                                  | TypeScript JSX     |         16 |          0 |          5 |         21 |
+| f:\e-booi-an-ebook-platform\frontend\components\ui\select.tsx                                 | TypeScript JSX     |        188 |          0 |         14 |        202 |
+| f:\e-booi-an-ebook-platform\frontend\components\ui\sheet.tsx                                  | TypeScript JSX     |        122 |          0 |         14 |        136 |
+| f:\e-booi-an-ebook-platform\frontend\components\ui\skeleton.tsx                               | TypeScript JSX     |         11 |          0 |          3 |         14 |
+| f:\e-booi-an-ebook-platform\frontend\components\ui\sonner.tsx                                 | TypeScript JSX     |         45 |          0 |          5 |         50 |
+| f:\e-booi-an-ebook-platform\frontend\components\ui\table.tsx                                  | TypeScript JSX     |        105 |          0 |         12 |        117 |
+| f:\e-booi-an-ebook-platform\frontend\components\ui\textarea.tsx                               | TypeScript JSX     |         15 |          0 |          4 |         19 |
+| f:\e-booi-an-ebook-platform\frontend\constants\index.ts                                       | TypeScript         |          1 |          0 |          0 |          1 |
+| f:\e-booi-an-ebook-platform\frontend\eslint.config.mjs                                        | JavaScript         |         14 |          2 |          3 |         19 |
+| f:\e-booi-an-ebook-platform\frontend\features\admin\api\admin.api.ts                          | TypeScript         |        197 |         15 |         41 |        253 |
+| f:\e-booi-an-ebook-platform\frontend\features\admin\components\books\BookDialog.tsx           | TypeScript JSX     |        454 |          2 |         38 |        494 |
+| f:\e-booi-an-ebook-platform\frontend\features\admin\components\books\BookViewDialog.tsx       | TypeScript JSX     |        172 |          6 |         34 |        212 |
+| f:\e-booi-an-ebook-platform\frontend\features\admin\components\books\books-filter.tsx         | TypeScript JSX     |         71 |          4 |         25 |        100 |
+| f:\e-booi-an-ebook-platform\frontend\features\admin\components\books\books-table.tsx          | TypeScript JSX     |        308 |          2 |         40 |        350 |
+| f:\e-booi-an-ebook-platform\frontend\features\admin\components\dashboard\dashboard-chart.tsx  | TypeScript JSX     |         72 |          0 |         12 |         84 |
+| f:\e-booi-an-ebook-platform\frontend\features\admin\components\dashboard\header.tsx           | TypeScript JSX     |        131 |          0 |         29 |        160 |
+| f:\e-booi-an-ebook-platform\frontend\features\admin\components\dashboard\latest-users.tsx     | TypeScript JSX     |         83 |          0 |         10 |         93 |
+| f:\e-booi-an-ebook-platform\frontend\features\admin\components\dashboard\recent-orders.tsx    | TypeScript JSX     |         85 |          0 |          8 |         93 |
+| f:\e-booi-an-ebook-platform\frontend\features\admin\components\dashboard\sales-chart.tsx      | TypeScript JSX     |         82 |          0 |          8 |         90 |
+| f:\e-booi-an-ebook-platform\frontend\features\admin\components\dashboard\sidebar.tsx          | TypeScript JSX     |         80 |          3 |          9 |         92 |
+| f:\e-booi-an-ebook-platform\frontend\features\admin\components\dashboard\stat-card.tsx        | TypeScript JSX     |         92 |          0 |         10 |        102 |
+| f:\e-booi-an-ebook-platform\frontend\features\admin\components\dashboard\top-books.tsx        | TypeScript JSX     |         68 |          0 |         10 |         78 |
+| f:\e-booi-an-ebook-platform\frontend\features\admin\components\users\add-user-dialog.tsx      | TypeScript JSX     |        281 |          0 |         39 |        320 |
+| f:\e-booi-an-ebook-platform\frontend\features\admin\components\users\delete-user-dialog.tsx   | TypeScript JSX     |         94 |          0 |         13 |        107 |
+| f:\e-booi-an-ebook-platform\frontend\features\admin\components\users\edit-user-dialog.tsx     | TypeScript JSX     |        173 |          1 |         34 |        208 |
+| f:\e-booi-an-ebook-platform\frontend\features\admin\components\users\pagination.tsx           | TypeScript JSX     |         77 |          0 |         15 |         92 |
+| f:\e-booi-an-ebook-platform\frontend\features\admin\components\users\users-filter.tsx         | TypeScript JSX     |         83 |          0 |          9 |         92 |
+| f:\e-booi-an-ebook-platform\frontend\features\admin\components\users\users-table.tsx          | TypeScript JSX     |        155 |          0 |         19 |        174 |
+| f:\e-booi-an-ebook-platform\frontend\features\admin\components\users\view-user-dialog.tsx     | TypeScript JSX     |        139 |          0 |         26 |        165 |
+| f:\e-booi-an-ebook-platform\frontend\features\admin\hooks\admin.hooks.ts                      | TypeScript         |        155 |         14 |         35 |        204 |
+| f:\e-booi-an-ebook-platform\frontend\features\admin\types\admin.types.ts                      | TypeScript         |        210 |          1 |         64 |        275 |
+| f:\e-booi-an-ebook-platform\frontend\features\auth\api\auth.api.ts                            | TypeScript         |         62 |          0 |         14 |         76 |
+| f:\e-booi-an-ebook-platform\frontend\features\auth\components\login-form.tsx                  | TypeScript JSX     |        248 |          2 |         38 |        288 |
+| f:\e-booi-an-ebook-platform\frontend\features\auth\components\register-form.tsx               | TypeScript JSX     |        360 |          4 |         34 |        398 |
+| f:\e-booi-an-ebook-platform\frontend\features\auth\hooks\auth.hooks.ts                        | TypeScript         |         54 |          0 |         15 |         69 |
+| f:\e-booi-an-ebook-platform\frontend\features\auth\schemas\auth.schema.ts                     | TypeScript         |         20 |          0 |          3 |         23 |
+| f:\e-booi-an-ebook-platform\frontend\features\auth\types\api-error.ts                         | TypeScript         |          7 |          0 |          0 |          7 |
+| f:\e-booi-an-ebook-platform\frontend\features\auth\types\auth.types.ts                        | TypeScript         |         26 |          0 |          4 |         30 |
+| f:\e-booi-an-ebook-platform\frontend\features\books\api\book.api.ts                           | TypeScript         |         43 |          0 |         14 |         57 |
+| f:\e-booi-an-ebook-platform\frontend\features\books\components\book-details\book-gallery.tsx  | TypeScript JSX     |        104 |          1 |         14 |        119 |
+| f:\e-booi-an-ebook-platform\frontend\features\books\components\book-details\book-info.tsx     | TypeScript JSX     |        218 |          7 |         24 |        249 |
+| f:\e-booi-an-ebook-platform\frontend\features\books\components\book-details\book-tabs.tsx     | TypeScript JSX     |         52 |          0 |          9 |         61 |
+| f:\e-booi-an-ebook-platform\frontend\features\books\components\book-details\breadcrumb.tsx    | TypeScript JSX     |         28 |          0 |          3 |         31 |
+| f:\e-booi-an-ebook-platform\frontend\features\books\components\book-details\related-books.tsx | TypeScript JSX     |          9 |          0 |          5 |         14 |
+| f:\e-booi-an-ebook-platform\frontend\features\books\components\book-details\review-list.tsx   | TypeScript JSX     |        117 |          0 |         16 |        133 |
+| f:\e-booi-an-ebook-platform\frontend\features\books\components\books-filters.tsx              | TypeScript JSX     |        167 |          3 |         21 |        191 |
+| f:\e-booi-an-ebook-platform\frontend\features\books\components\books-grid.tsx                 | TypeScript JSX     |        176 |          0 |         24 |        200 |
+| f:\e-booi-an-ebook-platform\frontend\features\books\components\books-hero.tsx                 | TypeScript JSX     |         28 |          0 |          6 |         34 |
+| f:\e-booi-an-ebook-platform\frontend\features\books\components\books-toolbar.tsx              | TypeScript JSX     |         90 |          5 |          8 |        103 |
+| f:\e-booi-an-ebook-platform\frontend\features\books\components\mobile-filters-sheet.tsx       | TypeScript JSX     |         54 |          0 |          9 |         63 |
+| f:\e-booi-an-ebook-platform\frontend\features\books\components\pagination.tsx                 | TypeScript JSX     |         73 |          0 |         11 |         84 |
+| f:\e-booi-an-ebook-platform\frontend\features\books\hooks\use-book.ts                         | TypeScript         |         29 |          0 |          7 |         36 |
+| f:\e-booi-an-ebook-platform\frontend\features\books\types\book.types.ts                       | TypeScript         |         59 |          1 |         24 |         84 |
+| f:\e-booi-an-ebook-platform\frontend\features\cart\api\cart.api.ts                            | TypeScript         |         35 |          1 |          8 |         44 |
+| f:\e-booi-an-ebook-platform\frontend\features\cart\components\cart-item.tsx                   | TypeScript JSX     |        118 |          0 |         16 |        134 |
+| f:\e-booi-an-ebook-platform\frontend\features\cart\components\empty-cart.tsx                  | TypeScript JSX     |         31 |          0 |          4 |         35 |
+| f:\e-booi-an-ebook-platform\frontend\features\cart\components\order-summary.tsx               | TypeScript JSX     |        148 |          2 |         19 |        169 |
+| f:\e-booi-an-ebook-platform\frontend\features\cart\hooks\use-cart.ts                          | TypeScript         |         91 |          0 |         20 |        111 |
+| f:\e-booi-an-ebook-platform\frontend\features\cart\types\cart.types.ts                        | TypeScript         |         55 |          0 |          8 |         63 |
+| f:\e-booi-an-ebook-platform\frontend\features\checkout\api\checkout.api.ts                    | TypeScript         |         24 |          0 |          5 |         29 |
+| f:\e-booi-an-ebook-platform\frontend\features\checkout\components\checkout-items-summary.tsx  | TypeScript JSX     |         65 |          0 |          9 |         74 |
+| f:\e-booi-an-ebook-platform\frontend\features\checkout\components\empty-checkout.tsx          | TypeScript JSX     |         45 |          0 |          5 |         50 |
+| f:\e-booi-an-ebook-platform\frontend\features\checkout\components\order-total-card.tsx        | TypeScript JSX     |         88 |          0 |         13 |        101 |
+| f:\e-booi-an-ebook-platform\frontend\features\checkout\components\payment-methods.tsx         | TypeScript JSX     |         90 |          2 |         10 |        102 |
+| f:\e-booi-an-ebook-platform\frontend\features\checkout\components\shipping-address-form.tsx   | TypeScript JSX     |         89 |          0 |         11 |        100 |
+| f:\e-booi-an-ebook-platform\frontend\features\checkout\hooks\use-checkout.ts                  | TypeScript         |         15 |          0 |          3 |         18 |
+| f:\e-booi-an-ebook-platform\frontend\features\checkout\types\checkout.types.ts                | TypeScript         |         56 |          3 |         10 |         69 |
+| f:\e-booi-an-ebook-platform\frontend\features\coupon\api\coupon.api.ts                        | TypeScript         |         12 |          0 |          2 |         14 |
+| f:\e-booi-an-ebook-platform\frontend\features\coupon\hooks\use-coupon.ts                      | TypeScript         |          6 |          0 |          1 |          7 |
+| f:\e-booi-an-ebook-platform\frontend\features\coupon\types\coupon.types.ts                    | TypeScript         |         14 |          0 |          2 |         16 |
+| f:\e-booi-an-ebook-platform\frontend\features\home\api\home.api.ts                            | TypeScript         |          9 |          0 |          3 |         12 |
+| f:\e-booi-an-ebook-platform\frontend\features\home\components\book-card.tsx                   | TypeScript JSX     |        174 |          3 |         31 |        208 |
+| f:\e-booi-an-ebook-platform\frontend\features\home\components\book-section.tsx                | TypeScript JSX     |         55 |          0 |         11 |         66 |
+| f:\e-booi-an-ebook-platform\frontend\features\home\components\category-section.tsx            | TypeScript JSX     |         56 |          0 |          7 |         63 |
+| f:\e-booi-an-ebook-platform\frontend\features\home\components\hero-section.tsx                | TypeScript JSX     |        156 |          5 |         20 |        181 |
+| f:\e-booi-an-ebook-platform\frontend\features\home\components\preorder-section.tsx            | TypeScript JSX     |         21 |          0 |          5 |         26 |
+| f:\e-booi-an-ebook-platform\frontend\features\home\components\section-header.tsx              | TypeScript JSX     |         22 |          0 |          4 |         26 |
+| f:\e-booi-an-ebook-platform\frontend\features\home\hooks\home.hooks.ts                        | TypeScript         |          8 |          0 |          2 |         10 |
+| f:\e-booi-an-ebook-platform\frontend\features\home\types\home.types.ts                        | TypeScript         |         56 |          0 |         12 |         68 |
+| f:\e-booi-an-ebook-platform\frontend\features\library\api\library.api.ts                      | TypeScript         |          7 |          0 |          2 |          9 |
+| f:\e-booi-an-ebook-platform\frontend\features\library\hooks\use-library.ts                    | TypeScript         |          7 |          0 |          1 |          8 |
+| f:\e-booi-an-ebook-platform\frontend\features\library\types\library.types.ts                  | TypeScript         |          8 |          0 |          0 |          8 |
+| f:\e-booi-an-ebook-platform\frontend\features\orders\api\orders.api.ts                        | TypeScript         |         43 |          0 |          7 |         50 |
+| f:\e-booi-an-ebook-platform\frontend\features\orders\components\order-card.tsx                | TypeScript JSX     |        176 |          0 |         19 |        195 |
+| f:\e-booi-an-ebook-platform\frontend\features\orders\hooks\use-orders.ts                      | TypeScript         |         28 |          0 |          6 |         34 |
+| f:\e-booi-an-ebook-platform\frontend\features\orders\types\orders.types.ts                    | TypeScript         |         35 |          0 |          4 |         39 |
+| f:\e-booi-an-ebook-platform\frontend\features\profile\api\profile.api.ts                      | TypeScript         |         55 |          0 |         17 |         72 |
+| f:\e-booi-an-ebook-platform\frontend\features\profile\components\change-password-form.tsx     | TypeScript JSX     |        184 |          0 |         24 |        208 |
+| f:\e-booi-an-ebook-platform\frontend\features\profile\components\profile-card.tsx             | TypeScript JSX     |        280 |          9 |         45 |        334 |
+| f:\e-booi-an-ebook-platform\frontend\features\profile\components\profile-form.tsx             | TypeScript JSX     |        256 |          4 |        100 |        360 |
+| f:\e-booi-an-ebook-platform\frontend\features\profile\components\profile-skeleton.tsx         | TypeScript JSX     |         50 |          2 |         38 |         90 |
+| f:\e-booi-an-ebook-platform\frontend\features\profile\hooks\profile.hooks.ts                  | TypeScript         |         83 |          0 |         25 |        108 |
+| f:\e-booi-an-ebook-platform\frontend\features\profile\schemas\change-password.schema.ts       | TypeScript         |         12 |          0 |          3 |         15 |
+| f:\e-booi-an-ebook-platform\frontend\features\profile\schemas\update-profile.schema.ts        | TypeScript         |          8 |          0 |          2 |         10 |
+| f:\e-booi-an-ebook-platform\frontend\features\profile\types\profile.types.ts                  | TypeScript         |         33 |          0 |         14 |         47 |
+| f:\e-booi-an-ebook-platform\frontend\features\reviews\api\review.api.ts                       | TypeScript         |         11 |          0 |          2 |         13 |
+| f:\e-booi-an-ebook-platform\frontend\features\reviews\hooks\use-review.ts                     | TypeScript         |          9 |          0 |          1 |         10 |
+| f:\e-booi-an-ebook-platform\frontend\features\reviews\types\review.type.ts                    | TypeScript         |         17 |          0 |          6 |         23 |
+| f:\e-booi-an-ebook-platform\frontend\hooks\use-auth.ts                                        | TypeScript         |          5 |          0 |          2 |          7 |
+| f:\e-booi-an-ebook-platform\frontend\hooks\use-debounce.ts                                    | TypeScript         |         12 |          0 |          5 |         17 |
+| f:\e-booi-an-ebook-platform\frontend\lib\query-client.ts                                      | TypeScript         |         14 |          0 |          1 |         15 |
+| f:\e-booi-an-ebook-platform\frontend\lib\utils.ts                                             | TypeScript         |          5 |          0 |          2 |          7 |
+| f:\e-booi-an-ebook-platform\frontend\middleware.ts                                            | TypeScript         |         13 |          1 |          5 |         19 |
+| f:\e-booi-an-ebook-platform\frontend\next.config.ts                                           | TypeScript         |         25 |          1 |          1 |         27 |
+| f:\e-booi-an-ebook-platform\frontend\package-lock.json                                        | JSON               |     10,619 |          0 |          1 |     10,620 |
+| f:\e-booi-an-ebook-platform\frontend\package.json                                             | JSON               |         50 |          0 |          1 |         51 |
+| f:\e-booi-an-ebook-platform\frontend\postcss.config.mjs                                       | JavaScript         |          6 |          0 |          2 |          8 |
+| f:\e-booi-an-ebook-platform\frontend\providers\auth-provider.tsx                              | TypeScript JSX     |         85 |          0 |         26 |        111 |
+| f:\e-booi-an-ebook-platform\frontend\providers\query-provider.tsx                             | TypeScript JSX     |         16 |          0 |          3 |         19 |
+| f:\e-booi-an-ebook-platform\frontend\providers\theme-provider.tsx                             | TypeScript JSX     |         19 |          0 |          2 |         21 |
+| f:\e-booi-an-ebook-platform\frontend\public\file.svg                                          | SVG                |          1 |          0 |          0 |          1 |
+| f:\e-booi-an-ebook-platform\frontend\public\globe.svg                                         | SVG                |          1 |          0 |          0 |          1 |
+| f:\e-booi-an-ebook-platform\frontend\public\next.svg                                          | SVG                |          1 |          0 |          0 |          1 |
+| f:\e-booi-an-ebook-platform\frontend\public\vercel.svg                                        | SVG                |          1 |          0 |          0 |          1 |
+| f:\e-booi-an-ebook-platform\frontend\public\window.svg                                        | SVG                |          1 |          0 |          0 |          1 |
+| f:\e-booi-an-ebook-platform\frontend\services\api\api.ts                                      | TypeScript         |          8 |          0 |          1 |          9 |
+| f:\e-booi-an-ebook-platform\frontend\services\api\axios.ts                                    | TypeScript         |        113 |         13 |         33 |        159 |
+| f:\e-booi-an-ebook-platform\frontend\services\api\endpoints.ts                                | TypeScript         |         81 |          0 |         11 |         92 |
+| f:\e-booi-an-ebook-platform\frontend\services\api\token.ts                                    | TypeScript         |          8 |          0 |          3 |         11 |
+| f:\e-booi-an-ebook-platform\frontend\stores\search-store.ts                                   | TypeScript         |         11 |          0 |          2 |         13 |
+| f:\e-booi-an-ebook-platform\frontend\tsconfig.json                                            | JSON with Comments |         34 |          0 |          1 |         35 |
+| f:\e-booi-an-ebook-platform\frontend\types\api.ts                                             | TypeScript         |          0 |          0 |          1 |          1 |
+| f:\e-booi-an-ebook-platform\frontend\types\auth.ts                                            | TypeScript         |          0 |          0 |          1 |          1 |
+| f:\e-booi-an-ebook-platform\frontend\types\book.ts                                            | TypeScript         |          0 |          0 |          1 |          1 |
+| f:\e-booi-an-ebook-platform\frontend\types\cart.ts                                            | TypeScript         |          0 |          0 |          1 |          1 |
+| f:\e-booi-an-ebook-platform\frontend\types\order.ts                                           | TypeScript         |          0 |          0 |          1 |          1 |
+| Total                                                                                         |                    |     25,189 |        240 |      2,307 |     27,736 |
++-----------------------------------------------------------------------------------------------+--------------------+------------+------------+------------+------------+
