@@ -19,7 +19,6 @@ const GATEWAY_MAP = {
 };
 
 // order create
-// order create
 async function createOrder(req, res, next) {
   try {
     const { shippingAddress, paymentMethod, couponCode } = req.body;
@@ -47,7 +46,6 @@ async function createOrder(req, res, next) {
 
     let hasDigital = false;
 
-    // Build order items
     for (const item of cartItems) {
       const book = item.book;
 
@@ -75,16 +73,11 @@ async function createOrder(req, res, next) {
       }
     }
 
-    // COD restriction
     if (gateway === "cod" && hasDigital) {
       return res.status(400).json({
         message: "Cash on Delivery is not allowed for Digital books",
       });
     }
-
-    // ======================
-    // Coupon Logic
-    // ======================
 
     let discountAmount = 0;
     let finalAmount = totalAmount;
@@ -138,10 +131,6 @@ async function createOrder(req, res, next) {
       couponId = coupon._id;
     }
 
-    // ======================
-    // Create Order
-    // ======================
-
     const order = new Order({
       user: req.user.id,
       items: orderItems,
@@ -161,11 +150,6 @@ async function createOrder(req, res, next) {
 
     await order.save();
 
-    // For COD, the order is final immediately — reduce stock and clear
-    // cart right away. For gateway payments (sslcommerz/stripe), both are
-    // deferred until paymentSuccess actually confirms the payment, so a
-    // failed/cancelled/abandoned payment doesn't reduce real inventory or
-    // wipe a cart for a purchase that never completed.
     if (gateway === "cod") {
       for (const item of cartItems) {
         if (item.book.bookType === "Physical") {
@@ -179,19 +163,31 @@ async function createOrder(req, res, next) {
       });
     }
 
-    // Send email
-    const user = await User.findById(req.user.id);
-
-    await sendEmail({
-      to: user.email,
-      subject: "Order Confirmation",
-      html: orderEmail(user, order),
-    });
-
+    // Send response immediately — don't make the customer wait on email
+    // delivery. A slow/hanging SMTP connection (common on hosts like Render
+    // if outbound SMTP ports are blocked or slow) would otherwise stall
+    // this entire request indefinitely, since res.json() can't fire until
+    // everything before it resolves.
     res.status(201).json({
       message: "Order created successfully",
       order,
     });
+
+    // Fire the confirmation email in the background. Errors are caught and
+    // logged only — a failed/slow email must never crash or hang the order
+    // creation flow, since the order itself already succeeded.
+    User.findById(req.user.id)
+      .then((user) => {
+        if (!user) return;
+        return sendEmail({
+          to: user.email,
+          subject: "Order Confirmation",
+          html: orderEmail(user, order),
+        });
+      })
+      .catch((err) => {
+        console.error("Order confirmation email failed:", err);
+      });
   } catch (error) {
     next(error);
   }
