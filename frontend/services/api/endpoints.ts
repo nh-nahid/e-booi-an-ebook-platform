@@ -42,12 +42,13 @@ CART: {
   CLEAR_CART: "/cart",
 },
 
-  ORDERS: {
+ORDERS: {
     CREATE: "/orders",
     MY_ORDERS: "/orders/my-orders",
     LIBRARY: "/orders/library",
     DOWNLOAD: (bookId: string) => `/orders/download/${bookId}`,
     INVOICE: (id: string) => `/orders/${id}/invoice`,
+    DETAILS: (id: string) => `/orders/${id}`,
     LIST: "/orders",
     UPDATE_STATUS: (id: string) => `/orders/${id}/status`,
     UPDATE_PAYMENT: (id: string) => `/orders/${id}/payment`,

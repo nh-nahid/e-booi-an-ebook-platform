@@ -25,8 +25,8 @@ export const NAV_LINKS: NavLink[] = [
     icon: BookOpen,
   },
   {
-    title: "Shop",
-    href: "/shop",
+    title: "Orders",
+    href: "/orders",
     icon: FolderOpen,
   },
 ];

@@ -28,65 +28,83 @@ import { useApplyCoupon } from "@/features/coupon/hooks/use-coupon";
 export default function CartPage() {
 const router = useRouter();
 
-const { user, isLoading: authLoading } = useAuth();
+  const { user, isLoading: authLoading } = useAuth();
 
-const { data: cart = [], isLoading } = useCart();
+  const { data: cart = [], isLoading } = useCart();
 
-const removeMutation = useRemoveCartItem();
-const clearMutation = useClearCart();
-const updateMutation = useUpdateCartQuantity();
-const [appliedDiscount, setAppliedDiscount] = useState(0);
-const applyCouponMutation = useApplyCoupon();
+  const removeMutation = useRemoveCartItem();
+  const clearMutation = useClearCart();
+  const updateMutation = useUpdateCartQuantity();
+  const [appliedDiscount, setAppliedDiscount] = useState(0);
+  const applyCouponMutation = useApplyCoupon();
 
-useEffect(() => {
-  if (!authLoading && !user) {
-    router.replace("/login");
-  }
-}, [authLoading, user, router]);
-
-if (authLoading || isLoading) {
-  return <Loading />;
-}
-
-if (!user) {
-  return null;
-}
-
-
-const items: CartItemData[] = cart.map((item) => ({
-  id: item._id,
-  bookId: item.book._id,
-  title: item.book.title,
-  author: item.book.author,
-  price: item.book.price,
-  originalPrice: undefined,
-  coverUrl: item.book.coverImage,
-  quantity: item.quantity ?? 1,
-  stock: item.book.stock,
-  bookType:
-    item.book.bookType === "Digital"
-      ? "Digital"
-      : "Physical",
-}));
+  // items and subtotal must be computed here — before any early return —
+  // since the coupon effect below depends on subtotal, and all hooks
+  // must run unconditionally on every render
+  const items: CartItemData[] = cart.map((item) => ({
+    id: item._id,
+    bookId: item.book._id,
+    title: item.book.title,
+    author: item.book.author,
+    price: item.book.price,
+    originalPrice: undefined,
+    coverUrl: item.book.coverImage,
+    quantity: item.quantity ?? 1,
+    stock: item.book.stock,
+    bookType: item.book.bookType === "Digital" ? "Digital" : "Physical",
+  }));
 
   const subtotal = items.reduce(
     (sum, item) => sum + item.price * item.quantity,
-    0
+    0,
   );
 
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.replace("/login");
+    }
+  }, [authLoading, user, router]);
+
+  useEffect(() => {
+    const savedCode = sessionStorage.getItem("appliedCouponCode");
+    if (!savedCode || subtotal <= 0) return;
+
+    applyCouponMutation.mutate(
+      { code: savedCode, amount: subtotal },
+      {
+        onSuccess: (response) => {
+          setAppliedDiscount(response.discount);
+        },
+        onError: () => {
+          sessionStorage.removeItem("appliedCouponCode");
+          setAppliedDiscount(0);
+        },
+      },
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [subtotal]);
+
+  // ---- early returns start here ----
+
+  if (authLoading || isLoading) {
+    return <Loading />;
+  }
+
+  if (!user) {
+    return null;
+  }
+
   const originalSubtotal = items.reduce(
-    (sum, item) =>
-      sum + (item.originalPrice ?? item.price) * item.quantity,
-    0
+    (sum, item) => sum + (item.originalPrice ?? item.price) * item.quantity,
+    0,
   );
 
   const itemDiscount = originalSubtotal - subtotal;
 
-const deliveryFee =
-  items.some((item) => item.bookType === "Physical") &&
-  subtotal < 1000
-    ? 60
-    : 0;
+  const deliveryFee =
+    items.some((item) => item.bookType === "Physical") && subtotal < 1000
+      ? 60
+      : 0;
 
 const handleQuantityChange = (
   id: string,
@@ -138,6 +156,8 @@ const handleRemove = (id: string) => {
 const handleClearCart = () => {
   clearMutation.mutate(undefined, {
     onSuccess: () => {
+      setAppliedDiscount(0);
+      sessionStorage.removeItem("appliedCouponCode");
       toast.success("কার্ট খালি করা হয়েছে");
     },
     onError: (error) => {
@@ -155,19 +175,19 @@ const handleClearCart = () => {
 
 const handleApplyPromo = async (code: string) => {
   try {
-    const response =
-      await applyCouponMutation.mutateAsync({
-        code,
-        amount: subtotal,
-      });
+    const response = await applyCouponMutation.mutateAsync({
+      code,
+      amount: subtotal,
+    });
 
     setAppliedDiscount(response.discount);
+    sessionStorage.setItem("appliedCouponCode", code);
 
     toast.success("কুপন সফলভাবে প্রয়োগ হয়েছে");
-
     return true;
   } catch (error) {
     setAppliedDiscount(0);
+    sessionStorage.removeItem("appliedCouponCode");
 
     if (isAxiosError(error)) {
       toast.error(

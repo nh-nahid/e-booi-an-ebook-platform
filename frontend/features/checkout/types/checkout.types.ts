@@ -11,7 +11,11 @@ export interface CheckoutItem {
   format: BookFormat;
 }
 
-export type PaymentMethodType = "card" | "bkash" | "nagad" | "cod";
+export type PaymentMethodType =
+  | "card"
+  | "bkash"
+  | "nagad"
+  | "cod";
 
 export interface ShippingAddress {
   fullName: string;
@@ -20,6 +24,7 @@ export interface ShippingAddress {
   city: string;
   postalCode: string;
   district: string;
+  notes?: string;
 }
 
 export interface ContactDetails {
@@ -32,4 +37,33 @@ export interface CheckoutSummary {
   shippingFee: number;
   discount: number;
   total: number;
+}
+
+/* ==========================
+   API Types
+========================== */
+
+export interface CreateOrderPayload {
+  shippingAddress?: ShippingAddress;
+  paymentMethod: PaymentMethodType;
+  couponCode?: string;
+}
+
+export interface Order {
+  _id: string;
+  totalAmount: number;
+  discountAmount: number;
+  finalAmount: number;
+  paymentMethod: PaymentMethodType;
+  paymentStatus: string;
+  orderStatus: string;
+}
+
+export interface CreateOrderResponse {
+  message: string;
+  order: Order;
+}
+
+export interface InitiatePaymentResponse {
+  gatewayURL: string;
 }
