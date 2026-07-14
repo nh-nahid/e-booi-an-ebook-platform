@@ -7,13 +7,19 @@ export interface RecentUser {
   id: string;
   name: string;
   email: string;
-  avatarUrl?: string;
+  avatar?: string;
   joinedAt: string;
   role?: "user" | "admin";
 }
 
 interface LatestUsersProps {
   users: RecentUser[];
+}
+
+function getAvatarUrl(avatar?: string) {
+  if (!avatar) return "";
+  const base = process.env.NEXT_PUBLIC_API_URL?.replace("/api/v1", "");
+  return `${base}/uploads/avatars/${avatar}`;
 }
 
 export default function LatestUsers({ users }: LatestUsersProps) {
@@ -42,6 +48,8 @@ export default function LatestUsers({ users }: LatestUsersProps) {
             .slice(0, 2)
             .toUpperCase();
 
+          const avatarUrl = getAvatarUrl(user.avatar);
+
           return (
             <div
               key={user.id}
@@ -49,9 +57,9 @@ export default function LatestUsers({ users }: LatestUsersProps) {
             >
               <div className="flex min-w-0 items-center gap-3">
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#0A0E2A] text-xs font-bold text-white">
-                  {user.avatarUrl ? (
+                  {avatarUrl ? (
                     <img
-                      src={user.avatarUrl}
+                      src={avatarUrl}
                       alt={user.name}
                       className="h-full w-full object-cover"
                     />
