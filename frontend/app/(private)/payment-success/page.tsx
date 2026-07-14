@@ -104,11 +104,8 @@ export default function PaymentSuccessPage() {
           </p>
         </div>
 
-        {digitalItems.length > 0 && (
-          <div className="mt-8 rounded-2xl border border-[#E1E5E8] bg-white p-5">
-            <h2 className="mb-4 text-sm font-bold text-[#0A0E2A]">
-              আপনার eBook গুলো
-            </h2>
+        
+          
 
             <div className="space-y-3">
               {digitalItems.length > 0 && (
@@ -175,8 +172,8 @@ export default function PaymentSuccessPage() {
   </div>
 )}
             </div>
-          </div>
-        )}
+          
+        
 
         {physicalItems.length > 0 && (
           <div className="mt-6 flex items-start gap-2.5 rounded-2xl bg-[#E6F7F6] p-4 text-sm text-[#0A0E2A]">
@@ -189,13 +186,13 @@ export default function PaymentSuccessPage() {
         <div className="mt-8 flex justify-center gap-3">
           <button
             onClick={() => router.push("/orders")}
-            className="rounded-full border border-[#E1E5E8] px-5 py-2.5 text-sm font-bold text-[#0A0E2A] hover:border-[#2DBDB6]"
+            className="rounded-full border cursor-pointer border-[#E1E5E8] px-5 py-2.5 text-sm font-bold text-[#0A0E2A] hover:border-[#2DBDB6]"
           >
             আমার অর্ডার দেখুন
           </button>
           <button
             onClick={() => router.push("/books")}
-            className="rounded-full bg-[#2DBDB6] px-5 py-2.5 text-sm font-bold text-white"
+            className="rounded-full cursor-pointer bg-[#2DBDB6] px-5 py-2.5 text-sm font-bold text-white"
           >
             শপিং চালিয়ে যান
           </button>

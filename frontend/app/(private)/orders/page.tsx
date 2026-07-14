@@ -51,6 +51,12 @@ export default function OrdersPage() {
             <p className="text-xs text-[#6B7280]">
               বই কেনাকাটা শুরু করুন এবং এখানে আপনার অর্ডার দেখুন
             </p>
+             <button
+            onClick={() => router.push("/books")}
+            className="rounded-full cursor-pointer bg-[#2DBDB6] px-5 py-2.5 text-sm font-bold text-white"
+          >
+            শপিং চালিয়ে যান
+          </button>
           </div>
         ) : (
           <div className="space-y-4">

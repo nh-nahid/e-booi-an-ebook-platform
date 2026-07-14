@@ -62,9 +62,9 @@ export default function ComingSoonPage() {
 
   return (
     <>
-    <Navbar />
+        <Navbar />
 
-    <div className="relative -m-6 flex min-h-screen items-center justify-center overflow-hidden bg-[#F7F9FA] -mt-15 px-4 py-16">
+        <div className="relative -m-6 flex min-h-screen items-center justify-center overflow-hidden bg-[#F7F9FA] -mt-15 px-4 py-16">
       <style>{`
         @keyframes csFloat {
           0%, 100% { transform: translate(0, 0) scale(1); }
@@ -86,7 +86,7 @@ export default function ComingSoonPage() {
         .cs-blob-b { animation: csFloatSlow 10s ease-in-out infinite; }
         .cs-fade { animation: csFadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
       `}</style>
-
+    
       {/* ambient blobs */}
       <div className="cs-blob-a pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-[#2DBDB6] opacity-[0.14] blur-3xl" />
       <div className="cs-blob-b pointer-events-none absolute -bottom-28 -right-16 h-80 w-80 rounded-full bg-[#0A0E2A] opacity-[0.08] blur-3xl" />
