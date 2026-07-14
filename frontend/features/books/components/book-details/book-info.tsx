@@ -169,31 +169,34 @@ export default function BookInfo({ book, onBuyNow }: BookInfoProps) {
         </div>
 
         <button
-          onClick={() => {
-            if (added) {
-              router.push("/cart");
-              return;
-            }
-            handleAddToCart();
-          }}
-          disabled={adding || (!added && book.stock === 0)}
-          className="group relative flex h-11 flex-1 min-w-[160px] items-center justify-center gap-2 overflow-hidden rounded-full border-0 bg-gradient-to-br from-[#2DBDB6] to-[#1f9d97] px-6 text-sm font-bold text-white shadow-[0_4px_12px_rgba(45,189,182,0.35)] transition-transform duration-150 hover:-translate-y-0.5 hover:shadow-[0_8px_18px_rgba(45,189,182,0.4)] active:translate-y-0 active:scale-[0.98] disabled:opacity-50"
-        >
-          <span className="absolute inset-0 -translate-x-[120%] bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-500 group-hover:translate-x-[120%]" />
-          <span className="relative flex items-center gap-2">
-            {added ? (
-              <>
-                <ShoppingCart className="h-4 w-4" />
-                কার্টে যান
-              </>
-            ) : (
-              <>
-                <ShoppingCart className="h-4 w-4" />
-                {adding ? "যোগ করা হচ্ছে..." : isPreOrder ? "প্রি-অর্ডার করুন" : "কার্টে যোগ করুন"}
-              </>
-            )}
-          </span>
-        </button>
+  onClick={() => {
+    if (added) {
+      router.push("/cart");
+      return;
+    }
+    handleAddToCart();
+  }}
+  disabled={adding || (!added && book.stock === 0)}
+  className={`group relative flex h-11 flex-1 min-w-[160px] items-center justify-center gap-2 overflow-hidden rounded-full border-0 px-6 text-sm font-bold text-white transition-transform duration-150 active:translate-y-0 active:scale-[0.98] disabled:opacity-50 ${
+    added
+      ? "bg-gradient-to-br from-[#0A0E2A] to-[#1E293B] shadow-[0_4px_12px_rgba(10,14,42,0.35)] hover:-translate-y-0.5 hover:shadow-[0_8px_18px_rgba(10,14,42,0.4)]"
+      : "bg-gradient-to-br from-[#2DBDB6] to-[#1f9d97] shadow-[0_4px_12px_rgba(45,189,182,0.35)] hover:-translate-y-0.5 hover:shadow-[0_8px_18px_rgba(45,189,182,0.4)]"
+  }`}
+>
+  <span className="absolute inset-0 -translate-x-[120%] bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-500 group-hover:translate-x-[120%]" />
+
+  <span className="relative flex items-center gap-2">
+    <ShoppingCart className="h-4 w-4" />
+
+    {added
+      ? "কার্টে যান"
+      : adding
+        ? "যোগ করা হচ্ছে..."
+        : isPreOrder
+          ? "প্রি-অর্ডার করুন"
+          : "কার্টে যোগ করুন"}
+  </span>
+</button>
 
         <button
           onClick={() => setLiked((v) => !v)}
@@ -212,11 +215,24 @@ export default function BookInfo({ book, onBuyNow }: BookInfoProps) {
       </div>
 
       <button
-        onClick={() => onBuyNow?.(quantity)}
-        className="mt-3 h-11 w-full rounded-full border border-[#0A0E2A] text-sm font-bold text-[#0A0E2A] transition-all duration-200 hover:bg-[#0A0E2A] hover:text-white"
-      >
-        এখনই কিনুন
-      </button>
+  onClick={() => router.push("/checkout")}
+  className="
+    mt-3 h-11 w-full rounded-full
+    border border-[#0A0E2A]
+    bg-white
+    text-sm font-bold text-[#0A0E2A]
+    transition-all duration-200
+    hover:-translate-y-0.5
+    hover:border-[#2DBDB6]
+    hover:bg-[#2DBDB6]
+    hover:text-white
+    hover:shadow-[0_8px_18px_rgba(45,189,182,0.35)]
+    active:translate-y-0
+    active:scale-[0.98]
+  "
+>
+  এখনই কিনুন
+</button>
 
       <div className="mt-6 grid grid-cols-2 gap-3 rounded-2xl bg-[#F7F9FA] p-4">
         <div className="flex items-center gap-2">
