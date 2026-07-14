@@ -49,6 +49,7 @@ all in one checkout.**
 **Frontend**
 - ⚛️ Next.js (App Router) + TypeScript
 - 🔄 TanStack Query (React Query)
+- 🧩 Shadcn/ui
 - 🎨 Tailwind CSS
 - 🌐 axios · sonner (toasts) · lucide-react
 
