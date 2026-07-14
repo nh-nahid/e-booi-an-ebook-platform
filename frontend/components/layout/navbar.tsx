@@ -13,12 +13,16 @@ import MobileNav from "./mobile-nav";
 import UserMenu from "./user-menu";
 import { NAV_LINKS } from "./nav-links";
 import { useDebounce } from "@/hooks/use-debounce";
+import { useCart } from "@/features/cart/hooks/use-cart";
 
 export default function Navbar() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
   const { isAuthenticated } = useAuth();
+
+  const { data: cart = [] } = useCart();
+  const cartCount = cart.reduce((sum, item) => sum + (item.quantity ?? 1), 0);
 
   const [search, setSearch] = useState(searchParams.get("search") ?? "");
   const debouncedSearch = useDebounce(search, 500);
@@ -140,8 +144,17 @@ export default function Navbar() {
         <Link href="/wishlist" className="nb-icon-btn" onClick={clearSearchState}>
           <Heart className="h-[18px] w-[18px]" />
         </Link>
-        <Link href="/cart" className="nb-icon-btn" onClick={clearSearchState}>
+        <Link
+          href="/cart"
+          className="nb-icon-btn relative"
+          onClick={clearSearchState}
+        >
           <ShoppingCart className="h-[18px] w-[18px]" />
+          {isAuthenticated && cartCount > 0 && (
+            <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#2DBDB6] px-1 text-[10px] font-bold leading-none text-white">
+              {cartCount > 9 ? "9+" : cartCount}
+            </span>
+          )}
         </Link>
 
         {isAuthenticated ? (
