@@ -305,6 +305,6 @@ of these together:
 
 <div align="center">
 
-Made with 📖 and 🇧🇩 for readers who want their books their way.
+Made with 📖 and 🇧🇩 for readers who want their books their way .
 
 </div>
