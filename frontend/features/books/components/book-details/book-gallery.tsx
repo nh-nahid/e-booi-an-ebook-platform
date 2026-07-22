@@ -53,7 +53,6 @@ export default function BookGallery({
         {hasImages && (
           <Image
             fill
-            unoptimized
             src={imageUrls[active]}
             alt={title}
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
@@ -104,7 +103,6 @@ export default function BookGallery({
             >
               <Image
                 fill
-                unoptimized
                 src={img}
                 alt={`${title} ${i + 1}`}
                 className="h-full w-full object-cover"

@@ -142,7 +142,6 @@ export default function BooksGrid({
                     src={getBookImageUrl(book.coverImage)}
                     alt={book.title}
                     fill
-                    unoptimized
                     sizes="56px"
                     className="object-cover"
                   />

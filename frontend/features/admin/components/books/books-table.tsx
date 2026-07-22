@@ -75,7 +75,6 @@ export default function BooksTable({
                     alt={book.title}
                     width={56}
                     height={80}
-                    unoptimized
                     className="rounded-lg border object-cover"
                   />
                 </td>

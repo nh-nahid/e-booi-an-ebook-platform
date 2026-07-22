@@ -51,7 +51,6 @@ export default function CartItem({
       <div className="relative h-24 w-16 shrink-0 overflow-hidden rounded-lg border border-[#E1E5E8] bg-gradient-to-br from-[#dfe7ea] to-[#cfd8db] sm:h-28 sm:w-20">
         <Image
           fill
-          unoptimized
           src={imageUrl}
           alt={item.title}
           className="object-cover"

@@ -68,7 +68,6 @@ export default function BookViewDialog({
                 alt={book.title}
                 width={180}
                 height={250}
-                unoptimized
                 className="h-[250px] w-full object-cover"
               />
             </div>
