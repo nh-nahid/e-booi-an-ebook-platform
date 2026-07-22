@@ -37,7 +37,7 @@ export interface Book {
 
   description?: string;
   pdfFile?: string | null;
-  stock?: number;
+  stock: number;
   sold?: number;
 
   isFeatured: boolean;

@@ -42,17 +42,17 @@ export const useRegister = () => {
 };
 
 export const useProfile = (enabled: boolean) => {
+  const hasToken = !!getAccessToken();
+
   return useQuery({
     queryKey: ["profile"],
     queryFn: getProfile,
-
-    enabled: enabled && !!getAccessToken(),
-
+    enabled: enabled && hasToken,
     retry: false,
-
-    staleTime: 1000 * 60 * 10,
-
+    staleTime: 10 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
     refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   });
 };
 

@@ -2,8 +2,10 @@
 
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
   type ReactNode,
 } from "react";
@@ -11,10 +13,7 @@ import {
 import type { UseQueryResult } from "@tanstack/react-query";
 
 import { useProfile } from "@/features/auth/hooks/auth.hooks";
-
-import {
-  refreshAccessToken,
-} from "@/features/auth/api/auth.api";
+import { refreshAccessToken } from "@/features/auth/api/auth.api";
 
 import {
   getAccessToken,
@@ -23,7 +22,6 @@ import {
 } from "@/services/api/token";
 
 import type { User } from "@/features/auth/types/auth.types";
-import Loading from "@/app/loading";
 
 interface AuthContextType {
   user: User | null;
@@ -35,8 +33,6 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-
-
 export default function AuthProvider({
   children,
 }: {
@@ -45,51 +41,48 @@ export default function AuthProvider({
   const [initialized, setInitialized] = useState(false);
 
   useEffect(() => {
-  const bootstrap = async () => {
-
-    try {
-      if (getAccessToken()) {
-        
+    const bootstrap = async () => {
+      try {
+        if (!getAccessToken()) {
+          const response = await refreshAccessToken();
+          setAccessToken(response.accessToken);
+        }
+      } catch {
+        clearAccessToken();
+      } finally {
         setInitialized(true);
-        return;
       }
+    };
 
-      const response = await refreshAccessToken();
-
-      setAccessToken(response.accessToken);
-    } catch (error) {
-      console.log("Refresh failed:", error);
-
-      clearAccessToken();
-    } finally {
-      setInitialized(true);
-    }
-  };
-
-  bootstrap();
-}, []);
+    bootstrap();
+  }, []);
 
   const {
     data,
-    isLoading,
+    isLoading: profileLoading,
     refetch,
   } = useProfile(initialized);
 
-  const refreshAuth = async () => {
-  await refetch();
-};
+  const refreshAuth = useCallback(async () => {
+    await refetch();
+  }, [refetch]);
 
-const value: AuthContextType = {
-  user: data?.user ?? null,
-  isAuthenticated: !!data?.user,
-  isLoading: !initialized || isLoading,
-  refetch,
-  refreshAuth,
-};
-
-if (!initialized) {
-  return <Loading/>; 
-}
+  const value = useMemo<AuthContextType>(
+    () => ({
+      user: data?.user ?? null,
+      isAuthenticated: !!data?.user,
+      isLoading: !initialized || profileLoading,
+      refetch,
+      refreshAuth,
+    }),
+    [
+      data,
+      initialized,
+      profileLoading,
+      refetch,
+      refreshAuth,
+    ],
+  );
 
   return (
     <AuthContext.Provider value={value}>
@@ -103,7 +96,7 @@ export function useAuthContext() {
 
   if (!context) {
     throw new Error(
-      "useAuthContext must be used inside AuthProvider"
+      "useAuthContext must be used inside AuthProvider",
     );
   }
 
