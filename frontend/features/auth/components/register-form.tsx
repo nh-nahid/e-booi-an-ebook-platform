@@ -122,7 +122,12 @@ export default function RegisterForm() {
       <div className="relative">
         {/* logo */}
         <div className="mb-5 flex items-center gap-2">
-          <Image src="/logo.jpeg" width={32} height={32} alt="Logo" />
+          <Image
+            src="/logo.jpeg"
+            alt="eBooi Logo"
+            width={32}
+            height={32}
+          />
 
           <span className="text-lg font-extrabold text-[#0A0E2A]">
             eBoo<span className="text-[#2DBDB6]">i</span>

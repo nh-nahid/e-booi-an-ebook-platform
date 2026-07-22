@@ -31,15 +31,21 @@ export default function Sidebar() {
     <aside className="sticky top-0 flex h-screen w-64 shrink-0 flex-col border-r border-[#E1E5E8] bg-white">
       {/* Logo */}
       <div className="flex items-center gap-2 px-6 py-5">
-        <Image src="/logo.jpeg" width={32} height={32} alt="Logo" />
-        
-        <span className="text-lg font-extrabold text-[#0A0E2A]">
-          eBoo<span className="text-[#2DBDB6]">i</span>
-        </span>
-        <span className="ml-1 rounded-full bg-[#E6F7F6] px-2 py-0.5 text-[10px] font-bold text-[#0A0E2A]">
-          ADMIN
-        </span>
-      </div>
+  <Image
+    src="/logo.jpeg"
+    alt="eBooi Admin Logo"
+    width={32}
+    height={32}
+  />
+
+  <span className="text-lg font-extrabold text-[#0A0E2A]">
+    eBoo<span className="text-[#2DBDB6]">i</span>
+  </span>
+
+  <span className="ml-1 rounded-full bg-[#E6F7F6] px-2 py-0.5 text-[10px] font-bold text-[#0A0E2A]">
+    ADMIN
+  </span>
+</div>
 
       {/* Nav */}
       <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-2">

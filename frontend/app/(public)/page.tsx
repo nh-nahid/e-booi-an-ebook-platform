@@ -6,7 +6,7 @@ import PreOrderSection from "@/features/home/components/preorder-section";
 
 import { getHome } from "@/features/home/api/home.api";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export default async function HomePage() {
   const response = await getHome();

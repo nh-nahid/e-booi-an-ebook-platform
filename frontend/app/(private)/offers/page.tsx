@@ -93,12 +93,21 @@ export default function ComingSoonPage() {
 
       <div className="relative z-10 flex w-full max-w-lg flex-col items-center text-center">
         {/* logo */}
-        <div className="cs-fade mb-6 flex items-center gap-2" style={{ animationDelay: "0s" }}>
-          <Image src="/logo.jpeg" width={32} height={32} alt="Logo" />
-          <span className="text-xl font-extrabold text-[#0A0E2A]">
-            eBoo<span className="text-[#2DBDB6]">i</span>
-          </span>
-        </div>
+        <div
+  className="cs-fade mb-6 flex items-center gap-2"
+  style={{ animationDelay: "0s" }}
+>
+  <Image
+    src="/logo.jpeg"
+    alt="eBooi Logo"
+    width={32}
+    height={32}
+  />
+
+  <span className="text-xl font-extrabold text-[#0A0E2A]">
+    eBoo<span className="text-[#2DBDB6]">i</span>
+  </span>
+</div>
 
         {/* badge */}
         <span

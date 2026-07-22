@@ -10,12 +10,19 @@ export default function SiteFooter() {
 
       <div className="container relative mx-auto grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
         <div>
-          <div className="flex items-center gap-2">
-            <Image src="/logo.jpeg" width={32} height={32} alt="Logo" />
-            <span className="text-lg font-extrabold text-white">
-              eBoo<span className="text-[#2DBDB6]">i</span>
-            </span>
-          </div>
+         <div className="flex items-center gap-2">
+  <Image
+    src="/logo.jpeg"
+    alt="eBooi Logo"
+    width={32}
+    height={32}
+    
+  />
+
+  <span className="text-lg font-extrabold text-white">
+    eBoo<span className="text-[#2DBDB6]">i</span>
+  </span>
+</div>
           <p className="mt-3 text-sm leading-relaxed text-[#A7B0C8]">
             আপনার প্রিয় বইয়ের সংগ্রহশালা, হাতের মুঠোয়।
           </p>

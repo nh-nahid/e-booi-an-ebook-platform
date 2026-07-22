@@ -97,7 +97,14 @@ export default function Navbar() {
       <div className="flex items-center gap-8 lg:gap-10">
         <Link href="/" className="nb-logo" onClick={clearSearchState}>
           <div className="nb-logo-mark">
-            <Image src="/logo.jpeg" width={32} height={32} alt="logo" className="rounded-lg" />
+            <Image
+              src="/logo.jpeg"
+              alt="eBooi Logo"
+              width={32}
+              height={32}
+              priority
+              className="rounded-lg"
+            />
           </div>
           <span>
             eBoo<span className="text-[#2DBDB6]">i</span>
@@ -141,7 +148,11 @@ export default function Navbar() {
       </div>
 
       <div className="flex items-center gap-1">
-        <Link href="/wishlist" className="nb-icon-btn" onClick={clearSearchState}>
+        <Link
+          href="/wishlist"
+          className="nb-icon-btn"
+          onClick={clearSearchState}
+        >
           <Heart className="h-[18px] w-[18px]" />
         </Link>
         <Link
@@ -163,10 +174,18 @@ export default function Navbar() {
           </div>
         ) : (
           <div className="nb-desktop items-center gap-1">
-            <Link href="/login" className="nb-cta-ghost" onClick={clearSearchState}>
+            <Link
+              href="/login"
+              className="nb-cta-ghost"
+              onClick={clearSearchState}
+            >
               Login
             </Link>
-            <Link href="/register" className="nb-cta-primary" onClick={clearSearchState}>
+            <Link
+              href="/register"
+              className="nb-cta-primary"
+              onClick={clearSearchState}
+            >
               Register
             </Link>
           </div>

@@ -1,4 +1,3 @@
-"use client";
 
 import BookSection from "./book-section";
 import type { Book } from "../types/home.types";

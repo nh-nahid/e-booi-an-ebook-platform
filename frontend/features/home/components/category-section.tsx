@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import SectionHeader from "../components/section-header";
 import type { Category } from "../types/home.types";

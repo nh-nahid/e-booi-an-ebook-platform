@@ -28,7 +28,10 @@ export default function ComingSoonPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const timer = setInterval(() => setTimeLeft(getTimeLeft(LAUNCH_DATE)), 1000);
+    const timer = setInterval(
+      () => setTimeLeft(getTimeLeft(LAUNCH_DATE)),
+      1000,
+    );
     return () => clearInterval(timer);
   }, []);
 
@@ -89,8 +92,16 @@ export default function ComingSoonPage() {
 
       <div className="relative z-10 flex w-full max-w-lg flex-col items-center text-center">
         {/* logo */}
-        <div className="cs-fade mb-6 flex items-center gap-2" style={{ animationDelay: "0s" }}>
-          <Image src="/logo.jpeg" width={32} height={32} alt="Logo" />
+        <div
+          className="cs-fade mb-6 flex items-center gap-2"
+          style={{ animationDelay: "0s" }}
+        >
+          <Image
+            src="/logo.jpeg"
+            alt="eBooi Logo"
+            width={32}
+            height={32}
+          />
           <span className="text-xl font-extrabold text-[#0A0E2A]">
             eBoo<span className="text-[#2DBDB6]">i</span>
           </span>
@@ -118,8 +129,8 @@ export default function ComingSoonPage() {
           className="cs-fade mt-3 max-w-sm text-sm text-[#6B7280] sm:text-base"
           style={{ animationDelay: "0.15s" }}
         >
-          We&apos;re putting the final touches on this page. Leave your email and
-          we&apos;ll let you know the moment it&apos;s live.
+          We&apos;re putting the final touches on this page. Leave your email
+          and we&apos;ll let you know the moment it&apos;s live.
         </p>
 
         {/* countdown */}
@@ -146,14 +157,20 @@ export default function ComingSoonPage() {
         </div>
 
         {/* subscribe form */}
-        <div className="cs-fade mt-9 w-full" style={{ animationDelay: "0.25s" }}>
+        <div
+          className="cs-fade mt-9 w-full"
+          style={{ animationDelay: "0.25s" }}
+        >
           {subscribed ? (
             <div className="flex items-center justify-center gap-2 rounded-full bg-[#E6F7F6] px-5 py-3 text-sm font-semibold text-[#0A0E2A]">
               <Check className="h-4 w-4 text-[#2DBDB6]" />
               You&apos;re on the list — we&apos;ll email you at launch.
             </div>
           ) : (
-            <form onSubmit={handleSubscribe} className="flex flex-col gap-2 sm:flex-row">
+            <form
+              onSubmit={handleSubscribe}
+              className="flex flex-col gap-2 sm:flex-row"
+            >
               <div className="relative flex-1">
                 <Mail
                   className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 transition-colors"
@@ -169,7 +186,9 @@ export default function ComingSoonPage() {
                   className="h-12 w-full rounded-full border pl-10 pr-4 text-sm text-[#0A0E2A] outline-none transition-all duration-200 placeholder:text-[#9AA3AF]"
                   style={{
                     borderColor: focused ? "#2DBDB6" : "#E1E5E8",
-                    boxShadow: focused ? "0 0 0 4px rgba(45,189,182,0.15)" : "none",
+                    boxShadow: focused
+                      ? "0 0 0 4px rgba(45,189,182,0.15)"
+                      : "none",
                   }}
                 />
               </div>
@@ -202,7 +221,9 @@ export default function ComingSoonPage() {
             </form>
           )}
 
-          {error && <p className="mt-2 text-xs font-medium text-red-600">{error}</p>}
+          {error && (
+            <p className="mt-2 text-xs font-medium text-red-600">{error}</p>
+          )}
         </div>
 
         <Link
