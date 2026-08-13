@@ -13,6 +13,7 @@ export interface Hero {
 
 export interface Statistics {
   totalBooks: number;
+  totalUsers?: number;
   totalAuthors: number;
   totalCategories: number;
   happyCustomers: number;

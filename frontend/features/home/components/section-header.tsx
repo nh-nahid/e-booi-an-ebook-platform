@@ -6,7 +6,7 @@ interface SectionHeaderProps {
   href?: string;
 }
 
-export default function SectionHeader({ title, href = "#" }: SectionHeaderProps) {
+export default function SectionHeader({ title, href = "/books" }: SectionHeaderProps) {
   return (
     <div className="mb-5 flex items-center justify-between">
       <span className="inline-block rounded-2xl bg-[#E6F7F6] px-4 py-1.5 text-base font-bold text-[#0A0E2A] sm:text-lg">

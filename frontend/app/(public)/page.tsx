@@ -3,6 +3,8 @@ import HeroSection from "@/features/home/components/hero-section";
 import CategorySection from "@/features/home/components/category-section";
 import BookSection from "@/features/home/components/book-section";
 import PreOrderSection from "@/features/home/components/preorder-section";
+import TrustSection from "@/features/home/components/trust-section";
+import TestimonialSection from "@/features/home/components/testimonial-section";
 
 import { getHome } from "@/features/home/api/home.api";
 
@@ -16,13 +18,15 @@ export default async function HomePage() {
     <div className="min-h-screen bg-[#F7F9FA]">
       <HeroSection statistics={homeData.statistics} />
 
-       <CategorySection categories={homeData.categories} />
+      <CategorySection categories={homeData.categories} />
 
       <BookSection
         title="Featured Books"
         href="/books?featured=true"
         books={homeData.featuredBooks}
       />
+
+      <TrustSection />
 
       <BookSection
         title="Latest Books"
@@ -37,6 +41,8 @@ export default async function HomePage() {
       />
 
       <PreOrderSection books={homeData.preOrderBooks} />
+
+      <TestimonialSection />
 
       <SiteFooter />
     </div>
