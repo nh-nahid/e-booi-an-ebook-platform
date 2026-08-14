@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Hind_Siliguri } from "next/font/google";
+import { Inter, Noto_Sans_Bengali } from "next/font/google";
 import "./globals.css";
 
 import QueryProvider from "@/providers/query-provider";
@@ -14,7 +14,7 @@ const inter = Inter({
   weight: ["400", "500", "600", "700"],
 });
 
-const banglaFont = Hind_Siliguri({
+const banglaFont = Noto_Sans_Bengali({
   subsets: ["bengali"],
   variable: "--font-bangla",
   weight: ["400", "500", "600", "700"],
