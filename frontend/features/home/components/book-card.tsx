@@ -5,6 +5,8 @@ import { useState } from "react";
 import { Heart, ShoppingCart, BookOpen, Star, Flame, Clock } from "lucide-react";
 
 import type { Book } from "../types/home.types";
+import getCoverImageUrl from "../utils/getCoverImageUrl";
+import Image from "next/image";
 
 // TODO: adjust these field names to match your real Book type exactly
 // (this assumes: title, author, price, oldPrice?, coverImage?, rating?, isPreOrder?, isPopular?, slug/_id)
@@ -35,7 +37,7 @@ export default function BookCard({ book, index = 0 }: BookCardProps) {
   const oldPrice = (book as any).oldPrice as number | undefined;
   const rating = (book as any).rating as number | undefined;
   const author = (book as any).author as string | undefined;
-  const coverImage = (book as any).coverImage as string | undefined;
+  const coverImage = getCoverImageUrl(book.coverImage);
   const isPreOrder = (book as any).isPreOrder as boolean | undefined;
   const isPopular = (book as any).isPopular as boolean | undefined;
   const slug = (book as any).slug ?? book._id;
@@ -49,6 +51,9 @@ export default function BookCard({ book, index = 0 }: BookCardProps) {
     // TODO: call your real add-to-cart mutation
     setTimeout(() => setAdding(false), 900);
   };
+
+  console.log("BOOK:", book);
+console.log("COVER IMAGE:", book.coverImage);
 
   return (
     <Link
@@ -75,12 +80,21 @@ export default function BookCard({ book, index = 0 }: BookCardProps) {
           `}
         >
           {coverImage ? (
-            <img src={coverImage} alt={book.title} className="absolute inset-0 h-full w-full object-cover" />
-          ) : (
-            <span className="text-sm font-bold leading-snug text-white [text-shadow:0_1px_4px_rgba(0,0,0,0.25)]">
-              {book.title}
-            </span>
-          )}
+  <Image
+    src={coverImage}
+    alt={book.title}
+    fill
+    sizes="168px"
+    className="object-cover transition-transform duration-500 group-hover:scale-105"
+    onError={() => {
+      console.error("Failed to load:", coverImage);
+    }}
+  />
+) : (
+  <span className="text-sm font-bold text-white">
+    {book.title}
+  </span>
+)}
 
           {(isPopular || isPreOrder) && (
             <span
