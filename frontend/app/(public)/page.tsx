@@ -21,12 +21,11 @@ export default async function HomePage() {
       <CategorySection categories={homeData.categories} />
 
       <BookSection
-        title="Featured Books"
+        title="সকল বই"
         href="/books?featured=true"
         books={homeData.featuredBooks}
       />
 
-      <TrustSection />
 
       <BookSection
         title="Latest Books"
@@ -42,7 +41,8 @@ export default async function HomePage() {
 
       <PreOrderSection books={homeData.preOrderBooks} />
 
-      <TestimonialSection />
+      {/* <TestimonialSection /> */}
+      <TrustSection />
 
       <SiteFooter />
     </div>

@@ -20,7 +20,6 @@ interface CategorySectionProps {
 
 const CATEGORY_IMAGES: Record<string, string> = {
   "ইসলামিক বই": "/images/categories/religious.jpeg",
-  "ধর্মীয়": "/images/categories/religious.jpeg",
   "কর্ম ও জীবিকা": "/images/categories/kormo.jpeg",
   "সেলফ লার্নিং": "/images/categories/self.jpeg",
   "সিরিজ": "/images/categories/series.jpeg",
@@ -29,7 +28,6 @@ const CATEGORY_IMAGES: Record<string, string> = {
 
 const ICON_BG: Record<string, string> = {
   "ইসলামিক বই": "bg-[#E6F7F6]",
-  "ধর্মীয়": "bg-[#E6F7F6]",
   "সেলফ লার্নিং": "bg-[#FEF6E4]",
   "কর্ম ও জীবিকা": "bg-[#FBF2DC]",
   "সিরিজ": "bg-[#E9F0F8]",

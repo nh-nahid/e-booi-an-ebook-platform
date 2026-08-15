@@ -2,12 +2,23 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Heart, ShoppingCart, BookOpen, Star, Flame, Clock } from "lucide-react";
+import {
+  Heart,
+  ShoppingCart,
+  BookOpen,
+  Star,
+  Flame,
+  Clock,
+  Check,
+} from "lucide-react";
 
 import type { Book } from "../types/home.types";
 import getCoverImageUrl from "../utils/getCoverImageUrl";
 import Image from "next/image";
-
+import { useAddToCart, useCart } from "@/features/cart/hooks/use-cart";
+import { isAxiosError } from "axios";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 // TODO: adjust these field names to match your real Book type exactly
 // (this assumes: title, author, price, oldPrice?, coverImage?, rating?, isPreOrder?, isPopular?, slug/_id)
 
@@ -34,26 +45,63 @@ export default function BookCard({ book, index = 0 }: BookCardProps) {
   const [adding, setAdding] = useState(false);
 
   const gradient = COVER_GRADIENTS[index % COVER_GRADIENTS.length];
-  const oldPrice = (book as any).oldPrice as number | undefined;
-  const rating = (book as any).rating as number | undefined;
-  const author = (book as any).author as string | undefined;
+
+  const oldPrice: number | undefined = undefined;
+  const rating = book.averageRating;
+  const author = book.author;
   const coverImage = getCoverImageUrl(book.coverImage);
-  const isPreOrder = (book as any).isPreOrder as boolean | undefined;
-  const isPopular = (book as any).isPopular as boolean | undefined;
-  const slug = (book as any).slug ?? book._id;
+  const isPreOrder = book.isPreOrder;
+  const isPopular = book.sold !== undefined && book.sold > 0;
+  const slug = book._id;
 
   const discount =
-    oldPrice && oldPrice > book.price ? Math.round(100 - (book.price / oldPrice) * 100) : 0;
+    oldPrice && oldPrice > book.price
+      ? Math.round(100 - (book.price / oldPrice) * 100)
+      : 0;
+  const router = useRouter();
+
+  const { data: cartItems } = useCart();
+  const addToCartMutation = useAddToCart();
+
+  const added =
+    cartItems?.some((item) =>
+      typeof item.book === "string"
+        ? item.book === book._id
+        : item.book?._id === book._id,
+    ) ?? false;
 
   const handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault();
-    setAdding(true);
-    // TODO: call your real add-to-cart mutation
-    setTimeout(() => setAdding(false), 900);
-  };
+    e.stopPropagation();
 
-  console.log("BOOK:", book);
-console.log("COVER IMAGE:", book.coverImage);
+    if (added) {
+      router.push("/cart");
+      return;
+    }
+
+    try {
+      await addToCartMutation.mutateAsync({
+        bookId: book._id,
+        quantity: 1,
+      });
+
+      toast.success("বইটি কার্টে যোগ করা হয়েছে");
+    } catch (error) {
+      if (isAxiosError<{ message: string }>(error)) {
+        if (error.response?.status === 401) {
+          toast.error("প্রথমে লগইন করুন");
+          router.push("/login");
+          return;
+        }
+
+        toast.error(error.response?.data?.message ?? "কার্টে যোগ করা যায়নি");
+
+        return;
+      }
+
+      toast.error("কার্টে যোগ করা যায়নি");
+    }
+  };
 
   return (
     <Link
@@ -80,21 +128,19 @@ console.log("COVER IMAGE:", book.coverImage);
           `}
         >
           {coverImage ? (
-  <Image
-    src={coverImage}
-    alt={book.title}
-    fill
-    sizes="168px"
-    className="object-cover transition-transform duration-500 group-hover:scale-105"
-    onError={() => {
-      console.error("Failed to load:", coverImage);
-    }}
-  />
-) : (
-  <span className="text-sm font-bold text-white">
-    {book.title}
-  </span>
-)}
+            <Image
+              src={coverImage}
+              alt={book.title}
+              fill
+              sizes="168px"
+              className="object-cover transition-transform duration-500 group-hover:scale-105"
+              onError={() => {
+                console.error("Failed to load:", coverImage);
+              }}
+            />
+          ) : (
+            <span className="text-sm font-bold text-white">{book.title}</span>
+          )}
 
           {(isPopular || isPreOrder) && (
             <span
@@ -128,7 +174,9 @@ console.log("COVER IMAGE:", book.coverImage);
               duration-200 group-hover:opacity-100
             "
           >
-            <Heart className={`h-3.5 w-3.5 transition-colors ${wishlisted ? "fill-red-500 text-red-500" : ""}`} />
+            <Heart
+              className={`h-3.5 w-3.5 transition-colors ${wishlisted ? "fill-red-500 text-red-500" : ""}`}
+            />
           </button>
         </div>
 
@@ -137,12 +185,18 @@ console.log("COVER IMAGE:", book.coverImage);
           {typeof rating === "number" && (
             <div className="flex items-center gap-1">
               <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
-              <span className="text-[11px] font-bold text-[#6B7280]">{rating.toFixed(1)}</span>
+              <span className="text-[11px] font-bold text-[#6B7280]">
+                {rating.toFixed(1)}
+              </span>
             </div>
           )}
 
-          <p className="line-clamp-1 text-[13px] font-bold text-[#0A0E2A]">{book.title}</p>
-          {author && <p className="line-clamp-1 text-[11px] text-[#9AA3AF]">{author}</p>}
+          <p className="line-clamp-1 text-[13px] font-bold text-[#0A0E2A]">
+            {book.title}
+          </p>
+          {author && (
+            <p className="line-clamp-1 text-[11px] text-[#9AA3AF]">{author}</p>
+          )}
 
           <p className="mt-0.5 text-sm font-extrabold text-[#2DBDB6]">
             ৳{book.price}
@@ -168,21 +222,38 @@ console.log("COVER IMAGE:", book.coverImage);
               `}
               aria-label="Wishlist"
             >
-              <Heart className={`h-3.5 w-3.5 ${wishlisted ? "fill-red-500" : ""}`} />
+              <Heart
+                className={`h-3.5 w-3.5 ${wishlisted ? "fill-red-500" : ""}`}
+              />
             </button>
 
             <button
               type="button"
               onClick={handleAddToCart}
-              disabled={adding}
-              className="
-                flex flex-1 items-center justify-center border-r border-[#E1E5E8] bg-white py-1.5
-                text-[#6B7280] transition-colors duration-150 hover:bg-[#F0F7F5] hover:text-[#2DBDB6]
-                disabled:opacity-50
-              "
-              aria-label="Add to cart"
+              disabled={
+                addToCartMutation.isPending || (!added && book.stock === 0)
+              }
+              className={`
+    flex flex-1 items-center justify-center
+    border-r border-[#E1E5E8]
+    py-1.5
+    transition-colors duration-150
+    disabled:cursor-not-allowed disabled:opacity-50
+    ${
+      added
+        ? "bg-[#E6F7F6] text-[#2DBDB6]"
+        : "bg-white text-[#6B7280] hover:bg-[#F0F7F5] hover:text-[#2DBDB6]"
+    }
+  `}
+              aria-label={added ? "Go to cart" : "Add to cart"}
             >
-              <ShoppingCart className="h-3.5 w-3.5" />
+              {addToCartMutation.isPending ? (
+                <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-[#2DBDB6] border-t-transparent" />
+              ) : added ? (
+                <Check className="h-3.5 w-3.5" />
+              ) : (
+                <ShoppingCart className="h-3.5 w-3.5" />
+              )}
             </button>
 
             <span
