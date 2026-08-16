@@ -325,10 +325,15 @@
 }
 
 .nb-search {
-  display: none;
+  display: flex;
   position: relative;
   flex: 1;
-  max-width: 380px;
+  max-width: 500px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+.nb-search > input[data-slot="input"] {
+  border-radius: 8px !important;
 }
 .nb-search input {
   height: 40px;
