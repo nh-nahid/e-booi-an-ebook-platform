@@ -24,6 +24,7 @@ const CATEGORY_IMAGES: Record<string, string> = {
   "সেলফ লার্নিং": "/images/categories/self.jpeg",
   "সিরিজ": "/images/categories/series.jpeg",
   "বিজ্ঞান": "/images/categories/biggan.jpeg",
+  "ব্যবসা": "/images/categories/business.png",
 };
 
 const ICON_BG: Record<string, string> = {
