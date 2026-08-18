@@ -23,7 +23,7 @@ all in one checkout.**
 > 🇧🇩 **Built for the local market, not adapted to it.** Payments route
 > through SSLCommerz so customers pay with bKash, Nagad, Rocket, or card
 > without ever leaving the checkout page. Invoices are typeset in a font
-> that renders Bengali *and* Latin script correctly in the same PDF — mos
+> that renders Bengali *and* Latin script correctly in the same PDF — most
 > off-the-shelf setups quietly fail one or the other.
 
 ---
