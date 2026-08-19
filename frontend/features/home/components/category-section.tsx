@@ -12,12 +12,6 @@ interface CategorySectionProps {
   categories: Category[];
 }
 
-/* ---------------------------------------------------------------------- */
-/* Category images — served from /public/images/categories/               */
-/* Map each category name to its image file. Add new entries here as      */
-/* new categories/images are introduced.                                  */
-/* ---------------------------------------------------------------------- */
-
 const CATEGORY_IMAGES: Record<string, string> = {
   "ইসলামিক বই": "/images/categories/religious.jpeg",
   "কর্ম ও জীবিকা": "/images/categories/kormo.jpeg",
@@ -27,15 +21,7 @@ const CATEGORY_IMAGES: Record<string, string> = {
   "ব্যবসা": "/images/categories/business.png",
 };
 
-const ICON_BG: Record<string, string> = {
-  "ইসলামিক বই": "bg-[#E6F7F6]",
-  "সেলফ লার্নিং": "bg-[#FEF6E4]",
-  "কর্ম ও জীবিকা": "bg-[#FBF2DC]",
-  "সিরিজ": "bg-[#E9F0F8]",
-  "বিজ্ঞান": "bg-[#E9F0F8]",
-};
-
-const VISIBLE_COUNT = 4;
+const VISIBLE_COUNT = 5;
 
 export default function CategorySection({ categories }: CategorySectionProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -78,58 +64,74 @@ export default function CategorySection({ categories }: CategorySectionProps) {
           aria-label="আগের ক্যাটাগরি"
           className="
             flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[#0A0E2A]
-            transition-colors duration-200 hover:bg-[#F0F3F4] disabled:opacity-30
-            disabled:hover:bg-transparent
+            bg-[#F2F4F5] shadow-[4px_4px_10px_rgba(163,177,198,0.4),-4px_-4px_10px_rgba(255,255,255,0.9)]
+            transition-all duration-200 hover:-translate-y-0.5
+            active:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.4),inset_-3px_-3px_6px_rgba(255,255,255,0.7)]
+            disabled:opacity-30 disabled:hover:translate-y-0
           "
         >
-          <ChevronLeft className="h-5 w-5" />
+          <ChevronLeft className="h-4 w-4" />
         </button>
 
         <div
           ref={scrollRef}
           className="
-            flex flex-1 snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth
+            flex flex-1 snap-x snap-mandatory gap-3 overflow-x-auto scroll-smooth py-3
             [scrollbar-width:none] [&::-webkit-scrollbar]:hidden
           "
         >
           {categories.map((category) => {
             const imageSrc = CATEGORY_IMAGES[category.name];
-            const iconBg = ICON_BG[category.name] ?? "bg-[#E6F7F6]";
             return (
               <Link
                 key={category.name}
                 href={`/books?category=${encodeURIComponent(category.name)}`}
                 className="
-                  group flex h-[150px] w-[calc(25%-12px)] min-w-[220px] shrink-0 snap-start
-                  flex-col items-center justify-center gap-3 rounded-2xl border border-[#E1E5E8]
-                  bg-white transition-all duration-300
-                  hover:-translate-y-1 hover:border-[#2DBDB6] hover:shadow-[0_10px_24px_rgba(10,14,42,0.08)]
+                  group relative flex h-[110px] w-[calc(20%-10px)] min-w-[128px] shrink-0 snap-start
+                  flex-col items-center justify-center gap-1.5 overflow-hidden rounded-lg p-2.5
+                  bg-gradient-to-br from-[#E9ECEF] to-[#D3D9DE]
+                  shadow-[6px_6px_14px_rgba(163,177,198,0.5),-6px_-6px_14px_rgba(255,255,255,0.9),inset_0_1px_0_rgba(255,255,255,0.6)]
+                  transition-all duration-300 ease-out
+                  hover:-translate-y-1.5 hover:scale-[1.03]
+                  hover:shadow-[9px_9px_20px_rgba(163,177,198,0.55),-9px_-9px_20px_rgba(255,255,255,0.95),inset_0_1px_0_rgba(255,255,255,0.7)]
+                  active:translate-y-0 active:scale-100
+                  active:shadow-[inset_5px_5px_10px_rgba(163,177,198,0.45),inset_-5px_-5px_10px_rgba(255,255,255,0.7)]
                 "
               >
+                {/* subtle top highlight for extra depth */}
+                <span className="pointer-events-none absolute inset-x-0 top-0 h-1/2 rounded-t-lg bg-gradient-to-b from-white/50 to-transparent" />
+
                 <span
-                  className={`
-                    relative flex h-16 w-16 items-center justify-center overflow-hidden rounded-2xl
-                    ${iconBg} transition-transform duration-300 group-hover:scale-110
-                  `}
+                  className="
+                    relative z-10 flex h-9 w-9 items-center justify-center overflow-hidden rounded-md
+                    bg-white
+                    shadow-[3px_3px_7px_rgba(163,177,198,0.45),-3px_-3px_7px_rgba(255,255,255,0.95),inset_0_1px_1px_rgba(255,255,255,0.8)]
+                    transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-3
+                  "
                 >
                   {imageSrc ? (
                     <Image
                       src={imageSrc}
                       alt={category.name}
                       fill
-                      sizes="64px"
+                      sizes="36px"
                       className="object-cover"
                     />
                   ) : (
-                    <BookOpen className="h-7 w-7 text-[#0B7A6E]" strokeWidth={1.75} />
+                    <BookOpen className="h-4 w-4 text-[#0B7A6E]" strokeWidth={1.75} />
                   )}
                 </span>
 
-                <span className="px-2 text-center text-[15px] font-bold leading-tight text-[#0A0E2A]">
+                <span className="relative z-10 px-1 text-center text-[12px] font-bold leading-tight text-[#0A0E2A] line-clamp-1">
                   {category.name}
                 </span>
 
-                <span className="text-xs font-medium text-[#9AA3AF]">
+                <span
+                  className="
+                    relative z-10 rounded-sm border border-[#E1E5E8]/70 bg-white/80 px-1.5 py-[1px]
+                    text-[9px] font-semibold text-[#6B7280] shadow-[1px_1px_2px_rgba(163,177,198,0.3)]
+                  "
+                >
                   {category.booksCount} টি বই
                 </span>
               </Link>
@@ -143,11 +145,13 @@ export default function CategorySection({ categories }: CategorySectionProps) {
           aria-label="পরবর্তী ক্যাটাগরি"
           className="
             flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[#0A0E2A]
-            transition-colors duration-200 hover:bg-[#F0F3F4] disabled:opacity-30
-            disabled:hover:bg-transparent
+            bg-[#F2F4F5] shadow-[4px_4px_10px_rgba(163,177,198,0.4),-4px_-4px_10px_rgba(255,255,255,0.9)]
+            transition-all duration-200 hover:-translate-y-0.5
+            active:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.4),inset_-3px_-3px_6px_rgba(255,255,255,0.7)]
+            disabled:opacity-30 disabled:hover:translate-y-0
           "
         >
-          <ChevronRight className="h-5 w-5" />
+          <ChevronRight className="h-4 w-4" />
         </button>
       </div>
 
