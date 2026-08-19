@@ -72,6 +72,12 @@ const bookSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    // Incremented every time the public book-detail endpoint is hit.
+    // Powers the "views" stat shown on the book detail page.
+    views: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,

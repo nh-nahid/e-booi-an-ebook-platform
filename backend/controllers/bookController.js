@@ -1,6 +1,10 @@
 const Book = require("../models/Book");
 const fs = require("fs");
 const path = require("path");
+const {
+  getOrCreatePreview,
+  removePreview,
+} = require("../utils/generateBookPreview");
 
 // delete uploaded file helper
 function removeFile(folder, filename) {
@@ -219,10 +223,19 @@ async function getBooks(req, res, next) {
 // get single book
 async function getBook(req, res, next) {
   try {
-    const book = await Book.findById(req.params.id).populate(
-      "uploadedBy",
-      "name",
-    );
+    // $inc the view counter and return the updated doc in one round trip —
+    // every detail-page hit counts as a view.
+    const book = await Book.findByIdAndUpdate(
+      req.params.id,
+      {
+        $inc: {
+          views: 1,
+        },
+      },
+      {
+        new: true,
+      },
+    ).populate("uploadedBy", "name");
 
     if (!book) {
       return res.status(404).json({
@@ -235,6 +248,46 @@ async function getBook(req, res, next) {
       message: "Book fetched successfully",
       data: book,
     });
+  } catch (err) {
+    next(err);
+  }
+}
+
+// get a short (first few pages) preview PDF for a Digital book — public,
+// no purchase required. Only ever serves a freshly-trimmed copy, never
+// the full pdfFile, so a shopper can sample the book without being able
+// to read/download the whole thing for free.
+async function getBookPreview(req, res, next) {
+  try {
+    const book = await Book.findById(req.params.id);
+
+    if (!book) {
+      return res.status(404).json({
+        message: "Book not found",
+      });
+    }
+
+    if (book.bookType !== "Digital" || !book.pdfFile) {
+      return res.status(404).json({
+        message: "Preview not available for this book",
+      });
+    }
+
+    const previewPath = await getOrCreatePreview(book);
+
+    if (!previewPath) {
+      return res.status(404).json({
+        message: "Preview not available for this book",
+      });
+    }
+
+    res.setHeader(
+      "Content-Disposition",
+      `inline; filename="preview-${book._id}.pdf"`,
+    );
+    res.type("application/pdf");
+
+    res.sendFile(path.resolve(previewPath));
   } catch (err) {
     next(err);
   }
@@ -278,6 +331,9 @@ async function updateBook(req, res, next) {
 
     if (oldPdf) {
       removeFile("pdfs", oldPdf);
+      // the cached preview was built from the old pdfFile — drop it so
+      // the next preview request rebuilds from the new one.
+      removePreview(book._id);
     }
 
     res.json({
@@ -317,6 +373,8 @@ async function deleteBook(req, res, next) {
 
     removeFile("pdfs", book.pdfFile);
 
+    removePreview(book._id);
+
     // delete database record
 
     await Book.findByIdAndDelete(req.params.id);
@@ -333,6 +391,7 @@ module.exports = {
   addBook,
   getBooks,
   getBook,
+  getBookPreview,
   updateBook,
   deleteBook,
 };

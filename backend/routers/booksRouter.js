@@ -4,6 +4,7 @@ const {
     addBook,
     getBooks,
     getBook,
+    getBookPreview,
     updateBook,
     deleteBook,
 } = require("../controllers/bookController");
@@ -20,6 +21,7 @@ const router = express.Router();
 // public routes
 router.get("/", getBooks);
 router.get("/:id", getBook);
+router.get("/:id/preview", getBookPreview);
 
 // admin routes
 router.post(
