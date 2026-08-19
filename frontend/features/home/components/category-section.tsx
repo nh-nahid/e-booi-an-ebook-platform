@@ -64,9 +64,9 @@ export default function CategorySection({ categories }: CategorySectionProps) {
           aria-label="আগের ক্যাটাগরি"
           className="
             flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[#0A0E2A]
-            bg-[#F2F4F5] shadow-[4px_4px_10px_rgba(163,177,198,0.4),-4px_-4px_10px_rgba(255,255,255,0.9)]
-            transition-all duration-200 hover:-translate-y-0.5
-            active:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.4),inset_-3px_-3px_6px_rgba(255,255,255,0.7)]
+            bg-white shadow-[0_2px_8px_rgba(0,0,0,0.12)]
+            transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_4px_12px_rgba(0,0,0,0.16)]
+            active:translate-y-0
             disabled:opacity-30 disabled:hover:translate-y-0
           "
         >
@@ -76,7 +76,7 @@ export default function CategorySection({ categories }: CategorySectionProps) {
         <div
           ref={scrollRef}
           className="
-            flex flex-1 snap-x snap-mandatory gap-3 overflow-x-auto scroll-smooth py-3
+            flex flex-1 snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth px-1 py-4
             [scrollbar-width:none] [&::-webkit-scrollbar]:hidden
           "
         >
@@ -87,26 +87,22 @@ export default function CategorySection({ categories }: CategorySectionProps) {
                 key={category.name}
                 href={`/books?category=${encodeURIComponent(category.name)}`}
                 className="
-                  group relative flex h-[110px] w-[calc(20%-10px)] min-w-[128px] shrink-0 snap-start
-                  flex-col items-center justify-center gap-1.5 overflow-hidden rounded-lg p-2.5
-                  bg-gradient-to-br from-[#E9ECEF] to-[#D3D9DE]
-                  shadow-[6px_6px_14px_rgba(163,177,198,0.5),-6px_-6px_14px_rgba(255,255,255,0.9),inset_0_1px_0_rgba(255,255,255,0.6)]
+                  group relative flex h-[168px] w-[calc(20%-16px)] min-w-[140px] shrink-0 snap-start
+                  flex-col items-center justify-start gap-2 rounded-xl bg-[#F5F5F4] p-3 pt-4
+                  shadow-[6px_8px_0px_rgba(0,0,0,0.08),0_1px_2px_rgba(0,0,0,0.05)]
+                  ring-1 ring-black/[0.04]
                   transition-all duration-300 ease-out
-                  hover:-translate-y-1.5 hover:scale-[1.03]
-                  hover:shadow-[9px_9px_20px_rgba(163,177,198,0.55),-9px_-9px_20px_rgba(255,255,255,0.95),inset_0_1px_0_rgba(255,255,255,0.7)]
-                  active:translate-y-0 active:scale-100
-                  active:shadow-[inset_5px_5px_10px_rgba(163,177,198,0.45),inset_-5px_-5px_10px_rgba(255,255,255,0.7)]
+                  hover:-translate-y-1.5
+                  hover:shadow-[8px_12px_0px_rgba(0,0,0,0.1),0_2px_4px_rgba(0,0,0,0.06)]
+                  active:translate-y-0
+                  active:shadow-[3px_4px_0px_rgba(0,0,0,0.1)]
                 "
               >
-                {/* subtle top highlight for extra depth */}
-                <span className="pointer-events-none absolute inset-x-0 top-0 h-1/2 rounded-t-lg bg-gradient-to-b from-white/50 to-transparent" />
-
                 <span
                   className="
-                    relative z-10 flex h-9 w-9 items-center justify-center overflow-hidden rounded-md
-                    bg-white
-                    shadow-[3px_3px_7px_rgba(163,177,198,0.45),-3px_-3px_7px_rgba(255,255,255,0.95),inset_0_1px_1px_rgba(255,255,255,0.8)]
-                    transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-3
+                    relative flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-lg
+                    bg-white shadow-[0_2px_4px_rgba(0,0,0,0.08)]
+                    transition-transform duration-300 group-hover:-rotate-2 group-hover:scale-105
                   "
                 >
                   {imageSrc ? (
@@ -114,22 +110,22 @@ export default function CategorySection({ categories }: CategorySectionProps) {
                       src={imageSrc}
                       alt={category.name}
                       fill
-                      sizes="36px"
+                      sizes="64px"
                       className="object-cover"
                     />
                   ) : (
-                    <BookOpen className="h-4 w-4 text-[#0B7A6E]" strokeWidth={1.75} />
+                    <BookOpen className="h-8 w-8 text-[#0B7A6E]" strokeWidth={1.75} />
                   )}
                 </span>
 
-                <span className="relative z-10 px-1 text-center text-[12px] font-bold leading-tight text-[#0A0E2A] line-clamp-1">
+                <span className="px-1 text-center text-[13px] font-bold leading-tight text-[#0A0E2A] line-clamp-2">
                   {category.name}
                 </span>
 
                 <span
                   className="
-                    relative z-10 rounded-sm border border-[#E1E5E8]/70 bg-white/80 px-1.5 py-[1px]
-                    text-[9px] font-semibold text-[#6B7280] shadow-[1px_1px_2px_rgba(163,177,198,0.3)]
+                    mt-auto rounded-full border border-[#DADFE2] bg-white px-2 py-0.5
+                    text-[10px] font-semibold text-[#6B7280]
                   "
                 >
                   {category.booksCount} টি বই
@@ -145,9 +141,9 @@ export default function CategorySection({ categories }: CategorySectionProps) {
           aria-label="পরবর্তী ক্যাটাগরি"
           className="
             flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[#0A0E2A]
-            bg-[#F2F4F5] shadow-[4px_4px_10px_rgba(163,177,198,0.4),-4px_-4px_10px_rgba(255,255,255,0.9)]
-            transition-all duration-200 hover:-translate-y-0.5
-            active:shadow-[inset_3px_3px_6px_rgba(163,177,198,0.4),inset_-3px_-3px_6px_rgba(255,255,255,0.7)]
+            bg-white shadow-[0_2px_8px_rgba(0,0,0,0.12)]
+            transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_4px_12px_rgba(0,0,0,0.16)]
+            active:translate-y-0
             disabled:opacity-30 disabled:hover:translate-y-0
           "
         >
