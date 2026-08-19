@@ -23,7 +23,7 @@ interface ApiError {
 
 function BookCardSkeleton() {
   const shimmer =
-    "relative overflow-hidden rounded-xl bg-[#EEF1F2] before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_1.5s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/60 before:to-transparent";
+    "relative overflow-hidden rounded-lg bg-[#EEF1F2] before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_1.5s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/60 before:to-transparent";
 
   return (
     <div>
@@ -100,7 +100,7 @@ export default function BooksGrid({
           ))}
         </div>
       ) : books.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[#E1E5E8] py-16 text-center">
+        <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-[#E1E5E8] py-16 text-center">
           <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#F7F9FA]">
             <SearchX className="h-6 w-6 text-[#9AA3AF]" />
           </div>
@@ -135,9 +135,9 @@ export default function BooksGrid({
                 style={{
                   animationDelay: `${Math.min(index, 8) * 0.05}s`,
                 }}
-                className="flex animate-in fade-in slide-in-from-bottom-1 items-center gap-4 rounded-2xl border border-[#E1E5E8] bg-white p-3 duration-500 fill-mode-both transition-all hover:-translate-y-0.5 hover:shadow-[0_10px_24px_rgba(10,14,42,0.06)]"
+                className="flex animate-in fade-in slide-in-from-bottom-1 items-start gap-3 rounded-lg border border-[#E1E5E8] bg-white p-3 duration-500 fill-mode-both transition-all hover:-translate-y-0.5 hover:shadow-[0_10px_24px_rgba(10,14,42,0.06)] sm:items-center sm:gap-4"
               >
-                <div className="relative h-20 w-14 shrink-0 overflow-hidden rounded-lg border border-[#E1E5E8]">
+                <div className="relative h-20 w-14 shrink-0 overflow-hidden rounded-md border border-[#E1E5E8]">
                   <Image
                     src={getBookImageUrl(book.coverImage)}
                     alt={book.title}
@@ -148,13 +148,13 @@ export default function BooksGrid({
                 </div>
 
                 <div className="min-w-0 flex-1">
-                  <h3 className="truncate text-sm font-bold text-[#0A0E2A]">
+                  <h3 className="line-clamp-1 text-sm font-bold text-[#0A0E2A]">
                     {book.title}
                   </h3>
 
                   <p className="mt-1 text-xs text-[#6B7280]">{book.author}</p>
 
-                  <div className="mt-2 flex items-center justify-between">
+                  <div className="mt-2 flex flex-wrap items-center justify-between gap-2">
                     <div>
                       <p className="font-semibold text-[#2DBDB6]">
                         ৳ {book.price}
@@ -172,7 +172,7 @@ export default function BooksGrid({
                         handleAddToCart(book._id);
                       }}
                       className="
-    flex items-center gap-2 rounded-full
+    flex shrink-0 items-center gap-2 rounded-full
     bg-[#2DBDB6] px-4 py-2
     text-xs font-semibold text-white
     transition-colors hover:bg-[#1f9d97] disabled:opacity-60

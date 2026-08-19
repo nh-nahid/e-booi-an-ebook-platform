@@ -71,7 +71,7 @@ export default function LoginForm() {
 
   return (
     <div
-      className="flex min-h-[560px] w-full items-center justify-center p-6"
+      className="flex min-h-[560px] w-full items-center justify-center p-3 sm:p-6"
       style={{ background: "#F7F9FA" }}
     >
       <Card

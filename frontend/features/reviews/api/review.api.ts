@@ -11,3 +11,20 @@ export const getBookReviews = async (
 
   return data.data;
 };
+
+export interface AddReviewPayload {
+  rating: number;
+  comment: string;
+}
+
+export const addBookReview = async (
+  bookId: string,
+  payload: AddReviewPayload
+): Promise<Review> => {
+  const { data } = await api.post<{ message: string; review: Review }>(
+    ENDPOINTS.REVIEWS.ADD_REVIEW(bookId),
+    payload
+  );
+
+  return data.review;
+};

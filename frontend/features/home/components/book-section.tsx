@@ -3,6 +3,7 @@
 import { useMemo, useState, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
+import { useInView } from "@/hooks/use-in-view";
 import type { Book } from "../types/home.types";
 import SectionHeader from "./section-header";
 import BookCard from "./book-card";
@@ -17,6 +18,7 @@ const VISIBLE_COUNT = 6;
 
 export default function BookSection({ title, href = "/books", books }: BookSectionProps) {
   const [page, setPage] = useState(0);
+  const { ref, inView } = useInView<HTMLElement>();
 
   // Split books into fixed-size pages of VISIBLE_COUNT so every page shows
   // full cards only — no partially-cut-off card at the row's edge.
@@ -43,7 +45,13 @@ export default function BookSection({ title, href = "/books", books }: BookSecti
   if (!books.length) return null;
 
   return (
-    <section className="container relative mx-auto px-5 py-6 sm:px-10 lg:px-[60px]">
+    <section
+      ref={ref}
+      className={`
+        container relative mx-auto px-5 py-6 transition-all duration-700 ease-out sm:px-10 lg:px-[60px]
+        ${inView ? "opacity-100 translate-y-0" : "translate-y-6 opacity-0"}
+      `}
+    >
       <SectionHeader title={title} href={href} />
 
       <div className="group/row relative">
@@ -54,7 +62,8 @@ export default function BookSection({ title, href = "/books", books }: BookSecti
           className="
             absolute -left-3 top-1/2 z-10 hidden h-9 w-9 -translate-y-1/2 items-center justify-center
             rounded-full border border-[#E1E5E8] bg-white text-[#0A0E2A] opacity-0 shadow-md
-            transition-all duration-200 hover:border-[#2DBDB6] hover:text-[#2DBDB6]
+            transition-all duration-200 hover:scale-110 hover:border-[#2DBDB6] hover:text-[#2DBDB6]
+            active:scale-95
             disabled:pointer-events-none disabled:opacity-0
             group-hover/row:opacity-100 lg:flex
           "
@@ -69,7 +78,8 @@ export default function BookSection({ title, href = "/books", books }: BookSecti
           className="
             absolute -right-3 top-1/2 z-10 hidden h-9 w-9 -translate-y-1/2 items-center justify-center
             rounded-full border border-[#E1E5E8] bg-white text-[#0A0E2A] opacity-0 shadow-md
-            transition-all duration-200 hover:border-[#2DBDB6] hover:text-[#2DBDB6]
+            transition-all duration-200 hover:scale-110 hover:border-[#2DBDB6] hover:text-[#2DBDB6]
+            active:scale-95
             disabled:pointer-events-none disabled:opacity-0
             group-hover/row:opacity-100 lg:flex
           "

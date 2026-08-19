@@ -111,7 +111,7 @@ export default function RegisterForm() {
     <div
       className="
         relative w-full max-w-md overflow-hidden rounded-3xl border border-[#E1E5E8]
-        bg-white p-7 shadow-[0_20px_45px_rgba(10,14,42,0.08)]
+        bg-white p-5 shadow-[0_20px_45px_rgba(10,14,42,0.08)] sm:p-7
         animate-in fade-in slide-in-from-bottom-2 duration-500
       "
     >

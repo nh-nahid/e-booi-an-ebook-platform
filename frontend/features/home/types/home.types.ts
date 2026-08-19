@@ -40,6 +40,8 @@ export interface Book {
   pdfFile?: string | null;
   stock: number;
   sold?: number;
+  // Incremented on every book-detail fetch; used for the "views" stat.
+  views?: number;
 
   isFeatured: boolean;
   isPreOrder: boolean;

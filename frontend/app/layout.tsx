@@ -32,7 +32,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="bn" suppressHydrationWarning>
-      <body className={`${inter.variable} ${banglaFont.variable}`}>
+      <body
+        className={`${inter.variable} ${banglaFont.variable}`}
+        suppressHydrationWarning
+      >
         <ThemeProvider>
           <QueryProvider>
             <AuthProvider>

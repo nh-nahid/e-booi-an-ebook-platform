@@ -51,6 +51,12 @@ export const getRelatedBooks = async (
   );
 };
 
+// Full URL to the public, purchase-free "first few pages" preview PDF for
+// a Digital book. Rendered directly in an <iframe>/<a>, not through the
+// axios instance, since it's a plain public GET, not JSON.
+export const getBookPreviewUrl = (id: string): string => {
+  const base =
+    process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
 
-
-
+  return `${base}${ENDPOINTS.BOOKS.PREVIEW(id)}`;
+};

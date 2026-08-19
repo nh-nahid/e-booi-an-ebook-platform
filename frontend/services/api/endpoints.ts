@@ -27,6 +27,7 @@ export const ENDPOINTS = {
     GET_BOOKS: "/books",
     LIST: "/books",
     DETAILS: (id: string) => `/books/${id}`,
+    PREVIEW: (id: string) => `/books/${id}/preview`,
     CREATE: "/books",
     UPDATE: (id: string) => `/books/${id}`,
     DELETE: (id: string) => `/books/${id}`,
@@ -34,7 +35,7 @@ export const ENDPOINTS = {
   HOME: {
     GET_HOME: "/home",
   },
-  
+
 CART: {
   GET_CART: "/cart",
   ADD_TO_CART: "/cart",
@@ -50,8 +51,8 @@ ORDERS: {
     INVOICE: (id: string) => `/orders/${id}/invoice`,
     DETAILS: (id: string) => `/orders/${id}`,
     LIST: "/orders",
-    ADMIN_ALL: "/orders",                              
-    ADMIN_STATUS: (id: string) => `/orders/${id}/status`,   
+    ADMIN_ALL: "/orders",
+    ADMIN_STATUS: (id: string) => `/orders/${id}/status`,
     ADMIN_PAYMENT: (id: string) => `/orders/${id}/payment`,
   },
 

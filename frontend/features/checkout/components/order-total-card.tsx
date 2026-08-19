@@ -36,7 +36,7 @@ export default function OrderTotalCard({
   };
 
   return (
-    <div className="sticky top-24 rounded-2xl border border-[#E1E5E8] bg-white p-5 animate-in fade-in slide-in-from-right-2 duration-500">
+    <div className="rounded-2xl border border-[#E1E5E8] bg-white p-5 animate-in fade-in slide-in-from-right-2 duration-500 lg:sticky lg:top-24">
       <h3 className="text-base font-bold text-[#0A0E2A]">মোট বিল</h3>
 
       <div className="mt-4 space-y-2.5 text-sm">

@@ -28,15 +28,16 @@ export default function Pagination({ page, totalPages, onPageChange }: Paginatio
   const pages = getPageList(page, totalPages);
 
   return (
-    <div className="flex items-center justify-center gap-1.5">
+    <div className="flex flex-wrap items-center justify-center gap-1 sm:gap-1.5">
       <button
         onClick={() => onPageChange(Math.max(1, page - 1))}
         disabled={page === 1}
         className="
-          flex h-9 w-9 items-center justify-center rounded-full border border-[#E1E5E8]
+          flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[#E1E5E8]
           text-[#0A0E2A] transition-all duration-200
           hover:border-[#2DBDB6] hover:text-[#2DBDB6]
           disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-[#E1E5E8] disabled:hover:text-[#0A0E2A]
+          sm:h-9 sm:w-9
         "
       >
         <ChevronLeft className="h-4 w-4" />
@@ -44,7 +45,7 @@ export default function Pagination({ page, totalPages, onPageChange }: Paginatio
 
       {pages.map((p, i) =>
         p === "..." ? (
-          <span key={`dots-${i}`} className="px-1.5 text-sm text-[#9AA3AF]">
+          <span key={`dots-${i}`} className="px-1 text-sm text-[#9AA3AF] sm:px-1.5">
             …
           </span>
         ) : (
@@ -52,8 +53,8 @@ export default function Pagination({ page, totalPages, onPageChange }: Paginatio
             key={p}
             onClick={() => onPageChange(p)}
             className={`
-              flex h-9 w-9 items-center justify-center rounded-full text-sm font-semibold
-              transition-all duration-200
+              flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold
+              transition-all duration-200 sm:h-9 sm:w-9
               ${
                 p === page
                   ? "bg-gradient-to-br from-[#2DBDB6] to-[#1f9d97] text-white shadow-[0_4px_12px_rgba(45,189,182,0.35)]"
@@ -70,10 +71,11 @@ export default function Pagination({ page, totalPages, onPageChange }: Paginatio
         onClick={() => onPageChange(Math.min(totalPages, page + 1))}
         disabled={page === totalPages}
         className="
-          flex h-9 w-9 items-center justify-center rounded-full border border-[#E1E5E8]
+          flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[#E1E5E8]
           text-[#0A0E2A] transition-all duration-200
           hover:border-[#2DBDB6] hover:text-[#2DBDB6]
           disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-[#E1E5E8] disabled:hover:text-[#0A0E2A]
+          sm:h-9 sm:w-9
         "
       >
         <ChevronRight className="h-4 w-4" />

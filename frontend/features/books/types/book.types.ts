@@ -15,6 +15,8 @@ export interface Book {
 
   stock: number;
   sold: number;
+  // Incremented on every book-detail fetch; used for the "views" stat.
+  views?: number;
 
   averageRating: number;
   reviewCount: number;
@@ -77,7 +79,3 @@ export interface BookResponse {
   message: string;
   data: Book;
 }
-
-
-
-

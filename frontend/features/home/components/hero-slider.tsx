@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -74,74 +73,86 @@ export default function HeroSlider({ slides = DEFAULT_SLIDES, autoPlayMs = 5000 
   };
 
   return (
-    <div
-      className="group/slider relative overflow-hidden rounded-3xl border border-[#E1E5E8] shadow-[0_10px_30px_rgba(10,14,42,0.06)]"
-      style={{ aspectRatio: BANNER_ASPECT_RATIO }}
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
-    >
-      <div
-        className="flex h-full transition-transform duration-500 ease-out"
-        style={{ transform: `translateX(-${active * 100}%)` }}
-      >
-        {slides.map((slide, i) => (
+    <div>
+      <div className="relative">
+        <div
+          className="relative overflow-hidden rounded border border-[#E1E5E8] shadow-[0_10px_30px_rgba(10,14,42,0.06)] sm:rounded-lg"
+          style={{ aspectRatio: BANNER_ASPECT_RATIO }}
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
           <div
-            key={slide.id}
-            className="relative h-full w-full shrink-0"
-            aria-label={slide.alt}
+            className="flex h-full transition-transform duration-500 ease-out"
+            style={{ transform: `translateX(-${active * 100}%)` }}
           >
-            <Image
-              src={slide.image}
-              alt={slide.alt}
-              fill
-              priority={i === 0}
-              sizes="100vw"
-              className="object-cover"
-            />
+            {slides.map((slide, i) => (
+              <div
+                key={slide.id}
+                className="relative h-full w-full shrink-0"
+                aria-label={slide.alt}
+              >
+                <Image
+                  src={slide.image}
+                  alt={slide.alt}
+                  fill
+                  priority={i === 0}
+                  sizes="100vw"
+                  className="object-cover"
+                />
+              </div>
+            ))}
           </div>
-        ))}
+        </div>
+
+        {slides.length > 1 && (
+          <>
+            {/* Positioned so ~40% of the button sits outside the banner's
+                left edge and ~60% overlaps it — translateX is relative to
+                the button's own width, so -40%/40% is what places the seam
+                there regardless of button size. */}
+            <button
+              onClick={prev}
+              aria-label="Previous slide"
+              className="
+                absolute left-0 top-1/2 z-10 flex h-8 w-8 -translate-x-[40%] -translate-y-1/2
+                items-center justify-center rounded-full bg-white text-[#0A0E2A] shadow-md
+                transition-all duration-200 hover:bg-[#F7F9FA]
+                sm:h-11 sm:w-11
+              "
+            >
+              <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" strokeWidth={2.25} />
+            </button>
+            <button
+              onClick={next}
+              aria-label="Next slide"
+              className="
+                absolute right-0 top-1/2 z-10 flex h-8 w-8 translate-x-[40%] -translate-y-1/2
+                items-center justify-center rounded-full bg-white text-[#0A0E2A] shadow-md
+                transition-all duration-200 hover:bg-[#F7F9FA]
+                sm:h-11 sm:w-11
+              "
+            >
+              <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" strokeWidth={2.25} />
+            </button>
+          </>
+        )}
       </div>
 
       {slides.length > 1 && (
-        <>
-          <button
-            onClick={prev}
-            aria-label="Previous slide"
-            className="
-              absolute left-3 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center
-              rounded-full bg-white/80 text-[#0A0E2A] opacity-0 shadow-md backdrop-blur transition-all
-              duration-200 hover:bg-white group-hover/slider:opacity-100
-            "
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </button>
-          <button
-            onClick={next}
-            aria-label="Next slide"
-            className="
-              absolute right-3 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center
-              rounded-full bg-white/80 text-[#0A0E2A] opacity-0 shadow-md backdrop-blur transition-all
-              duration-200 hover:bg-white group-hover/slider:opacity-100
-            "
-          >
-            <ChevronRight className="h-4 w-4" />
-          </button>
-
-          <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-1.5">
-            {slides.map((slide, i) => (
-              <button
-                key={slide.id}
-                onClick={() => goTo(i)}
-                aria-label={`Go to slide ${i + 1}`}
-                className={`h-1.5 rounded-full transition-all duration-300 ${
-                  i === active ? "w-6 bg-white" : "w-1.5 bg-white/50"
-                }`}
-              />
-            ))}
-          </div>
-        </>
+        <div className="mt-3 flex items-center justify-center gap-1.5">
+          {slides.map((slide, i) => (
+            <button
+              key={slide.id}
+              onClick={() => goTo(i)}
+              aria-label={`Go to slide ${i + 1}`}
+              className={`h-1.5 rounded-full transition-all duration-300 ${
+                i === active ? "w-6 bg-[#2DBDB6]" : "w-1.5 bg-[#E1E5E8]"
+              }`}
+            />
+          ))}
+        </div>
       )}
     </div>
   );

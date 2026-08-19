@@ -58,8 +58,8 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-[#F7F9FA]">
-      <div className="container mx-auto px-4 py-6 lg:px-[60px]">
-        <div className="grid gap-8 lg:grid-cols-[360px_1fr]">
+      <div className="container mx-auto px-5 py-6 sm:px-10 lg:px-[60px]">
+        <div className="grid gap-6 lg:grid-cols-[360px_1fr] lg:gap-8">
           {/* Left Side */}
           <div className="space-y-6">
             <ProfileCard

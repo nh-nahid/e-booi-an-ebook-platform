@@ -5,27 +5,25 @@ import { useParams } from "next/navigation";
 import SiteFooter from "@/components/layout/site-footer";
 
 import { useBook, useRelatedBooks } from "@/features/books/hooks/use-book";
+import { useBookReviews } from "@/features/reviews/hooks/use-review";
 
 import Breadcrumb from "@/features/books/components/book-details/breadcrumb";
-import BookGallery from "@/features/books/components/book-details/book-gallery";
-import BookInfo from "@/features/books/components/book-details/book-info";
-import BookTabs from "@/features/books/components/book-details/book-tabs";
-import ReviewList from "@/features/books/components/book-details/review-list";
-import RelatedBooks from "@/features/books/components/book-details/related-books";
+import BookHero from "@/features/books/components/book-details/book-hero";
+import BookAbout from "@/features/books/components/book-details/book-about";
+import ReviewSection from "@/features/books/components/book-details/review-section";
+import RelatedBooksGrid from "@/features/books/components/book-details/related-books-grid";
 import Loading from "@/app/loading";
-import { useBookReviews } from "@/features/reviews/hooks/use-review";
-import { useAddToCart } from "@/features/cart/hooks/use-cart";
 
 export default function BookDetailPage() {
   const params = useParams();
+  const bookId = params.id as string;
 
-  const { data: book, isLoading } = useBook(params.id as string);
+  const { data: book, isLoading } = useBook(bookId);
   const { data: relatedBooks = [] } = useRelatedBooks(
     book?.category,
     book?._id,
   );
   const { data: reviews = [] } = useBookReviews(book?._id);
-  const addToCartMutation = useAddToCart();
 
   if (isLoading) {
     return <Loading />;
@@ -39,38 +37,9 @@ export default function BookDetailPage() {
     );
   }
 
-  const galleryImages = [book.coverImage];
-
-  const bookDetails = [
-    {
-      label: "Author",
-      value: book.author,
-    },
-    {
-      label: "Category",
-      value: book.category,
-    },
-    {
-      label: "Format",
-      value: book.bookType,
-    },
-    {
-      label: "Stock",
-      value: String(book.stock),
-    },
-    {
-      label: "Sold",
-      value: String(book.sold),
-    },
-    {
-      label: "Published",
-      value: book.isPublished ? "Yes" : "No",
-    },
-  ];
-
   return (
-    <div className="min-h-screen bg-[#F7F9FA]">
-      <div className="container mx-auto px-5 py-5 sm:px-10 lg:px-[60px]">
+    <div className="min-h-screen bg-white">
+      <div className="container mx-auto max-w-5xl px-4 py-4 sm:px-6 lg:px-8">
         <Breadcrumb
           items={[
             {
@@ -88,53 +57,36 @@ export default function BookDetailPage() {
         />
       </div>
 
-      <div className="container mx-auto px-5 pb-10 sm:px-10 lg:px-[60px]">
-        <div className="grid gap-8 lg:grid-cols-2 lg:gap-12">
-          <div className="mx-auto w-full max-w-sm lg:max-w-none">
-            <BookGallery
-              title={book.title}
-              images={galleryImages}
-              badge={
-                book.isPreOrder
-                  ? "pre-order"
-                  : book.isFeatured
-                    ? "popular"
-                    : undefined
-              }
-            />
-          </div>
-
-          <BookInfo
-            book={{
-              id: book._id,
-              title: book.title,
-              author: book.author,
-              category: book.category,
-              price: book.price,
-              originalPrice: undefined,
-              rating: book.averageRating,
-              reviewCount: book.reviewCount,
-              stock: book.stock,
-              description: book.description,
-              bookType: book.bookType === "Digital" ? "digital" : "physical",
-              status: book.isPreOrder ? "pre-order" : "published",
-            }}
-            onBuyNow={async (qty) => {
-              console.log("Buy now", book._id, qty);
-            }}
-          />
-        </div>
-
-        <BookTabs
-          description={book.description}
-          details={bookDetails}
-          reviewsSlot={
-            <ReviewList reviews={reviews} averageRating={book.averageRating} />
-          }
+      <div className="container mx-auto max-w-5xl px-4 pb-12 sm:px-6 lg:px-8">
+        <BookHero
+          book={{
+            id: book._id,
+            title: book.title,
+            author: book.author,
+            category: book.category,
+            price: book.price,
+            // No `originalPrice` field exists on the Book model yet, so
+            // there's nothing real to show here — keeping this undefined
+            // (rather than inventing a number) means the strikethrough /
+            // discount badge only ever appears once that field is real.
+            originalPrice: undefined,
+            coverImage: book.coverImage,
+            bookType: book.bookType,
+            pdfFile: book.pdfFile,
+            stock: book.stock,
+            sold: book.sold,
+            views: book.views ?? 0,
+            isPreOrder: book.isPreOrder,
+            isFeatured: book.isFeatured,
+          }}
         />
-      </div>
 
-      <RelatedBooks books={relatedBooks} />
+        <BookAbout description={book.description} />
+
+        <ReviewSection bookId={book._id} reviews={reviews} />
+
+        <RelatedBooksGrid books={relatedBooks} />
+      </div>
 
       <SiteFooter />
     </div>

@@ -4,22 +4,19 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Heart, Search, ShoppingCart } from "lucide-react";
+import { Home, Library, Search, ShoppingCart, User as UserIcon } from "lucide-react";
 
-import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/use-auth";
-
-import MobileNav from "./mobile-nav";
-import UserMenu from "./user-menu";
-import { NAV_LINKS } from "./nav-links";
 import { useDebounce } from "@/hooks/use-debounce";
 import { useCart } from "@/features/cart/hooks/use-cart";
+
+import MobileNav from "./mobile-nav";
 
 export default function Navbar() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
 
   const { data: cart = [] } = useCart();
   const cartCount = cart.reduce((sum, item) => sum + (item.quantity ?? 1), 0);
@@ -92,46 +89,135 @@ export default function Navbar() {
     setSearch("");
   };
 
+  const avatarUrl = user?.avatar
+    ? `${process.env.NEXT_PUBLIC_API_URL?.replace(
+        "/api/v1",
+        "",
+      )}/uploads/avatars/${user.avatar}`
+    : null;
+
+  const initials = user?.name
+    ? user.name
+        .split(" ")
+        .map((w) => w[0])
+        .join("")
+        .slice(0, 2)
+        .toUpperCase()
+    : "";
+
   return (
-    <header className="nb-header">
-      <div className="flex items-center gap-8 lg:gap-10">
-        <Link href="/" className="nb-logo" onClick={clearSearchState}>
-          <div className="nb-logo-mark">
+    <header className="sticky top-0 z-40 border-b border-[#E1E5E8] bg-white px-5 py-3 sm:px-25">
+      <div className="flex items-center justify-between gap-2 sm:gap-6">
+        <div className="flex shrink-0 items-center gap-2">
+          <MobileNav />
+
+          <Link
+            href="/"
+            onClick={clearSearchState}
+            className="flex items-center gap-1.5"
+          >
             <Image
               src="/logo.jpeg"
               alt="eBooi Logo"
-              width={32}
-              height={32}
+              width={30}
+              height={30}
               priority
               className="rounded-lg"
             />
-          </div>
-          <span>
-            eBoo<span className="text-[#2DBDB6]">i</span>
-          </span>
-        </Link>
+            <span className="hidden text-xl font-extrabold tracking-tight text-[#0A0E2A] sm:inline">
+              eB<span className="text-[#2DBDB6]">oo</span>i
+            </span>
+          </Link>
+        </div>
 
-        <nav className="nb-links">
-          {NAV_LINKS.map((link) => {
-            const active = pathname === link.href;
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={clearSearchState}
-                className={`nb-link ${active ? "active" : ""}`}
-              >
-                {link.title}
-              </Link>
-            );
-          })}
-        </nav>
+        <div className="hidden min-w-0 flex-1 items-center gap-2 rounded border border-[#E1E5E8] bg-[#F7F9FA] px-4 py-2.5 transition-colors focus-within:border-[#2DBDB6] sm:flex sm:max-w-md md:max-w-lg">
+          <input
+            value={search}
+            onChange={(e) => {
+              isTypingRef.current = true;
+              setSearch(e.target.value);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleSearch();
+              }
+            }}
+            placeholder="বই, লেখক বা ক্যাটাগরি নাম দিয়ে খুঁজুন"
+            className="min-w-0 flex-1 bg-transparent text-sm text-[#0A0E2A] outline-none placeholder:text-[#9AA3AF]"
+          />
+          <button
+            type="button"
+            onClick={handleSearch}
+            aria-label="Search"
+            className="shrink-0 text-[#9AA3AF] transition-colors hover:text-[#2DBDB6]"
+          >
+            <Search className="h-[18px] w-[18px]" />
+          </button>
+        </div>
+
+        <div className="flex shrink-0 items-center gap-3 sm:gap-6">
+          <Link
+            href="/"
+            onClick={clearSearchState}
+            className="flex flex-col items-center gap-0.5 text-[#0A0E2A] transition-colors hover:text-[#2DBDB6]"
+            aria-label="হোম"
+          >
+            <Home className="h-5 w-5" />
+            <span className="text-[10px] font-semibold leading-none">হোম</span>
+          </Link>
+
+          <Link
+            href="/library"
+            onClick={clearSearchState}
+            className="flex flex-col items-center gap-0.5 text-[#0A0E2A] transition-colors hover:text-[#2DBDB6]"
+            aria-label="লাইব্রেরি"
+          >
+            <Library className="h-5 w-5" />
+            <span className="text-[10px] font-semibold leading-none">লাইব্রেরি</span>
+          </Link>
+
+          <Link
+            href="/cart"
+            onClick={clearSearchState}
+            className="flex flex-col items-center gap-0.5 text-[#0A0E2A] transition-colors hover:text-[#2DBDB6]"
+            aria-label="কার্ট"
+          >
+            <span className="relative">
+              <ShoppingCart className="h-5 w-5" />
+              {isAuthenticated && cartCount > 0 && (
+                <span className="absolute -right-2 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#2DBDB6] px-1 text-[9px] font-bold leading-none text-white">
+                  {cartCount > 9 ? "9+" : cartCount}
+                </span>
+              )}
+            </span>
+            <span className="text-[10px] font-semibold leading-none">কার্ট</span>
+          </Link>
+
+          <Link
+            href={isAuthenticated ? "/profile" : "/login"}
+            onClick={clearSearchState}
+            className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#0A0E2A] text-white transition-opacity hover:opacity-90"
+            aria-label={isAuthenticated ? "My Profile" : "Login"}
+          >
+            {avatarUrl ? (
+              <Image
+                src={avatarUrl}
+                alt={user?.name ?? "Profile"}
+                width={36}
+                height={36}
+                className="h-full w-full object-cover"
+              />
+            ) : isAuthenticated ? (
+              <span className="text-xs font-bold">{initials}</span>
+            ) : (
+              <UserIcon className="h-[18px] w-[18px]" />
+            )}
+          </Link>
+        </div>
       </div>
 
-      <div className="nb-search">
-        <Search className="h-4 w-4 cursor-pointer" onClick={handleSearch} />
-
-        <Input
+      <div className="mt-3 flex items-center gap-2 rounded-md border border-[#E1E5E8] bg-[#F7F9FA] px-4 py-2.5 transition-colors focus-within:border-[#2DBDB6] sm:hidden">
+        <input
           value={search}
           onChange={(e) => {
             isTypingRef.current = true;
@@ -142,58 +228,17 @@ export default function Navbar() {
               handleSearch();
             }
           }}
-          placeholder="Search books..."
-          className="border-0 shadow-none focus-visible:ring-0"
+          placeholder="বই, লেখক বা ক্যাটাগরি নাম দিয়ে খুঁজুন"
+          className="min-w-0 flex-1 bg-transparent text-sm text-[#0A0E2A] outline-none placeholder:text-[#9AA3AF]"
         />
-      </div>
-
-      <div className="flex items-center gap-1">
-        <Link
-          href="/wishlist"
-          className="nb-icon-btn"
-          onClick={clearSearchState}
+        <button
+          type="button"
+          onClick={handleSearch}
+          aria-label="Search"
+          className="shrink-0 text-[#9AA3AF] transition-colors hover:text-[#2DBDB6]"
         >
-          <Heart className="h-[18px] w-[18px]" />
-        </Link>
-        <Link
-          href="/cart"
-          className="nb-icon-btn relative"
-          onClick={clearSearchState}
-        >
-          <ShoppingCart className="h-[18px] w-[18px]" />
-          {isAuthenticated && cartCount > 0 && (
-            <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#2DBDB6] px-1 text-[10px] font-bold leading-none text-white">
-              {cartCount > 9 ? "9+" : cartCount}
-            </span>
-          )}
-        </Link>
-
-        {isAuthenticated ? (
-          <div className="hidden md:block">
-            <UserMenu />
-          </div>
-        ) : (
-          <div className="nb-desktop items-center gap-1">
-            <Link
-              href="/login"
-              className="nb-cta-ghost"
-              onClick={clearSearchState}
-            >
-              Login
-            </Link>
-            <Link
-              href="/register"
-              className="nb-cta-primary"
-              onClick={clearSearchState}
-            >
-              Register
-            </Link>
-          </div>
-        )}
-
-        <div className="nb-mobile-trigger mb-2">
-          <MobileNav />
-        </div>
+          <Search className="h-[18px] w-[18px]" />
+        </button>
       </div>
     </header>
   );

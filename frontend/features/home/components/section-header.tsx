@@ -9,7 +9,13 @@ interface SectionHeaderProps {
 export default function SectionHeader({ title, href = "/books" }: SectionHeaderProps) {
   return (
     <div className="mb-5 flex items-center justify-between">
-      <span className="inline-block rounded-2xl bg-[#E6F7F6] px-4 py-1.5 text-base font-bold text-[#0A0E2A] sm:text-lg">
+      <span
+        className="
+          inline-block rounded-md bg-gradient-to-r from-[#2DBDB6] to-[#1f9d97] px-3 py-1 text-sm
+          font-bold text-white shadow-[0_4px_12px_rgba(45,189,182,0.3)]
+          transition-transform duration-300 hover:-translate-y-0.5 sm:text-base
+        "
+      >
         {title}
       </span>
 

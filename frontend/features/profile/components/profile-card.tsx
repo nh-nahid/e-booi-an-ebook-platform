@@ -95,7 +95,7 @@ export default function ProfileCard({
     <div
       className="
         relative w-full max-w-md overflow-hidden rounded-3xl
-        border border-[#E1E5E8] bg-white p-6
+        border border-[#E1E5E8] bg-white p-5 sm:p-6
         shadow-[0_10px_30px_rgba(10,14,42,0.06)]
         transition-shadow duration-300
         hover:shadow-[0_16px_40px_rgba(10,14,42,0.1)]

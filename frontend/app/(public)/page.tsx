@@ -28,13 +28,13 @@ export default async function HomePage() {
 
 
       <BookSection
-        title="Latest Books"
+        title="নতুন বই"
         href="/books?sort=latest"
         books={homeData.latestBooks}
       />
 
       <BookSection
-        title="Best Selling Books"
+        title="বেস্ট সেলিং বই"
         href="/books?sort=best-selling"
         books={homeData.bestSellingBooks}
       />

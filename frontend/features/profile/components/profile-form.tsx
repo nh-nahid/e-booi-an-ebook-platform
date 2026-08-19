@@ -114,7 +114,7 @@ export default function ProfileForm({
       onSubmit={handleSubmit}
       className="
         w-full rounded-3xl border border-[#E1E5E8]
-        bg-white p-6
+        bg-white p-5 sm:p-6
         shadow-[0_10px_30px_rgba(10,14,42,0.06)]
         animate-in fade-in slide-in-from-bottom-2 duration-500
       "
