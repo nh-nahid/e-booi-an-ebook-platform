@@ -43,6 +43,7 @@ const COVER_GRADIENTS = [
 export default function BookCard({ book, index = 0 }: BookCardProps) {
   const [wishlisted, setWishlisted] = useState(false);
   const [adding, setAdding] = useState(false);
+  const [coverFailed, setCoverFailed] = useState(false);
 
   const gradient = COVER_GRADIENTS[index % COVER_GRADIENTS.length];
 
@@ -127,7 +128,7 @@ export default function BookCard({ book, index = 0 }: BookCardProps) {
             bg-gradient-to-br p-4 text-center ${gradient}
           `}
         >
-          {coverImage ? (
+          {coverImage && !coverFailed ? (
             <Image
               src={coverImage}
               alt={book.title}
@@ -136,6 +137,7 @@ export default function BookCard({ book, index = 0 }: BookCardProps) {
               className="object-cover transition-transform duration-500 group-hover:scale-105"
               onError={() => {
                 console.error("Failed to load:", coverImage);
+                setCoverFailed(true);
               }}
             />
           ) : (

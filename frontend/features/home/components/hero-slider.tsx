@@ -116,25 +116,25 @@ export default function HeroSlider({ slides = DEFAULT_SLIDES, autoPlayMs = 5000 
               onClick={prev}
               aria-label="Previous slide"
               className="
-                absolute left-0 top-1/2 z-10 hidden h-11 w-11 -translate-x-[40%] -translate-y-1/2
+                absolute left-0 top-1/2 z-10 flex h-8 w-8 -translate-x-[40%] -translate-y-1/2
                 items-center justify-center rounded-full bg-white text-[#0A0E2A] shadow-md
                 transition-all duration-200 hover:bg-[#F7F9FA]
-                sm:flex
+                sm:h-11 sm:w-11
               "
             >
-              <ChevronLeft className="h-5 w-5" strokeWidth={2.25} />
+              <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" strokeWidth={2.25} />
             </button>
             <button
               onClick={next}
               aria-label="Next slide"
               className="
-                absolute right-0 top-1/2 z-10 hidden h-11 w-11 translate-x-[40%] -translate-y-1/2
+                absolute right-0 top-1/2 z-10 flex h-8 w-8 translate-x-[40%] -translate-y-1/2
                 items-center justify-center rounded-full bg-white text-[#0A0E2A] shadow-md
                 transition-all duration-200 hover:bg-[#F7F9FA]
-                sm:flex
+                sm:h-11 sm:w-11
               "
             >
-              <ChevronRight className="h-5 w-5" strokeWidth={2.25} />
+              <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" strokeWidth={2.25} />
             </button>
           </>
         )}

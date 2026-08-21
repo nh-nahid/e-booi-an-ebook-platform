@@ -142,7 +142,7 @@ export default function Navbar() {
                 handleSearch();
               }
             }}
-            placeholder="বই, লেখক বা ক্যাটাগরি নাম দিয়ে খুঁজুন"
+            placeholder="কাঙ্ক্ষিত বই খুঁজুন"
             className="min-w-0 flex-1 bg-transparent text-sm text-[#0A0E2A] outline-none placeholder:text-[#9AA3AF]"
           />
           <button
@@ -156,15 +156,6 @@ export default function Navbar() {
         </div>
 
         <div className="flex shrink-0 items-center gap-3 sm:gap-6">
-          <Link
-            href="/"
-            onClick={clearSearchState}
-            className="flex flex-col items-center gap-0.5 text-[#0A0E2A] transition-colors hover:text-[#2DBDB6]"
-            aria-label="হোম"
-          >
-            <Home className="h-5 w-5" />
-            <span className="text-[10px] font-semibold leading-none">হোম</span>
-          </Link>
 
           <Link
             href="/library"
@@ -228,7 +219,7 @@ export default function Navbar() {
               handleSearch();
             }
           }}
-          placeholder="বই, লেখক বা ক্যাটাগরি নাম দিয়ে খুঁজুন"
+          placeholder="কাঙ্ক্ষিত বই খুঁজুন"
           className="min-w-0 flex-1 bg-transparent text-sm text-[#0A0E2A] outline-none placeholder:text-[#9AA3AF]"
         />
         <button

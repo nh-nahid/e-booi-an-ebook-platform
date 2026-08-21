@@ -79,18 +79,7 @@ export default function HeroSection({ statistics }: HeroSectionProps) {
 
       <div className="relative mx-auto px-5 sm:px-10">
         {/* eyebrow badge */}
-        <div className="flex justify-center pt-6 lg:pt-8">
-          <span
-            className="
-              hero-float inline-flex animate-in fade-in slide-in-from-bottom-1 items-center gap-1.5
-              rounded-full border border-[#2DBDB6]/25 bg-[#E6F7F6] px-3.5 py-1.5 text-xs font-bold
-              text-[#0B7A6E] duration-500
-            "
-          >
-            <Sparkles className="h-3.5 w-3.5" />
-            প্রতি সপ্তাহে নতুন বই যুক্ত হচ্ছে
-          </span>
-        </div>
+        
 
         {/* promo slider */}
         <div
