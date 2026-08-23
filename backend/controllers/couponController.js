@@ -1,4 +1,5 @@
 const Coupon = require("../models/Coupon");
+const User = require("../models/User");
 
 // create coupon
 async function createCoupon(req, res, next) {
@@ -58,6 +59,25 @@ async function applyCoupon(req, res, next) {
       return res.status(404).json({
         message: "Invalid coupon",
       });
+    }
+
+    // Restricted coupon (e.g. EB100) — only allowed for specific emails.
+    // Respond with the same generic "Invalid coupon" message as a missing
+    // coupon so an unauthorized user can't tell the code actually exists.
+    if (coupon.allowedEmails && coupon.allowedEmails.length > 0) {
+      const requester = await User.findById(req.user.id);
+      const requesterEmail = requester?.email?.trim().toLowerCase();
+      const isAllowed =
+        requesterEmail &&
+        coupon.allowedEmails.some(
+          (email) => email.trim().toLowerCase() === requesterEmail
+        );
+
+      if (!isAllowed) {
+        return res.status(404).json({
+          message: "Invalid coupon",
+        });
+      }
     }
 
     if (new Date() > coupon.expiryDate) {

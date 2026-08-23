@@ -167,8 +167,13 @@ async function paymentSuccess(req, res, next) {
         }
 
         // Clear cart now that payment is confirmed — deferred from
-        // createOrder for the same reason as stock above.
-        await Cart.deleteMany({ user: order.user });
+        // createOrder for the same reason as stock above. Skipped for a
+        // "buy now" order (fromCart: false): its items never came from
+        // the cart, so clearing here would wipe unrelated items the
+        // customer still has sitting in their real cart.
+        if (order.fromCart !== false) {
+            await Cart.deleteMany({ user: order.user });
+        }
 
         // Customer
         const user = await User.findById(order.user);

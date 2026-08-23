@@ -21,7 +21,7 @@ const GATEWAY_MAP = {
 // order create
 async function createOrder(req, res, next) {
   try {
-    const { shippingAddress, paymentMethod, couponCode } = req.body;
+    const { shippingAddress, paymentMethod, couponCode, items } = req.body;
 
     const gateway = GATEWAY_MAP[paymentMethod];
 
@@ -31,14 +31,42 @@ async function createOrder(req, res, next) {
       });
     }
 
-    const cartItems = await Cart.find({
-      user: req.user.id,
-    }).populate("book");
+    // "Buy now" — a direct single-book order placed from a book page,
+    // skipping the cart entirely. When `items` is sent, source straight
+    // from the requested books instead of the user's Cart, and never
+    // touch the Cart collection for this order.
+    const isBuyNow = Array.isArray(items) && items.length > 0;
 
-    if (!cartItems.length) {
-      return res.status(400).json({
-        message: "Cart is empty",
-      });
+    let sourceItems;
+
+    if (isBuyNow) {
+      sourceItems = [];
+
+      for (const { bookId, quantity } of items) {
+        const book = await Book.findById(bookId);
+
+        if (!book) {
+          return res.status(404).json({
+            message: "Book not found",
+          });
+        }
+
+        sourceItems.push({ book, quantity: quantity > 0 ? quantity : 1 });
+      }
+    } else {
+      const cartItems = await Cart.find({
+        user: req.user.id,
+      }).populate("book");
+
+      if (!cartItems.length) {
+        return res.status(400).json({
+          message: "Cart is empty",
+        });
+      }
+
+      sourceItems = cartItems
+        .filter((item) => item.book)
+        .map((item) => ({ book: item.book, quantity: item.quantity }));
     }
 
     const orderItems = [];
@@ -46,22 +74,18 @@ async function createOrder(req, res, next) {
 
     let hasDigital = false;
 
-    for (const item of cartItems) {
-      const book = item.book;
-
-      if (!book) continue;
-
+    for (const { book, quantity } of sourceItems) {
       orderItems.push({
         book: book._id,
-        quantity: item.quantity,
+        quantity,
         price: book.price,
         bookType: book.bookType,
       });
 
-      totalAmount += item.quantity * book.price;
+      totalAmount += quantity * book.price;
 
       if (book.bookType === "Physical") {
-        if (book.stock < item.quantity) {
+        if (book.stock < quantity) {
           return res.status(400).json({
             message: `${book.title} is out of stock`,
           });
@@ -93,6 +117,26 @@ async function createOrder(req, res, next) {
         return res.status(400).json({
           message: "Invalid coupon",
         });
+      }
+
+      // Restricted coupon (e.g. EB100) — only allowed for specific emails.
+      // Same generic message as a missing coupon, and this mirrors the
+      // check in couponController.applyCoupon so the restriction can't be
+      // bypassed by skipping the preview step and placing the order directly.
+      if (coupon.allowedEmails && coupon.allowedEmails.length > 0) {
+        const requester = await User.findById(req.user.id);
+        const requesterEmail = requester?.email?.trim().toLowerCase();
+        const isAllowed =
+          requesterEmail &&
+          coupon.allowedEmails.some(
+            (email) => email.trim().toLowerCase() === requesterEmail
+          );
+
+        if (!isAllowed) {
+          return res.status(400).json({
+            message: "Invalid coupon",
+          });
+        }
       }
 
       if (new Date() > coupon.expiryDate) {
@@ -146,21 +190,25 @@ async function createOrder(req, res, next) {
 
       paymentStatus: "pending",
       orderStatus: "pending",
+
+      fromCart: !isBuyNow,
     });
 
     await order.save();
 
     if (gateway === "cod") {
-      for (const item of cartItems) {
-        if (item.book.bookType === "Physical") {
-          item.book.stock -= item.quantity;
-          await item.book.save();
+      for (const { book, quantity } of sourceItems) {
+        if (book.bookType === "Physical") {
+          book.stock -= quantity;
+          await book.save();
         }
       }
 
-      await Cart.deleteMany({
-        user: req.user.id,
-      });
+      if (!isBuyNow) {
+        await Cart.deleteMany({
+          user: req.user.id,
+        });
+      }
     }
 
     // Send response immediately — don't make the customer wait on email

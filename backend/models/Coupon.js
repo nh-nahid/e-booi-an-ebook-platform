@@ -37,6 +37,13 @@ const couponSchema = new mongoose.Schema(
             type: Boolean,
             default: true,
         },
+        // When non-empty, only these emails (case-insensitive) may apply
+        // this coupon. Empty array = open to everyone (default behaviour
+        // for normal coupons). Used for restricted/secret codes like EB100.
+        allowedEmails: {
+            type: [String],
+            default: [],
+        },
     },
     {
         timestamps: true,

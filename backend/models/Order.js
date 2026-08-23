@@ -34,6 +34,15 @@ const orderSchema = new mongoose.Schema(
       required: true,
     },
 
+    // true when these items were pulled from the user's Cart (normal
+    // checkout). false for a direct "buy now" order placed straight from
+    // a book page — those items never touched the Cart collection, so
+    // the cart must NOT be cleared once this order is paid/placed.
+    fromCart: {
+      type: Boolean,
+      default: true,
+    },
+
     orderStatus: {
       type: String,
       enum: ["pending", "processing", "shipped", "delivered", "cancelled"],
