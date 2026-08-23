@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ChevronLeft, AlertCircle } from "lucide-react";
 import { isAxiosError } from "axios";
 import { toast } from "sonner";
@@ -18,6 +18,7 @@ import OrderTotalCard from "@/features/checkout/components/order-total-card";
 
 import { useAuth } from "@/hooks/use-auth";
 import { useCart } from "@/features/cart/hooks/use-cart";
+import { useBook } from "@/features/books/hooks/use-book";
 
 import {
   useCreateOrder,
@@ -44,8 +45,18 @@ const initialAddress: ShippingAddress = {
 
 export default function CheckoutPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { user, isLoading: authLoading } = useAuth();
-  const { data: cart = [], isLoading } = useCart();
+
+  // "Buy now" — arriving from a book page's Read button with ?bookId=...
+  // means checkout straight from that one book, never touching the cart.
+  const buyNowBookId = searchParams.get("bookId");
+  const isBuyNow = !!buyNowBookId;
+
+  const { data: cart = [], isLoading: cartLoading } = useCart();
+  const { data: buyNowBook, isLoading: buyNowLoading } = useBook(
+    buyNowBookId ?? "",
+  );
   const createOrderMutation = useCreateOrder();
   const paymentMutation = useInitiatePayment();
   const applyCouponMutation = useApplyCoupon();
@@ -53,16 +64,33 @@ export default function CheckoutPage() {
   const [discount, setDiscount] = useState(0);
   const [couponCode, setCouponCode] = useState<string | null>(null);
 
-  const cartItems: CheckoutItem[] = cart.map((item) => ({
-    id: item._id,
-    bookId: item.book._id,
-    title: item.book.title,
-    author: item.book.author,
-    coverImage: item.book.coverImage,
-    price: item.book.price,
-    quantity: item.quantity,
-    format: item.book.bookType === "Digital" ? "digital" : "physical",
-  }));
+  const isLoading = isBuyNow ? buyNowLoading : cartLoading;
+
+  const cartItems: CheckoutItem[] = isBuyNow
+    ? buyNowBook
+      ? [
+          {
+            id: buyNowBook._id,
+            bookId: buyNowBook._id,
+            title: buyNowBook.title,
+            author: buyNowBook.author,
+            coverImage: buyNowBook.coverImage,
+            price: buyNowBook.price,
+            quantity: 1,
+            format: buyNowBook.bookType === "Digital" ? "digital" : "physical",
+          },
+        ]
+      : []
+    : cart.map((item) => ({
+        id: item._id,
+        bookId: item.book._id,
+        title: item.book.title,
+        author: item.book.author,
+        coverImage: item.book.coverImage,
+        price: item.book.price,
+        quantity: item.quantity,
+        format: item.book.bookType === "Digital" ? "digital" : "physical",
+      }));
 
   const hasPhysicalItems = cartItems.some((item) => item.format === "physical");
   const hasOnlyDigitalItems = !hasPhysicalItems;
@@ -133,7 +161,13 @@ export default function CheckoutPage() {
       <div className="min-h-screen bg-[#F7F9FA]">
         <Navbar />
         <div className="container mx-auto px-5 py-8 sm:px-10 lg:px-[60px]">
-          <EmptyCheckout />
+          {isBuyNow ? (
+            <div className="flex min-h-[40vh] items-center justify-center text-sm text-[#6B7280]">
+              বইটি পাওয়া যায়নি।
+            </div>
+          ) : (
+            <EmptyCheckout />
+          )}
         </div>
         <SiteFooter />
       </div>
@@ -164,6 +198,9 @@ export default function CheckoutPage() {
   shippingAddress: hasPhysicalItems ? shipping : undefined,
   paymentMethod,
   couponCode: couponCode ?? undefined,
+  items: isBuyNow
+    ? cartItems.map((item) => ({ bookId: item.bookId, quantity: item.quantity }))
+    : undefined,
 });
 
       const order = response.order;

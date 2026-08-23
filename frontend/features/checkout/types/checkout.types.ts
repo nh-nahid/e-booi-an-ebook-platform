@@ -43,10 +43,18 @@ export interface CheckoutSummary {
    API Types
 ========================== */
 
+export interface BuyNowItem {
+  bookId: string;
+  quantity: number;
+}
+
 export interface CreateOrderPayload {
   shippingAddress?: ShippingAddress;
   paymentMethod: PaymentMethodType;
   couponCode?: string;
+  // When set, the order is created straight from these books instead of
+  // the user's cart — used for the "buy now" flow (no add-to-cart step).
+  items?: BuyNowItem[];
 }
 
 export interface Order {

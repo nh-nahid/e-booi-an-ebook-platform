@@ -37,7 +37,7 @@ export default function BooksToolbar({
       <div>
         <p className="text-xs text-[#6B7280]">
               <span className="font-semibold text-[#0A0E2A]">
-                সর্বমোট {resultCount ?? 0} টি বই
+                সর্বমোট -{resultCount ?? 0} টি বই
               </span> 
             </p>
       </div>

@@ -155,16 +155,13 @@ export default function BookHero({ book }: BookHeroProps) {
     }
   };
 
-  const handleWhatsappShare = () => {
+  const handleWhatsappContact = () => {
     if (typeof window === "undefined") return;
 
-    const shareUrl = canPreview ? previewUrl : window.location.href;
-    const message = canPreview
-      ? `${book.title} — এর কিছু পাতা পড়ে দেখুন: ${shareUrl}`
-      : `${book.title}: ${shareUrl}`;
+    const message = `আমি "${book.title}" বইটি সম্পর্কে জানতে চাই। লিংক: ${window.location.href}`;
 
     window.open(
-      `https://wa.me/?text=${encodeURIComponent(message)}`,
+      `https://wa.me/8801791148655?text=${encodeURIComponent(message)}`,
       "_blank",
       "noopener,noreferrer",
     );
@@ -322,8 +319,8 @@ export default function BookHero({ book }: BookHeroProps) {
 
         <button
           type="button"
-          onClick={() => (canPreview ? setPreviewOpen(true) : undefined)}
-          disabled={!canPreview}
+          onClick={() => router.push(`/checkout?bookId=${book.id}`)}
+          disabled={!isPreOrder && book.stock === 0}
           className="flex flex-col items-center justify-center gap-0.5 border-r border-[#E1E5E8] bg-[#2DBDB6] py-2 text-white transition-colors hover:bg-[#1f9d97] disabled:cursor-not-allowed disabled:bg-[#E1E5E8] disabled:text-[#9AA3AF]"
         >
           <BookOpen className="h-4 w-4" />
@@ -332,16 +329,11 @@ export default function BookHero({ book }: BookHeroProps) {
 
         <button
           type="button"
-          onClick={handleWhatsappShare}
+          onClick={handleWhatsappContact}
           className="relative flex flex-col items-center justify-center gap-0.5 bg-white py-2 text-[#25D366] transition-colors hover:bg-[#F0FDF6]"
         >
-          {canPreview && (
-            <span className="absolute right-1.5 top-1 rounded bg-red-500 px-1 text-[8px] font-bold leading-tight text-white">
-              PDF
-            </span>
-          )}
           <FaWhatsapp className="h-4 w-4" />
-          <span className="text-[10px] font-bold text-[#0A0E2A]">শেয়ার</span>
+          <span className="text-[10px] font-bold text-[#0A0E2A]">যোগাযোগ</span>
         </button>
       </div>
 
