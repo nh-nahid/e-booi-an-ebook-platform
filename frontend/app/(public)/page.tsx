@@ -41,9 +41,6 @@ export default async function HomePage() {
 
       <PreOrderSection books={homeData.preOrderBooks} />
 
-      {/* <TestimonialSection /> */}
-      <TrustSection />
-
       <SiteFooter />
     </div>
   );
