@@ -102,16 +102,13 @@ export default function SiteFooter() {
           <div className="flex flex-col gap-3 text-sm text-[#A7B0C8]">
             <div className="flex items-center gap-2">
               <Mail className="h-4 w-4 shrink-0 text-[#2DBDB6]" />
-              support@e-booi.com
+              ebooi.bd@gmail.com
             </div>
             <div className="flex items-center gap-2">
               <Phone className="h-4 w-4 shrink-0 text-[#2DBDB6]" />
-              +880 1728171519
+              +880 1791148655
             </div>
-            <div className="flex items-center gap-2">
-              <MapPin className="h-4 w-4 shrink-0 text-[#2DBDB6]" />
-              মেহেরপুর, খুলনা, বাংলাদেশ
-            </div>
+            
           </div>
         </div>
       </div>
