@@ -209,7 +209,7 @@ const handleApplyPromo = async (code: string) => {
   return (
     <div className="min-h-screen bg-[#F7F9FA]">
       <div className="container mx-auto px-5 py-8 sm:px-10 lg:px-[60px]">
-        <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+        <div className="mb-2.5 flex flex-wrap items-center justify-between gap-3 sm:mb-6">
           <div>
             <Link
               href="/books"
@@ -228,9 +228,9 @@ const handleApplyPromo = async (code: string) => {
             <button
               onClick={handleClearCart}
               disabled={clearMutation.isPending}
-              className="flex items-center gap-1.5 rounded-full border border-[#E1E5E8] px-3.5 py-2 text-xs font-bold text-[#6B7280] hover:border-red-300 hover:text-red-600"
+              className="flex items-center gap-1 rounded border border-[#E1E5E8] px-2.5 py-1 text-[10px] font-bold text-[#6B7280] hover:border-red-300 hover:text-red-600 sm:gap-1.5 sm:px-3.5 sm:py-2 sm:text-xs"
             >
-              <Trash2 className="h-3.5 w-3.5" />
+              <Trash2 className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
               কার্ট খালি করুন
             </button>
           )}

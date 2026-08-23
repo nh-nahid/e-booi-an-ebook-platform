@@ -43,12 +43,12 @@ export default function CartItem({
     <div
       style={{ animationDelay: `${Math.min(index, 6) * 0.05}s` }}
       className="
-        flex animate-in fade-in slide-in-from-bottom-1 gap-4 rounded-2xl
+        flex animate-in fade-in slide-in-from-bottom-1 gap-4 rounded
         border border-[#E1E5E8] bg-white p-4 duration-500 fill-mode-both
         transition-all hover:shadow-[0_10px_24px_rgba(10,14,42,0.05)]
       "
     >
-      <div className="relative h-24 w-16 shrink-0 overflow-hidden rounded-lg border border-[#E1E5E8] bg-gradient-to-br from-[#dfe7ea] to-[#cfd8db] sm:h-28 sm:w-20">
+      <div className="relative h-24 w-16 shrink-0 overflow-hidden rounded border border-[#E1E5E8] bg-gradient-to-br from-[#dfe7ea] to-[#cfd8db] sm:h-28 sm:w-20">
         <Image
           fill
           src={imageUrl}
@@ -69,14 +69,14 @@ export default function CartItem({
                 লেখক: {item.author}
               </p>
 
-              <span className="mt-1.5 inline-block rounded-full bg-[#F7F9FA] px-2 py-0.5 text-[10px] font-semibold text-[#6B7280]">
+              <span className="mt-1.5 inline-block rounded bg-[#F7F9FA] px-2 py-0.5 text-[10px] font-semibold text-[#6B7280]">
                 {item.bookType}
               </span>
             </div>
 
             <button
               onClick={() => onRemove(item.id)}
-              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[#9AA3AF] transition-all duration-200 hover:bg-red-50 hover:text-red-600"
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded text-[#9AA3AF] transition-all duration-200 hover:bg-red-50 hover:text-red-600"
               aria-label="Remove item"
             >
               <Trash2 className="h-4 w-4" />
@@ -85,7 +85,7 @@ export default function CartItem({
         </div>
 
         <div className="mt-2 flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center rounded-full border border-[#E1E5E8]">
+          <div className="flex items-center rounded border border-[#E1E5E8]">
             <button
               onClick={() =>
                 onQuantityChange(item.id, Math.max(1, item.quantity - 1))

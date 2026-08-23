@@ -54,7 +54,7 @@ export default function OrderSummary({
   };
 
   return (
-    <div className="rounded-2xl border border-[#E1E5E8] bg-white p-5 animate-in fade-in slide-in-from-right-2 duration-500 lg:sticky lg:top-24">
+    <div className="rounded border border-[#E1E5E8] bg-white p-5 animate-in fade-in slide-in-from-right-2 duration-500 lg:sticky lg:top-24">
       <h3 className="text-base font-bold text-[#0A0E2A]">অর্ডার সামারি</h3>
 
       {/* promo code */}
@@ -70,7 +70,7 @@ export default function OrderSummary({
               }}
               placeholder="প্রোমো কোড"
               className="
-                h-10 w-full rounded-full border border-[#E1E5E8] pl-10 pr-3 text-xs font-semibold
+                h-10 w-full rounded border border-[#E1E5E8] pl-10 pr-3 text-xs font-semibold
                 text-[#0A0E2A] outline-none transition-all duration-200 placeholder:text-[#9AA3AF]
                 focus:border-[#2DBDB6] focus:shadow-[0_0_0_4px_rgba(45,189,182,0.15)]
               "
@@ -79,7 +79,7 @@ export default function OrderSummary({
           <button
             onClick={handleApplyPromo}
             disabled={promoStatus === "loading" || promoStatus === "success"}
-            className="shrink-0 rounded-full border border-[#0A0E2A] px-4 text-xs font-bold text-[#0A0E2A] transition-colors hover:bg-[#0A0E2A] hover:text-white"
+            className="shrink-0 rounded border border-[#0A0E2A] px-4 text-xs font-bold text-[#0A0E2A] transition-colors hover:bg-[#0A0E2A] hover:text-white"
           >
             {promoStatus === "loading" ? (
               <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -140,7 +140,7 @@ export default function OrderSummary({
         disabled={checkingOut || itemCount === 0}
         className="
           group relative mt-5 flex h-12 w-full items-center justify-center gap-2 overflow-hidden
-          rounded-full border-0 bg-gradient-to-br from-[#2DBDB6] to-[#1f9d97] text-sm font-bold
+          rounded border-0 bg-gradient-to-br from-[#2DBDB6] to-[#1f9d97] text-sm font-bold
           text-white shadow-[0_4px_12px_rgba(45,189,182,0.35)] transition-transform duration-150
           hover:-translate-y-0.5 hover:shadow-[0_8px_18px_rgba(45,189,182,0.4)]
           active:translate-y-0 active:scale-[0.98] disabled:opacity-50

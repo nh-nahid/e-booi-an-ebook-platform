@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { BookOpen, Download, Loader2 } from "lucide-react";
 import { FaFacebook, FaWhatsapp } from "react-icons/fa";
@@ -72,6 +73,12 @@ export default function LibraryPage() {
             <p className="text-xs text-[#6B7280]">
               eBook কিনুন এবং সাথে সাথে পড়া শুরু করুন
             </p>
+            <Link
+              href="/books"
+              className="mt-1 flex items-center gap-1.5 rounded-full bg-[#2DBDB6] px-5 py-2.5 text-sm font-bold text-white transition-opacity hover:opacity-90"
+            >
+              বই কিনুন
+            </Link>
           </div>
         ) : (
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5">

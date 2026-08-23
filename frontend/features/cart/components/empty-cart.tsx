@@ -3,8 +3,8 @@ import { ShoppingCart, ArrowRight } from "lucide-react";
 
 export default function EmptyCart() {
   return (
-    <div className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-[#E1E5E8] bg-white px-6 py-16 text-center animate-in fade-in zoom-in-95 duration-500">
-      <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#E6F7F6]">
+    <div className="flex flex-col items-center justify-center rounded border border-dashed border-[#E1E5E8] bg-white px-6 py-16 text-center animate-in fade-in zoom-in-95 duration-500">
+      <div className="flex h-20 w-20 items-center justify-center rounded bg-[#E6F7F6]">
         <ShoppingCart className="h-9 w-9 text-[#2DBDB6]" />
       </div>
 
@@ -16,7 +16,7 @@ export default function EmptyCart() {
       <Link
         href="/books"
         className="
-          group relative mt-6 flex items-center gap-2 overflow-hidden rounded-full border-0
+          group relative mt-6 flex items-center gap-2 overflow-hidden rounded border-0
           bg-gradient-to-br from-[#2DBDB6] to-[#1f9d97] px-6 py-3 text-sm font-bold text-white
           shadow-[0_4px_12px_rgba(45,189,182,0.35)] transition-transform duration-150
           hover:-translate-y-0.5 hover:shadow-[0_8px_18px_rgba(45,189,182,0.4)]
