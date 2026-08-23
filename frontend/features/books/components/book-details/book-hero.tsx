@@ -176,7 +176,7 @@ export default function BookHero({ book }: BookHeroProps) {
       <div className="grid grid-cols-[128px_1fr] gap-4 sm:grid-cols-[168px_1fr] sm:gap-6 lg:grid-cols-[220px_1fr] lg:gap-8">
         {/* cover column */}
         <div className="flex h-full flex-col items-center gap-2.5">
-          <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl border border-[#E1E5E8] bg-gradient-to-br from-[#1b2947] to-[#0A0E2A] shadow-[0_10px_24px_rgba(10,14,42,0.14)]">
+          <div className="relative aspect-[3/4] w-full overflow-hidden rounded border border-[#E1E5E8] bg-gradient-to-br from-[#1b2947] to-[#0A0E2A] shadow-[0_10px_24px_rgba(10,14,42,0.14)]">
             {book.coverImage ? (
               <Image
                 fill
@@ -193,17 +193,17 @@ export default function BookHero({ book }: BookHeroProps) {
 
             {badge && (
               <span
-                className={`absolute left-2 top-2 flex items-center gap-1 rounded-full px-2 py-1 text-[10px] font-bold text-white ${
+                className={`absolute left-1.5 top-1.5 flex items-center gap-0.5 rounded px-1.5 py-0.5 text-[8px] font-bold text-white sm:left-2 sm:top-2 sm:gap-1 sm:rounded-full sm:px-2 sm:py-1 sm:text-[10px] ${
                   badge === "pre-order" ? "bg-[#0A0E2A]" : "bg-[#2DBDB6]"
                 }`}
               >
                 {badge === "pre-order" ? (
                   <>
-                    <Clock className="h-2.5 w-2.5" /> প্রি-অর্ডার
+                    <Clock className="h-2 w-2 sm:h-2.5 sm:w-2.5" /> প্রি-অর্ডার
                   </>
                 ) : (
                   <>
-                    <Flame className="h-2.5 w-2.5" /> জনপ্রিয়
+                    <Flame className="h-2 w-2 sm:h-2.5 sm:w-2.5" /> জনপ্রিয়
                   </>
                 )}
               </span>
@@ -214,7 +214,7 @@ export default function BookHero({ book }: BookHeroProps) {
             <button
               type="button"
               onClick={() => setPreviewOpen(true)}
-              className="group mt-auto flex w-full items-center justify-center gap-1 rounded-md border border-[#2DBDB6] bg-transparent px-1.5 py-1.5 text-center text-[9px] font-bold leading-tight text-[#2DBDB6] transition-all duration-200 hover:bg-[#E6F7F6] active:scale-[0.98] sm:mt-0 sm:gap-1.5 sm:px-2 sm:py-2 sm:text-[11px]"
+              className="group mt-auto flex w-full items-center justify-center gap-1 rounded border border-[#2DBDB6] bg-transparent px-1.5 py-1.5 text-center text-[9px] font-bold leading-tight text-[#2DBDB6] transition-all duration-200 hover:bg-[#E6F7F6] active:scale-[0.98] sm:mt-0 sm:gap-1.5 sm:px-2 sm:py-2 sm:text-[11px]"
             >
               <Eye className="h-3 w-3 shrink-0 sm:h-3.5 sm:w-3.5" />
               <span>কিছু অংশ পড়ে দেখুন</span>
@@ -278,7 +278,7 @@ export default function BookHero({ book }: BookHeroProps) {
             type="button"
             onClick={handleBuyNow}
             disabled={adding || (!added && !isPreOrder && book.stock === 0)}
-            className="mt-auto w-full max-w-[130px] rounded-md border border-[#2DBDB6] bg-transparent px-1.5 py-1.5 text-[9px] font-bold leading-tight text-[#2DBDB6] transition-all duration-200 hover:bg-[#E6F7F6] disabled:cursor-not-allowed disabled:opacity-50 sm:mt-3 sm:max-w-[150px] sm:px-2 sm:py-2 sm:text-[11px]"
+            className="mt-auto w-full max-w-[130px] rounded border border-[#2DBDB6] bg-transparent px-1.5 py-1.5 text-[9px] font-bold leading-tight text-[#2DBDB6] transition-all duration-200 hover:bg-[#E6F7F6] disabled:cursor-not-allowed disabled:opacity-50 sm:mt-3 sm:max-w-[150px] sm:px-2 sm:py-2 sm:text-[11px]"
           >
             {isPreOrder ? "প্রি-অর্ডার করুন" : "এখনই কিনুন"}
           </button>
@@ -286,7 +286,7 @@ export default function BookHero({ book }: BookHeroProps) {
       </div>
 
       {/* action bar */}
-      <div className="mt-4 grid grid-cols-4 overflow-hidden rounded-2xl border border-[#E1E5E8]">
+      <div className="mt-8 grid grid-cols-4 overflow-hidden rounded border border-[#E1E5E8]">
         <button
           type="button"
           onClick={() => setLiked((v) => !v)}
