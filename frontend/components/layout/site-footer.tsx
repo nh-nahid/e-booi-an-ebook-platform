@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { Mail, Phone, MapPin } from "lucide-react";
-import { FaFacebook, FaInstagram, FaYoutube } from "react-icons/fa";
+import { Mail, MapPin } from "lucide-react";
+import { FaFacebook, FaInstagram, FaYoutube, FaWhatsapp } from "react-icons/fa";
 import Image from "next/image";
 
 export default function SiteFooter() {
@@ -104,11 +104,16 @@ export default function SiteFooter() {
               <Mail className="h-4 w-4 shrink-0 text-[#2DBDB6]" />
               ebooi.bd@gmail.com
             </div>
-            <div className="flex items-center gap-2">
-              <Phone className="h-4 w-4 shrink-0 text-[#2DBDB6]" />
+            <a
+              href="https://wa.me/8801791148655"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 transition-colors hover:text-[#2DBDB6]"
+            >
+              <FaWhatsapp className="h-4 w-4 shrink-0 text-[#2DBDB6]" />
               +880 1791148655
-            </div>
-            
+            </a>
+
           </div>
         </div>
       </div>

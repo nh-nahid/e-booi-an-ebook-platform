@@ -120,33 +120,6 @@ const hasActiveFilters =
         </div>
       </div>
 
-      {/* Format */}
-      <div className="border-t border-[#F1F3F5] py-4">
-        <p className="mb-3 text-xs font-bold uppercase tracking-wide text-[#9AA3AF]">
-          Format
-        </p>
-
-        <div className="flex gap-2">
-          {BOOK_TYPES.map((type) => {
-            const active = filters.bookType === type.value;
-
-            return (
-              <button
-                key={type.value}
-                type="button"
-                onClick={() => toggleType(type.value)}
-                className={`rounded-full border px-3.5 py-1.5 text-xs font-bold transition-all ${
-                  active
-                    ? "border-[#2DBDB6] bg-[#E6F7F6] text-[#0A0E2A]"
-                    : "border-[#E1E5E8] text-[#6B7280] hover:border-[#2DBDB6]"
-                }`}
-              >
-                {type.label}
-              </button>
-            );
-          })}
-        </div>
-      </div>
 
       {/* Price */}
       <div className="border-t border-[#F1F3F5] pt-4">
