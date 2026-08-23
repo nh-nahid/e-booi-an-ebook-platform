@@ -82,7 +82,7 @@ export default function UserMenu() {
           <AvatarFallback>{initials}</AvatarFallback>
         </Avatar>
 
-        <ChevronsUpDown className="h-4 w-4 text-gray-500" />
+        <ChevronsUpDown className="h-4 w-4 text-gray-500" strokeWidth={1.25} />
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="end" className="w-64">
@@ -100,7 +100,7 @@ export default function UserMenu() {
             router.push("/profile");
           }}
         >
-          <User className="mr-2 h-4 w-4" />
+          <User className="mr-2 h-4 w-4" strokeWidth={1.25} />
           My Profile
         </DropdownMenuItem>
 
@@ -109,7 +109,7 @@ export default function UserMenu() {
             router.push("/library");
           }}
         >
-          <Library className="mr-2 h-4 w-4" />
+          <Library className="mr-2 h-4 w-4" strokeWidth={1.25} />
           My Library
         </DropdownMenuItem>
 
@@ -118,13 +118,13 @@ export default function UserMenu() {
             router.push("/orders");
           }}
         >
-          <ShoppingBag className="mr-2 h-4 w-4" />
+          <ShoppingBag className="mr-2 h-4 w-4" strokeWidth={1.25} />
           Orders
         </DropdownMenuItem>
 
         {user.role === "admin" && (
           <DropdownMenuItem onSelect={() => router.push("/admin")} className="cursor-pointer">
-            <Shield className="mr-2 h-4 w-4" />
+            <Shield className="mr-2 h-4 w-4" strokeWidth={1.25} />
             Dashboard
           </DropdownMenuItem>
         )}
@@ -137,7 +137,7 @@ export default function UserMenu() {
           disabled={isPending}
           className="text-red-600 cursor-pointer"
         >
-          <LogOut className="mr-2 h-4 w-4" />
+          <LogOut className="mr-2 h-4 w-4" strokeWidth={1.25} />
           Logout
         </DropdownMenuItem>
       </DropdownMenuContent>

@@ -48,7 +48,7 @@ export default function BookSection({ title, href = "/books", books }: BookSecti
     <section
       ref={ref}
       className={`
-        container relative mx-auto px-5 py-6 transition-all duration-700 ease-out sm:px-10 lg:px-[60px]
+        container relative mx-auto px-3 py-3 transition-all duration-700 ease-out sm:px-10 sm:py-6 lg:px-[60px]
         ${inView ? "opacity-100 translate-y-0" : "translate-y-6 opacity-0"}
       `}
     >
@@ -95,7 +95,7 @@ export default function BookSection({ title, href = "/books", books }: BookSecti
             {pages.map((pageBooks, pageIndex) => (
               <div
                 key={pageIndex}
-                className="grid w-full shrink-0 grid-cols-2 gap-3.5 sm:grid-cols-3 sm:gap-4 lg:grid-cols-6"
+                className="grid w-full shrink-0 grid-cols-2 gap-2.5 sm:gap-4 sm:grid-cols-3 lg:grid-cols-6"
               >
                 {pageBooks.map((book, index) => (
                   <BookCard key={book._id} book={book} index={pageIndex * VISIBLE_COUNT + index} />

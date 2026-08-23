@@ -6,7 +6,6 @@ import {
   Heart,
   ShoppingCart,
   BookOpen,
-  Star,
   Flame,
   Clock,
   Check,
@@ -48,7 +47,6 @@ export default function BookCard({ book, index = 0 }: BookCardProps) {
   const gradient = COVER_GRADIENTS[index % COVER_GRADIENTS.length];
 
   const oldPrice: number | undefined = undefined;
-  const rating = book.averageRating;
   const author = book.author;
   const coverImage = getCoverImageUrl(book.coverImage);
   const isPreOrder = book.isPreOrder;
@@ -109,7 +107,7 @@ export default function BookCard({ book, index = 0 }: BookCardProps) {
       href={`/books/${slug}`}
       style={{ animationDelay: `${Math.min(index, 8) * 0.06}s` }}
       className="
-        group block w-[150px] shrink-0 animate-in fade-in slide-in-from-bottom-2
+        group block w-full animate-in fade-in slide-in-from-bottom-2
         duration-500 fill-mode-both sm:w-[168px]
       "
     >
@@ -183,16 +181,7 @@ export default function BookCard({ book, index = 0 }: BookCardProps) {
         </div>
 
         {/* body */}
-        <div className="flex flex-col items-center gap-1 px-3 pb-3 pt-1 text-center">
-          {typeof rating === "number" && (
-            <div className="flex items-center gap-1">
-              <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
-              <span className="text-[11px] font-bold text-[#6B7280]">
-                {rating.toFixed(1)}
-              </span>
-            </div>
-          )}
-
+        <div className="flex flex-col items-center gap-0.5 px-3 pb-3 pt-1 text-center sm:gap-1">
           <p className="line-clamp-1 text-[13px] font-bold text-[#0A0E2A]">
             {book.title}
           </p>
@@ -200,7 +189,7 @@ export default function BookCard({ book, index = 0 }: BookCardProps) {
             <p className="line-clamp-1 text-[11px] text-[#9AA3AF]">{author}</p>
           )}
 
-          <p className="mt-0.5 text-sm font-extrabold text-[#2DBDB6]">
+          <p className="mt-0 text-sm font-extrabold text-[#2DBDB6] sm:mt-0.5">
             ৳{book.price}
             {oldPrice && oldPrice > book.price && (
               <span className="ml-1.5 text-[11px] font-medium text-[#B0B0B0] line-through">

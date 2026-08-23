@@ -467,9 +467,12 @@
 .mn-menu-icon {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   gap: 4px;
   cursor: pointer;
-  padding: 6px;
+  width: 36px;
+  height: 36px;
+  padding: 7px;
   border: none;
   background: transparent;
   border-radius: 8px;

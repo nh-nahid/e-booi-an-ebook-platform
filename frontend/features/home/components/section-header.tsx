@@ -8,12 +8,12 @@ interface SectionHeaderProps {
 
 export default function SectionHeader({ title, href = "/books" }: SectionHeaderProps) {
   return (
-    <div className="mb-5 flex items-center justify-between">
+    <div className="mb-1.5 flex items-center justify-between border-b border-[#B7BEC4] pb-1.5 sm:mb-5 sm:pb-3">
       <span
         className="
-          inline-block rounded-md bg-gradient-to-r from-[#2DBDB6] to-[#1f9d97] px-3 py-1 text-sm
-          font-bold text-white shadow-[0_4px_12px_rgba(45,189,182,0.3)]
-          transition-transform duration-300 hover:-translate-y-0.5 sm:text-base
+          inline-block rounded bg-[#DAF3F0] px-2 py-0.5 text-[11px]
+          font-bold text-[#5B6570]
+          transition-transform duration-300 hover:-translate-y-0.5 sm:rounded-md sm:px-3 sm:py-1 sm:text-base
         "
       >
         {title}
@@ -21,10 +21,10 @@ export default function SectionHeader({ title, href = "/books" }: SectionHeaderP
 
       <Link
         href={href}
-        className="group flex items-center gap-1 text-sm font-semibold text-[#2DBDB6] transition-colors hover:text-[#1f9d97]"
+        className="group flex items-center gap-0.5 text-xs font-semibold text-[#2DBDB6] transition-colors hover:text-[#1f9d97] sm:gap-1 sm:text-sm"
       >
         সব দেখুন
-        <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-1" />
+        <ArrowRight className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-1 sm:h-3.5 sm:w-3.5" />
       </Link>
     </div>
   );

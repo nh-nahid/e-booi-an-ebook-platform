@@ -21,23 +21,42 @@ const CATEGORY_IMAGES: Record<string, string> = {
   "ব্যবসা": "/images/categories/business.png",
 };
 
-const VISIBLE_COUNT = 5;
-const AUTO_PLAY_MS = 4000;
+const VISIBLE_COUNT = 4;
+const AUTO_PLAY_MS = 7000;
 
 export default function CategorySection({ categories }: CategorySectionProps) {
-  const scrollRef = useRef<HTMLDivElement>(null);
+  // Full-box slide, same technique as the hero banner: the row is
+  // transformed with CSS (not native scroll), so the whole box glides
+  // as one piece instead of the content just swapping in place.
+  const rowRef = useRef<HTMLDivElement>(null);
   const [page, setPage] = useState(0);
   const [paused, setPaused] = useState(false);
+  // viewport = visible width per page, total = full width of every card
+  // laid out in a row (including the ones currently off-screen).
+  const [dims, setDims] = useState({ viewport: 0, total: 0 });
   const pageCount = Math.max(1, Math.ceil(categories.length / VISIBLE_COUNT));
+
+  useEffect(() => {
+    const node = rowRef.current;
+    if (!node) return;
+
+    const update = () => setDims({ viewport: node.clientWidth, total: node.scrollWidth });
+    update();
+
+    const observer = new ResizeObserver(update);
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [categories.length]);
+
+  // Clamp the offset so the final page never shows a half-empty row —
+  // instead it snaps to the true end, overlapping with the previous
+  // page's tail so a full set of cards is always visible.
+  const maxOffset = Math.max(0, dims.total - dims.viewport);
+  const offset = Math.min(page * dims.viewport, maxOffset);
 
   const goToPage = useCallback(
     (next: number) => {
-      const clamped = Math.max(0, Math.min(pageCount - 1, next));
-      setPage(clamped);
-      const node = scrollRef.current;
-      if (node) {
-        node.scrollTo({ left: clamped * node.clientWidth, behavior: "smooth" });
-      }
+      setPage(Math.max(0, Math.min(pageCount - 1, next)));
     },
     [pageCount]
   );
@@ -48,107 +67,90 @@ export default function CategorySection({ categories }: CategorySectionProps) {
     if (paused || pageCount <= 1) return;
 
     const timer = setInterval(() => {
-      setPage((prev) => {
-        const next = (prev + 1) % pageCount;
-        const node = scrollRef.current;
-        if (node) {
-          node.scrollTo({ left: next * node.clientWidth, behavior: "smooth" });
-        }
-        return next;
-      });
+      setPage((prev) => (prev + 1) % pageCount);
     }, AUTO_PLAY_MS);
 
     return () => clearInterval(timer);
   }, [paused, pageCount]);
 
-  useEffect(() => {
-    const node = scrollRef.current;
-    if (!node) return;
-    const handleScroll = () => {
-      const current = Math.round(node.scrollLeft / Math.max(1, node.clientWidth));
-      setPage(current);
-    };
-    node.addEventListener("scroll", handleScroll, { passive: true });
-    return () => node.removeEventListener("scroll", handleScroll);
-  }, []);
-
   if (!categories.length) return null;
 
   return (
-    <section className="container mx-auto px-5 py-8 sm:px-10 lg:px-[60px]">
+    <section className="container mx-auto px-4 pb-2 pt-4 sm:px-10 sm:py-8 lg:px-[60px]">
       <SectionHeader title="ক্যাটাগরি সমূহ" href="/books" />
 
       <div
-        ref={scrollRef}
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
-        className="
-          flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-smooth px-1 py-4
-          sm:gap-5
-          [scrollbar-width:none] [&::-webkit-scrollbar]:hidden
-        "
+        className="overflow-hidden px-1 py-1 sm:py-4"
       >
-        {categories.map((category) => {
-          const imageSrc = CATEGORY_IMAGES[category.name];
-          return (
-            <Link
-              key={category.name}
-              href={`/books?category=${encodeURIComponent(category.name)}`}
-              className="
-                group relative flex h-[128px] w-[calc(50%-6px)] shrink-0 snap-start
-                flex-col items-center justify-start gap-1.5 rounded-xl bg-[#F5F5F4] p-2 pt-3
-                shadow-[4px_6px_0px_rgba(0,0,0,0.08),0_1px_2px_rgba(0,0,0,0.05)]
-                ring-1 ring-black/[0.04]
-                transition-all duration-300 ease-out
-                hover:-translate-y-1.5
-                hover:shadow-[8px_12px_0px_rgba(0,0,0,0.1),0_2px_4px_rgba(0,0,0,0.06)]
-                active:translate-y-0
-                active:shadow-[3px_4px_0px_rgba(0,0,0,0.1)]
-                sm:h-[168px] sm:w-[calc(33.333%-14px)] sm:gap-2 sm:p-3 sm:pt-4
-                sm:shadow-[6px_8px_0px_rgba(0,0,0,0.08),0_1px_2px_rgba(0,0,0,0.05)]
-                md:w-[calc(25%-15px)] lg:w-[calc(20%-16px)]
-              "
-            >
-              <span
+        <div
+          ref={rowRef}
+          className="flex gap-2 transition-transform duration-[900ms] ease-in-out sm:gap-5"
+          style={{ transform: `translateX(-${offset}px)` }}
+        >
+          {categories.map((category) => {
+            const imageSrc = CATEGORY_IMAGES[category.name];
+            return (
+              <Link
+                key={category.name}
+                href={`/books?category=${encodeURIComponent(category.name)}`}
                 className="
-                  relative flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-lg
-                  bg-white shadow-[0_2px_4px_rgba(0,0,0,0.08)]
-                  transition-transform duration-300 group-hover:-rotate-2 group-hover:scale-105
-                  sm:h-16 sm:w-16
+                  group relative flex h-[72px] w-[calc(25%-6px)] shrink-0
+                  flex-col items-center justify-start gap-0.5 overflow-hidden rounded-xl bg-[#F5F5F4] p-0.5 pt-0.5
+                  shadow-[4px_6px_0px_rgba(0,0,0,0.08),0_1px_2px_rgba(0,0,0,0.05)]
+                  ring-1 ring-black/[0.04]
+                  transition-all duration-300 ease-out
+                  hover:-translate-y-1.5
+                  hover:shadow-[8px_12px_0px_rgba(0,0,0,0.1),0_2px_4px_rgba(0,0,0,0.06)]
+                  active:translate-y-0
+                  active:shadow-[3px_4px_0px_rgba(0,0,0,0.1)]
+                  sm:h-[168px] sm:w-[calc(33.333%-14px)] sm:gap-2 sm:p-3 sm:pt-4
+                  sm:shadow-[6px_8px_0px_rgba(0,0,0,0.08),0_1px_2px_rgba(0,0,0,0.05)]
+                  md:w-[calc(25%-15px)] lg:w-[calc(20%-16px)]
                 "
               >
-                {imageSrc ? (
-                  <Image
-                    src={imageSrc}
-                    alt={category.name}
-                    fill
-                    sizes="64px"
-                    className="object-cover"
-                  />
-                ) : (
-                  <BookOpen className="h-6 w-6 text-[#0B7A6E] sm:h-8 sm:w-8" strokeWidth={1.75} />
-                )}
-              </span>
+                <span
+                  className="
+                    relative flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-lg
+                    bg-white shadow-[0_2px_4px_rgba(0,0,0,0.08)]
+                    transition-transform duration-300 group-hover:-rotate-2 group-hover:scale-105
+                    sm:h-20 sm:w-20
+                  "
+                >
+                  {imageSrc ? (
+                    <Image
+                      src={imageSrc}
+                      alt={category.name}
+                      fill
+                      sizes="(min-width: 1024px) 96px, (min-width: 640px) 80px, 32px"
+                      className="object-cover"
+                    />
+                  ) : (
+                    <BookOpen className="h-4 w-4 text-[#0B7A6E] sm:h-10 sm:w-10" strokeWidth={1.75} />
+                  )}
+                </span>
 
-              <span className="px-1 text-center text-[11px] font-bold leading-tight text-[#0A0E2A] line-clamp-2 sm:text-[13px]">
-                {category.name}
-              </span>
+                <span className="px-0.5 text-center text-[8px] font-bold leading-tight text-[#0A0E2A] line-clamp-2 sm:text-base">
+                  {category.name}
+                </span>
 
-              <span
-                className="
-                  mt-auto rounded-full border border-[#DADFE2] bg-white px-1.5 py-0.5
-                  text-[9px] font-semibold text-[#6B7280] sm:px-2 sm:text-[10px]
-                "
-              >
-                {category.booksCount} টি বই
-              </span>
-            </Link>
-          );
-        })}
+                <span
+                  className="
+                    mt-auto rounded-full border border-[#DADFE2] bg-white px-1 py-0.5
+                    text-[7px] font-semibold text-[#6B7280] sm:px-2.5 sm:py-1 sm:text-xs
+                  "
+                >
+                  {category.booksCount} টি বই
+                </span>
+              </Link>
+            );
+          })}
+        </div>
       </div>
 
       {pageCount > 1 && (
-        <div className="mt-4 flex justify-center gap-1.5">
+        <div className="mt-1 flex justify-center gap-1.5 sm:mt-4">
           {Array.from({ length: pageCount }).map((_, i) => (
             <button
               key={i}

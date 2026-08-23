@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export interface PromoSlide {
   id: string;
@@ -43,7 +42,7 @@ interface HeroSliderProps {
   autoPlayMs?: number;
 }
 
-export default function HeroSlider({ slides = DEFAULT_SLIDES, autoPlayMs = 5000 }: HeroSliderProps) {
+export default function HeroSlider({ slides = DEFAULT_SLIDES, autoPlayMs = 8000 }: HeroSliderProps) {
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
   const touchStartX = useRef<number | null>(null);
@@ -84,7 +83,7 @@ export default function HeroSlider({ slides = DEFAULT_SLIDES, autoPlayMs = 5000 
           onTouchEnd={handleTouchEnd}
         >
           <div
-            className="flex h-full transition-transform duration-500 ease-out"
+            className="flex h-full transition-transform duration-1000 ease-out"
             style={{ transform: `translateX(-${active * 100}%)` }}
           >
             {slides.map((slide, i) => (
@@ -105,43 +104,10 @@ export default function HeroSlider({ slides = DEFAULT_SLIDES, autoPlayMs = 5000 
             ))}
           </div>
         </div>
-
-        {slides.length > 1 && (
-          <>
-            {/* Positioned so ~40% of the button sits outside the banner's
-                left edge and ~60% overlaps it — translateX is relative to
-                the button's own width, so -40%/40% is what places the seam
-                there regardless of button size. */}
-            <button
-              onClick={prev}
-              aria-label="Previous slide"
-              className="
-                absolute left-0 top-1/2 z-10 flex h-8 w-8 -translate-x-[40%] -translate-y-1/2
-                items-center justify-center rounded-full bg-white text-[#0A0E2A] shadow-md
-                transition-all duration-200 hover:bg-[#F7F9FA]
-                sm:h-11 sm:w-11
-              "
-            >
-              <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" strokeWidth={2.25} />
-            </button>
-            <button
-              onClick={next}
-              aria-label="Next slide"
-              className="
-                absolute right-0 top-1/2 z-10 flex h-8 w-8 translate-x-[40%] -translate-y-1/2
-                items-center justify-center rounded-full bg-white text-[#0A0E2A] shadow-md
-                transition-all duration-200 hover:bg-[#F7F9FA]
-                sm:h-11 sm:w-11
-              "
-            >
-              <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" strokeWidth={2.25} />
-            </button>
-          </>
-        )}
       </div>
 
       {slides.length > 1 && (
-        <div className="mt-3 flex items-center justify-center gap-1.5">
+        <div className="mt-1.5 flex items-center justify-center gap-1.5 sm:mt-3">
           {slides.map((slide, i) => (
             <button
               key={slide.id}

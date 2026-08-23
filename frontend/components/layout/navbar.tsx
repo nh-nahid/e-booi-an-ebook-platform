@@ -106,7 +106,7 @@ export default function Navbar() {
     : "";
 
   return (
-    <header className="sticky top-0 z-40 border-b border-[#E1E5E8] bg-white px-5 py-3 sm:px-25">
+    <header className="sticky top-0 z-40 border-b border-[#E1E5E8] bg-white px-4 py-2 sm:px-25 sm:py-3">
       <div className="flex items-center justify-between gap-2 sm:gap-6">
         <div className="flex shrink-0 items-center gap-2">
           <MobileNav />
@@ -119,12 +119,12 @@ export default function Navbar() {
             <Image
               src="/logo.jpeg"
               alt="eBooi Logo"
-              width={30}
-              height={30}
+              width={36}
+              height={36}
               priority
               className="rounded-lg"
             />
-            <span className="hidden text-xl font-extrabold tracking-tight text-[#0A0E2A] sm:inline">
+            <span className="text-xl font-extrabold tracking-tight text-[#0A0E2A]">
               eB<span className="text-[#2DBDB6]">oo</span>i
             </span>
           </Link>
@@ -164,7 +164,7 @@ export default function Navbar() {
             aria-label="লাইব্রেরি"
           >
             <Library className="h-5 w-5" />
-            <span className="text-[10px] font-semibold leading-none">লাইব্রেরি</span>
+            <span className="text-[10px] font-normal leading-none">লাইব্রেরি</span>
           </Link>
 
           <Link
@@ -181,7 +181,7 @@ export default function Navbar() {
                 </span>
               )}
             </span>
-            <span className="text-[10px] font-semibold leading-none">কার্ট</span>
+            <span className="text-[10px] font-normal leading-none">কার্ট</span>
           </Link>
 
           <Link
@@ -207,7 +207,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      <div className="mt-3 flex items-center gap-2 rounded-md border border-[#E1E5E8] bg-[#F7F9FA] px-4 py-2.5 transition-colors focus-within:border-[#2DBDB6] sm:hidden">
+      <div className="mt-2 flex items-center gap-1.5 rounded-md border border-[#E1E5E8] bg-[#F7F9FA] px-2.5 py-1.5 transition-colors focus-within:border-[#2DBDB6] sm:hidden">
         <input
           value={search}
           onChange={(e) => {
@@ -220,7 +220,7 @@ export default function Navbar() {
             }
           }}
           placeholder="কাঙ্ক্ষিত বই খুঁজুন"
-          className="min-w-0 flex-1 bg-transparent text-sm text-[#0A0E2A] outline-none placeholder:text-[#9AA3AF]"
+          className="min-w-0 flex-1 bg-transparent text-xs text-[#0A0E2A] outline-none placeholder:text-[#9AA3AF]"
         />
         <button
           type="button"
@@ -228,7 +228,7 @@ export default function Navbar() {
           aria-label="Search"
           className="shrink-0 text-[#9AA3AF] transition-colors hover:text-[#2DBDB6]"
         >
-          <Search className="h-[18px] w-[18px]" />
+          <Search className="h-3.5 w-3.5" />
         </button>
       </div>
     </header>

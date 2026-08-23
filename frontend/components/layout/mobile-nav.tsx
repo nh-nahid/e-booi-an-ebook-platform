@@ -27,12 +27,17 @@ export default function MobileNav() {
   return (
     <Sheet>
 
-      {/* trigger button (no asChild) — matches the HTML's 3-bar menu icon */}
+      {/* trigger button (no asChild) — matches the HTML's 3-bar menu icon.
+          Visible only on large screens (lg+); hidden on mobile. The outer
+          div controls responsive visibility so it doesn't fight the
+          .mn-menu-icon CSS class's own `display: flex`. */}
       <SheetTrigger>
-        <div className="mn-menu-icon lg:hidden">
-          <span></span>
-          <span></span>
-          <span></span>
+        <div className="hidden lg:block">
+          <div className="mn-menu-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
         </div>
       </SheetTrigger>
 
@@ -62,7 +67,7 @@ export default function MobileNav() {
                   active ? "active" : "",
                 ].join(" ")}
               >
-                {Icon && <Icon className="mn-icon mr-2 h-4 w-4" />}
+                {Icon && <Icon className="mn-icon mr-2 h-4 w-4" strokeWidth={1.25} />}
                 {link.title}
               </Link>
             );
@@ -74,7 +79,7 @@ export default function MobileNav() {
             style={{ animationDelay: `${NAV_LINKS.length * 0.05}s` }}
             className="mn-item flex items-center rounded-2xl px-3 py-2.5"
           >
-            <Heart className="mn-icon mr-2 h-4 w-4" />
+            <Heart className="mn-icon mr-2 h-4 w-4" strokeWidth={1.25} />
             Wishlist
           </Link>
 
@@ -84,7 +89,7 @@ export default function MobileNav() {
             style={{ animationDelay: `${(NAV_LINKS.length + 1) * 0.05}s` }}
             className="mn-item flex items-center rounded-2xl px-3 py-2.5"
           >
-            <ShoppingCart className="mn-icon mr-2 h-4 w-4" />
+            <ShoppingCart className="mn-icon mr-2 h-4 w-4" strokeWidth={1.25} />
             Cart
           </Link>
 
