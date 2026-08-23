@@ -114,7 +114,7 @@ export default function HeroSlider({ slides = DEFAULT_SLIDES, autoPlayMs = 8000 
               onClick={() => goTo(i)}
               aria-label={`Go to slide ${i + 1}`}
               className={`h-1.5 rounded-full transition-all duration-300 ${
-                i === active ? "w-6 bg-[#2DBDB6]" : "w-1.5 bg-[#E1E5E8]"
+                i === active ? "w-3 bg-[#2DBDB6]" : "w-1.5 bg-[#E1E5E8]"
               }`}
             />
           ))}

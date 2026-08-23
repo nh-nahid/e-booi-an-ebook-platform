@@ -48,7 +48,7 @@ export default function BookSection({ title, href = "/books", books }: BookSecti
     <section
       ref={ref}
       className={`
-        container relative mx-auto px-3 py-3 transition-all duration-700 ease-out sm:px-10 sm:py-6 lg:px-[60px]
+        container relative mx-auto px-3 pb-3 pt-1.5 transition-all duration-700 ease-out sm:px-10 sm:py-6 lg:px-[60px]
         ${inView ? "opacity-100 translate-y-0" : "translate-y-6 opacity-0"}
       `}
     >
@@ -114,7 +114,7 @@ export default function BookSection({ title, href = "/books", books }: BookSecti
               onClick={() => goToPage(i)}
               aria-label={`পৃষ্ঠা ${i + 1}`}
               className={`h-1.5 rounded-full transition-all duration-300 ${
-                i === page ? "w-6 bg-[#2DBDB6]" : "w-1.5 bg-[#E1E5E8]"
+                i === page ? "w-3 bg-[#2DBDB6]" : "w-1.5 bg-[#E1E5E8]"
               }`}
             />
           ))}

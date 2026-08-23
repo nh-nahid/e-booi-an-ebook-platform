@@ -76,7 +76,7 @@ export default function CategorySection({ categories }: CategorySectionProps) {
   if (!categories.length) return null;
 
   return (
-    <section className="container mx-auto px-4 pb-2 pt-4 sm:px-10 sm:py-8 lg:px-[60px]">
+    <section className="container mx-auto px-4 pb-1 pt-4 sm:px-10 sm:py-8 lg:px-[60px]">
       <SectionHeader title="ক্যাটাগরি সমূহ" href="/books" />
 
       <div
@@ -157,7 +157,7 @@ export default function CategorySection({ categories }: CategorySectionProps) {
               onClick={() => goToPage(i)}
               aria-label={`পৃষ্ঠা ${i + 1}`}
               className={`h-1.5 rounded-full transition-all duration-300 ${
-                i === page ? "w-6 bg-[#2DBDB6]" : "w-1.5 bg-[#E1E5E8]"
+                i === page ? "w-3 bg-[#2DBDB6]" : "w-1.5 bg-[#E1E5E8]"
               }`}
             />
           ))}

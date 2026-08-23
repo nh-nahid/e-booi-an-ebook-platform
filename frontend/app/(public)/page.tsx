@@ -28,7 +28,7 @@ export default async function HomePage() {
 
 
       <BookSection
-        title="নতুন বই"
+        title="নতুন প্রকাশিত বই"
         href="/books?sort=latest"
         books={homeData.latestBooks}
       />
