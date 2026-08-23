@@ -81,7 +81,7 @@ export default function BookHero({ book }: BookHeroProps) {
   const coverUrl = getCoverImageUrl(book.coverImage);
 
   const stockLabel = isPreOrder
-    ? "প্রি-অর্ডার উপলব্ধ"
+    ? "প্রি-অর্ডার চলমান"
     : book.stock > 0
       ? `স্টকে আছে (${bn(book.stock)} কপি)`
       : "স্টক নেই";
@@ -175,7 +175,7 @@ export default function BookHero({ book }: BookHeroProps) {
     <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
       <div className="grid grid-cols-[128px_1fr] gap-4 sm:grid-cols-[168px_1fr] sm:gap-6 lg:grid-cols-[220px_1fr] lg:gap-8">
         {/* cover column */}
-        <div className="flex flex-col items-center gap-2.5">
+        <div className="flex h-full flex-col items-center gap-2.5">
           <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl border border-[#E1E5E8] bg-gradient-to-br from-[#1b2947] to-[#0A0E2A] shadow-[0_10px_24px_rgba(10,14,42,0.14)]">
             {book.coverImage ? (
               <Image
@@ -214,17 +214,16 @@ export default function BookHero({ book }: BookHeroProps) {
             <button
               type="button"
               onClick={() => setPreviewOpen(true)}
-              className="group relative flex w-full items-center justify-center gap-1 overflow-hidden rounded-full bg-gradient-to-r from-[#2DBDB6] to-[#1f9d97] px-1.5 py-1.5 text-center text-[9px] font-bold leading-tight text-white shadow-[0_4px_12px_rgba(45,189,182,0.45)] ring-2 ring-[#2DBDB6]/25 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_18px_rgba(45,189,182,0.55)] active:translate-y-0 active:scale-[0.98] sm:gap-1.5 sm:px-2 sm:py-2 sm:text-[11px]"
+              className="group mt-auto flex w-full items-center justify-center gap-1 rounded-md border border-[#2DBDB6] bg-transparent px-1.5 py-1.5 text-center text-[9px] font-bold leading-tight text-[#2DBDB6] transition-all duration-200 hover:bg-[#E6F7F6] active:scale-[0.98] sm:mt-0 sm:gap-1.5 sm:px-2 sm:py-2 sm:text-[11px]"
             >
-              <span className="absolute inset-0 -translate-x-[120%] bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-500 group-hover:translate-x-[120%]" />
-              <Eye className="relative h-3 w-3 shrink-0 sm:h-3.5 sm:w-3.5" />
-              <span className="relative">কিছু অংশ পড়ে দেখুন</span>
+              <Eye className="h-3 w-3 shrink-0 sm:h-3.5 sm:w-3.5" />
+              <span>কিছু অংশ পড়ে দেখুন</span>
             </button>
           )}
         </div>
 
         {/* info column */}
-        <div className="min-w-0">
+        <div className="flex h-full min-w-0 flex-col">
           <div className="flex items-start justify-between gap-2">
             <h1 className="text-xl font-extrabold leading-snug text-[#0A0E2A] sm:text-2xl">
               {book.title}
@@ -239,13 +238,13 @@ export default function BookHero({ book }: BookHeroProps) {
             </button>
           </div>
 
-          <p className="mt-1 text-sm text-[#6B7280]">{book.author}</p>
+          <p className=" text-sm text-[#6B7280]">{book.author}</p>
 
-          <span className="mt-2 inline-block rounded-full bg-[#E6F7F6] px-3 py-1 text-xs font-bold text-[#0A0E2A]">
+          <span className=" inline-block rounded-full text-xs font-bold text-[#0a0e2a93]">
             {book.category}
           </span>
 
-          <div className="mt-2.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[#6B7280]">
+          <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[#6B7280]">
             <span className="flex items-center gap-1">
               <Eye className="h-3.5 w-3.5" /> {bn(book.views)} ভিউ
             </span>
@@ -254,7 +253,7 @@ export default function BookHero({ book }: BookHeroProps) {
             </span>
           </div>
 
-          <div className="mt-3 flex flex-wrap items-center gap-2">
+          <div className="mt-1 flex flex-wrap items-center gap-2">
             <span className="text-2xl font-extrabold text-[#0A0E2A] sm:text-3xl">
               ৳{bn(book.price)}
             </span>
@@ -279,7 +278,7 @@ export default function BookHero({ book }: BookHeroProps) {
             type="button"
             onClick={handleBuyNow}
             disabled={adding || (!added && !isPreOrder && book.stock === 0)}
-            className="mt-3 h-8 w-full max-w-[150px] rounded-md border border-[#2DBDB6] bg-[#2DBDB6] px-4 text-xs font-bold text-white shadow-[0_4px_12px_rgba(45,189,182,0.35)] transition-all duration-200 hover:bg-transparent hover:text-[#2DBDB6] hover:shadow-none disabled:cursor-not-allowed disabled:opacity-50"
+            className="mt-auto w-full max-w-[130px] rounded-md border border-[#2DBDB6] bg-transparent px-1.5 py-1.5 text-[9px] font-bold leading-tight text-[#2DBDB6] transition-all duration-200 hover:bg-[#E6F7F6] disabled:cursor-not-allowed disabled:opacity-50 sm:mt-3 sm:max-w-[150px] sm:px-2 sm:py-2 sm:text-[11px]"
           >
             {isPreOrder ? "প্রি-অর্ডার করুন" : "এখনই কিনুন"}
           </button>
@@ -296,7 +295,7 @@ export default function BookHero({ book }: BookHeroProps) {
           }`}
           aria-label="Wishlist"
         >
-          <Heart className={`h-4 w-4 ${liked ? "fill-red-500" : ""}`} />
+          <Heart className={`h-6 w-6 ${liked ? "fill-red-500" : ""}`} />
         </button>
 
         <button
@@ -309,11 +308,11 @@ export default function BookHero({ book }: BookHeroProps) {
           aria-label={added ? "কার্টে যান" : "কার্টে যোগ করুন"}
         >
           {addToCartMutation.isPending ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
+            <Loader2 className="h-6 w-6 animate-spin" />
           ) : added ? (
-            <Check className="h-4 w-4" />
+            <Check className="h-6 w-6" />
           ) : (
-            <ShoppingCart className="h-4 w-4" />
+            <ShoppingCart className="h-6 w-6" />
           )}
         </button>
 
@@ -321,18 +320,18 @@ export default function BookHero({ book }: BookHeroProps) {
           type="button"
           onClick={() => router.push(`/checkout?bookId=${book.id}`)}
           disabled={!isPreOrder && book.stock === 0}
-          className="flex flex-col items-center justify-center gap-0.5 border-r border-[#E1E5E8] bg-[#2DBDB6] py-2 text-white transition-colors hover:bg-[#1f9d97] disabled:cursor-not-allowed disabled:bg-[#E1E5E8] disabled:text-[#9AA3AF]"
+          className="flex flex-col items-center justify-center gap-0.5 border-r border-[#E1E5E8] bg-[#2DBDB6] py-1 text-white transition-colors hover:bg-[#1f9d97] disabled:cursor-not-allowed disabled:bg-[#E1E5E8] disabled:text-[#9AA3AF]"
         >
-          <BookOpen className="h-4 w-4" />
+          <BookOpen className="h-6 w-6" />
           <span className="text-[10px] font-bold">Read</span>
         </button>
 
         <button
           type="button"
           onClick={handleWhatsappContact}
-          className="relative flex flex-col items-center justify-center gap-0.5 bg-white py-2 text-[#25D366] transition-colors hover:bg-[#F0FDF6]"
+          className="relative flex flex-col items-center justify-center gap-0.5 bg-white py-1 text-[#25D366] transition-colors hover:bg-[#F0FDF6]"
         >
-          <FaWhatsapp className="h-4 w-4" />
+          <FaWhatsapp className="h-6 w-6" />
           <span className="text-[10px] font-bold text-[#0A0E2A]">যোগাযোগ</span>
         </button>
       </div>
