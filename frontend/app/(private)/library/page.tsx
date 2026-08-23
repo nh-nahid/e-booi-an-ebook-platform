@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { BookOpen, Download, Loader2 } from "lucide-react";
+import { FaFacebook, FaWhatsapp } from "react-icons/fa";
 import { toast } from "sonner";
 import { isAxiosError } from "axios";
 
@@ -55,9 +56,9 @@ export default function LibraryPage() {
     <div className="min-h-screen bg-[#F7F9FA]">
       <Navbar />
 
-      <div className="container mx-auto px-5 py-8 sm:px-10 lg:px-[60px]">
-        <h1 className="mb-6 text-2xl font-extrabold text-[#0A0E2A] sm:text-3xl">
-          আমার লাইব্রেরি
+      <div className="container mx-auto px-5 py-3 sm:px-10 sm:py-8 lg:px-[60px]">
+        <h1 className="mb-2 text-lg font-extrabold text-[#0A0E2A] sm:mb-6 sm:text-3xl">
+          আমার বইসমূহ
         </h1>
 
         {books.length === 0 ? (
@@ -73,7 +74,7 @@ export default function LibraryPage() {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5">
             {books.map((book) => {
               const isDownloading =
                 downloadMutation.isPending &&
@@ -93,9 +94,9 @@ export default function LibraryPage() {
               return (
                 <div
                   key={book._id}
-                  className="group rounded-2xl border border-[#E1E5E8] bg-white p-3 transition-shadow hover:shadow-[0_10px_24px_rgba(10,14,42,0.08)]"
+                  className="group rounded border border-[#E1E5E8] bg-white p-1.5 transition-shadow hover:shadow-[0_10px_24px_rgba(10,14,42,0.08)] sm:p-3"
                 >
-                  <div className="aspect-[3/4] w-full overflow-hidden rounded-xl border border-[#E1E5E8] bg-gradient-to-br from-[#dfe7ea] to-[#cfd8db]">
+                  <div className="aspect-[3/4] w-full overflow-hidden rounded border border-[#E1E5E8] bg-gradient-to-br from-[#dfe7ea] to-[#cfd8db]">
                     <img
                       src={coverUrl}
                       alt={book.title}
@@ -103,22 +104,22 @@ export default function LibraryPage() {
                     />
                   </div>
 
-                  <p className="mt-2.5 truncate text-sm font-bold text-[#0A0E2A]">
+                  <p className="mt-1 truncate text-xs font-bold text-[#0A0E2A] sm:mt-2.5 sm:text-sm">
                     {book.title}
                   </p>
-                  <p className="truncate text-xs text-[#6B7280]">
+                  <p className="truncate text-[10px] text-[#6B7280] sm:text-xs">
                     {book.author}
                   </p>
 
                   <button
                     onClick={() => handleDownload(book._id, book.title)}
                     disabled={isDownloading}
-                    className="mt-3 flex h-9 w-full items-center justify-center gap-1.5 rounded-full bg-[#2DBDB6] text-xs font-bold text-white transition-transform hover:-translate-y-0.5 disabled:opacity-60"
+                    className="mt-1.5 flex h-7 w-full items-center justify-center gap-1 rounded bg-[#2DBDB6] text-[10px] font-bold text-white transition-transform hover:-translate-y-0.5 disabled:opacity-60 sm:mt-3 sm:h-9 sm:gap-1.5 sm:text-xs"
                   >
                     {isDownloading ? (
-                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                      <Loader2 className="h-3 w-3 animate-spin sm:h-3.5 sm:w-3.5" />
                     ) : (
-                      <Download className="h-3.5 w-3.5" />
+                      <Download className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                     )}
                     ডাউনলোড
                   </button>
@@ -127,6 +128,28 @@ export default function LibraryPage() {
             })}
           </div>
         )}
+
+        <div className="mt-10 flex items-center justify-center gap-2 sm:mt-10">
+          <a
+            href="https://www.facebook.com/profile.php?id=61579813011880"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 rounded bg-[#1877F2] px-5 py-2.5 text-sm font-bold text-white transition-opacity hover:opacity-90 sm:gap-1.5 sm:px-3 sm:py-1.5 sm:text-xs"
+          >
+            <FaFacebook className="h-4 w-4 sm:h-3.5 sm:w-3.5" />
+            ফেসবুক
+          </a>
+
+          <a
+            href="https://wa.me/8801791148655"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 rounded bg-[#25D366] px-5 py-2.5 text-sm font-bold text-white transition-opacity hover:opacity-90 sm:gap-1.5 sm:px-3 sm:py-1.5 sm:text-xs"
+          >
+            <FaWhatsapp className="h-4 w-4 sm:h-3.5 sm:w-3.5" />
+            হোয়াটসঅ্যাপ
+          </a>
+        </div>
       </div>
 
       <SiteFooter />
