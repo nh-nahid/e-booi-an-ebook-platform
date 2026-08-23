@@ -23,12 +23,6 @@ export default function PreOrderSection({ books }: PreOrderSectionProps) {
       <div className="preorder-glow pointer-events-none absolute -top-10 right-0 h-56 w-56 rounded-full bg-[#0A0E2A]/[0.05] blur-3xl" />
       <div className="pointer-events-none absolute inset-x-0 top-0 h-full bg-gradient-to-b from-[#0A0E2A]/[0.02] to-transparent" />
 
-      <div className="container relative mx-auto -mb-2 flex px-5 pt-6 sm:px-10 lg:px-[60px]">
-        <span className="inline-flex animate-pulse items-center gap-1.5 rounded-full bg-[#0A0E2A] px-3 py-1 text-[11px] font-bold text-white">
-          <Clock className="h-3 w-3" />
-          শীঘ্রই আসছে
-        </span>
-      </div>
 
       <BookSection title="প্রি-অর্ডার" href="/books?preOrder=true" books={books} />
     </div>
