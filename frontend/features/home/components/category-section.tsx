@@ -24,7 +24,24 @@ const CATEGORY_IMAGES: Record<string, string> = {
 const VISIBLE_COUNT = 4;
 const AUTO_PLAY_MS = 7000;
 
-export default function CategorySection({ categories }: CategorySectionProps) {
+// Pinned display order — these show first, in this exact order; any
+// other category (not in this list) follows after, in whatever order
+// the API returned it in.
+const CATEGORY_ORDER = ["ইসলামিক বই", "কর্ম ও জীবিকা", "সেলফ লার্নিং", "সিরিজ"];
+
+function sortCategories(categories: Category[]): Category[] {
+  const priority = (name: string) => {
+    const idx = CATEGORY_ORDER.indexOf(name);
+    return idx === -1 ? CATEGORY_ORDER.length : idx;
+  };
+  // Array.prototype.sort is stable, so categories outside CATEGORY_ORDER
+  // (equal priority) keep their original relative order.
+  return [...categories].sort((a, b) => priority(a.name) - priority(b.name));
+}
+
+export default function CategorySection({ categories: rawCategories }: CategorySectionProps) {
+  const categories = sortCategories(rawCategories);
+
   // Full-box slide, same technique as the hero banner: the row is
   // transformed with CSS (not native scroll), so the whole box glides
   // as one piece instead of the content just swapping in place.
@@ -61,6 +78,19 @@ export default function CategorySection({ categories }: CategorySectionProps) {
     [pageCount]
   );
 
+  // Touch swipe — same threshold/pattern as the hero banner slider.
+  const touchStartX = useRef<number | null>(null);
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const delta = e.changedTouches[0].clientX - touchStartX.current;
+    if (delta > 40) goToPage(page - 1);
+    if (delta < -40) goToPage(page + 1);
+    touchStartX.current = null;
+  };
+
   // Auto-slide, same pattern as the hero banner: advance on a timer and
   // wrap back to the first page, pausing while the pointer is over it.
   useEffect(() => {
@@ -82,6 +112,8 @@ export default function CategorySection({ categories }: CategorySectionProps) {
       <div
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
         className="overflow-hidden px-1 py-1 sm:py-4"
       >
         <div

@@ -113,7 +113,7 @@ export default function BookCard({ book, index = 0 }: BookCardProps) {
     >
       <div
         className="
-          relative flex flex-col overflow-hidden rounded-lg border border-[#E1E5E8] bg-white
+          relative flex flex-col overflow-hidden rounded border border-[#E1E5E8] bg-white
           shadow-[0_1px_2px_rgba(0,0,0,0.04),0_6px_16px_rgba(0,0,0,0.05)]
           transition-all duration-300 group-hover:-translate-y-1.5
           group-hover:shadow-[0_10px_24px_rgba(10,14,42,0.12)]
@@ -122,7 +122,7 @@ export default function BookCard({ book, index = 0 }: BookCardProps) {
         {/* cover */}
         <div
           className={`
-            relative m-2 flex h-[180px] items-center justify-center overflow-hidden rounded-md
+            relative m-2 flex h-[180px] items-center justify-center overflow-hidden rounded
             bg-gradient-to-br p-4 text-center ${gradient}
           `}
         >
@@ -199,7 +199,7 @@ export default function BookCard({ book, index = 0 }: BookCardProps) {
           </p>
 
           {/* grouped action bar */}
-          <div className="mt-1.5 flex w-full items-stretch overflow-hidden rounded-md border border-[#E1E5E8]">
+          <div className="mt-1.5 flex w-full items-stretch overflow-hidden rounded border border-[#E1E5E8]">
             <button
               type="button"
               onClick={(e) => {
