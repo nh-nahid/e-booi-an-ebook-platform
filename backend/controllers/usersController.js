@@ -1,12 +1,10 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
-const { unlink } = require("fs");
-const path = require("path");
 const sendEmail = require("../utils/sendEmail");
 const welcomeEmail = require("../emails/templates/welcomeEmail");
 const resetPasswordEmail = require("../emails/templates/resetPasswordEmail");
-const fs = require("fs");
+const { destroyAsset } = require("../utils/cloudinary");
 const { generateAccessToken, generateRefreshToken } = require("../utils/jwt");
 const { compareToken, hashToken } = require("../utils/token");
 const setRefreshCookie = require("../utils/setRefreshCookie");
@@ -130,24 +128,18 @@ async function updateAvatar(req, res, next) {
       });
     }
 
-    if (user.avatar) {
-      const oldAvatar = path.join(
-        __dirname,
-        "..",
-        "public",
-        "uploads",
-        "avatars",
-        user.avatar,
-      );
+    // avatarUpload.js (Cloudinary storage) sets .path to the secure_url
+    // and .filename to the Cloudinary public_id.
+    const oldAvatarPublicId = user.avatarPublicId;
 
-      if (fs.existsSync(oldAvatar)) {
-        fs.unlinkSync(oldAvatar);
-      }
-    }
-
-    user.avatar = req.files[0].filename;
+    user.avatar = req.files[0].path;
+    user.avatarPublicId = req.files[0].filename;
 
     await user.save();
+
+    if (oldAvatarPublicId) {
+      await destroyAsset(oldAvatarPublicId, "image");
+    }
 
     res.status(200).json({
       message: "Avatar updated successfully",
@@ -174,20 +166,10 @@ async function deleteAvatar(req, res, next) {
       });
     }
 
-    const avatarPath = path.join(
-      __dirname,
-      "..",
-      "public",
-      "uploads",
-      "avatars",
-      user.avatar,
-    );
-
-    if (fs.existsSync(avatarPath)) {
-      fs.unlinkSync(avatarPath);
-    }
+    await destroyAsset(user.avatarPublicId, "image");
 
     user.avatar = null;
+    user.avatarPublicId = null;
 
     await user.save();
 
@@ -239,9 +221,9 @@ async function addUser(req, res, next) {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Avatar upload (optional)
+    // Avatar upload (optional) — avatarUpload.js (Cloudinary storage)
+    // sets .path to the secure_url and .filename to the public_id.
     const file = req.files?.[0];
-    const filename = file ? file.filename : null;
 
     // Create user
     const newUser = await User.create({
@@ -249,7 +231,8 @@ async function addUser(req, res, next) {
       email,
       password: hashedPassword,
       role,
-      avatar: filename,
+      avatar: file?.path || null,
+      avatarPublicId: file?.filename || null,
     });
 
     // Send welcome email (do not fail registration if email fails)
@@ -297,24 +280,13 @@ async function updateUser(req, res, next) {
     }
 
     // update avatar (if new file uploaded)
+    let oldAvatarPublicId;
+
     if (req.files && req.files.length > 0) {
-      const newFile = req.files[0].filename;
+      oldAvatarPublicId = user.avatarPublicId;
 
-      // delete old avatar
-      if (user.avatar) {
-        const oldPath = path.join(
-          __dirname,
-          "..",
-          "public/uploads/avatars",
-          user.avatar,
-        );
-
-        unlink(oldPath, (err) => {
-          if (err) console.log("Old avatar delete error:", err);
-        });
-      }
-
-      req.body.avatar = newFile;
+      req.body.avatar = req.files[0].path;
+      req.body.avatarPublicId = req.files[0].filename;
     }
 
     // hash password if updated
@@ -325,6 +297,11 @@ async function updateUser(req, res, next) {
     await User.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
+
+    // delete the old avatar only after the update succeeded
+    if (oldAvatarPublicId) {
+      await destroyAsset(oldAvatarPublicId, "image");
+    }
 
     res.status(200).json({
       message: "User updated successfully",
@@ -348,18 +325,7 @@ async function deleteUser(req, res, next) {
     }
 
     // delete avatar
-    if (user.avatar) {
-      const filePath = path.join(
-        __dirname,
-        "..",
-        "public/uploads/avatars",
-        user.avatar,
-      );
-
-      unlink(filePath, (err) => {
-        if (err) console.log("Avatar delete error:", err);
-      });
-    }
+    await destroyAsset(user.avatarPublicId, "image");
 
     await User.findByIdAndDelete(req.params.id);
 

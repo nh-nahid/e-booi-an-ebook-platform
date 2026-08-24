@@ -1,49 +1,41 @@
 const Book = require("../models/Book");
-const fs = require("fs");
 const path = require("path");
+const { destroyAsset } = require("../utils/cloudinary");
 const {
   getOrCreatePreview,
   removePreview,
 } = require("../utils/generateBookPreview");
 
-// delete uploaded file helper
-function removeFile(folder, filename) {
-  if (!filename) return;
-
-  const filePath = path.join(
-    process.cwd(),
-    "public",
-    "uploads",
-    folder,
-    filename,
-  );
-
-  if (fs.existsSync(filePath)) {
-    fs.unlinkSync(filePath);
-  }
-}
-
 // add book
 async function addBook(req, res, next) {
   try {
-    const coverImage = req.files?.coverImage?.[0]?.filename || null;
+    // bookUpload.js (Cloudinary storage) sets .path to the secure_url and
+    // .filename to the Cloudinary public_id for each uploaded file.
+    const coverFile = req.files?.coverImage?.[0];
+    const pdfFileUpload = req.files?.pdfFile?.[0];
 
-    const pdfFile = req.files?.pdfFile?.[0]?.filename || null;
+    const coverImage = coverFile?.path || null;
+    const coverImagePublicId = coverFile?.filename || null;
+
+    const pdfFile = pdfFileUpload?.path || null;
+    const pdfFilePublicId = pdfFileUpload?.filename || null;
 
     const book = new Book({
       ...req.body,
       coverImage,
+      coverImagePublicId,
       pdfFile,
+      pdfFilePublicId,
       uploadedBy: req.user.id,
     });
 
     try {
       await book.save();
     } catch (error) {
-      // rollback uploaded files
-      removeFile("books", coverImage);
+      // rollback uploaded Cloudinary assets
+      await destroyAsset(coverImagePublicId, "image");
 
-      removeFile("pdfs", pdfFile);
+      await destroyAsset(pdfFilePublicId, "raw");
 
       throw error;
     }
@@ -304,33 +296,35 @@ async function updateBook(req, res, next) {
       });
     }
 
-    let oldCover;
-    let oldPdf;
+    let oldCoverPublicId;
+    let oldPdfPublicId;
 
     if (req.files?.coverImage) {
-      oldCover = book.coverImage;
+      oldCoverPublicId = book.coverImagePublicId;
 
-      req.body.coverImage = req.files.coverImage[0].filename;
+      req.body.coverImage = req.files.coverImage[0].path;
+      req.body.coverImagePublicId = req.files.coverImage[0].filename;
     }
 
     if (req.files?.pdfFile) {
-      oldPdf = book.pdfFile;
+      oldPdfPublicId = book.pdfFilePublicId;
 
-      req.body.pdfFile = req.files.pdfFile[0].filename;
+      req.body.pdfFile = req.files.pdfFile[0].path;
+      req.body.pdfFilePublicId = req.files.pdfFile[0].filename;
     }
 
     const updatedBook = await Book.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
 
-    // remove old files after successful update
+    // remove old Cloudinary assets after a successful update
 
-    if (oldCover) {
-      removeFile("books", oldCover);
+    if (oldCoverPublicId) {
+      await destroyAsset(oldCoverPublicId, "image");
     }
 
-    if (oldPdf) {
-      removeFile("pdfs", oldPdf);
+    if (oldPdfPublicId) {
+      await destroyAsset(oldPdfPublicId, "raw");
       // the cached preview was built from the old pdfFile — drop it so
       // the next preview request rebuilds from the new one.
       removePreview(book._id);
@@ -342,14 +336,14 @@ async function updateBook(req, res, next) {
       data: updatedBook,
     });
   } catch (error) {
-    // remove newly uploaded files if update fails
+    // remove newly uploaded Cloudinary assets if the update failed
 
     if (req.files?.coverImage) {
-      removeFile("books", req.files.coverImage[0].filename);
+      await destroyAsset(req.files.coverImage[0].filename, "image");
     }
 
     if (req.files?.pdfFile) {
-      removeFile("pdfs", req.files.pdfFile[0].filename);
+      await destroyAsset(req.files.pdfFile[0].filename, "raw");
     }
 
     next(error);
@@ -367,11 +361,11 @@ async function deleteBook(req, res, next) {
       });
     }
 
-    // delete files
+    // delete Cloudinary assets
 
-    removeFile("books", book.coverImage);
+    await destroyAsset(book.coverImagePublicId, "image");
 
-    removeFile("pdfs", book.pdfFile);
+    await destroyAsset(book.pdfFilePublicId, "raw");
 
     removePreview(book._id);
 

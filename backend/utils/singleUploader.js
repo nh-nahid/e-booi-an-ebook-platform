@@ -1,46 +1,39 @@
-const multer = require('multer');
-const path = require('path');
-const createError = require('http-errors');
+const multer = require("multer");
+const createError = require("http-errors");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const { cloudinary, ROOT_FOLDER } = require("./cloudinary");
 
-function uploader(subfolder_path, allowed_file_types, max_file_size, error_msg){
-    
-    const UPLOADS_FOLDER = `${__dirname}/../public/uploads/${subfolder_path}`
+// Generic single/any-file Cloudinary uploader. Kept as a factory (same
+// shape as before the Cloudinary migration) so callers like avatarUpload.js
+// don't need to change — only where the bytes end up changes.
+//
+// The uploaded file object (req.files[0], since avatarUpload calls
+// upload.any()) carries `.path` (the Cloudinary secure_url) and
+// `.filename` (the Cloudinary public_id) after this runs.
+function uploader(subfolder_path, allowed_file_types, max_file_size, error_msg) {
+  const storage = new CloudinaryStorage({
+    cloudinary,
+    params: {
+      folder: `${ROOT_FOLDER}/${subfolder_path}`,
+      resource_type: "image",
+    },
+  });
 
-    const storage = multer.diskStorage({
-        destination: (req, file, cb) => {
-            cb(null, UPLOADS_FOLDER);
-        },
+  const upload = multer({
+    storage: storage,
+    limits: {
+      fileSize: max_file_size,
+    },
+    fileFilter: (req, file, cb) => {
+      if (allowed_file_types.includes(file.mimetype)) {
+        cb(null, true);
+      } else {
+        cb(createError(error_msg));
+      }
+    },
+  });
 
-        filename: (req, file, cb) => {
-            const fileExt = path.extname(file.originalname);
-
-            const fileName = file.originalname
-                                    .replace(fileExt, "")
-                                    .toLowerCase()
-                                    .split(" ")
-                                    .join("-") + "-" + Date.now();
-
-                    cb(null, fileName + fileExt);
-        }
-    });
-
-    const upload = multer({
-        storage: storage,
-        limits: {
-            fileSize: max_file_size,
-        },
-        fileFilter: (req, file, cb) => {
-            if(allowed_file_types.includes(file.mimetype)){
-                cb(null, true);
-            } else {
-                cb(createError(error_msg));
-            }
-        }
-    });
-
-    return upload;
-
+  return upload;
 }
-
 
 module.exports = uploader;

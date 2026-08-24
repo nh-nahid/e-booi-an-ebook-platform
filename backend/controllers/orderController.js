@@ -265,7 +265,18 @@ async function downloadBook(req, res, next) {
       });
     }
 
-    res.download(`public/uploads/pdfs/${item.book.pdfFile}`);
+    // pdfFile is a Cloudinary secure_url (post-migration) — redirect the
+    // (already purchase-gated) request straight to it rather than
+    // streaming through this server. Both the "save to disk" download
+    // flow and the in-app reader fetch this via axios, which follows the
+    // redirect and returns the PDF bytes either way.
+    if (!item.book.pdfFile) {
+      return res.status(404).json({
+        message: "Book file not found",
+      });
+    }
+
+    return res.redirect(item.book.pdfFile);
   } catch (error) {
     next(error);
   }

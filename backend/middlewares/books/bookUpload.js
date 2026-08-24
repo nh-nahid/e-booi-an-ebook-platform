@@ -1,37 +1,34 @@
 const multer = require("multer");
-const path = require("path");
-const fs = require("fs");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const { cloudinary, ROOT_FOLDER } = require("../../utils/cloudinary");
 
-function createFolder(folder) {
-  if (!fs.existsSync(folder)) {
-    fs.mkdirSync(folder, {
-      recursive: true,
-    });
-  }
-}
-
-const storage = multer.diskStorage({
-  destination(req, file, cb) {
-    let uploadPath;
-
+// Cover images go up as "image" assets (Cloudinary can transform/optimize
+// these); PDFs go up as "raw" assets — Cloudinary only serves non-image
+// files (pdf, zip, etc.) as "raw", and trying to store a PDF as "image"
+// either fails or gets it treated as an image conversion target.
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: (req, file) => {
     if (file.fieldname === "coverImage") {
-      uploadPath = "./public/uploads/books";
-    } else if (file.fieldname === "pdfFile") {
-      uploadPath = "./public/uploads/pdfs";
-    } else {
-      return cb(new Error("Invalid upload field"));
+      return {
+        folder: `${ROOT_FOLDER}/books/covers`,
+        resource_type: "image",
+        allowed_formats: ["jpg", "jpeg", "png"],
+      };
     }
 
-    createFolder(uploadPath);
+    if (file.fieldname === "pdfFile") {
+      return {
+        folder: `${ROOT_FOLDER}/books/pdfs`,
+        resource_type: "raw",
+        // Cloudinary strips/ignores the original extension for raw
+        // uploads by default — setting format explicitly keeps the
+        // delivered URL ending in .pdf instead of the bare public_id.
+        format: "pdf",
+      };
+    }
 
-    cb(null, uploadPath);
-  },
-
-  filename(req, file, cb) {
-    cb(
-      null,
-      `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`,
-    );
+    throw new Error("Invalid upload field");
   },
 });
 
@@ -63,6 +60,11 @@ const upload = multer({
   },
 });
 
+// After this runs, each uploaded file (req.files.coverImage[0] /
+// req.files.pdfFile[0]) carries `.path` (the Cloudinary secure_url — what
+// gets stored as coverImage/pdfFile) and `.filename` (the Cloudinary
+// public_id — what gets stored as coverImagePublicId/pdfFilePublicId, the
+// handle needed to delete the asset later).
 module.exports = upload.fields([
   {
     name: "coverImage",

@@ -28,37 +28,40 @@ function previewPathFor(bookId) {
 // Returns the absolute path to a short preview PDF (first few pages only)
 // for the given book, building/caching it on first request. Returns null
 // if the book has no readable source PDF to build a preview from.
+//
+// book.pdfFile is a Cloudinary secure_url (post-migration) — the source
+// bytes are fetched over HTTP instead of read off local disk. The
+// generated *preview* itself still caches locally (public/uploads/previews)
+// since it's a small, freely-regenerable derivative, not an uploaded
+// asset — bookController.updateBook calls removePreview() whenever a
+// book's pdfFile is replaced, so there's no need for the old
+// preview-vs-source mtime check to self-heal a stale cache.
 async function getOrCreatePreview(book) {
   if (!book.pdfFile) return null;
-
-  const sourcePath = path.join(
-    process.cwd(),
-    "public",
-    "uploads",
-    "pdfs",
-    book.pdfFile,
-  );
-
-  if (!fs.existsSync(sourcePath)) return null;
 
   createFolder(previewDir());
 
   const previewPath = previewPathFor(book._id);
-  const sourceStat = fs.statSync(sourcePath);
 
-  // Reuse the cached preview as long as it's not older than the source
-  // file — this covers the normal case (many hits, one PDF) without
-  // regenerating on every request, but still self-heals after the admin
-  // uploads a new pdfFile for the book.
   if (fs.existsSync(previewPath)) {
-    const previewStat = fs.statSync(previewPath);
-
-    if (previewStat.mtimeMs >= sourceStat.mtimeMs) {
-      return previewPath;
-    }
+    return previewPath;
   }
 
-  const sourceBytes = fs.readFileSync(sourcePath);
+  let sourceBytes;
+
+  try {
+    const response = await fetch(book.pdfFile);
+
+    if (!response.ok) {
+      throw new Error(`Fetching source PDF failed: ${response.status}`);
+    }
+
+    sourceBytes = Buffer.from(await response.arrayBuffer());
+  } catch (err) {
+    console.error("Could not fetch source PDF for preview:", err.message);
+    return null;
+  }
+
   const sourceDoc = await PDFDocument.load(sourceBytes);
 
   const totalPages = sourceDoc.getPageCount();

@@ -23,9 +23,18 @@ const bookSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    // Cloudinary secure_url for the cover image.
     coverImage: {
       type: String,
       required: true,
+    },
+    // Cloudinary public_id for coverImage — needed to delete/replace the
+    // asset on Cloudinary later (update/delete). Null for any book
+    // created before the Cloudinary migration until it's backfilled by
+    // scripts/migrate-assets-to-cloudinary.js.
+    coverImagePublicId: {
+      type: String,
+      default: null,
     },
     // eBooi is a Digital-only platform now — enum kept (rather than
     // dropped) so the admin "Book Type" selector still has a field to
@@ -36,11 +45,17 @@ const bookSchema = new mongoose.Schema(
       default: "Digital",
       required: true,
     },
+    // Cloudinary secure_url for the full book PDF.
     pdfFile: {
       type: String,
       required: function () {
         return this.bookType === "Digital";
       },
+    },
+    // Cloudinary public_id for pdfFile (resource_type "raw").
+    pdfFilePublicId: {
+      type: String,
+      default: null,
     },
     stock: {
       type: Number,

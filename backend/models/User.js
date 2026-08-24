@@ -21,7 +21,15 @@ const UserSchema = new mongoose.Schema(
       required: true,
     },
 
+    // Cloudinary secure_url for the avatar image.
     avatar: {
+      type: String,
+      default: null,
+    },
+    // Cloudinary public_id for avatar — needed to delete/replace it on
+    // Cloudinary. Null for any user created before the Cloudinary
+    // migration until backfilled by scripts/migrate-assets-to-cloudinary.js.
+    avatarPublicId: {
       type: String,
       default: null,
     },
