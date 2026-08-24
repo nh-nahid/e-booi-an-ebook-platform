@@ -265,18 +265,46 @@ async function downloadBook(req, res, next) {
       });
     }
 
-    // pdfFile is a Cloudinary secure_url (post-migration) — redirect the
-    // (already purchase-gated) request straight to it rather than
-    // streaming through this server. Both the "save to disk" download
-    // flow and the in-app reader fetch this via axios, which follows the
-    // redirect and returns the PDF bytes either way.
+    // pdfFile is a Cloudinary secure_url (post-migration). This is
+    // fetched and streamed through our own server rather than
+    // `res.redirect()`-ed to the client — a redirect sends the browser's
+    // XHR across origins (our API -> Cloudinary), and since our axios
+    // instance uses `withCredentials: true`, that cross-origin follow-up
+    // request gets blocked by CORS (Cloudinary's public delivery
+    // response isn't set up for credentialed cross-origin reads),
+    // leaving the frontend request hanging with no usable
+    // success/error response. Streaming keeps the whole exchange
+    // same-origin from the browser's point of view.
     if (!item.book.pdfFile) {
       return res.status(404).json({
         message: "Book file not found",
       });
     }
 
-    return res.redirect(item.book.pdfFile);
+    const fileResponse = await fetch(item.book.pdfFile);
+
+    if (!fileResponse.ok) {
+      return res.status(502).json({
+        message: "Book file could not be retrieved",
+      });
+    }
+
+    const fileBuffer = Buffer.from(await fileResponse.arrayBuffer());
+
+    // HTTP header values must be Latin-1 — Bengali book titles aren't, so
+    // setting `filename="<বাংলা title>.pdf"` directly throws
+    // ERR_INVALID_CHAR (Node rejects the header) and the whole request
+    // 500s. Use a plain ASCII fallback plus the RFC 5987 UTF-8-encoded
+    // form, which every modern browser reads correctly for the real name.
+    const encodedTitle = encodeURIComponent(`${item.book.title}.pdf`);
+
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename="book.pdf"; filename*=UTF-8''${encodedTitle}`,
+    );
+
+    return res.send(fileBuffer);
   } catch (error) {
     next(error);
   }

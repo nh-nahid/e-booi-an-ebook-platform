@@ -1,24 +1,25 @@
 const multer = require("multer");
-const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const { cloudinary, ROOT_FOLDER } = require("../../utils/cloudinary");
 
-// Cover images go up as "image" assets (Cloudinary can transform/optimize
-// these); PDFs go up as "raw" assets — Cloudinary only serves non-image
-// files (pdf, zip, etc.) as "raw", and trying to store a PDF as "image"
-// either fails or gets it treated as an image conversion target.
-const storage = new CloudinaryStorage({
-  cloudinary,
-  params: (req, file) => {
+// Cloudinary's free/base plan rejects any single-request upload over
+// ~10MB ("File size too large. Got X. Maximum is 10485760.") no matter
+// what limit we set on our own multer instance. Cover images are always
+// small enough to stay under that with the plain upload_stream API, but
+// book PDFs can legitimately be much bigger — so PDFs go up through
+// Cloudinary's "large" (chunked) upload API instead, which streams the
+// file in pieces and isn't subject to that per-request cap.
+class CloudinaryBookStorage {
+  _handleFile(req, file, cb) {
+    let options;
+
     if (file.fieldname === "coverImage") {
-      return {
+      options = {
         folder: `${ROOT_FOLDER}/books/covers`,
         resource_type: "image",
         allowed_formats: ["jpg", "jpeg", "png"],
       };
-    }
-
-    if (file.fieldname === "pdfFile") {
-      return {
+    } else if (file.fieldname === "pdfFile") {
+      options = {
         folder: `${ROOT_FOLDER}/books/pdfs`,
         resource_type: "raw",
         // Cloudinary strips/ignores the original extension for raw
@@ -26,11 +27,44 @@ const storage = new CloudinaryStorage({
         // delivered URL ending in .pdf instead of the bare public_id.
         format: "pdf",
       };
+    } else {
+      return cb(new Error("Invalid upload field"));
     }
 
-    throw new Error("Invalid upload field");
-  },
-});
+    // NOTE: the chunked/streaming large-upload function in this SDK is
+    // called `upload_chunked_stream` — there is no `upload_large_stream`
+    // export (that name only exists for the path-based `upload_large`).
+    const uploadFn =
+      file.fieldname === "pdfFile"
+        ? cloudinary.uploader.upload_chunked_stream
+        : cloudinary.uploader.upload_stream;
+
+    const uploadStream = uploadFn(options, (error, result) => {
+      if (error) return cb(error);
+
+      // Multer stores whatever we hand back here onto req.files.*[0] —
+      // `.path` (secure_url) and `.filename` (public_id) match what the
+      // rest of the app already expects from multer-storage-cloudinary.
+      cb(null, {
+        path: result.secure_url,
+        filename: result.public_id,
+        size: result.bytes,
+      });
+    });
+
+    file.stream.pipe(uploadStream);
+  }
+
+  _removeFile(req, file, cb) {
+    const resourceType = file.fieldname === "pdfFile" ? "raw" : "image";
+
+    cloudinary.uploader.destroy(
+      file.filename,
+      { resource_type: resourceType },
+      (error) => cb(error),
+    );
+  }
+}
 
 function fileFilter(req, file, cb) {
   if (file.fieldname === "coverImage") {
@@ -51,12 +85,16 @@ function fileFilter(req, file, cb) {
 }
 
 const upload = multer({
-  storage,
+  storage: new CloudinaryBookStorage(),
 
   fileFilter,
 
   limits: {
-    fileSize: 20 * 1024 * 1024,
+    // Book PDFs can legitimately be large (scanned/illustrated books,
+    // long novels, etc.), so this ceiling is generous — 200MB. Cover
+    // images are always small in practice and share this same limit
+    // since multer only supports one fileSize cap per instance.
+    fileSize: 200 * 1024 * 1024,
   },
 });
 
