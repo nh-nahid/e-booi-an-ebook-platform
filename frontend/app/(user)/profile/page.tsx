@@ -1,6 +1,13 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { LogOut, Loader2 } from "lucide-react";
+
 import { useProfile } from "@/features/profile/hooks/profile.hooks";
+import { useLogout } from "@/features/auth/hooks/auth.hooks";
+import { clearAccessToken } from "@/services/api/token";
 
 import ProfileCard from "@/features/profile/components/profile-card";
 import ProfileForm from "@/features/profile/components/profile-form";
@@ -8,7 +15,30 @@ import ChangePasswordForm from "@/features/profile/components/change-password-fo
 import ProfileSkeleton from "@/features/profile/components/profile-skeleton";
 
 export default function ProfilePage() {
+  const router = useRouter();
+  const queryClient = useQueryClient();
+
   const { data, isLoading, isError } = useProfile();
+  const { mutate: logout, isPending: loggingOut } = useLogout();
+
+  const handleLogout = () => {
+    logout(undefined, {
+      onSuccess: () => {
+        clearAccessToken();
+        queryClient.setQueryData(["profile"], {
+          user: null,
+        });
+
+        toast.success("Logged out successfully");
+
+        router.replace("/login");
+      },
+
+      onError: (error) => {
+        toast.error(error.response?.data?.message ?? "Logout failed");
+      },
+    });
+  };
 
   if (isLoading) {
     return <ProfileSkeleton />;
@@ -81,7 +111,27 @@ export default function ProfilePage() {
               }
             />
 
-            
+            <button
+              type="button"
+              onClick={handleLogout}
+              disabled={loggingOut}
+              className="
+                flex w-full max-w-md items-center justify-center gap-2
+                rounded-3xl border border-red-200 bg-white px-5 py-3.5
+                text-sm font-bold text-red-600
+                shadow-[0_10px_30px_rgba(10,14,42,0.06)]
+                transition-all duration-200
+                hover:-translate-y-0.5 hover:bg-red-50
+                disabled:cursor-not-allowed disabled:opacity-60
+              "
+            >
+              {loggingOut ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <LogOut className="h-4 w-4" />
+              )}
+              Logout
+            </button>
           </div>
 
           {/* Right Side */}

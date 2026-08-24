@@ -10,11 +10,16 @@ import { useBook } from "@/features/books/hooks/use-book";
 import { useBookFile } from "@/features/orders/hooks/use-orders";
 import { bn } from "@/features/books/utils/bn-number";
 
-// In-platform reader — renders the purchased PDF page-by-page onto a
-// <canvas> via pdf.js, same technique as the free-preview modal
-// (book-preview-modal.tsx). No native PDF viewer chrome (iframe/object),
-// so there's no built-in "save"/"print" button sitting on top of a
-// purchased book — the reader is the only way to see the pages here.
+// In-platform reader — renders the purchased PDF page-by-page onto stacked
+// <canvas> elements via pdf.js (same technique as the free-preview modal),
+// laid out as one continuous top-to-bottom scroll rather than a single page
+// swapped left/right. No native PDF viewer chrome (iframe/object), so
+// there's no built-in "save"/"print" button sitting on top of a purchased
+// book — the reader is the only way to see the pages here.
+//
+// Pages render lazily as they scroll into view (via IntersectionObserver)
+// instead of all at once — a long book can be hundreds of pages, and
+// rendering every canvas up front would be slow and memory-heavy.
 type Theme = "light" | "warm";
 
 const THEME_BG: Record<Theme, string> = {
@@ -40,15 +45,22 @@ export default function BookReaderPage() {
     isError: fileError,
   } = useBookFile(bookId);
 
-  const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const pageWrapperRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const canvasRefs = useRef<(HTMLCanvasElement | null)[]>([]);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const pdfDocRef = useRef<any>(null);
+  const baseScaleRef = useRef(1);
+  const zoomRef = useRef(1);
+  const renderedPagesRef = useRef<Set<number>>(new Set());
+  const visiblePagesRef = useRef<Set<number>>(new Set());
 
-  const [rendering, setRendering] = useState(true);
+  const [docReady, setDocReady] = useState(false);
   const [renderError, setRenderError] = useState(false);
   const [pageNum, setPageNum] = useState(1);
   const [numPages, setNumPages] = useState(0);
+  const [pageSize, setPageSize] = useState<{ width: number; height: number } | null>(null);
+  const [renderedPages, setRenderedPages] = useState<Set<number>>(new Set());
   const [zoom, setZoom] = useState(1);
   const [theme, setTheme] = useState<Theme>("light");
 
@@ -58,16 +70,17 @@ export default function BookReaderPage() {
     }
   }, [authLoading, user, router]);
 
+  useEffect(() => {
+    zoomRef.current = zoom;
+  }, [zoom]);
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async function renderPage(pdf: any, num: number, zoomLevel: number) {
-    const canvas = canvasRef.current;
+  async function renderPageAt(pdf: any, num: number, zoomLevel: number) {
+    const canvas = canvasRefs.current[num - 1];
     if (!canvas) return;
 
     const page = await pdf.getPage(num);
-
-    const containerWidth = Math.min(containerRef.current?.clientWidth || 700, 700);
-    const unscaledViewport = page.getViewport({ scale: 1 });
-    const scale = (containerWidth / unscaledViewport.width) * zoomLevel;
+    const scale = baseScaleRef.current * zoomLevel;
     const viewport = page.getViewport({ scale });
 
     const ratio = window.devicePixelRatio || 1;
@@ -83,7 +96,10 @@ export default function BookReaderPage() {
     await page.render({ canvasContext: ctx, viewport }).promise;
   }
 
-  // Load the PDF once its bytes have arrived.
+  // Load the PDF once its bytes have arrived — parse it, work out a
+  // shared page size (books have uniform page dimensions) so unrendered
+  // pages can reserve the right amount of scroll space, then let the
+  // IntersectionObserver effect below render pages as they come into view.
   useEffect(() => {
     if (!fileBytes) return;
 
@@ -91,8 +107,12 @@ export default function BookReaderPage() {
 
     (async () => {
       try {
-        setRendering(true);
+        setDocReady(false);
         setRenderError(false);
+        renderedPagesRef.current = new Set();
+        setRenderedPages(new Set());
+        pageWrapperRefs.current = [];
+        canvasRefs.current = [];
 
         const pdfjsLib = await import("pdfjs-dist");
         pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.js";
@@ -108,16 +128,26 @@ export default function BookReaderPage() {
         }
 
         pdfDocRef.current = pdf;
+
+        const page1 = await pdf.getPage(1);
+        const containerWidth = Math.min(containerRef.current?.clientWidth || 700, 700);
+        const unscaledViewport = page1.getViewport({ scale: 1 });
+        const baseScale = containerWidth / unscaledViewport.width;
+        baseScaleRef.current = baseScale;
+
+        const referenceViewport = page1.getViewport({ scale: baseScale });
+
+        if (cancelled) return;
+
+        setPageSize({ width: referenceViewport.width, height: referenceViewport.height });
         setNumPages(pdf.numPages);
         setPageNum(1);
-        await renderPage(pdf, 1, zoom);
-
-        if (!cancelled) setRendering(false);
+        setDocReady(true);
       } catch (err) {
         console.error("Book failed to render:", err);
         if (!cancelled) {
           setRenderError(true);
-          setRendering(false);
+          setDocReady(true);
         }
       }
     })();
@@ -130,43 +160,69 @@ export default function BookReaderPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fileBytes]);
 
-  const goToPage = async (num: number) => {
-    if (!pdfDocRef.current || num < 1 || num > numPages) return;
-    setPageNum(num);
-    setRendering(true);
-    await renderPage(pdfDocRef.current, num, zoom);
-    setRendering(false);
-  };
-
-  // Re-render the current page whenever zoom changes.
+  // Observe every page's placeholder — render a page onto its canvas the
+  // first time it (or a neighbour, via rootMargin) scrolls into view.
   useEffect(() => {
-    if (!pdfDocRef.current) return;
+    if (!docReady || !numPages || renderError) return;
 
-    let cancelled = false;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        let changed = false;
 
-    (async () => {
-      setRendering(true);
-      await renderPage(pdfDocRef.current, pageNum, zoom);
-      if (!cancelled) setRendering(false);
-    })();
+        entries.forEach((entry) => {
+          const num = Number(entry.target.getAttribute("data-page"));
+          if (!num) return;
 
-    return () => {
-      cancelled = true;
-    };
+          if (entry.isIntersecting) {
+            visiblePagesRef.current.add(num);
+
+            if (!renderedPagesRef.current.has(num) && pdfDocRef.current) {
+              renderedPagesRef.current.add(num);
+              changed = true;
+              renderPageAt(pdfDocRef.current, num, zoomRef.current);
+            }
+          } else {
+            visiblePagesRef.current.delete(num);
+          }
+        });
+
+        if (changed) {
+          setRenderedPages(new Set(renderedPagesRef.current));
+        }
+
+        if (visiblePagesRef.current.size) {
+          setPageNum(Math.min(...visiblePagesRef.current));
+        }
+      },
+      {
+        root: containerRef.current,
+        rootMargin: "600px 0px 600px 0px",
+        threshold: 0.01,
+      },
+    );
+
+    pageWrapperRefs.current.forEach((el) => el && observer.observe(el));
+
+    return () => observer.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [docReady, numPages, renderError]);
+
+  // Re-render every already-rendered page at the new zoom level.
+  useEffect(() => {
+    if (!pdfDocRef.current || !renderedPagesRef.current.size) return;
+
+    renderedPagesRef.current.forEach((num) => {
+      renderPageAt(pdfDocRef.current, num, zoom);
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [zoom]);
 
-  // Touch swipe — same threshold/pattern used across the site's sliders.
-  const touchStartX = useRef<number | null>(null);
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
-  };
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartX.current === null) return;
-    const delta = e.changedTouches[0].clientX - touchStartX.current;
-    if (delta > 50) goToPage(pageNum - 1);
-    if (delta < -50) goToPage(pageNum + 1);
-    touchStartX.current = null;
+  const goToPage = (num: number) => {
+    if (num < 1 || num > numPages) return;
+    pageWrapperRefs.current[num - 1]?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
   };
 
   if (authLoading || bookLoading) {
@@ -179,7 +235,7 @@ export default function BookReaderPage() {
 
   const bg = THEME_BG[theme];
   const filter = THEME_FILTER[theme];
-  const showLoader = fileLoading || rendering;
+  const showLoader = fileLoading || !docReady;
   const showError = (fileError || renderError) && !showLoader;
 
   return (
@@ -206,13 +262,11 @@ export default function BookReaderPage() {
         )}
       </header>
 
-      {/* page area */}
+      {/* page area — one continuous top-to-bottom scroll */}
       <div
         ref={containerRef}
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
         onContextMenu={(e) => e.preventDefault()}
-        className="relative flex flex-1 select-none items-start justify-center overflow-auto p-3 sm:p-6"
+        className="relative flex flex-1 select-none flex-col items-center gap-3 overflow-y-auto p-3 sm:p-6"
       >
         {showLoader && (
           <div className={`absolute inset-0 z-10 flex flex-col items-center justify-center gap-2 ${bg} text-[#6B7280]`}>
@@ -230,34 +284,36 @@ export default function BookReaderPage() {
           </div>
         )}
 
-        <canvas
-          ref={canvasRef}
-          style={{ filter }}
-          className="max-w-full rounded shadow-[0_4px_20px_rgba(0,0,0,0.12)] transition-[filter] duration-300"
-        />
+        {!showError &&
+          docReady &&
+          pageSize &&
+          Array.from({ length: numPages }, (_, i) => i + 1).map((num) => (
+            <div
+              key={num}
+              ref={(el) => {
+                pageWrapperRefs.current[num - 1] = el;
+              }}
+              data-page={num}
+              className="relative flex items-center justify-center rounded bg-white/40 shadow-[0_4px_20px_rgba(0,0,0,0.12)]"
+              style={{
+                width: pageSize.width * zoom,
+                height: pageSize.height * zoom,
+                maxWidth: "100%",
+              }}
+            >
+              {!renderedPages.has(num) && (
+                <Loader2 className="h-5 w-5 animate-spin text-[#2DBDB6]" />
+              )}
 
-        {numPages > 1 && (
-          <>
-            <button
-              type="button"
-              onClick={() => goToPage(pageNum - 1)}
-              disabled={pageNum <= 1}
-              className="fixed left-2 top-1/2 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/95 text-[#0A0E2A] shadow-md transition-opacity hover:bg-white disabled:opacity-0 sm:flex"
-              aria-label="আগের পাতা"
-            >
-              <ChevronLeft className="h-5 w-5" />
-            </button>
-            <button
-              type="button"
-              onClick={() => goToPage(pageNum + 1)}
-              disabled={pageNum >= numPages}
-              className="fixed right-2 top-1/2 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/95 text-[#0A0E2A] shadow-md transition-opacity hover:bg-white disabled:opacity-0 sm:flex"
-              aria-label="পরের পাতা"
-            >
-              <ChevronRight className="h-5 w-5" />
-            </button>
-          </>
-        )}
+              <canvas
+                ref={(el) => {
+                  canvasRefs.current[num - 1] = el;
+                }}
+                style={{ filter }}
+                className="max-w-full rounded transition-[filter] duration-300"
+              />
+            </div>
+          ))}
       </div>
 
       {/* bottom toolbar */}
@@ -308,7 +364,7 @@ export default function BookReaderPage() {
         </div>
 
         {numPages > 1 && (
-          <div className="flex items-center gap-4 sm:hidden">
+          <div className="flex items-center gap-4">
             <button
               type="button"
               onClick={() => goToPage(pageNum - 1)}

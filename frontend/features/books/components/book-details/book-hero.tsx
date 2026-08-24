@@ -317,12 +317,12 @@ export default function BookHero({ book }: BookHeroProps) {
       {/* action bar — download/read/share once purchased, otherwise the
           usual wishlist/cart/preview/contact bar */}
       {isPurchased ? (
-        <div className="mt-8 grid grid-cols-3 overflow-hidden rounded border border-[#E1E5E8]">
+        <div className="mt-8 grid grid-cols-4 overflow-hidden rounded border border-[#E1E5E8]">
           <button
             type="button"
             onClick={handleDownload}
             disabled={downloadMutation.isPending}
-            className="flex flex-col items-center justify-center gap-0.5 border-r border-[#E1E5E8] bg-white py-2 text-[#6B7280] transition-colors hover:bg-[#F0F7F5] hover:text-[#2DBDB6] disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex flex-col items-center justify-center gap-0.5 border-r border-[#E1E5E8] bg-white py-1 text-[#6B7280] transition-colors hover:bg-[#F0F7F5] hover:text-[#2DBDB6] disabled:cursor-not-allowed disabled:opacity-50"
           >
             {downloadMutation.isPending ? (
               <Loader2 className="h-6 w-6 animate-spin" />
@@ -335,7 +335,7 @@ export default function BookHero({ book }: BookHeroProps) {
           <button
             type="button"
             onClick={handleRead}
-            className="flex flex-col items-center justify-center gap-0.5 border-r border-[#E1E5E8] bg-[#2DBDB6] py-2 text-white transition-colors hover:bg-[#1f9d97]"
+            className="flex flex-col items-center justify-center gap-0.5 border-r border-[#E1E5E8] bg-[#2DBDB6] py-1 text-white transition-colors hover:bg-[#1f9d97]"
           >
             <BookOpen className="h-6 w-6" />
             <span className="text-[10px] font-bold">পড়ুন</span>
@@ -343,8 +343,17 @@ export default function BookHero({ book }: BookHeroProps) {
 
           <button
             type="button"
+            onClick={handleWhatsappContact}
+            className="relative flex flex-col items-center justify-center gap-0.5 border-r border-[#E1E5E8] bg-white py-1 text-[#25D366] transition-colors hover:bg-[#F0FDF6]"
+          >
+            <FaWhatsapp className="h-6 w-6" />
+            <span className="text-[10px] font-bold text-[#0A0E2A]">যোগাযোগ</span>
+          </button>
+
+          <button
+            type="button"
             onClick={handleShare}
-            className="flex flex-col items-center justify-center gap-0.5 bg-white py-2 text-[#6B7280] transition-colors hover:bg-[#F0F7F5] hover:text-[#2DBDB6]"
+            className="flex flex-col items-center justify-center gap-0.5 bg-white py-1 text-[#6B7280] transition-colors hover:bg-[#F0F7F5] hover:text-[#2DBDB6]"
           >
             <Share2 className="h-6 w-6" />
             <span className="text-[10px] font-bold">শেয়ার</span>
