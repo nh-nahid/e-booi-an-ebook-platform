@@ -34,8 +34,10 @@ const DEFAULT_SLIDES: PromoSlide[] = [
   },
 ];
 
-// Design canvas: 1323.7 x 323px (~4.1:1) — export @2x as 2647x646 for retina
-const BANNER_ASPECT_RATIO = "1323.7 / 323";
+// Design canvas: 1323.7 x 323px (~4.1:1) — export @2x as 2647x646 for retina.
+// That ratio is used from sm: up; mobile uses a taller 2:1 crop instead
+// (see the banner's className below) so the banner doesn't shrink to a
+// thin strip on small screens.
 
 interface HeroSliderProps {
   slides?: PromoSlide[];
@@ -75,8 +77,7 @@ export default function HeroSlider({ slides = DEFAULT_SLIDES, autoPlayMs = 8000 
     <div>
       <div className="relative">
         <div
-          className="relative overflow-hidden rounded border border-[#E1E5E8] shadow-[0_10px_30px_rgba(10,14,42,0.06)] sm:rounded-lg"
-          style={{ aspectRatio: BANNER_ASPECT_RATIO }}
+          className="relative aspect-[2.3/1] overflow-hidden rounded border border-[#E1E5E8] shadow-[0_10px_30px_rgba(10,14,42,0.06)] sm:aspect-[1323.7/323] sm:rounded-lg"
           onMouseEnter={() => setPaused(true)}
           onMouseLeave={() => setPaused(false)}
           onTouchStart={handleTouchStart}

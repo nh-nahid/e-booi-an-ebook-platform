@@ -84,8 +84,8 @@ export default function HeroSection({ statistics }: HeroSectionProps) {
         {/* promo slider */}
         <div
           className="
-            mx-auto mt-2 animate-in fade-in slide-in-from-bottom-2 duration-500
-            [animation-delay:150ms] fill-mode-both sm:mt-4 lg:mt-6
+            mx-auto mt-4 animate-in fade-in slide-in-from-bottom-2 duration-500
+            [animation-delay:150ms] fill-mode-both lg:mt-6
           "
         >
           <HeroSlider />

@@ -108,7 +108,7 @@ export default function Navbar() {
     : "";
 
   return (
-    <header className="sticky top-0 z-40 border-b border-[#E1E5E8] bg-white px-4 py-2 sm:px-25 sm:py-3">
+    <header className="sticky top-0 z-40 border-b border-[#E1E5E8] bg-white px-4 py-3.5 sm:px-25 sm:py-3">
       <div className="flex items-center justify-between gap-2 sm:gap-6">
         <div className="flex shrink-0 items-center gap-2">
           <MobileNav />
@@ -209,7 +209,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      <div className="mt-2 flex items-center gap-1.5 rounded-md border border-[#E1E5E8] bg-[#F7F9FA] px-2.5 py-1.5 transition-colors focus-within:border-[#2DBDB6] sm:hidden">
+      <div className="mt-3 flex items-center gap-2 rounded-md border border-[#E1E5E8] bg-[#F7F9FA] px-4 py-2.5 transition-colors focus-within:border-[#2DBDB6] sm:hidden">
         <input
           value={search}
           onChange={(e) => {
@@ -222,7 +222,7 @@ export default function Navbar() {
             }
           }}
           placeholder="কাঙ্ক্ষিত বই খুঁজুন"
-          className="min-w-0 flex-1 bg-transparent text-xs text-[#0A0E2A] outline-none placeholder:text-[#9AA3AF]"
+          className="min-w-0 flex-1 bg-transparent text-sm text-[#0A0E2A] outline-none placeholder:text-[#9AA3AF]"
         />
         <button
           type="button"
@@ -230,7 +230,7 @@ export default function Navbar() {
           aria-label="Search"
           className="shrink-0 text-[#9AA3AF] transition-colors hover:text-[#2DBDB6]"
         >
-          <Search className="h-3.5 w-3.5" />
+          <Search className="h-[18px] w-[18px]" />
         </button>
       </div>
     </header>

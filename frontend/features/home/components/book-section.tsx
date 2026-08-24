@@ -48,7 +48,7 @@ export default function BookSection({ title, href = "/books", books }: BookSecti
     <section
       ref={ref}
       className={`
-        container relative mx-auto px-3 pb-3 pt-1.5 transition-all duration-700 ease-out sm:px-10 sm:py-6 lg:px-[60px]
+        container relative mx-auto px-5 pb-6 pt-2 transition-all duration-700 ease-out sm:py-6 sm:px-10 lg:px-[60px]
         ${inView ? "opacity-100 translate-y-0" : "translate-y-6 opacity-0"}
       `}
     >
