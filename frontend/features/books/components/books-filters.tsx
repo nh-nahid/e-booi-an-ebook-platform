@@ -2,14 +2,13 @@
 
 import { X } from "lucide-react";
 
-const BOOK_TYPES = [
-  { value: "Physical", label: "Physical" },
-  { value: "Digital", label: "Digital" },
-] as const;
+// eBooi is Digital-only — kept as a single-value union (not a bare
+// string) so the rest of the filter's typing stays intact.
+const BOOK_TYPES = [{ value: "Digital", label: "Digital" }] as const;
 
 export interface BooksFilterState {
   categories: string[];
-  bookType: "Digital" | "Physical" | "";
+  bookType: "Digital" | "";
   minPrice: number;
   maxPrice: number;
 }
@@ -40,7 +39,7 @@ export default function BooksFilters({
   });
 };
 
-  const toggleType = (bookType: "Digital" | "Physical") => {
+  const toggleType = (bookType: "Digital") => {
     onChange({
       ...filters,
       bookType: filters.bookType === bookType ? "" : bookType,

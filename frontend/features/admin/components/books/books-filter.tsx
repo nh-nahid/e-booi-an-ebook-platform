@@ -76,8 +76,6 @@ export default function BooksFilter({
           <option value="">All Types</option>
 
           <option value="Digital">Digital</option>
-
-          <option value="Physical">Physical</option>
         </select>
 
         {/* Status */}

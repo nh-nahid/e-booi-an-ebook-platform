@@ -9,7 +9,7 @@ export interface Book {
   coverImage: string;
   coverUrl?: string;
 
-  bookType: "Digital" | "Physical";
+  bookType: "Digital";
 
   pdfFile: string | null;
 
@@ -39,7 +39,7 @@ export interface GetBooksParams {
 
   category?: string;
 
-  bookType?: "Digital" | "Physical";
+  bookType?: "Digital";
 
   minPrice?: number;
   maxPrice?: number;

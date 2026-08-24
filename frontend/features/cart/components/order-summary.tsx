@@ -6,7 +6,6 @@ import { Tag, Loader2, ArrowRight, ShieldCheck } from "lucide-react";
 interface OrderSummaryProps {
   subtotal: number;
   discount?: number;
-  deliveryFee?: number;
   itemCount: number;
   onApplyPromo?: (code: string) => Promise<boolean> | boolean;
   onCheckout?: () => Promise<void> | void;
@@ -15,7 +14,6 @@ interface OrderSummaryProps {
 export default function OrderSummary({
   subtotal,
   discount = 0,
-  deliveryFee = 0,
   itemCount,
   onApplyPromo,
   onCheckout,
@@ -26,7 +24,7 @@ export default function OrderSummary({
   >("idle");
   const [checkingOut, setCheckingOut] = useState(false);
 
-  const total = Math.max(0, subtotal - discount + deliveryFee);
+  const total = Math.max(0, subtotal - discount);
 
   const handleApplyPromo = async () => {
     if (!promoCode.trim()) return;
@@ -120,12 +118,6 @@ export default function OrderSummary({
           </div>
         )}
 
-        <div className="flex items-center justify-between">
-          <span className="text-[#6B7280]">ডেলিভারি চার্জ</span>
-          <span className="font-semibold text-[#0A0E2A]">
-            {deliveryFee === 0 ? "ফ্রি" : `৳ ${deliveryFee.toLocaleString()}`}
-          </span>
-        </div>
       </div>
 
       <div className="mt-4 flex items-center justify-between border-t border-[#F1F3F5] pt-4">

@@ -31,7 +31,7 @@ export interface Book {
   category: string;
   price: number;
   coverImage: string;
-  bookType: "Digital" | "Physical";
+  bookType: "Digital";
 
   averageRating: number;
   reviewCount: number;

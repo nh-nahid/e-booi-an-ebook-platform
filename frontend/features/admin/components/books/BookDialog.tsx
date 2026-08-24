@@ -46,7 +46,9 @@ export interface BookFormValues {
   pages: string;
   price: string;
   stock: string;
-  bookType: "Physical" | "Digital";
+  // eBooi is Digital-only — the union is kept at a single value (rather
+  // than a plain string) so the rest of the form's typing stays intact.
+  bookType: "Digital";
   status: "published" | "draft";
   description: string;
 
@@ -62,7 +64,7 @@ const initialValues: BookFormValues = {
   isbn: "",
   price: "",
   stock: "",
-  bookType: "Physical",
+  bookType: "Digital",
   status: "draft",
   description: "",
   cover: null,
@@ -384,7 +386,6 @@ export default function BookDialog({
                 </SelectTrigger>
 
                 <SelectContent>
-                  <SelectItem value="Physical">Physical</SelectItem>
                   <SelectItem value="Digital">Digital</SelectItem>
                 </SelectContent>
               </Select>

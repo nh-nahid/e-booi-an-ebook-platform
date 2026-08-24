@@ -5,14 +5,14 @@ export interface OrderBook {
   title: string;
   author: string;
   coverImage?: string;
-  bookType: "Physical" | "Digital";
+  bookType: "Digital";
 }
 
 export interface OrderItem {
   book: OrderBook;
   quantity: number;
   price: number;
-  bookType: "Physical" | "Digital";
+  bookType: "Digital";
 }
 
 export interface ShippingAddressInOrder {
@@ -29,7 +29,7 @@ export interface Order {
   totalAmount: number;
   discountAmount: number;
   finalAmount: number;
-  paymentMethod: PaymentMethodType | "sslcommerz" | "cod" | "stripe";
+  paymentMethod: PaymentMethodType | "sslcommerz" | "stripe";
   paymentStatus: "pending" | "paid" | "failed";
   orderStatus: "pending" | "processing" | "shipped" | "delivered" | "cancelled";
   shippingAddress?: ShippingAddressInOrder;

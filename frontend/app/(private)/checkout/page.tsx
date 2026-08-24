@@ -11,7 +11,6 @@ import Navbar from "@/components/layout/navbar";
 import SiteFooter from "@/components/layout/site-footer";
 import Loading from "@/app/loading";
 
-import ShippingAddressForm from "@/features/checkout/components/shipping-address-form";
 import PaymentMethods from "@/features/checkout/components/payment-methods";
 import CheckoutItemsSummary from "@/features/checkout/components/checkout-items-summary";
 import OrderTotalCard from "@/features/checkout/components/order-total-card";
@@ -28,20 +27,9 @@ import {
 import type {
   CheckoutItem,
   PaymentMethodType,
-  ShippingAddress,
 } from "@/features/checkout/types/checkout.types";
 import EmptyCheckout from "@/features/checkout/components/empty-checkout";
 import { useApplyCoupon } from "@/features/coupon/hooks/use-coupon";
-
-const initialAddress: ShippingAddress = {
-  fullName: "",
-  phone: "",
-  address: "",
-  city: "",
-  district: "",
-  postalCode: "",
-  notes: "",
-};
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -63,6 +51,7 @@ export default function CheckoutPage() {
 
   const [discount, setDiscount] = useState(0);
   const [couponCode, setCouponCode] = useState<string | null>(null);
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethodType>("bkash");
 
   const isLoading = isBuyNow ? buyNowLoading : cartLoading;
 
@@ -77,7 +66,6 @@ export default function CheckoutPage() {
             coverImage: buyNowBook.coverImage,
             price: buyNowBook.price,
             quantity: 1,
-            format: buyNowBook.bookType === "Digital" ? "digital" : "physical",
           },
         ]
       : []
@@ -89,25 +77,7 @@ export default function CheckoutPage() {
         coverImage: item.book.coverImage,
         price: item.book.price,
         quantity: item.quantity,
-        format: item.book.bookType === "Digital" ? "digital" : "physical",
       }));
-
-  const hasPhysicalItems = cartItems.some((item) => item.format === "physical");
-  const hasOnlyDigitalItems = !hasPhysicalItems;
-
-  const [shipping, setShipping] = useState<ShippingAddress>(initialAddress);
-
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethodType>(
-    () => (hasOnlyDigitalItems ? "bkash" : "cod"),
-  );
-
-  const [prevHasOnlyDigitalItems, setPrevHasOnlyDigitalItems] =
-    useState(hasOnlyDigitalItems);
-
-  if (hasOnlyDigitalItems !== prevHasOnlyDigitalItems) {
-    setPrevHasOnlyDigitalItems(hasOnlyDigitalItems);
-    setPaymentMethod(hasOnlyDigitalItems ? "bkash" : "cod");
-  }
 
   const [error, setError] = useState<string | null>(null);
 
@@ -174,42 +144,19 @@ export default function CheckoutPage() {
     );
   }
 
-  const deliveryFee = hasPhysicalItems && subtotal < 1000 ? 60 : 0;
-
-  const isShippingValid =
-    hasOnlyDigitalItems ||
-    Boolean(
-      shipping.fullName.trim() &&
-      shipping.phone.trim() &&
-      shipping.address.trim() &&
-      shipping.city.trim(),
-    );
-
   const handlePlaceOrder = async () => {
     setError(null);
 
-    if (!isShippingValid) {
-      setError("অনুগ্রহ করে সম্পূর্ণ শিপিং ঠিকানা পূরণ করুন।");
-      return;
-    }
-
     try {
       const response = await createOrderMutation.mutateAsync({
-  shippingAddress: hasPhysicalItems ? shipping : undefined,
-  paymentMethod,
-  couponCode: couponCode ?? undefined,
-  items: isBuyNow
-    ? cartItems.map((item) => ({ bookId: item.bookId, quantity: item.quantity }))
-    : undefined,
-});
+        paymentMethod,
+        couponCode: couponCode ?? undefined,
+        items: isBuyNow
+          ? cartItems.map((item) => ({ bookId: item.bookId, quantity: item.quantity }))
+          : undefined,
+      });
 
       const order = response.order;
-
-      if (paymentMethod === "cod") {
-        toast.success("অর্ডার সফলভাবে সম্পন্ন হয়েছে");
-        router.push("/orders");
-        return;
-      }
 
       const payment = await paymentMutation.mutateAsync(order._id);
 
@@ -224,8 +171,6 @@ export default function CheckoutPage() {
       }
     }
   };
-
-  
 
   return (
     <div className="min-h-screen bg-[#F7F9FA]">
@@ -244,26 +189,16 @@ export default function CheckoutPage() {
           চেকআউট
         </h1>
 
-        {hasOnlyDigitalItems && (
-          <div className="mb-6 flex items-start gap-2.5 rounded-2xl bg-[#E6F7F6] p-4 text-sm text-[#0A0E2A] animate-in fade-in slide-in-from-bottom-1 duration-500">
-            <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-[#2DBDB6]" />
-            আপনার অর্ডারে শুধু eBook রয়েছে, তাই কোনো শিপিং ঠিকানার প্রয়োজন
-            নেই। পেমেন্ট সম্পন্ন হওয়ার সাথে সাথেই বইগুলো আপনার লাইব্রেরিতে যোগ
-            হয়ে যাবে।
-          </div>
-        )}
+        <div className="mb-6 flex items-start gap-2.5 rounded-2xl bg-[#E6F7F6] p-4 text-sm text-[#0A0E2A] animate-in fade-in slide-in-from-bottom-1 duration-500">
+          <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-[#2DBDB6]" />
+          আপনার অর্ডারে শুধু eBook রয়েছে, তাই কোনো শিপিং ঠিকানার প্রয়োজন
+          নেই। পেমেন্ট সম্পন্ন হওয়ার সাথে সাথেই বইগুলো আপনার লাইব্রেরিতে যোগ
+          হয়ে যাবে।
+        </div>
 
         <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
           <div className="space-y-6">
-            {hasPhysicalItems && (
-              <ShippingAddressForm value={shipping} onChange={setShipping} />
-            )}
-
-            <PaymentMethods
-              value={paymentMethod}
-              onChange={setPaymentMethod}
-              codAvailable={hasPhysicalItems}
-            />
+            <PaymentMethods value={paymentMethod} onChange={setPaymentMethod} />
 
             <CheckoutItemsSummary items={cartItems} />
           </div>
@@ -278,8 +213,6 @@ export default function CheckoutPage() {
             <OrderTotalCard
               subtotal={subtotal}
               discount={discount}
-              deliveryFee={deliveryFee}
-              hasPhysicalItems={hasPhysicalItems}
               onPlaceOrder={handlePlaceOrder}
               isSubmitting={
                 createOrderMutation.isPending || paymentMutation.isPending

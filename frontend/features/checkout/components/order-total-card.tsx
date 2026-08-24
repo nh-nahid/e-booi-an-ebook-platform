@@ -6,8 +6,6 @@ import { Loader2, ShieldCheck, Lock } from "lucide-react";
 interface OrderTotalCardProps {
   subtotal: number;
   discount?: number;
-  deliveryFee?: number;
-  hasPhysicalItems: boolean;
   disabled?: boolean;
   isSubmitting?: boolean;
   onPlaceOrder?: () => Promise<void> | void;
@@ -16,15 +14,13 @@ interface OrderTotalCardProps {
 export default function OrderTotalCard({
   subtotal,
   discount = 0,
-  deliveryFee = 0,
-  hasPhysicalItems,
   disabled = false,
   isSubmitting = false,
   onPlaceOrder,
 }: OrderTotalCardProps) {
   const [loading, setLoading] = useState(false);
 
- const total = Math.max(0, subtotal - discount + deliveryFee);
+ const total = Math.max(0, subtotal - discount);
 
   const handlePlaceOrder = async () => {
     setLoading(true);
@@ -52,14 +48,6 @@ export default function OrderTotalCard({
           </div>
         )}
 
-        {hasPhysicalItems && (
-          <div className="flex items-center justify-between">
-            <span className="text-[#6B7280]">ডেলিভারি চার্জ</span>
-            <span className="font-semibold text-[#0A0E2A]">
-              {deliveryFee === 0 ? "ফ্রি" : `৳ ${deliveryFee.toLocaleString()}`}
-            </span>
-          </div>
-        )}
       </div>
 
       <div className="mt-4 flex items-center justify-between border-t border-[#F1F3F5] pt-4">

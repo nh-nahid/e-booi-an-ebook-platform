@@ -1,4 +1,4 @@
-import { BookOpen, Package } from "lucide-react";
+import { BookOpen } from "lucide-react";
 import type { CheckoutItem } from "@/features/checkout/types/checkout.types";
 
 interface CheckoutItemsSummaryProps {
@@ -6,44 +6,23 @@ interface CheckoutItemsSummaryProps {
 }
 
 export default function CheckoutItemsSummary({ items }: CheckoutItemsSummaryProps) {
-  const physicalItems = items.filter((i) => i.format === "physical");
-  const ebookItems = items.filter((i) => i.format === "digital");
-
   return (
     <div className="rounded-2xl border border-[#E1E5E8] bg-white p-5 animate-in fade-in slide-in-from-bottom-2 duration-500 [animation-delay:150ms]">
       <h3 className="mb-4 text-sm font-bold text-[#0A0E2A]">অর্ডার রিভিউ</h3>
 
-      {physicalItems.length > 0 && (
-        <div className="mb-4">
-          <p className="mb-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide text-[#9AA3AF]">
-            <Package className="h-3.5 w-3.5 text-[#2DBDB6]" />
-            ফিজিক্যাল বই ({physicalItems.length})
-          </p>
-          <div className="space-y-3">
-            {physicalItems.map((item) => (
-              <ItemRow key={item.id} item={item} />
-            ))}
-          </div>
-        </div>
-      )}
+      <p className="mb-3 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide text-[#9AA3AF]">
+        <BookOpen className="h-3.5 w-3.5 text-[#2DBDB6]" />
+        eBook ({items.length})
+      </p>
+      <div className="space-y-3">
+        {items.map((item) => (
+          <ItemRow key={item.id} item={item} />
+        ))}
+      </div>
 
-      {ebookItems.length > 0 && (
-        <div>
-          <p className="mb-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide text-[#9AA3AF]">
-            <BookOpen className="h-3.5 w-3.5 text-[#2DBDB6]" />
-            eBook ({ebookItems.length})
-          </p>
-          <div className="space-y-3">
-            {ebookItems.map((item) => (
-              <ItemRow key={item.id} item={item} />
-            ))}
-          </div>
-
-          <p className="mt-3 rounded-xl bg-[#E6F7F6] px-3 py-2 text-xs font-medium text-[#0A0E2A]">
-            eBook গুলো অর্ডার সম্পন্ন হওয়ার সাথে সাথেই আপনার লাইব্রেরিতে যোগ হয়ে যাবে।
-          </p>
-        </div>
-      )}
+      <p className="mt-3 rounded-xl bg-[#E6F7F6] px-3 py-2 text-xs font-medium text-[#0A0E2A]">
+        eBook গুলো অর্ডার সম্পন্ন হওয়ার সাথে সাথেই আপনার লাইব্রেরিতে যোগ হয়ে যাবে।
+      </p>
     </div>
   );
 }

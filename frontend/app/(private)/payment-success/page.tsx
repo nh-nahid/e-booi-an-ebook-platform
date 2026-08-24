@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { CheckCircle2, Download, Loader2, Package } from "lucide-react";
+import { CheckCircle2, Download, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { isAxiosError } from "axios";
 
@@ -80,12 +80,8 @@ export default function PaymentSuccessPage() {
     );
   }
 
-  const digitalItems = order.items.filter(
-    (item) => item.bookType === "Digital",
-  );
-  const physicalItems = order.items.filter(
-    (item) => item.bookType === "Physical",
-  );
+  // eBooi is Digital-only — every purchased item is an eBook.
+  const digitalItems = order.items;
 
   return (
     <div className="min-h-screen bg-[#F7F9FA]">
@@ -174,14 +170,6 @@ export default function PaymentSuccessPage() {
             </div>
           
         
-
-        {physicalItems.length > 0 && (
-          <div className="mt-6 flex items-start gap-2.5 rounded-2xl bg-[#E6F7F6] p-4 text-sm text-[#0A0E2A]">
-            <Package className="mt-0.5 h-4 w-4 shrink-0 text-[#2DBDB6]" />
-            আপনার ফিজিক্যাল বইগুলো শীঘ্রই পাঠানো হবে। অর্ডার স্ট্যাটাস আপনার
-            অর্ডার পেজ থেকে দেখতে পারবেন।
-          </div>
-        )}
 
         <div className="mt-8 flex justify-center gap-3">
           <button

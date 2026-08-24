@@ -1,6 +1,6 @@
 "use client";
 
-import { Minus, Plus, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import Image from "next/image";
 
 export interface CartItemData {
@@ -13,7 +13,6 @@ export interface CartItemData {
   coverUrl?: string;
   quantity: number;
   stock: number;
-  bookType: "Physical" | "Digital";
 }
 
 interface CartItemProps {
@@ -27,9 +26,7 @@ interface CartItemProps {
 export default function CartItem({
   item,
   index = 0,
-  onQuantityChange,
   onRemove,
-  updating = false,
 }: CartItemProps) {
   const baseUrl = process.env.NEXT_PUBLIC_API_URL?.replace("/api/v1", "");
 
@@ -70,7 +67,7 @@ export default function CartItem({
               </p>
 
               <span className="mt-1.5 inline-block rounded bg-[#F7F9FA] px-2 py-0.5 text-[10px] font-semibold text-[#6B7280]">
-                {item.bookType}
+                eBook
               </span>
             </div>
 
@@ -85,34 +82,9 @@ export default function CartItem({
         </div>
 
         <div className="mt-2 flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center rounded border border-[#E1E5E8]">
-            <button
-              onClick={() =>
-                onQuantityChange(item.id, Math.max(1, item.quantity - 1))
-              }
-              disabled={updating || item.bookType === "Digital"}
-              className="flex h-9 w-9 items-center justify-center text-[#0A0E2A] transition-colors hover:text-[#2DBDB6] disabled:opacity-40"
-            >
-              <Minus className="h-3.5 w-3.5" />
-            </button>
-
-            <span className="w-7 text-center text-sm font-bold text-[#0A0E2A]">
-              {item.bookType === "Digital" ? 1 : item.quantity}
-            </span>
-
-            <button
-              onClick={() =>
-                onQuantityChange(
-                  item.id,
-                  Math.min(item.stock, item.quantity + 1),
-                )
-              }
-              disabled={updating || item.bookType === "Digital"}
-              className="flex h-9 w-9 items-center justify-center text-[#0A0E2A] transition-colors hover:text-[#2DBDB6] disabled:opacity-40"
-            >
-              <Plus className="h-3.5 w-3.5" />
-            </button>
-          </div>
+          <span className="rounded border border-[#E1E5E8] px-3 py-1.5 text-xs font-semibold text-[#0A0E2A]">
+            ১ কপি
+          </span>
 
           <div className="text-right">
             <p className="text-sm font-extrabold text-[#0A0E2A] sm:text-base">

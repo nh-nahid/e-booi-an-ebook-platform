@@ -51,7 +51,6 @@ const router = useRouter();
     coverUrl: item.book.coverImage,
     quantity: item.quantity ?? 1,
     stock: item.book.stock,
-    bookType: item.book.bookType === "Digital" ? "Digital" : "Physical",
   }));
 
   const subtotal = items.reduce(
@@ -100,11 +99,6 @@ const router = useRouter();
   );
 
   const itemDiscount = originalSubtotal - subtotal;
-
-  const deliveryFee =
-    items.some((item) => item.bookType === "Physical") && subtotal < 1000
-      ? 60
-      : 0;
 
 const handleQuantityChange = (
   id: string,
@@ -256,7 +250,6 @@ const handleApplyPromo = async (code: string) => {
             <OrderSummary
               subtotal={subtotal}
               discount={itemDiscount + appliedDiscount}
-              deliveryFee={deliveryFee}
               itemCount={items.reduce(
                 (sum, item) => sum + item.quantity,
                 0
