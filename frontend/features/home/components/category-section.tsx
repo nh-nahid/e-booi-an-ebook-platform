@@ -129,7 +129,7 @@ export default function CategorySection({ categories: rawCategories }: CategoryS
                 href={`/books?category=${encodeURIComponent(category.name)}`}
                 className="
                   group relative flex h-[72px] w-[calc(25%-6px)] shrink-0
-                  flex-col items-center justify-start gap-0.5 overflow-hidden rounded-xl bg-[#F5F5F4] p-0.5 pt-0.5
+                  flex-col items-center justify-start gap-0.5 overflow-hidden rounded bg-[#F5F5F4] p-0.5 pt-0.5
                   shadow-[4px_6px_0px_rgba(0,0,0,0.08),0_1px_2px_rgba(0,0,0,0.05)]
                   ring-1 ring-black/[0.04]
                   transition-all duration-300 ease-out
@@ -144,7 +144,7 @@ export default function CategorySection({ categories: rawCategories }: CategoryS
               >
                 <span
                   className="
-                    relative flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-lg
+                    relative flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded
                     bg-white shadow-[0_2px_4px_rgba(0,0,0,0.08)]
                     transition-transform duration-300 group-hover:-rotate-2 group-hover:scale-105
                     sm:h-20 sm:w-20
