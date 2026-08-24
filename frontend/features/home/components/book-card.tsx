@@ -245,7 +245,7 @@ export default function BookCard({ book, index = 0 }: BookCardProps) {
             <p className="line-clamp-1 text-[11px] text-[#9AA3AF]">{author}</p>
           )}
 
-          <p className="mt-0 text-sm font-extrabold text-[#2DBDB6] sm:mt-0.5">
+          <p className="mt-0 text-sm font-extrabold text-[#3368A0] sm:mt-0.5">
             ৳{book.price}
             {oldPrice && oldPrice > book.price && (
               <span className="ml-1.5 text-[11px] font-medium text-[#B0B0B0] line-through">
