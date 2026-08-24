@@ -27,9 +27,13 @@ const bookSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    // eBooi is a Digital-only platform now — enum kept (rather than
+    // dropped) so the admin "Book Type" selector still has a field to
+    // bind to, just with a single allowed value.
     bookType: {
       type: String,
-      enum: ["Physical", "Digital"],
+      enum: ["Digital"],
+      default: "Digital",
       required: true,
     },
     pdfFile: {

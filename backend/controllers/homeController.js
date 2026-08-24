@@ -47,7 +47,7 @@ async function getHome(req, res, next) {
       data: {
         hero: {
           title: "Discover Your Next Favorite Book",
-          subtitle: "Thousands of eBooks and physical books",
+          subtitle: "Thousands of eBooks",
           description: "Read anytime, anywhere.",
           image: "hero-banner.jpg",
           button: {

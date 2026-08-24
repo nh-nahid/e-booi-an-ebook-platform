@@ -14,16 +14,6 @@ async function addToCart(req, res, next) {
       });
     }
 
-    // Don't allow more than available stock for physical books
-    if (
-      book.bookType === "Physical" &&
-      quantity > book.stock
-    ) {
-      return res.status(400).json({
-        message: "Requested quantity exceeds available stock",
-      });
-    }
-
     let cartItem = await Cart.findOne({
       user: req.user.id,
       book: bookId,
@@ -31,13 +21,6 @@ async function addToCart(req, res, next) {
 
     if (cartItem) {
       cartItem.quantity += Number(quantity);
-
-      if (
-        book.bookType === "Physical" &&
-        cartItem.quantity > book.stock
-      ) {
-        cartItem.quantity = book.stock;
-      }
 
       await cartItem.save();
 
@@ -86,8 +69,6 @@ async function getCart(req, res, next) {
 async function updateCartQuantity(req,res,next){
   try {
 
-    const { quantity } = req.body;
-
     const cartItem = await Cart.findOne({
       _id:req.params.id,
       user:req.user.id
@@ -101,19 +82,8 @@ async function updateCartQuantity(req,res,next){
     }
 
 
-    if(cartItem.book.bookType === "Digital"){
-      cartItem.quantity = 1;
-    }
-    else {
-
-      if(quantity > cartItem.book.stock){
-        return res.status(400).json({
-          message:"Not enough stock"
-        });
-      }
-
-      cartItem.quantity = quantity;
-    }
+    // eBooi is Digital-only — one copy per cart line item.
+    cartItem.quantity = 1;
 
 
     await cartItem.save();

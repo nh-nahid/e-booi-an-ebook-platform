@@ -24,7 +24,8 @@ const orderSchema = new mongoose.Schema(
 
         bookType: {
           type: String,
-          enum: ["Physical", "Digital"],
+          enum: ["Digital"],
+          default: "Digital",
         },
       },
     ],
@@ -63,23 +64,17 @@ const orderSchema = new mongoose.Schema(
       default: 0,
     },
 
-    shippingAddress: {
-      fullName: String,
-      phone: String,
-      address: String,
-      city: String,
-      postalCode: String,
-    },
-
     paymentStatus: {
       type: String,
       enum: ["pending", "paid", "failed"],
       default: "pending",
     },
 
+    // "cod" (Cash on Delivery) was only ever used for Physical book
+    // shipping and is removed now that eBooi is Digital-only.
     paymentMethod: {
       type: String,
-      enum: ["cod", "sslcommerz", "stripe"],
+      enum: ["sslcommerz", "stripe"],
       required: true,
     },
 

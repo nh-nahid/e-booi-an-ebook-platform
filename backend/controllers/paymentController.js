@@ -4,7 +4,6 @@ const Order = require("../models/Order");
 const User = require("../models/User");
 const Coupon = require("../models/Coupon");
 const Cart = require("../models/Cart");
-const Book = require("../models/Book");
 
 const sendEmail = require("../utils/sendEmail");
 
@@ -35,11 +34,9 @@ async function initiatePayment(req, res, next) {
 
         const customer = order.user;
 
-        // Digital-only orders have no shippingAddress — fall back to the
-        // customer's account details so SSLCommerz's required customer
-        // fields are never undefined.
-        const hasShipping = Boolean(order.shippingAddress?.fullName);
-
+        // eBooi is Digital-only now — there's never a physical shipment,
+        // so shipping fields just mirror the customer's account details
+        // (SSLCommerz still requires them to be non-empty).
         const data = {
             total_amount: order.finalAmount || order.totalAmount,
             currency: "BDT",
@@ -50,46 +47,27 @@ async function initiatePayment(req, res, next) {
             cancel_url: `${process.env.BACKEND_URL}/api/v1/payment/cancel`,
             ipn_url: `${process.env.BACKEND_URL}/api/v1/payment/ipn`,
 
-            shipping_method: hasShipping ? "Courier" : "NO",
+            shipping_method: "NO",
 
             product_name: "Book Purchase",
             product_category: "Books",
             product_profile: "general",
 
-            // Shipping Information
-            ship_name: hasShipping
-                ? order.shippingAddress.fullName
-                : customer?.name || "Customer",
-
-            ship_add1: hasShipping ? order.shippingAddress.address : "N/A",
-
-            ship_city: hasShipping ? order.shippingAddress.city : "N/A",
-
-            ship_postcode: hasShipping
-                ? order.shippingAddress.postalCode || "0000"
-                : "0000",
-
+            // Shipping Information (unused for Digital delivery, but
+            // SSLCommerz requires these fields to be populated)
+            ship_name: customer?.name || "Customer",
+            ship_add1: "N/A",
+            ship_city: "N/A",
+            ship_postcode: "0000",
             ship_country: "Bangladesh",
-
-            ship_phone: hasShipping
-                ? order.shippingAddress.phone
-                : customer?.phone || "01700000000",
+            ship_phone: customer?.phone || "01700000000",
 
             // Customer Information
-            cus_name: hasShipping
-                ? order.shippingAddress.fullName
-                : customer?.name || "Customer",
-
+            cus_name: customer?.name || "Customer",
             cus_email: customer?.email || "customer@example.com",
-
-            cus_phone: hasShipping
-                ? order.shippingAddress.phone
-                : customer?.phone || "01700000000",
-
-            cus_add1: hasShipping ? order.shippingAddress.address : "N/A",
-
-            cus_city: hasShipping ? order.shippingAddress.city : "N/A",
-
+            cus_phone: customer?.phone || "01700000000",
+            cus_add1: "N/A",
+            cus_city: "N/A",
             cus_country: "Bangladesh",
         };
 
@@ -155,17 +133,6 @@ async function paymentSuccess(req, res, next) {
             });
         }
 
-        // Reduce stock now that payment is confirmed — deferred from
-        // createOrder for gateway payments so a failed/abandoned payment
-        // never permanently reduces inventory for a sale that never happened.
-        for (const item of order.items) {
-            if (item.book && item.book.bookType === "Physical") {
-                await Book.findByIdAndUpdate(item.book._id, {
-                    $inc: { stock: -item.quantity },
-                });
-            }
-        }
-
         // Clear cart now that payment is confirmed — deferred from
         // createOrder for the same reason as stock above. Skipped for a
         // "buy now" order (fromCart: false): its items never came from
@@ -197,9 +164,10 @@ async function paymentSuccess(req, res, next) {
             console.log("Payment email failed:", emailError.message);
         }
 
-        // Send Digital books email
+        // Send Digital books email — eBooi is Digital-only, so every
+        // purchased item qualifies.
         const DigitalBooks = order.items
-            .filter((item) => item.book && item.book.bookType === "Digital")
+            .filter((item) => item.book)
             .map((item) => item.book);
 
         if (DigitalBooks.length > 0) {

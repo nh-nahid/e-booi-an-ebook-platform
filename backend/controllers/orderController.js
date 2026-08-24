@@ -8,20 +8,19 @@ const Coupon = require("../models/Coupon");
 const path = require("path");
 
 // Map frontend payment method choices to the gateway used to process them.
-// bKash/Nagad/card all route through the SSLCommerz integration; only COD
-// is a distinct path. The Order schema's paymentMethod enum only knows
-// about gateways ("cod" | "sslcommerz" | "stripe"), not specific methods.
+// bKash/Nagad/card all route through the SSLCommerz integration. Cash on
+// Delivery was only ever for Physical book shipping and has been removed
+// now that eBooi is Digital-only.
 const GATEWAY_MAP = {
   bkash: "sslcommerz",
   nagad: "sslcommerz",
   card: "sslcommerz",
-  cod: "cod",
 };
 
 // order create
 async function createOrder(req, res, next) {
   try {
-    const { shippingAddress, paymentMethod, couponCode, items } = req.body;
+    const { paymentMethod, couponCode, items } = req.body;
 
     const gateway = GATEWAY_MAP[paymentMethod];
 
@@ -72,8 +71,6 @@ async function createOrder(req, res, next) {
     const orderItems = [];
     let totalAmount = 0;
 
-    let hasDigital = false;
-
     for (const { book, quantity } of sourceItems) {
       orderItems.push({
         book: book._id,
@@ -83,24 +80,6 @@ async function createOrder(req, res, next) {
       });
 
       totalAmount += quantity * book.price;
-
-      if (book.bookType === "Physical") {
-        if (book.stock < quantity) {
-          return res.status(400).json({
-            message: `${book.title} is out of stock`,
-          });
-        }
-      }
-
-      if (book.bookType === "Digital") {
-        hasDigital = true;
-      }
-    }
-
-    if (gateway === "cod" && hasDigital) {
-      return res.status(400).json({
-        message: "Cash on Delivery is not allowed for Digital books",
-      });
     }
 
     let discountAmount = 0;
@@ -185,7 +164,6 @@ async function createOrder(req, res, next) {
 
       coupon: couponId,
 
-      shippingAddress,
       paymentMethod: gateway,
 
       paymentStatus: "pending",
@@ -196,20 +174,9 @@ async function createOrder(req, res, next) {
 
     await order.save();
 
-    if (gateway === "cod") {
-      for (const { book, quantity } of sourceItems) {
-        if (book.bookType === "Physical") {
-          book.stock -= quantity;
-          await book.save();
-        }
-      }
-
-      if (!isBuyNow) {
-        await Cart.deleteMany({
-          user: req.user.id,
-        });
-      }
-    }
+    // Stock/cart-clearing for a completed purchase now happens only in
+    // paymentSuccess (payment gateway confirmation) — there is no more
+    // COD path that needs to settle those immediately here.
 
     // Send response immediately — don't make the customer wait on email
     // delivery. A slow/hanging SMTP connection (common on hosts like Render
