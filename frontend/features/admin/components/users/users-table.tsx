@@ -36,7 +36,9 @@ export default function UsersTable({
   const imageBaseUrl = process.env.NEXT_PUBLIC_API_URL?.replace("/api/v1", "");
   const avatarSrc = (user: AdminUser) =>
     user.avatar
-      ? `${imageBaseUrl}/uploads/avatars/${user.avatar}`
+      ? user.avatar.startsWith("http")
+        ? user.avatar
+        : `${imageBaseUrl}/uploads/avatars/${user.avatar}`
       : "/avatar-placeholder.png";
 
   return (

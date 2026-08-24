@@ -125,7 +125,9 @@ export default function AdminDashboardPage() {
             rating: 0,
 
             coverUrl: book.coverImage
-              ? `${process.env.NEXT_PUBLIC_API_URL?.replace("/api/v1", "")}/uploads/books/${book.coverImage}`
+              ? book.coverImage.startsWith("http")
+                ? book.coverImage
+                : `${process.env.NEXT_PUBLIC_API_URL?.replace("/api/v1", "")}/uploads/books/${book.coverImage}`
               : undefined,
           })) ?? []
         }

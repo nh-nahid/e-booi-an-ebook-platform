@@ -50,10 +50,12 @@ export default function ProfilePage() {
   const user = data.user;
 
   const avatarUrl = user.avatar
-    ? `${process.env.NEXT_PUBLIC_API_URL?.replace(
-        "/api/v1",
-        "",
-      )}/uploads/avatars/${user.avatar}`
+    ? user.avatar.startsWith("http")
+      ? user.avatar
+      : `${process.env.NEXT_PUBLIC_API_URL?.replace(
+          "/api/v1",
+          "",
+        )}/uploads/avatars/${user.avatar}`
     : "";
 
   return (

@@ -9,12 +9,18 @@ import {
   Flame,
   Clock,
   Check,
+  Download,
+  Share2,
+  Loader2,
 } from "lucide-react";
 
 import type { Book } from "../types/home.types";
 import getCoverImageUrl from "../utils/getCoverImageUrl";
 import Image from "next/image";
 import { useAddToCart, useCart } from "@/features/cart/hooks/use-cart";
+import { useAuth } from "@/hooks/use-auth";
+import { useLibrary } from "@/features/library/hooks/use-library";
+import { useDownloadBook } from "@/features/orders/hooks/use-orders";
 import { isAxiosError } from "axios";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -59,8 +65,17 @@ export default function BookCard({ book, index = 0 }: BookCardProps) {
       : 0;
   const router = useRouter();
 
+  const { user } = useAuth();
   const { data: cartItems } = useCart();
   const addToCartMutation = useAddToCart();
+
+  // Only fetch the library when logged in — the endpoint requires auth,
+  // and every BookCard on the page shares this one cached query.
+  const { data: libraryBooks } = useLibrary({ enabled: !!user });
+  const downloadMutation = useDownloadBook();
+
+  const isPurchased =
+    libraryBooks?.some((libBook) => libBook._id === book._id) ?? false;
 
   const added =
     cartItems?.some((item) =>
@@ -99,6 +114,47 @@ export default function BookCard({ book, index = 0 }: BookCardProps) {
       }
 
       toast.error("কার্টে যোগ করা যায়নি");
+    }
+  };
+
+  const handleDownload = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    downloadMutation.mutate(
+      { bookId: book._id, title: book.title },
+      {
+        onError: () => toast.error("ডাউনলোড করা যায়নি"),
+      },
+    );
+  };
+
+  const handleRead = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    router.push(`/read/${book._id}`);
+  };
+
+  const handleShare = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (typeof window === "undefined") return;
+
+    const url = `${window.location.origin}/books/${book._id}`;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: book.title, url });
+      } catch {
+        // user cancelled the native share sheet — nothing to do
+      }
+      return;
+    }
+
+    if (navigator.clipboard) {
+      await navigator.clipboard.writeText(url);
+      toast.success("লিংক কপি হয়েছে");
     }
   };
 
@@ -198,64 +254,101 @@ export default function BookCard({ book, index = 0 }: BookCardProps) {
             )}
           </p>
 
-          {/* grouped action bar */}
-          <div className="mt-1.5 flex w-full items-stretch overflow-hidden rounded border border-[#E1E5E8]">
-            <button
-              type="button"
-              onClick={(e) => {
-                e.preventDefault();
-                setWishlisted((v) => !v);
-              }}
-              className={`
-                flex flex-1 items-center justify-center border-r border-[#E1E5E8] py-1.5
-                transition-colors duration-150
-                ${wishlisted ? "bg-red-50 text-red-500" : "bg-white text-[#6B7280] hover:bg-red-50 hover:text-red-500"}
-              `}
-              aria-label="Wishlist"
-            >
-              <Heart
-                className={`h-3.5 w-3.5 ${wishlisted ? "fill-red-500" : ""}`}
-              />
-            </button>
+          {/* grouped action bar — download/read/share once purchased,
+              otherwise the usual wishlist/cart/details bar */}
+          {isPurchased ? (
+            <div className="mt-1.5 flex w-full items-stretch overflow-hidden rounded border border-[#E1E5E8]">
+              <button
+                type="button"
+                onClick={handleDownload}
+                disabled={downloadMutation.isPending}
+                className="flex flex-1 items-center justify-center border-r border-[#E1E5E8] bg-white py-1.5 text-[#6B7280] transition-colors duration-150 hover:bg-[#F0F7F5] hover:text-[#2DBDB6] disabled:cursor-not-allowed disabled:opacity-50"
+                aria-label="ডাউনলোড"
+              >
+                {downloadMutation.isPending ? (
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                ) : (
+                  <Download className="h-3.5 w-3.5" />
+                )}
+              </button>
 
-            <button
-              type="button"
-              onClick={handleAddToCart}
-              disabled={
-                addToCartMutation.isPending || (!added && book.stock === 0)
-              }
-              className={`
-    flex flex-1 items-center justify-center
-    border-r border-[#E1E5E8]
-    py-1.5
-    transition-colors duration-150
-    disabled:cursor-not-allowed disabled:opacity-50
-    ${
-      added
-        ? "bg-[#E6F7F6] text-[#2DBDB6]"
-        : "bg-white text-[#6B7280] hover:bg-[#F0F7F5] hover:text-[#2DBDB6]"
-    }
-  `}
-              aria-label={added ? "Go to cart" : "Add to cart"}
-            >
-              {addToCartMutation.isPending ? (
-                <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-[#2DBDB6] border-t-transparent" />
-              ) : added ? (
-                <Check className="h-3.5 w-3.5" />
-              ) : (
-                <ShoppingCart className="h-3.5 w-3.5" />
-              )}
-            </button>
+              <button
+                type="button"
+                onClick={handleRead}
+                className="flex flex-1 items-center justify-center border-r border-[#E1E5E8] bg-[#2DBDB6] py-1.5 text-white transition-colors duration-150 group-hover:bg-[#1f9d97]"
+                aria-label="পড়ুন"
+              >
+                <BookOpen className="h-3.5 w-3.5" />
+              </button>
 
-            <span
-              className="
-                flex flex-1 items-center justify-center bg-[#2DBDB6] py-1.5 text-white
-                transition-colors duration-150 group-hover:bg-[#1f9d97]
-              "
-            >
-              <BookOpen className="h-3.5 w-3.5" />
-            </span>
-          </div>
+              <button
+                type="button"
+                onClick={handleShare}
+                className="flex flex-1 items-center justify-center bg-white py-1.5 text-[#6B7280] transition-colors duration-150 hover:bg-[#F0F7F5] hover:text-[#2DBDB6]"
+                aria-label="শেয়ার করুন"
+              >
+                <Share2 className="h-3.5 w-3.5" />
+              </button>
+            </div>
+          ) : (
+            <div className="mt-1.5 flex w-full items-stretch overflow-hidden rounded border border-[#E1E5E8]">
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setWishlisted((v) => !v);
+                }}
+                className={`
+                  flex flex-1 items-center justify-center border-r border-[#E1E5E8] py-1.5
+                  transition-colors duration-150
+                  ${wishlisted ? "bg-red-50 text-red-500" : "bg-white text-[#6B7280] hover:bg-red-50 hover:text-red-500"}
+                `}
+                aria-label="Wishlist"
+              >
+                <Heart
+                  className={`h-3.5 w-3.5 ${wishlisted ? "fill-red-500" : ""}`}
+                />
+              </button>
+
+              <button
+                type="button"
+                onClick={handleAddToCart}
+                disabled={
+                  addToCartMutation.isPending || (!added && book.stock === 0)
+                }
+                className={`
+      flex flex-1 items-center justify-center
+      border-r border-[#E1E5E8]
+      py-1.5
+      transition-colors duration-150
+      disabled:cursor-not-allowed disabled:opacity-50
+      ${
+        added
+          ? "bg-[#E6F7F6] text-[#2DBDB6]"
+          : "bg-white text-[#6B7280] hover:bg-[#F0F7F5] hover:text-[#2DBDB6]"
+      }
+    `}
+                aria-label={added ? "Go to cart" : "Add to cart"}
+              >
+                {addToCartMutation.isPending ? (
+                  <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-[#2DBDB6] border-t-transparent" />
+                ) : added ? (
+                  <Check className="h-3.5 w-3.5" />
+                ) : (
+                  <ShoppingCart className="h-3.5 w-3.5" />
+                )}
+              </button>
+
+              <span
+                className="
+                  flex flex-1 items-center justify-center bg-[#2DBDB6] py-1.5 text-white
+                  transition-colors duration-150 group-hover:bg-[#1f9d97]
+                "
+              >
+                <BookOpen className="h-3.5 w-3.5" />
+              </span>
+            </div>
+          )}
         </div>
       </div>
     </Link>

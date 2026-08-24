@@ -33,7 +33,9 @@ export default function BooksTable({
 
   const coverSrc = (book: Book) =>
     book.coverImage
-      ? `${imageBaseUrl}/uploads/books/${book.coverImage}`
+      ? book.coverImage.startsWith("http")
+        ? book.coverImage
+        : `${imageBaseUrl}/uploads/books/${book.coverImage}`
       : "/book-placeholder.jpg";
   return (
     <div className="overflow-hidden rounded-2xl border border-[#E1E5E8] bg-white shadow-sm">

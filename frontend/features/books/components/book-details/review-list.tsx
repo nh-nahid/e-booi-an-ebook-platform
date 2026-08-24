@@ -12,6 +12,7 @@ interface ReviewListProps {
 
 function getAvatarUrl(avatar?: string) {
   if (!avatar) return null;
+  if (avatar.startsWith("http")) return avatar;
 
   return `${process.env.NEXT_PUBLIC_API_URL?.replace(
     "/api/v1",

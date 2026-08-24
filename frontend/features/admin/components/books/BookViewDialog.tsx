@@ -28,11 +28,15 @@ export default function BookViewDialog({
     process.env.NEXT_PUBLIC_API_URL?.replace("/api/v1", "");
 
   const coverSrc = book.coverImage
-    ? `${imageBaseUrl}/uploads/books/${book.coverImage}`
+    ? book.coverImage.startsWith("http")
+      ? book.coverImage
+      : `${imageBaseUrl}/uploads/books/${book.coverImage}`
     : "/book-placeholder.jpg";
 
   const pdfUrl = book.pdfFile
-    ? `${imageBaseUrl}/uploads/pdfs/${book.pdfFile}`
+    ? book.pdfFile.startsWith("http")
+      ? book.pdfFile
+      : `${imageBaseUrl}/uploads/pdfs/${book.pdfFile}`
     : null;
 
   return (

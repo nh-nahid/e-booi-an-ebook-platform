@@ -16,10 +16,14 @@ import {
   Clock,
   Flame,
   Loader2,
+  Download,
 } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 
 import { useAddToCart, useCart } from "@/features/cart/hooks/use-cart";
+import { useAuth } from "@/hooks/use-auth";
+import { useLibrary } from "@/features/library/hooks/use-library";
+import { useDownloadBook } from "@/features/orders/hooks/use-orders";
 import getCoverImageUrl from "@/features/home/utils/getCoverImageUrl";
 import { getBookPreviewUrl } from "@/features/books/api/book.api";
 import { bn } from "@/features/books/utils/bn-number";
@@ -58,8 +62,14 @@ export default function BookHero({ book }: BookHeroProps) {
 
   const router = useRouter();
 
+  const { user } = useAuth();
   const { data: cartItems } = useCart();
   const addToCartMutation = useAddToCart();
+
+  const { data: libraryBooks } = useLibrary({ enabled: !!user });
+  const downloadMutation = useDownloadBook();
+  const isPurchased =
+    libraryBooks?.some((libBook) => libBook._id === book.id) ?? false;
 
   const added =
     cartItems?.some((item) =>
@@ -153,6 +163,19 @@ export default function BookHero({ book }: BookHeroProps) {
       await navigator.clipboard.writeText(url);
       toast.success("লিংক কপি হয়েছে");
     }
+  };
+
+  const handleDownload = () => {
+    downloadMutation.mutate(
+      { bookId: book.id, title: book.title },
+      {
+        onError: () => toast.error("ডাউনলোড করা যায়নি"),
+      },
+    );
+  };
+
+  const handleRead = () => {
+    router.push(`/read/${book.id}`);
   };
 
   const handleWhatsappContact = () => {
@@ -274,67 +297,110 @@ export default function BookHero({ book }: BookHeroProps) {
             {stockLabel}
           </p>
 
-          <button
-            type="button"
-            onClick={handleBuyNow}
-            disabled={adding || (!added && !isPreOrder && book.stock === 0)}
-            className="mt-auto w-full max-w-[130px] rounded border border-[#2DBDB6] bg-transparent px-1.5 py-1.5 text-[9px] font-bold leading-tight text-[#2DBDB6] transition-all duration-200 hover:bg-[#E6F7F6] disabled:cursor-not-allowed disabled:opacity-50 sm:mt-3 sm:max-w-[150px] sm:px-2 sm:py-2 sm:text-[11px]"
-          >
-            {isPreOrder ? "প্রি-অর্ডার করুন" : "এখনই কিনুন"}
-          </button>
+          {isPurchased ? (
+            <span className="mt-auto flex w-full max-w-[150px] items-center justify-center gap-1 rounded border border-emerald-200 bg-emerald-50 px-1.5 py-1.5 text-[9px] font-bold leading-tight text-emerald-600 sm:mt-3 sm:px-2 sm:py-2 sm:text-[11px]">
+              <Check className="h-3 w-3 sm:h-3.5 sm:w-3.5" /> কেনা হয়েছে
+            </span>
+          ) : (
+            <button
+              type="button"
+              onClick={handleBuyNow}
+              disabled={adding || (!added && !isPreOrder && book.stock === 0)}
+              className="mt-auto w-full max-w-[130px] rounded border border-[#2DBDB6] bg-transparent px-1.5 py-1.5 text-[9px] font-bold leading-tight text-[#2DBDB6] transition-all duration-200 hover:bg-[#E6F7F6] disabled:cursor-not-allowed disabled:opacity-50 sm:mt-3 sm:max-w-[150px] sm:px-2 sm:py-2 sm:text-[11px]"
+            >
+              {isPreOrder ? "প্রি-অর্ডার করুন" : "এখনই কিনুন"}
+            </button>
+          )}
         </div>
       </div>
 
-      {/* action bar */}
-      <div className="mt-8 grid grid-cols-4 overflow-hidden rounded border border-[#E1E5E8]">
-        <button
-          type="button"
-          onClick={() => setLiked((v) => !v)}
-          className={`flex items-center justify-center border-r border-[#E1E5E8] py-2.5 transition-colors ${
-            liked ? "bg-red-50 text-red-500" : "bg-white text-[#6B7280] hover:bg-red-50 hover:text-red-500"
-          }`}
-          aria-label="Wishlist"
-        >
-          <Heart className={`h-6 w-6 ${liked ? "fill-red-500" : ""}`} />
-        </button>
+      {/* action bar — download/read/share once purchased, otherwise the
+          usual wishlist/cart/preview/contact bar */}
+      {isPurchased ? (
+        <div className="mt-8 grid grid-cols-3 overflow-hidden rounded border border-[#E1E5E8]">
+          <button
+            type="button"
+            onClick={handleDownload}
+            disabled={downloadMutation.isPending}
+            className="flex flex-col items-center justify-center gap-0.5 border-r border-[#E1E5E8] bg-white py-2 text-[#6B7280] transition-colors hover:bg-[#F0F7F5] hover:text-[#2DBDB6] disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {downloadMutation.isPending ? (
+              <Loader2 className="h-6 w-6 animate-spin" />
+            ) : (
+              <Download className="h-6 w-6" />
+            )}
+            <span className="text-[10px] font-bold">ডাউনলোড</span>
+          </button>
 
-        <button
-          type="button"
-          onClick={handleCartClick}
-          disabled={adding || (!added && !isPreOrder && book.stock === 0)}
-          className={`flex items-center justify-center border-r border-[#E1E5E8] py-2.5 transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
-            added ? "bg-[#E6F7F6] text-[#2DBDB6]" : "bg-white text-[#6B7280] hover:bg-[#F0F7F5] hover:text-[#2DBDB6]"
-          }`}
-          aria-label={added ? "কার্টে যান" : "কার্টে যোগ করুন"}
-        >
-          {addToCartMutation.isPending ? (
-            <Loader2 className="h-6 w-6 animate-spin" />
-          ) : added ? (
-            <Check className="h-6 w-6" />
-          ) : (
-            <ShoppingCart className="h-6 w-6" />
-          )}
-        </button>
+          <button
+            type="button"
+            onClick={handleRead}
+            className="flex flex-col items-center justify-center gap-0.5 border-r border-[#E1E5E8] bg-[#2DBDB6] py-2 text-white transition-colors hover:bg-[#1f9d97]"
+          >
+            <BookOpen className="h-6 w-6" />
+            <span className="text-[10px] font-bold">পড়ুন</span>
+          </button>
 
-        <button
-          type="button"
-          onClick={() => router.push(`/checkout?bookId=${book.id}`)}
-          disabled={!isPreOrder && book.stock === 0}
-          className="flex flex-col items-center justify-center gap-0.5 border-r border-[#E1E5E8] bg-[#2DBDB6] py-1 text-white transition-colors hover:bg-[#1f9d97] disabled:cursor-not-allowed disabled:bg-[#E1E5E8] disabled:text-[#9AA3AF]"
-        >
-          <BookOpen className="h-6 w-6" />
-          <span className="text-[10px] font-bold">Read</span>
-        </button>
+          <button
+            type="button"
+            onClick={handleShare}
+            className="flex flex-col items-center justify-center gap-0.5 bg-white py-2 text-[#6B7280] transition-colors hover:bg-[#F0F7F5] hover:text-[#2DBDB6]"
+          >
+            <Share2 className="h-6 w-6" />
+            <span className="text-[10px] font-bold">শেয়ার</span>
+          </button>
+        </div>
+      ) : (
+        <div className="mt-8 grid grid-cols-4 overflow-hidden rounded border border-[#E1E5E8]">
+          <button
+            type="button"
+            onClick={() => setLiked((v) => !v)}
+            className={`flex items-center justify-center border-r border-[#E1E5E8] py-2.5 transition-colors ${
+              liked ? "bg-red-50 text-red-500" : "bg-white text-[#6B7280] hover:bg-red-50 hover:text-red-500"
+            }`}
+            aria-label="Wishlist"
+          >
+            <Heart className={`h-6 w-6 ${liked ? "fill-red-500" : ""}`} />
+          </button>
 
-        <button
-          type="button"
-          onClick={handleWhatsappContact}
-          className="relative flex flex-col items-center justify-center gap-0.5 bg-white py-1 text-[#25D366] transition-colors hover:bg-[#F0FDF6]"
-        >
-          <FaWhatsapp className="h-6 w-6" />
-          <span className="text-[10px] font-bold text-[#0A0E2A]">যোগাযোগ</span>
-        </button>
-      </div>
+          <button
+            type="button"
+            onClick={handleCartClick}
+            disabled={adding || (!added && !isPreOrder && book.stock === 0)}
+            className={`flex items-center justify-center border-r border-[#E1E5E8] py-2.5 transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
+              added ? "bg-[#E6F7F6] text-[#2DBDB6]" : "bg-white text-[#6B7280] hover:bg-[#F0F7F5] hover:text-[#2DBDB6]"
+            }`}
+            aria-label={added ? "কার্টে যান" : "কার্টে যোগ করুন"}
+          >
+            {addToCartMutation.isPending ? (
+              <Loader2 className="h-6 w-6 animate-spin" />
+            ) : added ? (
+              <Check className="h-6 w-6" />
+            ) : (
+              <ShoppingCart className="h-6 w-6" />
+            )}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => router.push(`/checkout?bookId=${book.id}`)}
+            disabled={!isPreOrder && book.stock === 0}
+            className="flex flex-col items-center justify-center gap-0.5 border-r border-[#E1E5E8] bg-[#2DBDB6] py-1 text-white transition-colors hover:bg-[#1f9d97] disabled:cursor-not-allowed disabled:bg-[#E1E5E8] disabled:text-[#9AA3AF]"
+          >
+            <BookOpen className="h-6 w-6" />
+            <span className="text-[10px] font-bold">Read</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={handleWhatsappContact}
+            className="relative flex flex-col items-center justify-center gap-0.5 bg-white py-1 text-[#25D366] transition-colors hover:bg-[#F0FDF6]"
+          >
+            <FaWhatsapp className="h-6 w-6" />
+            <span className="text-[10px] font-bold text-[#0A0E2A]">যোগাযোগ</span>
+          </button>
+        </div>
+      )}
 
       {canPreview && (
         <BookPreviewModal

@@ -18,6 +18,7 @@ interface LatestUsersProps {
 
 function getAvatarUrl(avatar?: string) {
   if (!avatar) return "";
+  if (avatar.startsWith("http")) return avatar;
   const base = process.env.NEXT_PUBLIC_API_URL?.replace("/api/v1", "");
   return `${base}/uploads/avatars/${avatar}`;
 }

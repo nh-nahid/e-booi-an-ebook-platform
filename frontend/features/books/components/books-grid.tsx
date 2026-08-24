@@ -48,6 +48,10 @@ export default function BooksGrid({
       return "/placeholder-book.png";
     }
 
+    if (image.startsWith("http")) {
+      return image;
+    }
+
     return `${process.env.NEXT_PUBLIC_API_URL?.replace(
       "/api/v1",
       "",

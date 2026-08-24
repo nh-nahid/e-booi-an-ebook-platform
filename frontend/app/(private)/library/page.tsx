@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { BookOpen, Download, Loader2 } from "lucide-react";
+import { BookOpen, Download, Loader2, Share2 } from "lucide-react";
 import { FaFacebook, FaWhatsapp } from "react-icons/fa";
 import { toast } from "sonner";
 import { isAxiosError } from "axios";
@@ -51,6 +51,30 @@ export default function LibraryPage() {
         },
       },
     );
+  };
+
+  const handleRead = (bookId: string) => {
+    router.push(`/read/${bookId}`);
+  };
+
+  const handleShare = async (bookId: string, title: string) => {
+    if (typeof window === "undefined") return;
+
+    const url = `${window.location.origin}/books/${bookId}`;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({ title, url });
+      } catch {
+        // user cancelled the native share sheet — nothing to do
+      }
+      return;
+    }
+
+    if (navigator.clipboard) {
+      await navigator.clipboard.writeText(url);
+      toast.success("লিংক কপি হয়েছে");
+    }
   };
 
   return (
@@ -118,18 +142,36 @@ export default function LibraryPage() {
                     {book.author}
                   </p>
 
-                  <button
-                    onClick={() => handleDownload(book._id, book.title)}
-                    disabled={isDownloading}
-                    className="mt-1.5 flex h-7 w-full items-center justify-center gap-1 rounded bg-[#2DBDB6] text-[10px] font-bold text-white transition-transform hover:-translate-y-0.5 disabled:opacity-60 sm:mt-3 sm:h-9 sm:gap-1.5 sm:text-xs"
-                  >
-                    {isDownloading ? (
-                      <Loader2 className="h-3 w-3 animate-spin sm:h-3.5 sm:w-3.5" />
-                    ) : (
-                      <Download className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
-                    )}
-                    ডাউনলোড
-                  </button>
+                  <div className="mt-1.5 flex h-7 w-full items-stretch overflow-hidden rounded border border-[#E1E5E8] sm:mt-3 sm:h-9">
+                    <button
+                      onClick={() => handleDownload(book._id, book.title)}
+                      disabled={isDownloading}
+                      aria-label="ডাউনলোড"
+                      className="flex flex-1 items-center justify-center border-r border-[#E1E5E8] bg-white text-[#6B7280] transition-colors hover:bg-[#F0F7F5] hover:text-[#2DBDB6] disabled:opacity-60"
+                    >
+                      {isDownloading ? (
+                        <Loader2 className="h-3 w-3 animate-spin sm:h-3.5 sm:w-3.5" />
+                      ) : (
+                        <Download className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                      )}
+                    </button>
+
+                    <button
+                      onClick={() => handleRead(book._id)}
+                      aria-label="পড়ুন"
+                      className="flex flex-1 items-center justify-center border-r border-[#E1E5E8] bg-[#2DBDB6] text-white transition-colors hover:bg-[#1f9d97]"
+                    >
+                      <BookOpen className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                    </button>
+
+                    <button
+                      onClick={() => handleShare(book._id, book.title)}
+                      aria-label="শেয়ার করুন"
+                      className="flex flex-1 items-center justify-center bg-white text-[#6B7280] transition-colors hover:bg-[#F0F7F5] hover:text-[#2DBDB6]"
+                    >
+                      <Share2 className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                    </button>
+                  </div>
                 </div>
               );
             })}

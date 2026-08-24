@@ -23,7 +23,9 @@ export default function ViewUserDialog({ user }: ViewUserDialogProps) {
   const imageBaseUrl = process.env.NEXT_PUBLIC_API_URL?.replace("/api/v1", "");
 
   const avatarSrc = user.avatar
-    ? `${imageBaseUrl}/uploads/avatars/${user.avatar}`
+    ? user.avatar.startsWith("http")
+      ? user.avatar
+      : `${imageBaseUrl}/uploads/avatars/${user.avatar}`
     : undefined;
 
   const initials = user.name
