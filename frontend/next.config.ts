@@ -21,6 +21,16 @@ const nextConfig = {
         hostname: "e-booi-an-ebook-platform.onrender.com",
         pathname: "/uploads/**",
       },
+      // Cloudinary — book covers, book PDFs' cover previews, and avatars
+      // are now served from here post-migration. Next.js's <Image>
+      // component refuses to load any hostname not explicitly
+      // whitelisted here, which is why covers stopped rendering after
+      // switching to Cloudinary URLs.
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+        pathname: "/**",
+      },
     ],
   },
 };
