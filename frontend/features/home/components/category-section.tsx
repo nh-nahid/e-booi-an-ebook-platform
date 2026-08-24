@@ -188,8 +188,8 @@ export default function CategorySection({ categories: rawCategories }: CategoryS
               key={i}
               onClick={() => goToPage(i)}
               aria-label={`পৃষ্ঠা ${i + 1}`}
-              className={`h-1.5 rounded-full transition-all duration-300 ${
-                i === page ? "w-3 bg-[#2DBDB6]" : "w-1.5 bg-[#E1E5E8]"
+              className={`h-1.5 w-1.5 rounded-full bg-[#6B7280] transition-all duration-300 ${
+                i === page ? "opacity-100" : "opacity-30"
               }`}
             />
           ))}

@@ -21,7 +21,7 @@ export default function SectionHeader({ title, href = "/books" }: SectionHeaderP
 
       <Link
         href={href}
-        className="group flex items-center gap-0.5 text-xs font-semibold text-[#2DBDB6] transition-colors hover:text-[#1f9d97] sm:gap-1 sm:text-sm"
+        className="group flex items-center gap-0.5 text-xs font-semibold text-[gray] transition-colors hover:text-[#1f9d97] sm:gap-1 sm:text-sm"
       >
         সব দেখুন
         <ArrowRight className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-1 sm:h-3.5 sm:w-3.5" />

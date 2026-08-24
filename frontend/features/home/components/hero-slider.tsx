@@ -7,30 +7,25 @@ export interface PromoSlide {
   id: string;
   /** Path relative to /public, e.g. "/images/hero/banner-1.png" */
   image: string;
+  /** Optional mobile-only override, sized for the 2.3:1 mobile crop (e.g. 800x348) */
+  mobileImage?: string;
   /** Accessible alt text describing the banner's offer */
   alt: string;
   ctaHref: string;
 }
 
 // TODO: wire this up to real promo/campaign data (from your CMS or homeData) instead of hardcoding
+// Single-banner setup: only one promo slide right now (EB06 coupon), with
+// separate desktop/mobile crops. When more promos are ready, add more
+// entries here — the slider's dots/autoplay/swipe logic already only
+// activates once slides.length > 1.
 const DEFAULT_SLIDES: PromoSlide[] = [
   {
     id: "slide-1",
     image: "/images/hero/banner-1.png",
-    alt: "সব বইয়ে সর্বনিম্ন ৬০% ছাড় — EBO6 কুপন কোড ব্যবহার করুন",
+    mobileImage: "/images/hero/banner-1-mobile.png",
+    alt: "সব বইয়ে সর্বদা ৬% ছাড় — EB06 কুপন কোড ব্যবহার করুন",
     ctaHref: "/books?offer=true",
-  },
-  {
-    id: "slide-2",
-    image: "/images/hero/banner-2.png",
-    alt: "এই সপ্তাহের নতুন বইগুলো দেখুন",
-    ctaHref: "/books?sort=latest",
-  },
-  {
-    id: "slide-3",
-    image: "/images/hero/banner-3.png",
-    alt: "এখনই পড়ুন, ডাউনলোডের ঝামেলা নেই — eBook রিডার",
-    ctaHref: "/books?type=ebook",
   },
 ];
 
@@ -93,14 +88,35 @@ export default function HeroSlider({ slides = DEFAULT_SLIDES, autoPlayMs = 8000 
                 className="relative h-full w-full shrink-0"
                 aria-label={slide.alt}
               >
-                <Image
-                  src={slide.image}
-                  alt={slide.alt}
-                  fill
-                  priority={i === 0}
-                  sizes="100vw"
-                  className="object-cover"
-                />
+                {slide.mobileImage ? (
+                  <>
+                    <Image
+                      src={slide.mobileImage}
+                      alt={slide.alt}
+                      fill
+                      priority={i === 0}
+                      sizes="100vw"
+                      className="object-cover sm:hidden"
+                    />
+                    <Image
+                      src={slide.image}
+                      alt={slide.alt}
+                      fill
+                      priority={i === 0}
+                      sizes="100vw"
+                      className="hidden object-cover sm:block"
+                    />
+                  </>
+                ) : (
+                  <Image
+                    src={slide.image}
+                    alt={slide.alt}
+                    fill
+                    priority={i === 0}
+                    sizes="100vw"
+                    className="object-cover"
+                  />
+                )}
               </div>
             ))}
           </div>
@@ -114,8 +130,8 @@ export default function HeroSlider({ slides = DEFAULT_SLIDES, autoPlayMs = 8000 
               key={slide.id}
               onClick={() => goTo(i)}
               aria-label={`Go to slide ${i + 1}`}
-              className={`h-1.5 rounded-full transition-all duration-300 ${
-                i === active ? "w-3 bg-[#2DBDB6]" : "w-1.5 bg-[#E1E5E8]"
+              className={`h-1.5 w-1.5 rounded-full bg-[#6B7280] transition-all duration-300 ${
+                i === active ? "opacity-100" : "opacity-30"
               }`}
             />
           ))}

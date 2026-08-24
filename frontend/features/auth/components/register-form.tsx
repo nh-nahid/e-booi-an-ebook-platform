@@ -1,20 +1,20 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
 import {
-  Mail,
-  Lock,
-  User,
+  ArrowRight,
   Eye,
   EyeOff,
-  ArrowRight,
-  Loader2,
-  ShieldCheck,
   KeyRound,
+  Loader2,
+  Lock,
+  Mail,
+  ShieldCheck,
+  User,
 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { toast } from "sonner";
 
 import { useRegister } from "@/features/auth/hooks/auth.hooks";
@@ -122,12 +122,7 @@ export default function RegisterForm() {
       <div className="relative">
         {/* logo */}
         <div className="mb-5 flex items-center gap-2">
-          <Image
-            src="/logo.jpeg"
-            alt="eBooi Logo"
-            width={32}
-            height={32}
-          />
+          <Image src="/logo.jpeg" alt="ebooi Logo" width={32} height={32} />
 
           <span className="text-lg font-extrabold text-[#0A0E2A]">
             eBoo<span className="text-[#2DBDB6]">i</span>
@@ -136,7 +131,7 @@ export default function RegisterForm() {
 
         <h1 className="text-2xl font-bold text-[#0A0E2A]">Create an account</h1>
         <p className="mt-1 text-sm text-[#6B7280]">
-          Join eBooi and start building your library.
+          Join ebooi and start building your library.
         </p>
 
         {/* role toggle */}

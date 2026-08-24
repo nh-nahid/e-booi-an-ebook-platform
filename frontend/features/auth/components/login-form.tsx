@@ -20,10 +20,10 @@ import {
   type LoginPayload,
 } from "@/features/auth/schemas/auth.schema";
 
+import { useAuth } from "@/hooks/use-auth";
 import { setAccessToken } from "@/services/api/token";
 import { ArrowRight, Eye, EyeOff, Loader2, Lock, Mail } from "lucide-react";
 import { getProfile } from "../api/auth.api";
-import { useAuth } from "@/hooks/use-auth";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -46,7 +46,7 @@ export default function LoginForm() {
     login(values, {
       onSuccess: async (data) => {
         setAccessToken(data.accessToken);
-        
+
         await refreshAuth();
 
         await queryClient.fetchQuery({
@@ -115,7 +115,7 @@ export default function LoginForm() {
             />
 
             <span className="text-lg font-bold" style={{ color: "#0A0E2A" }}>
-              eBooi
+              ebooi
             </span>
           </div>
 

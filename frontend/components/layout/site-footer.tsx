@@ -1,13 +1,16 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
-import Link from "next/link";
-import Image from "next/image";
 import { ChevronDown, Mail } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useState, type ReactNode } from "react";
 import { FaFacebook, FaWhatsapp } from "react-icons/fa";
 
 const SOCIAL_LINKS = [
-  { Icon: FaFacebook, href: "https://www.facebook.com/profile.php?id=61579813011880" },
+  {
+    Icon: FaFacebook,
+    href: "https://www.facebook.com/profile.php?id=61579813011880",
+  },
   { Icon: FaWhatsapp, href: "https://wa.me/8801791148655" },
 ];
 
@@ -60,14 +63,14 @@ export default function SiteFooter() {
           <div className="flex items-center gap-2">
             <Image
               src="/logo.jpeg"
-              alt="eBooi Logo"
+              alt="ebooi Logo"
               width={26}
               height={26}
               className="h-[26px] w-[26px] sm:h-8 sm:w-8"
             />
 
             <span className="text-base font-extrabold text-white sm:text-lg">
-              eB<span className="text-[#2DBDB6]">oo</span>i
+              eb<span className="text-[#2DBDB6]">oo</span>i
             </span>
           </div>
           <p className="mt-2 text-xs leading-relaxed text-[#A7B0C8] sm:mt-3 sm:text-sm">
@@ -168,7 +171,7 @@ export default function SiteFooter() {
       </div>
 
       <div className="container relative mx-auto mt-4 border-t border-white/10 pt-3 text-center text-[10px] text-[#7c86a3] sm:mt-4 sm:pt-5 sm:text-[11.5px]">
-        © ২০২৬ eBooi. সর্বস্বত্ব সংরক্ষিত।
+        © ২০২৬ ebooi. সর্বস্বত্ব সংরক্ষিত।
       </div>
     </footer>
   );

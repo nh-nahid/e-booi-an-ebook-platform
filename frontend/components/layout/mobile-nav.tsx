@@ -28,11 +28,11 @@ export default function MobileNav() {
     <Sheet>
 
       {/* trigger button (no asChild) — matches the HTML's 3-bar menu icon.
-          Visible only on large screens (lg+); hidden on mobile. The outer
-          div controls responsive visibility so it doesn't fight the
-          .mn-menu-icon CSS class's own `display: flex`. */}
+          Visible at all breakpoints, including mobile. The outer div is
+          just a wrapper so it doesn't fight the .mn-menu-icon CSS class's
+          own `display: flex`. */}
       <SheetTrigger>
-        <div className="hidden lg:block">
+        <div className="block">
           <div className="mn-menu-icon">
             <span></span>
             <span></span>
@@ -47,7 +47,7 @@ export default function MobileNav() {
             className="inline-flex w-fit items-center gap-1 rounded-2xl px-4 py-1.5 text-lg font-extrabold"
             style={{ background: "#E6F7F6", color: "#0A0E2A" }}
           >
-            eBoo<span style={{ color: "#2DBDB6" }}>i</span>
+            eboo<span style={{ color: "#2DBDB6" }}>i</span>
           </SheetTitle>
         </SheetHeader>
 

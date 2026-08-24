@@ -2,7 +2,7 @@
 
 import { X } from "lucide-react";
 
-// eBooi is Digital-only — kept as a single-value union (not a bare
+// ebooi is Digital-only — kept as a single-value union (not a bare
 // string) so the rest of the filter's typing stays intact.
 const BOOK_TYPES = [{ value: "Digital", label: "Digital" }] as const;
 
@@ -29,15 +29,15 @@ export default function BooksFilters({
   className = "",
 }: BooksFiltersProps) {
   const toggleCategory = (category: string) => {
-  const exists = filters.categories.includes(category);
+    const exists = filters.categories.includes(category);
 
-  onChange({
-    ...filters,
-    categories: exists
-      ? filters.categories.filter((c) => c !== category)
-      : [...filters.categories, category],
-  });
-};
+    onChange({
+      ...filters,
+      categories: exists
+        ? filters.categories.filter((c) => c !== category)
+        : [...filters.categories, category],
+    });
+  };
 
   const toggleType = (bookType: "Digital") => {
     onChange({
@@ -46,11 +46,11 @@ export default function BooksFilters({
     });
   };
 
-const hasActiveFilters =
-  filters.categories.length > 0 ||
-  filters.bookType !== "" ||
-  filters.minPrice > 0 ||
-  filters.maxPrice > 0;
+  const hasActiveFilters =
+    filters.categories.length > 0 ||
+    filters.bookType !== "" ||
+    filters.minPrice > 0 ||
+    filters.maxPrice > 0;
 
   return (
     <div
@@ -94,10 +94,7 @@ const hasActiveFilters =
                   }`}
                 >
                   {checked && (
-                    <svg
-                      viewBox="0 0 12 12"
-                      className="h-2.5 w-2.5 fill-white"
-                    >
+                    <svg viewBox="0 0 12 12" className="h-2.5 w-2.5 fill-white">
                       <path d="M4.5 8.5L2 6l-.7.7L4.5 10l6-6-.7-.7z" />
                     </svg>
                   )}
@@ -106,9 +103,7 @@ const hasActiveFilters =
                 <span
                   onClick={() => toggleCategory(cat)}
                   className={
-                    checked
-                      ? "font-semibold text-[#0A0E2A]"
-                      : "text-[#6B7280]"
+                    checked ? "font-semibold text-[#0A0E2A]" : "text-[#6B7280]"
                   }
                 >
                   {cat}
@@ -118,7 +113,6 @@ const hasActiveFilters =
           })}
         </div>
       </div>
-
 
       {/* Price */}
       <div className="border-t border-[#F1F3F5] pt-4">

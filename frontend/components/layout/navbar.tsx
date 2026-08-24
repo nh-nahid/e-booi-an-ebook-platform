@@ -1,14 +1,14 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Library, Search, ShoppingCart, User as UserIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Home, Library, Search, ShoppingCart, User as UserIcon } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
+import { useCart } from "@/features/cart/hooks/use-cart";
 import { useAuth } from "@/hooks/use-auth";
 import { useDebounce } from "@/hooks/use-debounce";
-import { useCart } from "@/features/cart/hooks/use-cart";
 
 import MobileNav from "./mobile-nav";
 
@@ -120,14 +120,14 @@ export default function Navbar() {
           >
             <Image
               src="/logo.jpeg"
-              alt="eBooi Logo"
+              alt="ebooi Logo"
               width={36}
               height={36}
               priority
               className="rounded-lg"
             />
             <span className="text-xl font-extrabold tracking-tight text-[#0A0E2A]">
-              eB<span className="text-[#2DBDB6]">oo</span>i
+              eb<span className="text-[#2DBDB6]">oo</span>i
             </span>
           </Link>
         </div>
@@ -158,7 +158,6 @@ export default function Navbar() {
         </div>
 
         <div className="flex shrink-0 items-center gap-3 sm:gap-6">
-
           <Link
             href="/library"
             onClick={clearSearchState}
@@ -166,7 +165,9 @@ export default function Navbar() {
             aria-label="লাইব্রেরি"
           >
             <Library className="h-5 w-5" />
-            <span className="text-[10px] font-normal leading-none">লাইব্রেরি</span>
+            <span className="text-[10px] font-normal leading-none">
+              লাইব্রেরি
+            </span>
           </Link>
 
           <Link

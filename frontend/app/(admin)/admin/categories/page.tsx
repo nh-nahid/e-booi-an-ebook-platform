@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import { Mail, ArrowRight, Loader2, Check, Clock } from "lucide-react";
+import { ArrowRight, Check, Clock, Loader2, Mail } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
 // Set your real launch date/time here
 const LAUNCH_DATE = new Date("2026-09-01T00:00:00");
@@ -96,12 +96,7 @@ export default function ComingSoonPage() {
           className="cs-fade mb-6 flex items-center gap-2"
           style={{ animationDelay: "0s" }}
         >
-          <Image
-            src="/logo.jpeg"
-            alt="eBooi Logo"
-            width={32}
-            height={32}
-          />
+          <Image src="/logo.jpeg" alt="ebooi Logo" width={32} height={32} />
 
           <span className="text-xl font-extrabold text-[#0A0E2A]">
             eBoo<span className="text-[#2DBDB6]">i</span>

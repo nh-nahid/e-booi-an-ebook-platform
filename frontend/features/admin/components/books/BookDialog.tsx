@@ -1,8 +1,8 @@
 "use client";
 
 import { ImagePlus, Loader2, Plus, X } from "lucide-react";
-import { useRef, useState } from "react";
 import type { ReactElement } from "react";
+import { useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -46,7 +46,7 @@ export interface BookFormValues {
   pages: string;
   price: string;
   stock: string;
-  // eBooi is Digital-only — the union is kept at a single value (rather
+  // ebooi is Digital-only — the union is kept at a single value (rather
   // than a plain string) so the rest of the form's typing stays intact.
   bookType: "Digital";
   status: "published" | "draft";
