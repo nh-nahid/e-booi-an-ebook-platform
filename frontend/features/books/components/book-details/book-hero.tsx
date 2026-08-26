@@ -17,6 +17,7 @@ import {
   Flame,
   Loader2,
   Download,
+  Star,
 } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 
@@ -45,6 +46,8 @@ export interface BookHeroData {
   views: number;
   isPreOrder: boolean;
   isFeatured: boolean;
+  averageRating: number;
+  reviewCount: number;
 }
 
 interface BookHeroProps {
@@ -214,30 +217,14 @@ export default function BookHero({ book }: BookHeroProps) {
               </span>
             )}
 
-            {badge && (
-              <span
-                className={`absolute left-1.5 top-1.5 flex items-center gap-0.5 rounded px-1.5 py-0.5 text-[8px] font-bold text-white sm:left-2 sm:top-2 sm:gap-1 sm:rounded-full sm:px-2 sm:py-1 sm:text-[10px] ${
-                  badge === "pre-order" ? "bg-[#0A0E2A]" : "bg-[#2DBDB6]"
-                }`}
-              >
-                {badge === "pre-order" ? (
-                  <>
-                    <Clock className="h-2 w-2 sm:h-2.5 sm:w-2.5" /> প্রি-অর্ডার
-                  </>
-                ) : (
-                  <>
-                    <Flame className="h-2 w-2 sm:h-2.5 sm:w-2.5" /> জনপ্রিয়
-                  </>
-                )}
-              </span>
-            )}
+            
           </div>
 
           {canPreview && (
             <button
               type="button"
               onClick={() => setPreviewOpen(true)}
-              className="group mt-auto flex w-full items-center justify-center gap-1 rounded border border-[#2DBDB6] bg-transparent px-1.5 py-1.5 text-center text-[9px] font-bold leading-tight text-[#2DBDB6] transition-all duration-200 hover:bg-[#E6F7F6] active:scale-[0.98] sm:mt-0 sm:gap-1.5 sm:px-2 sm:py-2 sm:text-[11px]"
+              className="group mt-auto flex w-full items-center justify-center gap-1 rounded border  bg-transparent px-1.5 py-1.5 text-center text-[9px] font-bold leading-tight text-[#2DBDB6] transition-all duration-200 hover:bg-[#E6F7F6] active:scale-[0.98] sm:mt-0 sm:gap-1.5 sm:px-2 sm:py-2 sm:text-[11px]"
             >
               <Eye className="h-3 w-3 shrink-0 sm:h-3.5 sm:w-3.5" />
               <span>কিছু অংশ পড়ে দেখুন</span>
@@ -263,9 +250,28 @@ export default function BookHero({ book }: BookHeroProps) {
 
           <p className=" text-sm text-[#6B7280]">{book.author}</p>
 
-          <span className=" inline-block rounded-full text-xs font-bold text-[#0a0e2a93]">
+          <span className=" inline-block rounded py-0.5 max-w-[150px]  bg-[#2dbdb63c] text-xs font-bold text-[#0a0e2a93]">
             {book.category}
           </span>
+
+          <div className="mt-1 flex items-center gap-1.5">
+            <div className="flex items-center gap-0.5">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <Star
+                  key={i}
+                  className={`h-3.5 w-3.5 ${
+                    i < Math.round(book.averageRating)
+                      ? "fill-[#2DBDB6] text-[#2DBDB6]"
+                      : "fill-[#E1E5E8] text-[#E1E5E8]"
+                  }`}
+                />
+              ))}
+            </div>
+            <span className="text-xs font-semibold text-[#0A0E2A]">
+              {bn(book.averageRating.toFixed(1))}
+            </span>
+            <span className="text-xs text-[#9AA3AF]">({bn(book.reviewCount)} রিভিউ)</span>
+          </div>
 
           <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[#6B7280]">
             <span className="flex items-center gap-1">

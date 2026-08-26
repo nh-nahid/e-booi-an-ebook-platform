@@ -1,4 +1,5 @@
 import SiteFooter from "@/components/layout/site-footer";
+import AdminRedirectGuard from "@/features/home/components/admin-redirect-guard";
 import HeroSection from "@/features/home/components/hero-section";
 import CategorySection from "@/features/home/components/category-section";
 import BookSection from "@/features/home/components/book-section";
@@ -16,6 +17,8 @@ export default async function HomePage() {
 
   return (
     <div className="min-h-screen bg-[#F7F9FA]">
+      <AdminRedirectGuard />
+
       <HeroSection statistics={homeData.statistics} />
 
       <CategorySection categories={homeData.categories} />

@@ -78,6 +78,8 @@ export default function BookDetailPage() {
             views: book.views ?? 0,
             isPreOrder: book.isPreOrder,
             isFeatured: book.isFeatured,
+            averageRating: book.averageRating,
+            reviewCount: book.reviewCount,
           }}
         />
 
