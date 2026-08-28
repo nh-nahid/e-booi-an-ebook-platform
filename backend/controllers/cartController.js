@@ -53,7 +53,7 @@ async function getCart(req, res, next) {
     }).populate({
       path: "book",
       select:
-        "title author coverImage price stock bookType isPreOrder",
+        "title author coverImage price bookType isPreOrder",
     });
 
     res.status(200).json({

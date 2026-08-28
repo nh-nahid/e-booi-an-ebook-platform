@@ -23,6 +23,13 @@ const bookSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    // Pre-discount "MRP" shown struck-through next to price on the storefront.
+    // Optional — a discount badge only renders when this is set and higher
+    // than price (see book-hero.tsx's hasDiscount check).
+    originalPrice: {
+      type: Number,
+      default: null,
+    },
     // Cloudinary secure_url for the cover image.
     coverImage: {
       type: String,
@@ -56,10 +63,6 @@ const bookSchema = new mongoose.Schema(
     pdfFilePublicId: {
       type: String,
       default: null,
-    },
-    stock: {
-      type: Number,
-      default: 1,
     },
     isPublished: {
       type: Boolean,
