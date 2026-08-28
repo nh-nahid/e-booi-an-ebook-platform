@@ -118,7 +118,7 @@ export default function Navbar() {
               className="rounded-lg"
             />
             <span className="text-xl font-extrabold tracking-tight text-[#0A0E2A]">
-              eB<span className="text-[#2DBDB6]">oo</span>i
+              eb<span className="text-[#2DBDB6]">oo</span>i
             </span>
           </Link>
         </div>
