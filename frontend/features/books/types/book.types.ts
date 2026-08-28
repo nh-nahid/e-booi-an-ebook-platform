@@ -6,6 +6,7 @@ export interface Book {
   category: string;
 
   price: number;
+  originalPrice?: number | null;
   coverImage: string;
   coverUrl?: string;
 
@@ -13,7 +14,6 @@ export interface Book {
 
   pdfFile: string | null;
 
-  stock: number;
   sold: number;
   // Incremented on every book-detail fetch; used for the "views" stat.
   views?: number;

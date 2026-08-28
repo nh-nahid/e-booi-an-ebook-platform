@@ -50,7 +50,6 @@ const router = useRouter();
     originalPrice: undefined,
     coverUrl: item.book.coverImage,
     quantity: item.quantity ?? 1,
-    stock: item.book.stock,
   }));
 
   const subtotal = items.reduce(

@@ -9,7 +9,6 @@ export interface CartBook {
   price: number;
   coverImage: string;
   bookType: "Digital";
-  stock: number;
   isPreOrder: boolean;
   isFeatured: boolean;
 }

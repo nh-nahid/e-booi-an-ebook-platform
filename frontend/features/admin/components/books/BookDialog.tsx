@@ -45,7 +45,7 @@ export interface BookFormValues {
   publicationDate: string;
   pages: string;
   price: string;
-  stock: string;
+  originalPrice: string;
   // ebooi is Digital-only — the union is kept at a single value (rather
   // than a plain string) so the rest of the form's typing stays intact.
   bookType: "Digital";
@@ -63,7 +63,7 @@ const initialValues: BookFormValues = {
   publisher: "",
   isbn: "",
   price: "",
-  stock: "",
+  originalPrice: "",
   bookType: "Digital",
   status: "draft",
   description: "",
@@ -355,18 +355,18 @@ export default function BookDialog({
 
             <div className="space-y-1.5">
               <Label
-                htmlFor="stock"
+                htmlFor="originalPrice"
                 className="text-xs font-semibold text-[#0A0E2A]"
               >
-                Stock
+                Original Price (৳)
               </Label>
               <Input
-                id="stock"
+                id="originalPrice"
                 type="number"
                 min="0"
-                value={values.stock}
-                onChange={(e) => update("stock", e.target.value)}
-                placeholder="0"
+                value={values.originalPrice}
+                onChange={(e) => update("originalPrice", e.target.value)}
+                placeholder="Optional — for discount"
                 className="h-11 rounded-xl border-[#E1E5E8] focus-visible:border-[#2DBDB6] focus-visible:ring-4 focus-visible:ring-[#2DBDB6]/15"
               />
             </div>

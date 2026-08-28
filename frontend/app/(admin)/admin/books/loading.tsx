@@ -74,9 +74,6 @@ export default function BooksLoading() {
               {/* Price */}
               <div className={`h-4 w-16 rounded ${shimmer}`} />
 
-              {/* Stock */}
-              <div className={`h-4 w-10 rounded ${shimmer}`} />
-
               {/* Rating */}
               <div>
                 <div className={`h-4 w-12 rounded ${shimmer}`} />

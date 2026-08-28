@@ -65,15 +65,13 @@ export default function BookDetailPage() {
             author: book.author,
             category: book.category,
             price: book.price,
-            // No `originalPrice` field exists on the Book model yet, so
-            // there's nothing real to show here — keeping this undefined
-            // (rather than inventing a number) means the strikethrough /
-            // discount badge only ever appears once that field is real.
-            originalPrice: undefined,
+            // Optional admin-set "MRP" — BookHero only renders the
+            // strikethrough/discount badge when this is set and higher
+            // than price.
+            originalPrice: book.originalPrice ?? undefined,
             coverImage: book.coverImage,
             bookType: book.bookType,
             pdfFile: book.pdfFile,
-            stock: book.stock,
             sold: book.sold,
             views: book.views ?? 0,
             isPreOrder: book.isPreOrder,

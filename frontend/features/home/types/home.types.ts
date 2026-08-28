@@ -38,7 +38,6 @@ export interface Book {
 
   description?: string;
   pdfFile?: string | null;
-  stock: number;
   sold?: number;
   // Incremented on every book-detail fetch; used for the "views" stat.
   views?: number;

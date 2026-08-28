@@ -41,7 +41,6 @@ export interface BookHeroData {
   coverImage: string;
   bookType: "Digital" | "Physical";
   pdfFile: string | null;
-  stock: number;
   sold: number;
   views: number;
   isPreOrder: boolean;
@@ -92,18 +91,6 @@ export default function BookHero({ book }: BookHeroProps) {
   const previewUrl = canPreview ? getBookPreviewUrl(book.id) : "";
 
   const coverUrl = getCoverImageUrl(book.coverImage);
-
-  const stockLabel = isPreOrder
-    ? "প্রি-অর্ডার চলমান"
-    : book.stock > 0
-      ? `স্টকে আছে (${bn(book.stock)} কপি)`
-      : "স্টক নেই";
-
-  const stockColor = isPreOrder
-    ? "text-[#0A0E2A]"
-    : book.stock > 0
-      ? "text-emerald-600"
-      : "text-red-600";
 
   const handleAddToCart = async () => {
     try {
@@ -224,7 +211,7 @@ export default function BookHero({ book }: BookHeroProps) {
             <button
               type="button"
               onClick={() => setPreviewOpen(true)}
-              className="group mt-auto flex w-full items-center justify-center gap-1 rounded border  bg-transparent px-1.5 py-1.5 text-center text-[9px] font-bold leading-tight text-[#2DBDB6] transition-all duration-200 hover:bg-[#E6F7F6] active:scale-[0.98] sm:mt-0 sm:gap-1.5 sm:px-2 sm:py-2 sm:text-[11px]"
+              className="group mt-auto flex w-full items-center justify-center gap-1 rounded border  bg-transparent px-1.5 py-1.5 text-center text-[9px] font-bold leading-tight text-[#293b3bd4] transition-all duration-200 hover:bg-[#E6F7F6] active:scale-[0.98] sm:mt-0 sm:gap-1.5 sm:px-2 sm:py-2 sm:text-[11px]"
             >
               <Eye className="h-3 w-3 shrink-0 sm:h-3.5 sm:w-3.5" />
               <span>কিছু অংশ পড়ে দেখুন</span>
@@ -298,11 +285,6 @@ export default function BookHero({ book }: BookHeroProps) {
             )}
           </div>
 
-          <p className={`mt-1.5 flex items-center gap-1 text-xs font-semibold ${stockColor}`}>
-            <Check className="h-3.5 w-3.5" />
-            {stockLabel}
-          </p>
-
           {isPurchased ? (
             <span className="mt-auto flex w-full max-w-[150px] items-center justify-center gap-1 rounded border border-emerald-200 bg-emerald-50 px-1.5 py-1.5 text-[9px] font-bold leading-tight text-emerald-600 sm:mt-3 sm:px-2 sm:py-2 sm:text-[11px]">
               <Check className="h-3 w-3 sm:h-3.5 sm:w-3.5" /> কেনা হয়েছে
@@ -311,8 +293,8 @@ export default function BookHero({ book }: BookHeroProps) {
             <button
               type="button"
               onClick={handleBuyNow}
-              disabled={adding || (!added && !isPreOrder && book.stock === 0)}
-              className="mt-auto w-full max-w-[130px] rounded border border-[#2DBDB6] bg-transparent px-1.5 py-1.5 text-[9px] font-bold leading-tight text-[#2DBDB6] transition-all duration-200 hover:bg-[#E6F7F6] disabled:cursor-not-allowed disabled:opacity-50 sm:mt-3 sm:max-w-[150px] sm:px-2 sm:py-2 sm:text-[11px]"
+              disabled={adding}
+              className="mt-auto w-full max-w-[130px] rounded border border bg-transparent px-1.5 py-1.5 text-[9px] font-bold leading-tight text-[#293b3bd4] transition-all duration-200 hover:bg-[#E6F7F6] disabled:cursor-not-allowed disabled:opacity-50 sm:mt-3 sm:max-w-[150px] sm:px-2 sm:py-2 sm:text-[11px]"
             >
               {isPreOrder ? "প্রি-অর্ডার করুন" : "এখনই কিনুন"}
             </button>
@@ -381,7 +363,7 @@ export default function BookHero({ book }: BookHeroProps) {
           <button
             type="button"
             onClick={handleCartClick}
-            disabled={adding || (!added && !isPreOrder && book.stock === 0)}
+            disabled={adding}
             className={`flex items-center justify-center border-r border-[#E1E5E8] py-2.5 transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
               added ? "bg-[#E6F7F6] text-[#2DBDB6]" : "bg-white text-[#6B7280] hover:bg-[#F0F7F5] hover:text-[#2DBDB6]"
             }`}
@@ -399,8 +381,7 @@ export default function BookHero({ book }: BookHeroProps) {
           <button
             type="button"
             onClick={() => router.push(`/checkout?bookId=${book.id}`)}
-            disabled={!isPreOrder && book.stock === 0}
-            className="flex flex-col items-center justify-center gap-0.5 border-r border-[#E1E5E8] bg-[#2DBDB6] py-1 text-white transition-colors hover:bg-[#1f9d97] disabled:cursor-not-allowed disabled:bg-[#E1E5E8] disabled:text-[#9AA3AF]"
+            className="flex flex-col items-center justify-center gap-0.5 border-r border-[#E1E5E8] bg-[#2DBDB6] py-1 text-white transition-colors hover:bg-[#1f9d97]"
           >
             <BookOpen className="h-6 w-6" />
             <span className="text-[10px] font-bold">Read</span>

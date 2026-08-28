@@ -106,11 +106,6 @@ export default function BookViewDialog({
                 />
 
                 <InfoItem
-                  label="Stock"
-                  value={String(book.stock)}
-                />
-
-                <InfoItem
                   label="Rating"
                   value={`⭐ ${book.averageRating ?? 0} (${book.reviewCount ?? 0})`}
                 />

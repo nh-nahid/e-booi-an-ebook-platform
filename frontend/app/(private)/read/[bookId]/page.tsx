@@ -235,8 +235,13 @@ export default function BookReaderPage() {
 
   const bg = THEME_BG[theme];
   const filter = THEME_FILTER[theme];
-  const showLoader = fileLoading || !docReady;
-  const showError = (fileError || renderError) && !showLoader;
+  // Error must win over the loader: docReady only ever flips to true
+  // inside the fileBytes-driven effect below, so when the file fetch
+  // itself fails (bad/missing pdfFile, network error) docReady stays
+  // false forever and the old `fileLoading || !docReady` loader
+  // condition would spin indefinitely instead of showing showError.
+  const showError = fileError || renderError;
+  const showLoader = !showError && (fileLoading || !docReady);
 
   return (
     <div className={`fixed inset-0 z-50 flex flex-col ${bg}`}>

@@ -58,7 +58,6 @@ export default function BooksTable({
               <th className="px-4 py-4 lg:px-6">Category</th>
               <th className="px-4 py-4 lg:px-6">Type</th>
               <th className="px-4 py-4 lg:px-6">Price</th>
-              <th className="px-4 py-4 lg:px-6">Stock</th>
               <th className="px-4 py-4 lg:px-6">Rating</th>
               <th className="px-4 py-4 lg:px-6">Status</th>
               <th className="px-4 py-4 text-center lg:px-6">Actions</th>
@@ -116,20 +115,6 @@ export default function BooksTable({
                 </td>
 
                 <td className="px-4 py-4 text-sm lg:px-6">
-                  <span
-                    className={`font-semibold ${
-                      book.stock > 10
-                        ? "text-green-600"
-                        : book.stock > 0
-                          ? "text-yellow-600"
-                          : "text-red-600"
-                    }`}
-                  >
-                    {book.stock}
-                  </span>
-                </td>
-
-                <td className="px-4 py-4 text-sm lg:px-6">
                   ⭐ {book.averageRating ?? 0}
                   <div className="text-xs inline ml-1 text-gray-500">
                     ({book.reviewCount ?? 0})
@@ -171,7 +156,9 @@ export default function BooksTable({
                         publicationDate: book.publicationDate,
                         pages: String(book.pages),
                         price: String(book.price),
-                        stock: String(book.stock),
+                        originalPrice: book.originalPrice
+                          ? String(book.originalPrice)
+                          : "",
                         bookType: book.bookType,
                         status: book.isPublished ? "published" : "draft",
                         description: book.description,
@@ -266,18 +253,6 @@ export default function BooksTable({
               <div className="mt-3 flex items-center justify-between text-sm">
                 <span className="font-semibold text-[#0A0E2A]">
                   ৳ {book.price}
-                </span>
-
-                <span
-                  className={`font-semibold ${
-                    book.stock > 10
-                      ? "text-green-600"
-                      : book.stock > 0
-                        ? "text-yellow-600"
-                        : "text-red-600"
-                  }`}
-                >
-                  Stock: {book.stock}
                 </span>
 
                 <span className="text-gray-500">

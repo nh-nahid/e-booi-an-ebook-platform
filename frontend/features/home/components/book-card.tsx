@@ -198,26 +198,6 @@ export default function BookCard({ book, index = 0 }: BookCardProps) {
             <span className="text-sm font-bold text-white">{book.title}</span>
           )}
 
-          {(isPopular || isPreOrder) && (
-            <span
-              className={`
-                absolute left-2 top-2 flex items-center gap-1 rounded-full px-2 py-1 text-[9px]
-                font-bold text-white
-                ${isPreOrder ? "bg-[#0A0E2A]" : "bg-[#2DBDB6]"}
-              `}
-            >
-              {isPreOrder ? (
-                <>
-                  <Clock className="h-2.5 w-2.5" /> শীঘ্রই
-                </>
-              ) : (
-                <>
-                  <Flame className="h-2.5 w-2.5" /> জনপ্রিয়
-                </>
-              )}
-            </span>
-          )}
-
           <button
             type="button"
             onClick={(e) => {
@@ -313,9 +293,7 @@ export default function BookCard({ book, index = 0 }: BookCardProps) {
               <button
                 type="button"
                 onClick={handleAddToCart}
-                disabled={
-                  addToCartMutation.isPending || (!added && book.stock === 0)
-                }
+                disabled={addToCartMutation.isPending}
                 className={`
       flex flex-1 items-center justify-center
       border-r border-[#E1E5E8]

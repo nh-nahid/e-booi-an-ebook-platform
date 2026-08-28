@@ -12,7 +12,6 @@ export interface CartItemData {
   originalPrice?: number;
   coverUrl?: string;
   quantity: number;
-  stock: number;
 }
 
 interface CartItemProps {

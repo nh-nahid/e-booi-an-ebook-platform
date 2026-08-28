@@ -53,7 +53,9 @@ export default function AdminBooksPage() {
     formData.append("publicationDate", values.publicationDate);
     formData.append("pages", values.pages);
     formData.append("price", values.price);
-    formData.append("stock", values.stock);
+    if (values.originalPrice) {
+      formData.append("originalPrice", values.originalPrice);
+    }
     formData.append("bookType", values.bookType);
     formData.append("description", values.description);
 
@@ -94,7 +96,9 @@ export default function AdminBooksPage() {
     formData.append("publicationDate", values.publicationDate);
     formData.append("pages", values.pages);
     formData.append("price", values.price);
-    formData.append("stock", values.stock);
+    if (values.originalPrice) {
+      formData.append("originalPrice", values.originalPrice);
+    }
     formData.append("bookType", values.bookType);
     formData.append("description", values.description);
 

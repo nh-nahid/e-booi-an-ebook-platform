@@ -9,7 +9,6 @@ import { useAddToCart, useCart } from "@/features/cart/hooks/use-cart";
 
 interface AddToCartButtonProps {
   bookId: string;
-  stock: number;
 }
 
 interface ApiError {
@@ -18,7 +17,6 @@ interface ApiError {
 
 export default function AddToCartButton({
   bookId,
-  stock,
 }: AddToCartButtonProps) {
   const router = useRouter();
 
@@ -74,7 +72,7 @@ export default function AddToCartButton({
         e.stopPropagation();
         handleAddToCart();
       }}
-      disabled={adding || (!added && stock === 0)}
+      disabled={adding}
       className={`
         mt-2 flex w-full items-center justify-center gap-1.5
         rounded-full px-3 py-2

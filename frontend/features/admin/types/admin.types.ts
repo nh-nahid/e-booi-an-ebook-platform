@@ -168,7 +168,7 @@ export interface Book {
   pages: number;
 
   price: number;
-  stock: number;
+  originalPrice?: number | null;
 
   coverImage: string;
   pdfFile: string | null;
