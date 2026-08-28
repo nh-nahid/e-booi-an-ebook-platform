@@ -1,3 +1,11 @@
+// Render's outbound network doesn't route IPv6, but Node's DNS resolver
+// can still hand back an AAAA (IPv6) address first for dual-stack hosts
+// (Gmail's SMTP servers, Cloudinary's CDN, etc.), which then fails with
+// ENETUNREACH. Forcing IPv4-first resolution for the whole process fixes
+// outbound requests everywhere (nodemailer, fetch() for Cloudinary PDFs,
+// any future outbound call) without touching each call site individually.
+require("dns").setDefaultResultOrder("ipv4first");
+
 require("dotenv").config();
 
 const express = require("express");
