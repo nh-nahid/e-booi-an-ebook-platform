@@ -25,9 +25,9 @@ function CustomTooltip({ active, payload, label }: any) {
   if (!active || !payload?.length) return null;
 
   return (
-    <div className="rounded-xl border border-[#E1E5E8] bg-white px-3 py-2 shadow-[0_10px_24px_rgba(10,14,42,0.1)]">
-      <p className="text-xs font-semibold text-[#6B7280]">{label}</p>
-      <p className="text-sm font-bold text-[#0A0E2A]">
+    <div className="rounded-xl border border-line bg-surface px-3 py-2 shadow-[0_10px_24px_rgba(10,14,42,0.1)]">
+      <p className="text-xs font-semibold text-muted-ink">{label}</p>
+      <p className="text-sm font-bold text-ink">
         ৳ {payload[0].value.toLocaleString()}
       </p>
     </div>
@@ -40,13 +40,13 @@ export default function SalesChart({
   subtitle = "Revenue trend over time",
 }: SalesChartProps) {
   return (
-    <div className="rounded-2xl border border-[#E1E5E8] bg-white p-5">
+    <div className="rounded-2xl border border-line bg-surface p-5">
       <div className="mb-4 flex items-center justify-between">
         <div>
-          <h3 className="text-sm font-bold text-[#0A0E2A]">{title}</h3>
-          <p className="text-xs text-[#6B7280]">{subtitle}</p>
+          <h3 className="text-sm font-bold text-ink">{title}</h3>
+          <p className="text-xs text-muted-ink">{subtitle}</p>
         </div>
-        <span className="rounded-full bg-[#E6F7F6] px-3 py-1 text-[11px] font-bold text-[#0A0E2A]">
+        <span className="rounded-full bg-brand-soft px-3 py-1 text-[11px] font-bold text-ink">
           This month
         </span>
       </div>

@@ -37,7 +37,7 @@ function AdminLayoutContent({
   }
 
   return (
-    <div className="flex min-h-screen bg-[#F7F9FA]">
+    <div className="flex min-h-screen bg-canvas">
       <Sidebar />
 
       <div className="flex min-w-0 flex-1 flex-col">

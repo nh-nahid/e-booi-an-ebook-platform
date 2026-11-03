@@ -10,6 +10,8 @@ import { useAuth } from "@/hooks/use-auth";
 import { useDebounce } from "@/hooks/use-debounce";
 import { useCart } from "@/features/cart/hooks/use-cart";
 
+import ThemeSwitcher from "@/components/theme/theme-switcher";
+
 import MobileNav from "./mobile-nav";
 
 export default function Navbar() {
@@ -99,7 +101,7 @@ export default function Navbar() {
     : null;
 
   return (
-    <header className="sticky top-0 z-40 border-b border-[#E1E5E8] bg-white px-4 py-3.5 sm:px-25 sm:py-3">
+    <header className="sticky top-0 z-40 border-b border-white/30 bg-surface/65 px-4 shadow-[0_4px_30px_rgba(0,0,0,0.05)] backdrop-blur-xl backdrop-saturate-150 dark:border-white/10 dark:shadow-[0_4px_30px_rgba(0,0,0,0.3)] py-3.5 sm:px-25 sm:py-3">
       <div className="flex items-center justify-between gap-2 sm:gap-6">
         <div className="flex shrink-0 items-center gap-2">
           <MobileNav />
@@ -117,13 +119,13 @@ export default function Navbar() {
               priority
               className="rounded-lg"
             />
-            <span className="text-xl font-extrabold tracking-tight text-[#0A0E2A]">
-              eb<span className="text-[#2DBDB6]">oo</span>i
+            <span className="text-xl font-extrabold tracking-tight text-ink">
+              eb<span className="text-brand">oo</span>i
             </span>
           </Link>
         </div>
 
-        <div className="hidden min-w-0 flex-1 items-center gap-2 rounded border border-[#E1E5E8] bg-[#F7F9FA] px-4 py-2.5 transition-colors focus-within:border-[#2DBDB6] sm:flex sm:max-w-md md:max-w-lg">
+        <div className="hidden min-w-0 flex-1 items-center gap-2 rounded border border-line bg-canvas px-4 py-2.5 transition-colors focus-within:border-brand sm:flex sm:max-w-md md:max-w-lg">
           <input
             value={search}
             onChange={(e) => {
@@ -136,24 +138,25 @@ export default function Navbar() {
               }
             }}
             placeholder="কাঙ্ক্ষিত বই খুঁজুন"
-            className="min-w-0 flex-1 bg-transparent text-sm text-[#0A0E2A] outline-none placeholder:text-[#9AA3AF]"
+            className="min-w-0 flex-1 bg-transparent text-sm text-ink outline-none placeholder:text-subtle"
           />
           <button
             type="button"
             onClick={handleSearch}
             aria-label="Search"
-            className="shrink-0 text-[#9AA3AF] transition-colors hover:text-[#2DBDB6]"
+            className="shrink-0 text-subtle transition-colors hover:text-brand"
           >
             <Search className="h-[18px] w-[18px]" />
           </button>
         </div>
 
         <div className="flex shrink-0 items-center gap-3 sm:gap-6">
+          <ThemeSwitcher />
 
           <Link
             href="/library"
             onClick={clearSearchState}
-            className="flex flex-col items-center gap-0.5 text-[#0A0E2A] transition-colors hover:text-[#2DBDB6]"
+            className="flex flex-col items-center gap-0.5 text-ink transition-colors hover:text-brand"
             aria-label="লাইব্রেরি"
           >
             <Library className="h-5 w-5" />
@@ -163,13 +166,13 @@ export default function Navbar() {
           <Link
             href="/cart"
             onClick={clearSearchState}
-            className="flex flex-col items-center gap-0.5 text-[#0A0E2A] transition-colors hover:text-[#2DBDB6]"
+            className="flex flex-col items-center gap-0.5 text-ink transition-colors hover:text-brand"
             aria-label="কার্ট"
           >
             <span className="relative">
               <ShoppingCart className="h-5 w-5" />
               {isAuthenticated && cartCount > 0 && (
-                <span className="absolute -right-2 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#2DBDB6] px-1 text-[9px] font-bold leading-none text-white">
+                <span className="absolute -right-2 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-brand px-1 text-[9px] font-bold leading-none text-white">
                   {cartCount > 9 ? "9+" : cartCount}
                 </span>
               )}
@@ -180,7 +183,7 @@ export default function Navbar() {
           <Link
             href={isAuthenticated ? "/profile" : "/login"}
             onClick={clearSearchState}
-            className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#0A0E2A] text-white transition-opacity hover:opacity-90"
+            className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-navy text-white transition-opacity hover:opacity-90"
             aria-label={isAuthenticated ? "My Profile" : "Login"}
           >
             {avatarUrl ? (
@@ -198,7 +201,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      <div className="mt-3 flex items-center gap-2 rounded-md border border-[#E1E5E8] bg-[#F7F9FA] px-4 py-2.5 transition-colors focus-within:border-[#2DBDB6] sm:hidden">
+      <div className="mt-3 flex items-center gap-2 rounded-md border border-line bg-canvas px-4 py-2.5 transition-colors focus-within:border-brand sm:hidden">
         <input
           value={search}
           onChange={(e) => {
@@ -211,13 +214,13 @@ export default function Navbar() {
             }
           }}
           placeholder="কাঙ্ক্ষিত বই খুঁজুন"
-          className="min-w-0 flex-1 bg-transparent text-sm text-[#0A0E2A] outline-none placeholder:text-[#9AA3AF]"
+          className="min-w-0 flex-1 bg-transparent text-sm text-ink outline-none placeholder:text-subtle"
         />
         <button
           type="button"
           onClick={handleSearch}
           aria-label="Search"
-          className="shrink-0 text-[#9AA3AF] transition-colors hover:text-[#2DBDB6]"
+          className="shrink-0 text-subtle transition-colors hover:text-brand"
         >
           <Search className="h-[18px] w-[18px]" />
         </button>

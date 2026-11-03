@@ -38,7 +38,7 @@ export default function BookDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-surface">
       <div className="container mx-auto max-w-5xl px-4 py-4 sm:px-6 lg:px-8">
         <Breadcrumb
           items={[

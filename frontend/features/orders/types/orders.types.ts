@@ -29,6 +29,7 @@ export interface Order {
   totalAmount: number;
   discountAmount: number;
   finalAmount: number;
+  // "sslcommerz" / "stripe" only appear on older orders.
   paymentMethod: PaymentMethodType | "sslcommerz" | "stripe";
   paymentStatus: "pending" | "paid" | "failed";
   orderStatus: "pending" | "processing" | "shipped" | "delivered" | "cancelled";

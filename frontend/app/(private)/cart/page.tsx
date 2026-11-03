@@ -200,19 +200,19 @@ const handleApplyPromo = async (code: string) => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7F9FA]">
+    <div className="min-h-screen bg-canvas">
       <div className="container mx-auto px-5 py-8 sm:px-10 lg:px-[60px]">
         <div className="mb-2.5 flex flex-wrap items-center justify-between gap-3 sm:mb-6">
           <div>
             <Link
               href="/books"
-              className="mb-2 flex items-center gap-1 text-xs font-semibold text-[#6B7280] hover:text-[#2DBDB6]"
+              className="mb-2 flex items-center gap-1 text-xs font-semibold text-muted-ink hover:text-brand"
             >
               <ChevronLeft className="h-3.5 w-3.5" />
               শপিং চালিয়ে যান
             </Link>
 
-            <h1 className="text-2xl font-extrabold text-[#0A0E2A] sm:text-3xl">
+            <h1 className="text-2xl font-extrabold text-ink sm:text-3xl">
               আপনার কার্ট
             </h1>
           </div>
@@ -221,7 +221,7 @@ const handleApplyPromo = async (code: string) => {
             <button
               onClick={handleClearCart}
               disabled={clearMutation.isPending}
-              className="flex items-center gap-1 rounded border border-[#E1E5E8] px-2.5 py-1 text-[10px] font-bold text-[#6B7280] hover:border-red-300 hover:text-red-600 sm:gap-1.5 sm:px-3.5 sm:py-2 sm:text-xs"
+              className="flex items-center gap-1 rounded border border-line px-2.5 py-1 text-[10px] font-bold text-muted-ink hover:border-danger-ink/30 hover:text-danger-ink sm:gap-1.5 sm:px-3.5 sm:py-2 sm:text-xs"
             >
               <Trash2 className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
               কার্ট খালি করুন

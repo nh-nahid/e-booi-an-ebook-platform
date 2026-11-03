@@ -45,8 +45,8 @@ export default function BookGallery({
     group relative mx-auto aspect-[3/4]
     w-full max-w-[340px]
     overflow-hidden rounded-2xl
-    border border-[#E1E5E8]
-    bg-gradient-to-br from-[#dfe7ea] to-[#cfd8db]
+    border border-line
+    bg-gradient-to-br from-soft to-line
     shadow-[0_10px_30px_rgba(10,14,42,0.08)]
   "
       >
@@ -64,7 +64,7 @@ export default function BookGallery({
             className={`
               absolute left-3 top-3 flex items-center gap-1 rounded-full
               px-3 py-1.5 text-xs font-bold text-white
-              ${isPreOrder ? "bg-[#0A0E2A]" : "bg-[#2DBDB6]"}
+              ${isPreOrder ? "bg-navy" : "bg-brand"}
             `}
           >
             {isPreOrder ? (
@@ -81,7 +81,7 @@ export default function BookGallery({
           </span>
         )}
 
-        <div className="absolute bottom-3 right-3 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-[#0A0E2A] opacity-0 shadow-sm backdrop-blur transition-opacity duration-200 group-hover:opacity-100">
+        <div className="absolute bottom-3 right-3 flex h-9 w-9 items-center justify-center rounded-full bg-surface/90 text-ink opacity-0 shadow-sm backdrop-blur transition-opacity duration-200 group-hover:opacity-100">
           <ZoomIn className="h-4 w-4" />
         </div>
       </div>
@@ -96,8 +96,8 @@ export default function BookGallery({
                 h-16 w-12 shrink-0 overflow-hidden rounded-lg border-2 transition-all
                 ${
                   active === i
-                    ? "border-[#2DBDB6]"
-                    : "border-[#E1E5E8] opacity-70 hover:opacity-100"
+                    ? "border-brand"
+                    : "border-line opacity-70 hover:opacity-100"
                 }
               `}
             >

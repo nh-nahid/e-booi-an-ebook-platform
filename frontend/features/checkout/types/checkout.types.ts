@@ -10,7 +10,7 @@ export interface CheckoutItem {
 
 // ebooi is Digital-only — "cod" (Cash on Delivery) was only ever for
 // Physical book shipping and has been removed.
-export type PaymentMethodType = "card" | "bkash" | "nagad";
+export type PaymentMethodType = "eps";
 
 export interface ContactDetails {
   email: string;

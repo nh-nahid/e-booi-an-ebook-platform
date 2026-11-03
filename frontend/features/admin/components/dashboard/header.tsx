@@ -1,5 +1,6 @@
 "use client";
 
+import ThemeSwitcher from "@/components/theme/theme-switcher";
 import { Bell, User, Settings, LogOut, ChevronsUpDown } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
@@ -38,9 +39,9 @@ export default function AdminHeader() {
 
   if (isLoading) {
     return (
-      <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b border-[#E1E5E8] bg-white/90 px-6 backdrop-blur">
-        <div className="h-6 w-40 animate-pulse rounded bg-gray-200" />
-        <div className="h-10 w-10 animate-pulse rounded-full bg-gray-200" />
+      <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b border-white/30 bg-surface/65 px-6 backdrop-blur-xl backdrop-saturate-150 dark:border-white/10">
+        <div className="h-6 w-40 animate-pulse rounded bg-line" />
+        <div className="h-10 w-10 animate-pulse rounded-full bg-line" />
       </header>
     );
   }
@@ -87,33 +88,34 @@ export default function AdminHeader() {
   };
 
   return (
-    <header className="sticky top-0 z-10 flex h-16 items-center justify-between gap-4 border-b border-[#E1E5E8] bg-white/90 px-6 backdrop-blur">
+    <header className="sticky top-0 z-10 flex h-16 items-center justify-between gap-4 border-b border-white/30 bg-surface/65 px-6 backdrop-blur-xl backdrop-saturate-150 dark:border-white/10">
       <div>
-        <h1 className="text-lg font-bold text-[#0A0E2A]">{title}</h1>
+        <h1 className="text-lg font-bold text-ink">{title}</h1>
       </div>
 
       <div className="hidden max-w-sm flex-1 items-center md:flex">
         <div className="relative w-full">
           <input
             placeholder="Search books, users, orders..."
-            className="h-10 w-full rounded-full border border-[#E1E5E8] bg-[#F7F9FA] px-4 text-sm outline-none focus:border-[#2DBDB6]"
+            className="h-10 w-full rounded-full border border-line bg-canvas px-4 text-sm outline-none focus:border-brand"
           />
         </div>
       </div>
 
       <div className="flex items-center gap-3">
-        <button className="relative flex h-10 w-10 items-center justify-center rounded-full transition hover:bg-[#E6F7F6]">
+        <ThemeSwitcher />
+        <button className="relative flex h-10 w-10 items-center justify-center rounded-full transition hover:bg-brand-soft">
           <Bell className="h-5 w-5" />
 
           {notificationCount > 0 && (
-            <span className="absolute right-1 top-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#2DBDB6] text-[9px] font-bold text-white">
+            <span className="absolute right-1 top-1 flex h-4 w-4 items-center justify-center rounded-full bg-brand text-[9px] font-bold text-white">
               {notificationCount > 9 ? "9+" : notificationCount}
             </span>
           )}
         </button>
 
         <DropdownMenu>
-          <DropdownMenuTrigger className="flex items-center gap-2 rounded-full border border-[#E1E5E8] py-1 pl-1 pr-3 outline-none transition hover:border-[#2DBDB6]">
+          <DropdownMenuTrigger className="flex items-center gap-2 rounded-full border border-line py-1 pl-1 pr-3 outline-none transition hover:border-brand">
             <Avatar className="h-8 w-8">
               <AvatarImage src={avatarUrl} />
               <AvatarFallback>{initials}</AvatarFallback>
@@ -123,7 +125,7 @@ export default function AdminHeader() {
               {user.name}
             </span>
 
-            <ChevronsUpDown className="h-4 w-4 text-gray-500" />
+            <ChevronsUpDown className="h-4 w-4 text-muted-ink" />
           </DropdownMenuTrigger>
 
           <DropdownMenuContent align="end" className="w-56">
@@ -149,7 +151,7 @@ export default function AdminHeader() {
             <DropdownMenuItem
               onClick={handleLogout}
               disabled={isPending}
-              className="text-red-600 focus:text-red-600"
+              className="text-danger-ink focus:text-danger-ink"
             >
               <LogOut className="mr-2 h-4 w-4" />
               Logout

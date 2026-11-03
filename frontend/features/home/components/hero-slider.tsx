@@ -72,7 +72,7 @@ export default function HeroSlider({ slides = DEFAULT_SLIDES, autoPlayMs = 8000 
     <div>
       <div className="relative">
         <div
-          className="relative aspect-[2.3/1] overflow-hidden rounded border border-[#E1E5E8] shadow-[0_10px_30px_rgba(10,14,42,0.06)] sm:aspect-[1323.7/323] sm:rounded-lg"
+          className="relative aspect-[2.3/1] overflow-hidden rounded border border-line shadow-[0_10px_30px_rgba(10,14,42,0.06)] sm:aspect-[1323.7/323] sm:rounded-lg"
           onMouseEnter={() => setPaused(true)}
           onMouseLeave={() => setPaused(false)}
           onTouchStart={handleTouchStart}
@@ -130,7 +130,7 @@ export default function HeroSlider({ slides = DEFAULT_SLIDES, autoPlayMs = 8000 
               key={slide.id}
               onClick={() => goTo(i)}
               aria-label={`Go to slide ${i + 1}`}
-              className={`h-1.5 w-1.5 rounded-full bg-[#6B7280] transition-all duration-300 ${
+              className={`h-1.5 w-1.5 rounded-full bg-muted-ink transition-all duration-300 ${
                 i === active ? "opacity-100" : "opacity-30"
               }`}
             />

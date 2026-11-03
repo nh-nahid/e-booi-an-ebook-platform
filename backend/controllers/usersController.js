@@ -295,7 +295,7 @@ async function updateUser(req, res, next) {
     }
 
     await User.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
+      returnDocument: "after",
     });
 
     // delete the old avatar only after the update succeeded
@@ -485,19 +485,24 @@ async function refreshToken(req, res, next) {
 // FORGOT PASSWORD
 async function forgotPassword(req, res, next) {
   try {
-    const { email } = req.body;
+    const email = String(req.body.email || "").trim().toLowerCase();
 
-    const user = await User.findOne({ email });
+    const user = email ? await User.findOne({ email }) : null;
 
+    // Same response whether or not the email is registered, so this endpoint
+    // can't be used to discover which emails have an account.
     if (!user) {
-      return res.status(404).json({
-        message: "User not found",
+      return res.json({
+        message: "If an account exists for that email, a reset link has been sent",
       });
     }
 
+    // `purpose` marks this as a reset-only token: checkLogin rejects it, so it
+    // can't double as a login token.
     const token = jwt.sign(
       {
         id: user._id,
+        purpose: "password-reset",
       },
       process.env.JWT_ACCESS_SECRET,
       {
@@ -514,7 +519,7 @@ async function forgotPassword(req, res, next) {
     });
 
     res.json({
-      message: "Password reset link sent successfully",
+      message: "If an account exists for that email, a reset link has been sent",
     });
   } catch (error) {
     next(error);
@@ -526,7 +531,17 @@ async function resetPassword(req, res, next) {
   try {
     const { token, password } = req.body;
 
+    if (typeof password !== "string" || password.length < 6) {
+      return res.status(400).json({
+        message: "Password must be at least 6 characters",
+      });
+    }
+
     const decoded = jwt.verify(token, process.env.JWT_ACCESS_SECRET);
+
+    if (decoded.purpose !== "password-reset") {
+      throw new Error("Not a password reset token");
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 

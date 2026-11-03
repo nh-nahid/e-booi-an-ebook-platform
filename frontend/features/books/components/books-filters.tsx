@@ -54,15 +54,15 @@ export default function BooksFilters({
 
   return (
     <div
-      className={`rounded-2xl border border-[#E1E5E8] bg-white p-5 ${className}`}
+      className={`rounded-2xl border border-line bg-surface p-5 ${className}`}
     >
       <div className="mb-4 flex items-center justify-between">
-        <h3 className="text-sm font-bold text-[#0A0E2A]">Filters</h3>
+        <h3 className="text-sm font-bold text-ink">Filters</h3>
 
         {hasActiveFilters && (
           <button
             onClick={onClear}
-            className="flex items-center gap-1 text-xs font-semibold text-[#2DBDB6] hover:text-[#1f9d97]"
+            className="flex items-center gap-1 text-xs font-semibold text-brand hover:text-brand-strong"
           >
             <X className="h-3 w-3" />
             Clear all
@@ -71,8 +71,8 @@ export default function BooksFilters({
       </div>
 
       {/* Category */}
-      <div className="border-t border-[#F1F3F5] py-4">
-        <p className="mb-3 text-xs font-bold uppercase tracking-wide text-[#9AA3AF]">
+      <div className="border-t border-soft py-4">
+        <p className="mb-3 text-xs font-bold uppercase tracking-wide text-subtle">
           Category
         </p>
 
@@ -89,8 +89,8 @@ export default function BooksFilters({
                   onClick={() => toggleCategory(cat)}
                   className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-md border transition-all ${
                     checked
-                      ? "border-[#2DBDB6] bg-[#2DBDB6]"
-                      : "border-[#E1E5E8] bg-white"
+                      ? "border-brand bg-brand"
+                      : "border-line bg-surface"
                   }`}
                 >
                   {checked && (
@@ -103,7 +103,7 @@ export default function BooksFilters({
                 <span
                   onClick={() => toggleCategory(cat)}
                   className={
-                    checked ? "font-semibold text-[#0A0E2A]" : "text-[#6B7280]"
+                    checked ? "font-semibold text-ink" : "text-muted-ink"
                   }
                 >
                   {cat}
@@ -115,8 +115,8 @@ export default function BooksFilters({
       </div>
 
       {/* Price */}
-      <div className="border-t border-[#F1F3F5] pt-4">
-        <p className="mb-3 text-xs font-bold uppercase tracking-wide text-[#9AA3AF]">
+      <div className="border-t border-soft pt-4">
+        <p className="mb-3 text-xs font-bold uppercase tracking-wide text-subtle">
           Price Range
         </p>
 
@@ -132,10 +132,10 @@ export default function BooksFilters({
               })
             }
             placeholder="Min"
-            className="h-9 w-full rounded-lg border border-[#E1E5E8] px-3 text-xs text-[#0A0E2A] outline-none transition-colors focus:border-[#2DBDB6]"
+            className="h-9 w-full rounded-lg border border-line px-3 text-xs text-ink outline-none transition-colors focus:border-brand"
           />
 
-          <span className="text-[#9AA3AF]">—</span>
+          <span className="text-subtle">—</span>
 
           <input
             type="number"
@@ -148,7 +148,7 @@ export default function BooksFilters({
               })
             }
             placeholder="Max"
-            className="h-9 w-full rounded-lg border border-[#E1E5E8] px-3 text-xs text-[#0A0E2A] outline-none transition-colors focus:border-[#2DBDB6]"
+            className="h-9 w-full rounded-lg border border-line px-3 text-xs text-ink outline-none transition-colors focus:border-brand"
           />
         </div>
       </div>

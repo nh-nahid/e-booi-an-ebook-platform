@@ -38,28 +38,28 @@ export default function TrustSection() {
         ${inView ? "opacity-100 translate-y-0" : "translate-y-6 opacity-0"}
       `}
     >
-      <div className="grid grid-cols-2 gap-3 rounded-3xl border border-[#E1E5E8] bg-white p-5 sm:gap-6 sm:p-6 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 rounded-3xl border border-line bg-surface p-5 sm:gap-6 sm:p-6 lg:grid-cols-4">
         {FEATURES.map(({ icon: Icon, title, desc }, i) => (
           <div
             key={title}
             style={{ animationDelay: inView ? `${i * 0.08}s` : undefined }}
             className={`
               group flex flex-col items-center gap-2 rounded-2xl p-3 text-center transition-colors
-              duration-500 fill-mode-both hover:bg-[#F7F9FA] sm:flex-row sm:items-start sm:text-left
+              duration-500 fill-mode-both hover:bg-canvas sm:flex-row sm:items-start sm:text-left
               ${inView ? "animate-in fade-in slide-in-from-bottom-1" : "opacity-0"}
             `}
           >
             <span
               className="
-                flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#E6F7F6]
+                flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-brand-soft
                 transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-110
               "
             >
-              <Icon className="h-5 w-5 text-[#2DBDB6]" />
+              <Icon className="h-5 w-5 text-brand" />
             </span>
             <div>
-              <p className="text-sm font-bold text-[#0A0E2A]">{title}</p>
-              <p className="mt-0.5 text-xs text-[#6B7280]">{desc}</p>
+              <p className="text-sm font-bold text-ink">{title}</p>
+              <p className="mt-0.5 text-xs text-muted-ink">{desc}</p>
             </div>
           </div>
         ))}

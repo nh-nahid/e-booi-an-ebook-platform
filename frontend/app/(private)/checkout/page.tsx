@@ -51,7 +51,7 @@ export default function CheckoutPage() {
 
   const [discount, setDiscount] = useState(0);
   const [couponCode, setCouponCode] = useState<string | null>(null);
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethodType>("bkash");
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethodType>("eps");
 
   const isLoading = isBuyNow ? buyNowLoading : cartLoading;
 
@@ -128,11 +128,11 @@ export default function CheckoutPage() {
 
   if (cartItems.length === 0) {
     return (
-      <div className="min-h-screen bg-[#F7F9FA]">
+      <div className="min-h-screen bg-canvas">
         <Navbar />
         <div className="container mx-auto px-5 py-8 sm:px-10 lg:px-[60px]">
           {isBuyNow ? (
-            <div className="flex min-h-[40vh] items-center justify-center text-sm text-[#6B7280]">
+            <div className="flex min-h-[40vh] items-center justify-center text-sm text-muted-ink">
               বইটি পাওয়া যায়নি।
             </div>
           ) : (
@@ -173,24 +173,24 @@ export default function CheckoutPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7F9FA]">
+    <div className="min-h-screen bg-canvas">
       <Navbar />
 
       <div className="container mx-auto px-5 py-8 sm:px-10 lg:px-[60px]">
         <Link
           href="/cart"
-          className="mb-2 flex w-fit items-center gap-1 text-xs font-semibold text-[#6B7280] transition-colors hover:text-[#2DBDB6]"
+          className="mb-2 flex w-fit items-center gap-1 text-xs font-semibold text-muted-ink transition-colors hover:text-brand"
         >
           <ChevronLeft className="h-3.5 w-3.5" />
           কার্টে ফিরে যান
         </Link>
 
-        <h1 className="mb-6 text-2xl font-extrabold text-[#0A0E2A] sm:text-3xl">
+        <h1 className="mb-6 text-2xl font-extrabold text-ink sm:text-3xl">
           চেকআউট
         </h1>
 
-        <div className="mb-6 flex items-start gap-2.5 rounded-2xl bg-[#E6F7F6] p-4 text-sm text-[#0A0E2A] animate-in fade-in slide-in-from-bottom-1 duration-500">
-          <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-[#2DBDB6]" />
+        <div className="mb-6 flex items-start gap-2.5 rounded-2xl bg-brand-soft p-4 text-sm text-ink animate-in fade-in slide-in-from-bottom-1 duration-500">
+          <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
           আপনার অর্ডারে শুধু eBook রয়েছে, তাই কোনো শিপিং ঠিকানার প্রয়োজন
           নেই। পেমেন্ট সম্পন্ন হওয়ার সাথে সাথেই বইগুলো আপনার লাইব্রেরিতে যোগ
           হয়ে যাবে।
@@ -205,7 +205,7 @@ export default function CheckoutPage() {
 
           <div className="space-y-3">
             {error && (
-              <p className="rounded-xl bg-[#FDEDEC] px-4 py-2.5 text-xs font-medium text-red-600 animate-in fade-in duration-200">
+              <p className="rounded-xl bg-danger-soft px-4 py-2.5 text-xs font-medium text-danger-ink animate-in fade-in duration-200">
                 {error}
               </p>
             )}

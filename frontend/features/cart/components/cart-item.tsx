@@ -40,11 +40,11 @@ export default function CartItem({
       style={{ animationDelay: `${Math.min(index, 6) * 0.05}s` }}
       className="
         flex animate-in fade-in slide-in-from-bottom-1 gap-4 rounded
-        border border-[#E1E5E8] bg-white p-4 duration-500 fill-mode-both
+        border border-line bg-surface p-4 duration-500 fill-mode-both
         transition-all hover:shadow-[0_10px_24px_rgba(10,14,42,0.05)]
       "
     >
-      <div className="relative h-24 w-16 shrink-0 overflow-hidden rounded border border-[#E1E5E8] bg-gradient-to-br from-[#dfe7ea] to-[#cfd8db] sm:h-28 sm:w-20">
+      <div className="relative h-24 w-16 shrink-0 overflow-hidden rounded border border-line bg-gradient-to-br from-soft to-line sm:h-28 sm:w-20">
         <Image
           fill
           src={imageUrl}
@@ -57,22 +57,22 @@ export default function CartItem({
         <div>
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0">
-              <p className="truncate text-sm font-bold text-[#0A0E2A] sm:text-base">
+              <p className="truncate text-sm font-bold text-ink sm:text-base">
                 {item.title}
               </p>
 
-              <p className="mt-0.5 text-xs text-[#6B7280]">
+              <p className="mt-0.5 text-xs text-muted-ink">
                 লেখক: {item.author}
               </p>
 
-              <span className="mt-1.5 inline-block rounded bg-[#F7F9FA] px-2 py-0.5 text-[10px] font-semibold text-[#6B7280]">
+              <span className="mt-1.5 inline-block rounded bg-canvas px-2 py-0.5 text-[10px] font-semibold text-muted-ink">
                 eBook
               </span>
             </div>
 
             <button
               onClick={() => onRemove(item.id)}
-              className="flex h-8 w-8 shrink-0 items-center justify-center rounded text-[#9AA3AF] transition-all duration-200 hover:bg-red-50 hover:text-red-600"
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded text-subtle transition-all duration-200 hover:bg-danger-soft hover:text-danger-ink"
               aria-label="Remove item"
             >
               <Trash2 className="h-4 w-4" />
@@ -81,17 +81,17 @@ export default function CartItem({
         </div>
 
         <div className="mt-2 flex flex-wrap items-center justify-between gap-3">
-          <span className="rounded border border-[#E1E5E8] px-3 py-1.5 text-xs font-semibold text-[#0A0E2A]">
+          <span className="rounded border border-line px-3 py-1.5 text-xs font-semibold text-ink">
             ১ কপি
           </span>
 
           <div className="text-right">
-            <p className="text-sm font-extrabold text-[#0A0E2A] sm:text-base">
+            <p className="text-sm font-extrabold text-ink sm:text-base">
               ৳ {(item.price * item.quantity).toLocaleString()}
             </p>
 
             {item.originalPrice && item.originalPrice > item.price && (
-              <p className="text-xs text-[#9AA3AF] line-through">
+              <p className="text-xs text-subtle line-through">
                 ৳ {(item.originalPrice * item.quantity).toLocaleString()}
               </p>
             )}

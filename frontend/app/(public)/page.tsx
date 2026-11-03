@@ -16,7 +16,7 @@ export default async function HomePage() {
   const homeData = response.data;
 
   return (
-    <div className="min-h-screen bg-[#F7F9FA]">
+    <div className="min-h-screen bg-canvas">
       <AdminRedirectGuard />
 
       <HeroSection statistics={homeData.statistics} />

@@ -208,25 +208,25 @@ export default function BookPreviewModal({
           widens it. */}
       <DialogContent className="top-6 flex h-[92vh] w-full max-w-[calc(100%-2rem)] -translate-y-0 flex-col gap-3 p-4 sm:top-8 sm:h-[90vh] sm:max-w-xl sm:p-5">
         <DialogHeader>
-          <DialogTitle className="pr-8 text-base font-bold text-[#0A0E2A]">
+          <DialogTitle className="pr-8 text-base font-bold text-ink">
             {title} — কিছু অংশ পড়ে দেখুন
           </DialogTitle>
         </DialogHeader>
 
         <div
           ref={containerRef}
-          className="relative flex flex-1 select-none flex-col items-center gap-3 overflow-auto rounded-xl border border-[#E1E5E8] bg-[#F7F9FA] p-2"
+          className="relative flex flex-1 select-none flex-col items-center gap-3 overflow-auto rounded-xl border border-line bg-canvas p-2"
           onContextMenu={(e) => e.preventDefault()}
         >
           {loading && (
-            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-2 bg-[#F7F9FA] text-[#9AA3AF]">
+            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-2 bg-canvas text-subtle">
               <Loader2 className="h-6 w-6 animate-spin" />
               <span className="text-xs font-medium">প্রিভিউ লোড হচ্ছে...</span>
             </div>
           )}
 
           {error && !loading && (
-            <div className="absolute inset-0 flex items-center justify-center px-6 text-center text-sm text-[#9AA3AF]">
+            <div className="absolute inset-0 flex items-center justify-center px-6 text-center text-sm text-subtle">
               প্রিভিউ লোড করা যায়নি। একটু পরে আবার চেষ্টা করুন।
             </div>
           )}
@@ -244,22 +244,22 @@ export default function BookPreviewModal({
         </div>
 
         <div className="flex items-center justify-center gap-3">
-          <div className="flex items-center gap-1 rounded-full border border-[#E1E5E8] px-1 py-0.5">
+          <div className="flex items-center gap-1 rounded-full border border-line px-1 py-0.5">
             <button
               type="button"
               onClick={() => setZoom((z) => Math.max(0.6, +(z - 0.15).toFixed(2)))}
-              className="flex h-6 w-6 items-center justify-center rounded-full text-[#6B7280] transition-colors hover:text-[#2DBDB6]"
+              className="flex h-6 w-6 items-center justify-center rounded-full text-muted-ink transition-colors hover:text-brand"
               aria-label="জুম আউট"
             >
               <Minus className="h-3.5 w-3.5" />
             </button>
-            <span className="w-9 text-center text-[11px] font-semibold text-[#0A0E2A]">
+            <span className="w-9 text-center text-[11px] font-semibold text-ink">
               {Math.round(zoom * 100)}%
             </span>
             <button
               type="button"
               onClick={() => setZoom((z) => Math.min(2.5, +(z + 0.15).toFixed(2)))}
-              className="flex h-6 w-6 items-center justify-center rounded-full text-[#6B7280] transition-colors hover:text-[#2DBDB6]"
+              className="flex h-6 w-6 items-center justify-center rounded-full text-muted-ink transition-colors hover:text-brand"
               aria-label="জুম ইন"
             >
               <Plus className="h-3.5 w-3.5" />
@@ -267,7 +267,7 @@ export default function BookPreviewModal({
           </div>
         </div>
 
-        <p className="text-center text-xs text-[#9AA3AF]">
+        <p className="text-center text-xs text-subtle">
           বইটির প্রথম কয়েক পাতা দেখানো হচ্ছে — সম্পূর্ণ বইটি পড়তে হলে কিনুন
         </p>
       </DialogContent>

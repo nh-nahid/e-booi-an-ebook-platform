@@ -43,27 +43,27 @@ export default function DeleteUserDialog({
       <button
         onClick={() => setOpen(true)}
         className="
-          flex h-8 w-8 items-center justify-center rounded-full text-[#6B7280]
-          transition-all duration-200 hover:bg-red-50 hover:text-red-600
+          flex h-8 w-8 items-center justify-center rounded-full text-muted-ink
+          transition-all duration-200 hover:bg-danger-soft hover:text-danger-ink
         "
         aria-label="Delete user"
       >
         <Trash2 className="h-4 w-4" />
       </button>
 
-      <DialogContent className="rounded-3xl border-[#E1E5E8] sm:max-w-sm">
+      <DialogContent className="rounded-3xl border-line sm:max-w-sm">
         <DialogHeader>
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-50">
-            <AlertTriangle className="h-6 w-6 text-red-600" />
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-danger-soft">
+            <AlertTriangle className="h-6 w-6 text-danger-ink" />
           </div>
 
-          <DialogTitle className="text-center text-lg font-bold text-[#0A0E2A]">
+          <DialogTitle className="text-center text-lg font-bold text-ink">
             Delete this user?
           </DialogTitle>
 
-          <DialogDescription className="text-center text-sm text-[#6B7280]">
+          <DialogDescription className="text-center text-sm text-muted-ink">
             You&apos;re about to remove{" "}
-            <span className="font-semibold text-[#0A0E2A]">
+            <span className="font-semibold text-ink">
               {user.name}
             </span>{" "}
             ({user.email}). This action can&apos;t be undone.
@@ -94,8 +94,8 @@ export default function DeleteUserDialog({
             variant="outline"
             onClick={() => setOpen(false)}
             className="
-              w-full rounded-full border-[#E1E5E8]
-              font-semibold text-[#0A0E2A]
+              w-full rounded-full border-line
+              font-semibold text-ink
             "
           >
             Cancel

@@ -7,14 +7,11 @@ const orderEmail = require("../emails/templates/orderEmail");
 const Coupon = require("../models/Coupon");
 const path = require("path");
 
-// Map frontend payment method choices to the gateway used to process them.
-// bKash/Nagad/card all route through the SSLCommerz integration. Cash on
-// Delivery was only ever for Physical book shipping and has been removed
-// now that eBooi is Digital-only.
+// Payment methods the storefront can send. Every online method (bKash, Nagad,
+// Rocket, cards) is processed through the EPS gateway. Cash on Delivery was
+// removed when eBooi became Digital-only.
 const GATEWAY_MAP = {
-  bkash: "sslcommerz",
-  nagad: "sslcommerz",
-  card: "sslcommerz",
+  eps: "eps",
 };
 
 // order create
@@ -318,7 +315,7 @@ async function updatePaymentStatus(req, res, next) {
       {
         paymentStatus: req.body.paymentStatus,
       },
-      { new: true },
+      { returnDocument: "after" },
     );
 
     res.json(order);

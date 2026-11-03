@@ -27,12 +27,12 @@ export default function BooksFilter({
   onStatusChange,
 }: BooksFilterProps) {
   return (
-    <div className="rounded-2xl border border-[#E1E5E8] bg-white p-5">
+    <div className="rounded-2xl border border-line bg-surface p-5">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {/* Search */}
 
         <div className="relative">
-          <Search className="absolute left-3 top-3.5 h-4 w-4 text-gray-400" />
+          <Search className="absolute left-3 top-3.5 h-4 w-4 text-muted-ink" />
 
           <Input
             placeholder="Search books..."
@@ -47,7 +47,7 @@ export default function BooksFilter({
         <select
           value={category}
           onChange={(e) => onCategoryChange(e.target.value)}
-          className="h-10 rounded-md border border-[#E1E5E8] px-3"
+          className="h-10 rounded-md border border-line px-3"
         >
           <option value="">All Categories</option>
 
@@ -71,7 +71,7 @@ export default function BooksFilter({
         <select
           value={bookType}
           onChange={(e) => onBookTypeChange(e.target.value)}
-          className="h-10 rounded-md border border-[#E1E5E8] px-3"
+          className="h-10 rounded-md border border-line px-3"
         >
           <option value="">All Types</option>
 
@@ -83,7 +83,7 @@ export default function BooksFilter({
         <select
           value={status}
           onChange={(e) => onStatusChange(e.target.value)}
-          className="h-10 rounded-md border border-[#E1E5E8] px-3"
+          className="h-10 rounded-md border border-line px-3"
         >
           <option value="">All Status</option>
 

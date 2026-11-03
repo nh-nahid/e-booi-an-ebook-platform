@@ -158,7 +158,7 @@ export default function BookDialog({
       <DialogTrigger
         render={
           trigger ?? (
-            <Button className="bg-gradient-to-br from-[#2DBDB6] to-[#1f9d97] text-white" />
+            <Button className="bg-gradient-to-br from-brand to-brand-strong text-white" />
           )
         }
       >
@@ -170,12 +170,12 @@ export default function BookDialog({
         )}
       </DialogTrigger>
 
-      <DialogContent className="max-h-[90vh] overflow-y-auto rounded-3xl border-[#E1E5E8] sm:max-w-2xl">
+      <DialogContent className="max-h-[90vh] overflow-y-auto rounded-3xl border-line sm:max-w-2xl">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold text-[#0A0E2A]">
+          <DialogTitle className="text-xl font-bold text-ink">
             {mode === "create" ? "Add New Book" : "Edit Book"}
           </DialogTitle>
-          <DialogDescription className="text-sm text-[#6B7280]">
+          <DialogDescription className="text-sm text-muted-ink">
             {mode === "create"
               ? "Fill in the details below to add a new book to your catalog."
               : "Update the book information below and save your changes."}
@@ -186,7 +186,7 @@ export default function BookDialog({
           <div className="grid gap-5 sm:grid-cols-[140px_1fr]">
             {/* Cover upload */}
             <div className="space-y-1.5">
-              <Label className="text-xs font-semibold text-[#0A0E2A]">
+              <Label className="text-xs font-semibold text-ink">
                 Cover
               </Label>
               <div
@@ -194,8 +194,8 @@ export default function BookDialog({
                 className="
                   group relative flex h-48 w-full cursor-pointer flex-col items-center
                   justify-center gap-2 overflow-hidden rounded-xl border-2 border-dashed
-                  border-[#E1E5E8] bg-[#F7F9FA] transition-colors duration-200
-                  hover:border-[#2DBDB6] sm:h-[180px]
+                  border-line bg-canvas transition-colors duration-200
+                  hover:border-brand sm:h-[180px]
                 "
               >
                 {coverPreview ? (
@@ -221,8 +221,8 @@ export default function BookDialog({
                   </>
                 ) : (
                   <>
-                    <ImagePlus className="h-6 w-6 text-[#9AA3AF] transition-colors group-hover:text-[#2DBDB6]" />
-                    <span className="px-2 text-center text-[11px] text-[#9AA3AF]">
+                    <ImagePlus className="h-6 w-6 text-subtle transition-colors group-hover:text-brand" />
+                    <span className="px-2 text-center text-[11px] text-subtle">
                       Click to upload cover
                     </span>
                   </>
@@ -242,7 +242,7 @@ export default function BookDialog({
               <div className="space-y-1.5">
                 <Label
                   htmlFor="title"
-                  className="text-xs font-semibold text-[#0A0E2A]"
+                  className="text-xs font-semibold text-ink"
                 >
                   Book Title
                 </Label>
@@ -251,7 +251,7 @@ export default function BookDialog({
                   value={values.title}
                   onChange={(e) => update("title", e.target.value)}
                   placeholder="e.g. The Silent Ocean"
-                  className="h-11 rounded-xl border-[#E1E5E8] focus-visible:border-[#2DBDB6] focus-visible:ring-4 focus-visible:ring-[#2DBDB6]/15"
+                  className="h-11 rounded-xl border-line focus-visible:border-brand focus-visible:ring-4 focus-visible:ring-brand/15"
                 />
               </div>
 
@@ -259,7 +259,7 @@ export default function BookDialog({
                 <div className="space-y-1.5">
                   <Label
                     htmlFor="author"
-                    className="text-xs font-semibold text-[#0A0E2A]"
+                    className="text-xs font-semibold text-ink"
                   >
                     Author
                   </Label>
@@ -268,14 +268,14 @@ export default function BookDialog({
                     value={values.author}
                     onChange={(e) => update("author", e.target.value)}
                     placeholder="Author name"
-                    className="h-11 rounded-xl border-[#E1E5E8] focus-visible:border-[#2DBDB6] focus-visible:ring-4 focus-visible:ring-[#2DBDB6]/15"
+                    className="h-11 rounded-xl border-line focus-visible:border-brand focus-visible:ring-4 focus-visible:ring-brand/15"
                   />
                 </div>
 
                 <div className="space-y-1.5">
                   <Label
                     htmlFor="publisher"
-                    className="text-xs font-semibold text-[#0A0E2A]"
+                    className="text-xs font-semibold text-ink"
                   >
                     Publisher
                   </Label>
@@ -284,7 +284,7 @@ export default function BookDialog({
                     value={values.publisher}
                     onChange={(e) => update("publisher", e.target.value)}
                     placeholder="Publisher name"
-                    className="h-11 rounded-xl border-[#E1E5E8] focus-visible:border-[#2DBDB6] focus-visible:ring-4 focus-visible:ring-[#2DBDB6]/15"
+                    className="h-11 rounded-xl border-line focus-visible:border-brand focus-visible:ring-4 focus-visible:ring-brand/15"
                   />
                 </div>
               </div>
@@ -293,7 +293,7 @@ export default function BookDialog({
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-1.5">
-              <Label className="text-xs font-semibold text-[#0A0E2A]">
+              <Label className="text-xs font-semibold text-ink">
                 Category
               </Label>
               <Select
@@ -304,7 +304,7 @@ export default function BookDialog({
                   }
                 }}
               >
-                <SelectTrigger className="h-11 rounded-xl border-[#E1E5E8] focus:ring-4 focus:ring-[#2DBDB6]/15">
+                <SelectTrigger className="h-11 rounded-xl border-line focus:ring-4 focus:ring-brand/15">
                   <SelectValue placeholder="Select category" />
                 </SelectTrigger>
                 <SelectContent>
@@ -320,7 +320,7 @@ export default function BookDialog({
             <div className="space-y-1.5">
               <Label
                 htmlFor="isbn"
-                className="text-xs font-semibold text-[#0A0E2A]"
+                className="text-xs font-semibold text-ink"
               >
                 ISBN
               </Label>
@@ -329,7 +329,7 @@ export default function BookDialog({
                 value={values.isbn}
                 onChange={(e) => update("isbn", e.target.value)}
                 placeholder="978-XXXXXXXXXX"
-                className="h-11 rounded-xl border-[#E1E5E8] focus-visible:border-[#2DBDB6] focus-visible:ring-4 focus-visible:ring-[#2DBDB6]/15"
+                className="h-11 rounded-xl border-line focus-visible:border-brand focus-visible:ring-4 focus-visible:ring-brand/15"
               />
             </div>
           </div>
@@ -338,7 +338,7 @@ export default function BookDialog({
             <div className="space-y-1.5">
               <Label
                 htmlFor="price"
-                className="text-xs font-semibold text-[#0A0E2A]"
+                className="text-xs font-semibold text-ink"
               >
                 Price (৳)
               </Label>
@@ -349,14 +349,14 @@ export default function BookDialog({
                 value={values.price}
                 onChange={(e) => update("price", e.target.value)}
                 placeholder="0.00"
-                className="h-11 rounded-xl border-[#E1E5E8] focus-visible:border-[#2DBDB6] focus-visible:ring-4 focus-visible:ring-[#2DBDB6]/15"
+                className="h-11 rounded-xl border-line focus-visible:border-brand focus-visible:ring-4 focus-visible:ring-brand/15"
               />
             </div>
 
             <div className="space-y-1.5">
               <Label
                 htmlFor="originalPrice"
-                className="text-xs font-semibold text-[#0A0E2A]"
+                className="text-xs font-semibold text-ink"
               >
                 Original Price (৳)
               </Label>
@@ -367,12 +367,12 @@ export default function BookDialog({
                 value={values.originalPrice}
                 onChange={(e) => update("originalPrice", e.target.value)}
                 placeholder="Optional — for discount"
-                className="h-11 rounded-xl border-[#E1E5E8] focus-visible:border-[#2DBDB6] focus-visible:ring-4 focus-visible:ring-[#2DBDB6]/15"
+                className="h-11 rounded-xl border-line focus-visible:border-brand focus-visible:ring-4 focus-visible:ring-brand/15"
               />
             </div>
 
             <div className="space-y-1.5">
-              <Label className="text-xs font-semibold text-[#0A0E2A]">
+              <Label className="text-xs font-semibold text-ink">
                 Book Type
               </Label>
               <Select
@@ -402,14 +402,14 @@ export default function BookDialog({
                 />
 
                 {values.pdf && (
-                  <p className="text-sm text-green-600">{values.pdf.name}</p>
+                  <p className="text-sm text-success-ink">{values.pdf.name}</p>
                 )}
               </div>
             )}
           </div>
 
           <div className="space-y-1.5">
-            <Label className="text-xs font-semibold text-[#0A0E2A]">
+            <Label className="text-xs font-semibold text-ink">
               Status
             </Label>
             <Select
@@ -418,7 +418,7 @@ export default function BookDialog({
                 update("status", v as BookFormValues["status"])
               }
             >
-              <SelectTrigger className="h-11 rounded-xl border-[#E1E5E8] focus:ring-4 focus:ring-[#2DBDB6]/15">
+              <SelectTrigger className="h-11 rounded-xl border-line focus:ring-4 focus:ring-brand/15">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -432,7 +432,7 @@ export default function BookDialog({
           <div className="space-y-1.5">
             <Label
               htmlFor="description"
-              className="text-xs font-semibold text-[#0A0E2A]"
+              className="text-xs font-semibold text-ink"
             >
               Description
             </Label>
@@ -442,12 +442,12 @@ export default function BookDialog({
               onChange={(e) => update("description", e.target.value)}
               placeholder="Short description of the book..."
               rows={3}
-              className="resize-none rounded-xl border-[#E1E5E8] focus-visible:border-[#2DBDB6] focus-visible:ring-4 focus-visible:ring-[#2DBDB6]/15"
+              className="resize-none rounded-xl border-line focus-visible:border-brand focus-visible:ring-4 focus-visible:ring-brand/15"
             />
           </div>
 
           {error && (
-            <p className="rounded-xl bg-[#FDEDEC] px-3 py-2 text-xs font-medium text-red-600">
+            <p className="rounded-xl bg-danger-soft px-3 py-2 text-xs font-medium text-danger-ink">
               {error}
             </p>
           )}
@@ -457,7 +457,7 @@ export default function BookDialog({
               type="button"
               variant="outline"
               onClick={() => setOpen(false)}
-              className="rounded-full border-[#E1E5E8] font-semibold text-[#0A0E2A] hover:border-[#2DBDB6] hover:text-[#2DBDB6]"
+              className="rounded-full border-line font-semibold text-ink hover:border-brand hover:text-brand"
             >
               Cancel
             </Button>
@@ -467,7 +467,7 @@ export default function BookDialog({
               disabled={loading}
               className="
                 group relative min-w-[140px] overflow-hidden rounded-full border-0
-                font-semibold text-white bg-gradient-to-br from-[#2DBDB6] to-[#1f9d97]
+                font-semibold text-white bg-gradient-to-br from-brand to-brand-strong
                 shadow-[0_4px_12px_rgba(45,189,182,0.35)]
                 transition-transform duration-150
                 hover:-translate-y-0.5 hover:shadow-[0_8px_18px_rgba(45,189,182,0.4)]

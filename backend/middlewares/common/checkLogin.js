@@ -20,6 +20,13 @@ function checkLogin(req, res, next) {
             process.env.JWT_ACCESS_SECRET
         );
 
+        // Password-reset tokens are not login tokens.
+        if (decoded.purpose) {
+            return res.status(401).json({
+                message: "Invalid access token",
+            });
+        }
+
         req.user = decoded;
         res.locals.loggedInUser = decoded;
 

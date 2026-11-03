@@ -27,7 +27,7 @@ export default function RelatedBooksGrid({ books }: RelatedBooksGridProps) {
 
   return (
     <section className="mt-10 animate-in fade-in slide-in-from-bottom-2 duration-500 [animation-delay:160ms]">
-      <h2 className="mb-4 text-lg font-extrabold text-[#0A0E2A]">
+      <h2 className="mb-4 text-lg font-extrabold text-ink">
         আরও পছন্দ হতে পারে
       </h2>
 
@@ -62,10 +62,10 @@ export default function RelatedBooksGrid({ books }: RelatedBooksGridProps) {
                 )}
               </div>
 
-              <p className="mt-2 line-clamp-1 text-sm font-bold text-[#0A0E2A]">
+              <p className="mt-2 line-clamp-1 text-sm font-bold text-ink">
                 {book.title}
               </p>
-              <p className="text-sm font-extrabold text-[#2DBDB6]">
+              <p className="text-sm font-extrabold text-brand">
                 ৳{bn(book.price)}
               </p>
             </Link>

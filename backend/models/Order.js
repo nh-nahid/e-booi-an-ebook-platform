@@ -74,8 +74,18 @@ const orderSchema = new mongoose.Schema(
     // shipping and is removed now that eBooi is Digital-only.
     paymentMethod: {
       type: String,
-      enum: ["sslcommerz", "stripe"],
+      // "sslcommerz" and "stripe" are legacy values kept only so older orders
+      // still validate when saved. New orders are always "eps".
+      enum: ["sslcommerz", "stripe", "eps"],
       required: true,
+    },
+
+    // Unique id sent to EPS on each payment attempt; used to find the order
+    // again when EPS redirects the shopper back.
+    epsMerchantTransactionId: {
+      type: String,
+      default: null,
+      index: true,
     },
 
     transactionId: {

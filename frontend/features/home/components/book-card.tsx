@@ -169,7 +169,7 @@ export default function BookCard({ book, index = 0 }: BookCardProps) {
     >
       <div
         className="
-          relative flex flex-col overflow-hidden rounded border border-[#E1E5E8] bg-white
+          relative flex flex-col overflow-hidden rounded border border-line bg-surface
           shadow-[0_1px_2px_rgba(0,0,0,0.04),0_6px_16px_rgba(0,0,0,0.05)]
           transition-all duration-300 group-hover:-translate-y-1.5
           group-hover:shadow-[0_10px_24px_rgba(10,14,42,0.12)]
@@ -206,29 +206,29 @@ export default function BookCard({ book, index = 0 }: BookCardProps) {
             }}
             className="
               absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full
-              bg-white/90 text-[#0A0E2A] opacity-0 shadow-sm backdrop-blur transition-all
+              bg-surface/90 text-ink opacity-0 shadow-sm backdrop-blur transition-all
               duration-200 group-hover:opacity-100
             "
           >
             <Heart
-              className={`h-3.5 w-3.5 transition-colors ${wishlisted ? "fill-red-500 text-red-500" : ""}`}
+              className={`h-3.5 w-3.5 transition-colors ${wishlisted ? "fill-red-500 text-danger-ink" : ""}`}
             />
           </button>
         </div>
 
         {/* body */}
         <div className="flex flex-col items-center gap-0.5 px-3 pb-3 pt-1 text-center sm:gap-1">
-          <p className="line-clamp-1 text-[13px] font-bold text-[#0A0E2A]">
+          <p className="line-clamp-1 text-[13px] font-bold text-ink">
             {book.title}
           </p>
           {author && (
-            <p className="line-clamp-1 text-[11px] text-[#9AA3AF]">{author}</p>
+            <p className="line-clamp-1 text-[11px] text-subtle">{author}</p>
           )}
 
-          <p className="mt-0 text-sm font-extrabold text-[#3368A0] sm:mt-0.5">
+          <p className="mt-0 text-sm font-extrabold text-price sm:mt-0.5">
             ৳{book.price}
             {oldPrice && oldPrice > book.price && (
-              <span className="ml-1.5 text-[11px] font-medium text-[#B0B0B0] line-through">
+              <span className="ml-1.5 text-[11px] font-medium text-subtle line-through">
                 ৳{oldPrice}
               </span>
             )}
@@ -237,12 +237,12 @@ export default function BookCard({ book, index = 0 }: BookCardProps) {
           {/* grouped action bar — download/read/share once purchased,
               otherwise the usual wishlist/cart/details bar */}
           {isPurchased ? (
-            <div className="mt-1.5 flex w-full items-stretch overflow-hidden rounded border border-[#E1E5E8]">
+            <div className="mt-1.5 flex w-full items-stretch overflow-hidden rounded border border-line">
               <button
                 type="button"
                 onClick={handleDownload}
                 disabled={downloadMutation.isPending}
-                className="flex flex-1 items-center justify-center border-r border-[#E1E5E8] bg-white py-1.5 text-[#6B7280] transition-colors duration-150 hover:bg-[#F0F7F5] hover:text-[#2DBDB6] disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex flex-1 items-center justify-center border-r border-line bg-surface py-1.5 text-muted-ink transition-colors duration-150 hover:bg-brand-soft hover:text-brand disabled:cursor-not-allowed disabled:opacity-50"
                 aria-label="ডাউনলোড"
               >
                 {downloadMutation.isPending ? (
@@ -255,7 +255,7 @@ export default function BookCard({ book, index = 0 }: BookCardProps) {
               <button
                 type="button"
                 onClick={handleRead}
-                className="flex flex-1 items-center justify-center border-r border-[#E1E5E8] bg-[#2DBDB6] py-1.5 text-white transition-colors duration-150 group-hover:bg-[#1f9d97]"
+                className="flex flex-1 items-center justify-center border-r border-line bg-brand py-1.5 text-white transition-colors duration-150 group-hover:bg-brand-strong"
                 aria-label="পড়ুন"
               >
                 <BookOpen className="h-3.5 w-3.5" />
@@ -264,14 +264,14 @@ export default function BookCard({ book, index = 0 }: BookCardProps) {
               <button
                 type="button"
                 onClick={handleShare}
-                className="flex flex-1 items-center justify-center bg-white py-1.5 text-[#6B7280] transition-colors duration-150 hover:bg-[#F0F7F5] hover:text-[#2DBDB6]"
+                className="flex flex-1 items-center justify-center bg-surface py-1.5 text-muted-ink transition-colors duration-150 hover:bg-brand-soft hover:text-brand"
                 aria-label="শেয়ার করুন"
               >
                 <Share2 className="h-3.5 w-3.5" />
               </button>
             </div>
           ) : (
-            <div className="mt-1.5 flex w-full items-stretch overflow-hidden rounded border border-[#E1E5E8]">
+            <div className="mt-1.5 flex w-full items-stretch overflow-hidden rounded border border-line">
               <button
                 type="button"
                 onClick={(e) => {
@@ -279,9 +279,9 @@ export default function BookCard({ book, index = 0 }: BookCardProps) {
                   setWishlisted((v) => !v);
                 }}
                 className={`
-                  flex flex-1 items-center justify-center border-r border-[#E1E5E8] py-1.5
+                  flex flex-1 items-center justify-center border-r border-line py-1.5
                   transition-colors duration-150
-                  ${wishlisted ? "bg-red-50 text-red-500" : "bg-white text-[#6B7280] hover:bg-red-50 hover:text-red-500"}
+                  ${wishlisted ? "bg-danger-soft text-danger-ink" : "bg-surface text-muted-ink hover:bg-danger-soft hover:text-danger-ink"}
                 `}
                 aria-label="Wishlist"
               >
@@ -296,20 +296,20 @@ export default function BookCard({ book, index = 0 }: BookCardProps) {
                 disabled={addToCartMutation.isPending}
                 className={`
       flex flex-1 items-center justify-center
-      border-r border-[#E1E5E8]
+      border-r border-line
       py-1.5
       transition-colors duration-150
       disabled:cursor-not-allowed disabled:opacity-50
       ${
         added
-          ? "bg-[#E6F7F6] text-[#2DBDB6]"
-          : "bg-white text-[#6B7280] hover:bg-[#F0F7F5] hover:text-[#2DBDB6]"
+          ? "bg-brand-soft text-brand"
+          : "bg-surface text-muted-ink hover:bg-brand-soft hover:text-brand"
       }
     `}
                 aria-label={added ? "Go to cart" : "Add to cart"}
               >
                 {addToCartMutation.isPending ? (
-                  <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-[#2DBDB6] border-t-transparent" />
+                  <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-brand border-t-transparent" />
                 ) : added ? (
                   <Check className="h-3.5 w-3.5" />
                 ) : (
@@ -319,8 +319,8 @@ export default function BookCard({ book, index = 0 }: BookCardProps) {
 
               <span
                 className="
-                  flex flex-1 items-center justify-center bg-[#2DBDB6] py-1.5 text-white
-                  transition-colors duration-150 group-hover:bg-[#1f9d97]
+                  flex flex-1 items-center justify-center bg-brand py-1.5 text-white
+                  transition-colors duration-150 group-hover:bg-brand-strong
                 "
               >
                 <BookOpen className="h-3.5 w-3.5" />

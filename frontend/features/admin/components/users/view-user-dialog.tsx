@@ -40,15 +40,15 @@ export default function ViewUserDialog({ user }: ViewUserDialogProps) {
       <button
         onClick={() => setOpen(true)}
         className="
-          flex h-8 w-8 items-center justify-center rounded-full text-[#6B7280]
-          transition-all duration-200 hover:bg-[#E6F7F6] hover:text-[#2DBDB6]
+          flex h-8 w-8 items-center justify-center rounded-full text-muted-ink
+          transition-all duration-200 hover:bg-brand-soft hover:text-brand
         "
         aria-label="View user"
       >
         <Eye className="h-4 w-4" />
       </button>
 
-      <DialogContent className="rounded-3xl border-[#E1E5E8] sm:max-w-md">
+      <DialogContent className="rounded-3xl border-line sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="sr-only">{user.name}</DialogTitle>
           <DialogDescription className="sr-only">
@@ -58,7 +58,7 @@ export default function ViewUserDialog({ user }: ViewUserDialogProps) {
 
         <div className="flex flex-col items-center text-center">
           <div className="relative">
-            <span className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-full bg-[#0A0E2A] text-xl font-bold text-white ring-4 ring-[#E6F7F6]">
+            <span className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-full bg-navy text-xl font-bold text-white ring-4 ring-brand-soft">
               {avatarSrc ? (
                 <img
                   src={avatarSrc}
@@ -71,18 +71,18 @@ export default function ViewUserDialog({ user }: ViewUserDialogProps) {
             </span>
           </div>
 
-          <h2 className="mt-3 text-lg font-bold text-[#0A0E2A]">
+          <h2 className="mt-3 text-lg font-bold text-ink">
             {user.name}
           </h2>
 
-          <p className="text-sm text-[#6B7280]">{user.email}</p>
+          <p className="text-sm text-muted-ink">{user.email}</p>
 
           <div className="mt-2 flex items-center gap-2">
             <span
               className={`rounded-full px-2.5 py-1 text-[11px] font-bold capitalize ${
                 user.role === "admin"
-                  ? "bg-[#0A0E2A] text-white"
-                  : "bg-[#E6F7F6] text-[#0A0E2A]"
+                  ? "bg-navy text-white"
+                  : "bg-brand-soft text-ink"
               }`}
             >
               {user.role}
@@ -91,8 +91,8 @@ export default function ViewUserDialog({ user }: ViewUserDialogProps) {
             <span
               className={`flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold capitalize ${
                 user.status === "active"
-                  ? "bg-emerald-50 text-emerald-600"
-                  : "bg-red-50 text-red-600"
+                  ? "bg-success-soft text-success-ink"
+                  : "bg-danger-soft text-danger-ink"
               }`}
             >
               <span
@@ -108,56 +108,56 @@ export default function ViewUserDialog({ user }: ViewUserDialogProps) {
           </div>
         </div>
 
-        <div className="mt-5 grid grid-cols-2 gap-3 rounded-2xl bg-[#F7F9FA] p-4">
+        <div className="mt-5 grid grid-cols-2 gap-3 rounded-2xl bg-canvas p-4">
           <div className="flex items-center gap-2">
-            <ShoppingBag className="h-4 w-4 text-[#2DBDB6]" />
+            <ShoppingBag className="h-4 w-4 text-brand" />
 
             <div>
-              <p className="text-[11px] text-[#9AA3AF]">Orders</p>
-              <p className="text-sm font-semibold text-[#0A0E2A]">
+              <p className="text-[11px] text-subtle">Orders</p>
+              <p className="text-sm font-semibold text-ink">
                 {user.ordersCount ?? 0}
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
-            <BookOpen className="h-4 w-4 text-[#2DBDB6]" />
+            <BookOpen className="h-4 w-4 text-brand" />
 
             <div>
-              <p className="text-[11px] text-[#9AA3AF]">Library</p>
-              <p className="text-sm font-semibold text-[#0A0E2A]">
+              <p className="text-[11px] text-subtle">Library</p>
+              <p className="text-sm font-semibold text-ink">
                 {user.booksOwned ?? 0} books
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
-            <Phone className="h-4 w-4 text-[#2DBDB6]" />
+            <Phone className="h-4 w-4 text-brand" />
 
             <div>
-              <p className="text-[11px] text-[#9AA3AF]">Phone</p>
-              <p className="truncate text-sm font-semibold text-[#0A0E2A]">
+              <p className="text-[11px] text-subtle">Phone</p>
+              <p className="truncate text-sm font-semibold text-ink">
                 {user.phone || "—"}
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
-            <Calendar className="h-4 w-4 text-[#2DBDB6]" />
+            <Calendar className="h-4 w-4 text-brand" />
 
             <div>
-              <p className="text-[11px] text-[#9AA3AF]">Joined</p>
-              <p className="text-sm font-semibold text-[#0A0E2A]">
+              <p className="text-[11px] text-subtle">Joined</p>
+              <p className="text-sm font-semibold text-ink">
                 {user.joinedAt}
               </p>
             </div>
           </div>
         </div>
 
-        <div className="mt-4 flex items-center gap-2 rounded-2xl border border-[#E1E5E8] px-4 py-3">
-          <Mail className="h-4 w-4 shrink-0 text-[#9AA3AF]" />
+        <div className="mt-4 flex items-center gap-2 rounded-2xl border border-line px-4 py-3">
+          <Mail className="h-4 w-4 shrink-0 text-subtle" />
 
-          <p className="truncate text-sm text-[#6B7280]">
+          <p className="truncate text-sm text-muted-ink">
             {user.email}
           </p>
         </div>

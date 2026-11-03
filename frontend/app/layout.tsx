@@ -6,6 +6,7 @@ import QueryProvider from "@/providers/query-provider";
 import { ThemeProvider } from "@/providers/theme-provider";
 import AuthProvider from "@/providers/auth-provider";
 import { Toaster } from "@/components/ui/sonner";
+import { ACCENT_INIT_SCRIPT } from "@/components/theme/accent";
 import SearchCleanup from "@/components/search/search-cleanup";
 
 const inter = Inter({
@@ -32,6 +33,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="bn" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: ACCENT_INIT_SCRIPT }} />
+      </head>
       <body
         className={`${inter.variable} ${banglaFont.variable}`}
         suppressHydrationWarning

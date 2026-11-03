@@ -129,7 +129,7 @@ export default function CategorySection({ categories: rawCategories }: CategoryS
                 href={`/books?category=${encodeURIComponent(category.name)}`}
                 className="
                   group relative flex h-[104px] w-[calc(33.333%_-_6px)] shrink-0
-                  flex-col items-center justify-start gap-1 overflow-hidden rounded-xl bg-[#F5F5F4] p-1.5 pt-2
+                  flex-col items-center justify-start gap-1 overflow-hidden rounded-xl bg-soft p-1.5 pt-2
                   shadow-[4px_6px_0px_rgba(0,0,0,0.08),0_1px_2px_rgba(0,0,0,0.05)]
                   ring-1 ring-black/[0.04]
                   transition-all duration-300 ease-out
@@ -145,7 +145,7 @@ export default function CategorySection({ categories: rawCategories }: CategoryS
                 <span
                   className="
                     relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg
-                    bg-white shadow-[0_2px_4px_rgba(0,0,0,0.08)]
+                    bg-surface shadow-[0_2px_4px_rgba(0,0,0,0.08)]
                     transition-transform duration-300 group-hover:-rotate-2 group-hover:scale-105
                     sm:h-20 sm:w-20
                   "
@@ -159,18 +159,18 @@ export default function CategorySection({ categories: rawCategories }: CategoryS
                       className="object-cover"
                     />
                   ) : (
-                    <BookOpen className="h-5 w-5 text-[#0B7A6E] sm:h-10 sm:w-10" strokeWidth={1.75} />
+                    <BookOpen className="h-5 w-5 text-brand-strong sm:h-10 sm:w-10" strokeWidth={1.75} />
                   )}
                 </span>
 
-                <span className="px-1 text-center text-[11px] font-bold leading-tight text-[#0A0E2A] line-clamp-2 sm:text-base">
+                <span className="px-1 text-center text-[11px] font-bold leading-tight text-ink line-clamp-2 sm:text-base">
                   {category.name}
                 </span>
 
                 <span
                   className="
-                    mt-auto rounded-full border border-[#DADFE2] bg-white px-1.5 py-0.5
-                    text-[9px] font-semibold text-[#6B7280] sm:px-2.5 sm:py-1 sm:text-xs
+                    mt-auto rounded-full border border-line bg-surface px-1.5 py-0.5
+                    text-[9px] font-semibold text-muted-ink sm:px-2.5 sm:py-1 sm:text-xs
                   "
                 >
                   {category.booksCount} টি বই
@@ -188,7 +188,7 @@ export default function CategorySection({ categories: rawCategories }: CategoryS
               key={i}
               onClick={() => goToPage(i)}
               aria-label={`পৃষ্ঠা ${i + 1}`}
-              className={`h-1.5 w-1.5 rounded-full bg-[#6B7280] transition-all duration-300 ${
+              className={`h-1.5 w-1.5 rounded-full bg-muted-ink transition-all duration-300 ${
                 i === page ? "opacity-100" : "opacity-30"
               }`}
             />

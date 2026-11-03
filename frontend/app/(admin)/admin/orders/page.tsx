@@ -18,17 +18,17 @@ const ORDER_STATUSES: Order["orderStatus"][] = [
 const PAYMENT_STATUSES: Order["paymentStatus"][] = ["pending", "paid", "failed"];
 
 const STATUS_STYLES: Record<Order["orderStatus"], string> = {
-  pending: "bg-[#FEF3C7] text-[#92400E]",
-  processing: "bg-[#E6F7F6] text-[#0A0E2A]",
-  shipped: "bg-[#DBEAFE] text-[#1E40AF]",
-  delivered: "bg-[#DCFCE7] text-[#166534]",
-  cancelled: "bg-[#FEE2E2] text-[#991B1B]",
+  pending: "bg-warn-soft text-warn-ink",
+  processing: "bg-brand-soft text-ink",
+  shipped: "bg-info-soft text-info-ink",
+  delivered: "bg-success-soft text-success-ink",
+  cancelled: "bg-danger-soft text-danger-ink",
 };
 
 const PAYMENT_STYLES: Record<Order["paymentStatus"], string> = {
-  pending: "bg-[#FEF3C7] text-[#92400E]",
-  paid: "bg-[#DCFCE7] text-[#166534]",
-  failed: "bg-[#FEE2E2] text-[#991B1B]",
+  pending: "bg-warn-soft text-warn-ink",
+  paid: "bg-success-soft text-success-ink",
+  failed: "bg-danger-soft text-danger-ink",
 };
 
 function formatDate(iso: string) {
@@ -86,8 +86,8 @@ export default function AdminOrdersPage() {
     <div className="mx-auto max-w-6xl px-4 py-8">
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-extrabold text-[#0A0E2A]">Orders</h1>
-          <p className="mt-1 text-sm text-[#6B7280]">
+          <h1 className="text-2xl font-extrabold text-ink">Orders</h1>
+          <p className="mt-1 text-sm text-muted-ink">
             {pagination ? `${pagination.total} total orders` : "Loading orders…"}
           </p>
         </div>
@@ -96,12 +96,12 @@ export default function AdminOrdersPage() {
       {/* Filters */}
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#9AA3AF]" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-subtle" />
           <input
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             placeholder="Search by invoice, transaction ID, or customer"
-            className="h-10 w-full rounded-lg border border-[#E1E5E8] pl-9 pr-3 text-sm text-[#0A0E2A] outline-none focus:border-[#2DBDB6]"
+            className="h-10 w-full rounded-lg border border-line pl-9 pr-3 text-sm text-ink outline-none focus:border-brand"
           />
         </div>
 
@@ -111,7 +111,7 @@ export default function AdminOrdersPage() {
             setOrderStatus(e.target.value as Order["orderStatus"] | "");
             setPage(1);
           }}
-          className="h-10 rounded-lg border border-[#E1E5E8] px-3 text-sm text-[#0A0E2A] outline-none focus:border-[#2DBDB6]"
+          className="h-10 rounded-lg border border-line px-3 text-sm text-ink outline-none focus:border-brand"
         >
           <option value="">All order statuses</option>
           {ORDER_STATUSES.map((s) => (
@@ -127,7 +127,7 @@ export default function AdminOrdersPage() {
             setPaymentStatus(e.target.value as Order["paymentStatus"] | "");
             setPage(1);
           }}
-          className="h-10 rounded-lg border border-[#E1E5E8] px-3 text-sm text-[#0A0E2A] outline-none focus:border-[#2DBDB6]"
+          className="h-10 rounded-lg border border-line px-3 text-sm text-ink outline-none focus:border-brand"
         >
           <option value="">All payment statuses</option>
           {PAYMENT_STATUSES.map((s) => (
@@ -139,24 +139,24 @@ export default function AdminOrdersPage() {
       </div>
 
       {/* Table */}
-      <div className="overflow-hidden rounded-xl border border-[#E1E5E8] bg-white">
+      <div className="overflow-hidden rounded-xl border border-line bg-surface">
         {isLoading ? (
-          <div className="flex items-center justify-center gap-2 py-16 text-sm text-[#6B7280]">
+          <div className="flex items-center justify-center gap-2 py-16 text-sm text-muted-ink">
             <Loader2 className="h-4 w-4 animate-spin" />
             Loading orders…
           </div>
         ) : isError ? (
-          <div className="py-16 text-center text-sm text-red-600">
+          <div className="py-16 text-center text-sm text-danger-ink">
             Couldn&apos;t load orders. Refresh to try again.
           </div>
         ) : orders.length === 0 ? (
-          <div className="flex flex-col items-center gap-2 py-16 text-[#6B7280]">
-            <Package className="h-8 w-8 text-[#9AA3AF]" />
+          <div className="flex flex-col items-center gap-2 py-16 text-muted-ink">
+            <Package className="h-8 w-8 text-subtle" />
             <p className="text-sm">No orders match these filters.</p>
           </div>
         ) : (
           <table className="w-full text-left text-sm">
-            <thead className="border-b border-[#E1E5E8] bg-[#F7F9FA] text-xs uppercase tracking-wide text-[#9AA3AF]">
+            <thead className="border-b border-line bg-canvas text-xs uppercase tracking-wide text-subtle">
               <tr>
                 <th className="w-8 px-4 py-3" />
                 <th className="px-4 py-3">Customer</th>
@@ -176,10 +176,10 @@ export default function AdminOrdersPage() {
                 return (
                   <Fragment key={order._id}>
                     <tr
-                      className="cursor-pointer border-b border-[#E1E5E8] last:border-0 hover:bg-[#F7F9FA]"
+                      className="cursor-pointer border-b border-line last:border-0 hover:bg-canvas"
                       onClick={() => setExpandedId(isExpanded ? null : order._id)}
                     >
-                      <td className="px-4 py-3 text-[#9AA3AF]">
+                      <td className="px-4 py-3 text-subtle">
                         {isExpanded ? (
                           <ChevronUp className="h-4 w-4" />
                         ) : (
@@ -187,16 +187,16 @@ export default function AdminOrdersPage() {
                         )}
                       </td>
                       <td className="px-4 py-3">
-                        <div className="font-medium text-[#0A0E2A]">
+                        <div className="font-medium text-ink">
                           {order.user?.name ?? "Deleted user"}
                         </div>
-                        <div className="text-xs text-[#9AA3AF]">{order.user?.email}</div>
+                        <div className="text-xs text-subtle">{order.user?.email}</div>
                       </td>
-                      <td className="px-4 py-3 text-[#6B7280]">{formatDate(order.createdAt)}</td>
-                      <td className="px-4 py-3 font-medium text-[#0A0E2A]">
+                      <td className="px-4 py-3 text-muted-ink">{formatDate(order.createdAt)}</td>
+                      <td className="px-4 py-3 font-medium text-ink">
                         {formatMoney(order.finalAmount)}
                       </td>
-                      <td className="px-4 py-3 capitalize text-[#6B7280]">{order.paymentMethod}</td>
+                      <td className="px-4 py-3 capitalize text-muted-ink">{order.paymentMethod}</td>
                       <td className="px-4 py-3">
                         <span
                           className={`rounded-full px-2.5 py-1 text-xs font-semibold capitalize ${PAYMENT_STYLES[order.paymentStatus]}`}
@@ -221,45 +221,45 @@ export default function AdminOrdersPage() {
                             ))}
                           </select>
                           {isUpdatingThisRow && (
-                            <Loader2 className="h-3.5 w-3.5 animate-spin text-[#9AA3AF]" />
+                            <Loader2 className="h-3.5 w-3.5 animate-spin text-subtle" />
                           )}
                         </div>
                       </td>
                     </tr>
 
                     {isExpanded && (
-                      <tr className="border-b border-[#E1E5E8] bg-[#F7F9FA]/60 last:border-0">
+                      <tr className="border-b border-line bg-canvas/60 last:border-0">
                         <td colSpan={7} className="px-4 py-4">
                           <div className="grid gap-6 sm:grid-cols-2">
                             <div>
-                              <h4 className="mb-2 text-xs font-bold uppercase tracking-wide text-[#9AA3AF]">
+                              <h4 className="mb-2 text-xs font-bold uppercase tracking-wide text-subtle">
                                 Shipping
                               </h4>
                               {order.shippingAddress?.fullName ? (
-                                <div className="space-y-0.5 text-sm text-[#0A0E2A]">
+                                <div className="space-y-0.5 text-sm text-ink">
                                   <p>{order.shippingAddress.fullName}</p>
-                                  <p className="text-[#6B7280]">{order.shippingAddress.phone}</p>
-                                  <p className="text-[#6B7280]">
+                                  <p className="text-muted-ink">{order.shippingAddress.phone}</p>
+                                  <p className="text-muted-ink">
                                     {order.shippingAddress.address}, {order.shippingAddress.city}{" "}
                                     {order.shippingAddress.postalCode}
                                   </p>
                                 </div>
                               ) : (
-                                <p className="text-sm text-[#9AA3AF]">Digital order — no shipping</p>
+                                <p className="text-sm text-subtle">Digital order — no shipping</p>
                               )}
                             </div>
 
                             <div>
-                              <h4 className="mb-2 text-xs font-bold uppercase tracking-wide text-[#9AA3AF]">
+                              <h4 className="mb-2 text-xs font-bold uppercase tracking-wide text-subtle">
                                 Items
                               </h4>
-                              <ul className="space-y-1 text-sm text-[#0A0E2A]">
+                              <ul className="space-y-1 text-sm text-ink">
                                 {order.items.map((item, i) => (
                                   <li key={i} className="flex justify-between">
                                     <span>
                                       {item.quantity}× {item.bookType}
                                     </span>
-                                    <span className="text-[#6B7280]">{formatMoney(item.price)}</span>
+                                    <span className="text-muted-ink">{formatMoney(item.price)}</span>
                                   </li>
                                 ))}
                               </ul>
@@ -278,7 +278,7 @@ export default function AdminOrdersPage() {
 
       {/* Pagination */}
       {pagination && pagination.totalPages > 1 && (
-        <div className="mt-4 flex items-center justify-between text-sm text-[#6B7280]">
+        <div className="mt-4 flex items-center justify-between text-sm text-muted-ink">
           <span>
             Page {pagination.page} of {pagination.totalPages}
           </span>
@@ -286,14 +286,14 @@ export default function AdminOrdersPage() {
             <button
               disabled={page <= 1}
               onClick={() => setPage((p) => p - 1)}
-              className="rounded-lg border border-[#E1E5E8] px-3 py-1.5 font-medium text-[#0A0E2A] disabled:opacity-40"
+              className="rounded-lg border border-line px-3 py-1.5 font-medium text-ink disabled:opacity-40"
             >
               Previous
             </button>
             <button
               disabled={page >= pagination.totalPages}
               onClick={() => setPage((p) => p + 1)}
-              className="rounded-lg border border-[#E1E5E8] px-3 py-1.5 font-medium text-[#0A0E2A] disabled:opacity-40"
+              className="rounded-lg border border-line px-3 py-1.5 font-medium text-ink disabled:opacity-40"
             >
               Next
             </button>

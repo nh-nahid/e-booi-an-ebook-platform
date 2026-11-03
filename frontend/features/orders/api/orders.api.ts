@@ -3,9 +3,18 @@ import { api } from "@/services/api/api";
 import type { Order } from "../types/orders.types";
 import { ENDPOINTS } from "@/services/api/endpoints";
 
+// If a book is deleted after it was ordered (admin removal, or the
+// physical-books cleanup script), the API returns that order item with
+// `book: null`. The UI reads item.book.* everywhere, so drop those orphaned
+// items here, once, instead of crashing every order screen.
+const dropRemovedBooks = (order: Order): Order => ({
+  ...order,
+  items: (order.items ?? []).filter((item) => item.book),
+});
+
 export const getOrderById = async (orderId: string): Promise<Order> => {
   const { data } = await api.get<Order>(ENDPOINTS.ORDERS.DETAILS(orderId));
-  return data;
+  return dropRemovedBooks(data);
 };
 
 export const downloadDigitalBook = async (
@@ -43,7 +52,7 @@ export const getBookFile = async (bookId: string): Promise<Uint8Array> => {
 
 export const getMyOrders = async (): Promise<Order[]> => {
   const { data } = await api.get<Order[]>(ENDPOINTS.ORDERS.MY_ORDERS);
-  return data;
+  return data.map(dropRemovedBooks);
 };
 
 export const downloadInvoice = async (

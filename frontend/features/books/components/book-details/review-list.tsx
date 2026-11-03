@@ -26,7 +26,7 @@ export default function ReviewList({
 }: ReviewListProps) {
   if (reviews.length === 0) {
     return (
-      <p className="text-sm text-[#6B7280]">
+      <p className="text-sm text-muted-ink">
         এখনও কোনো রিভিউ নেই।
       </p>
     );
@@ -35,8 +35,8 @@ export default function ReviewList({
   return (
     <div className="space-y-5">
       {typeof averageRating === "number" && (
-        <div className="flex items-center gap-3 rounded-2xl bg-[#F7F9FA] p-4">
-          <span className="text-3xl font-extrabold text-[#0A0E2A]">
+        <div className="flex items-center gap-3 rounded-2xl bg-canvas p-4">
+          <span className="text-3xl font-extrabold text-ink">
             {averageRating.toFixed(1)}
           </span>
 
@@ -47,14 +47,14 @@ export default function ReviewList({
                   key={i}
                   className={`h-3.5 w-3.5 ${
                     i < Math.round(averageRating)
-                      ? "fill-[#2DBDB6] text-[#2DBDB6]"
-                      : "fill-[#E1E5E8] text-[#E1E5E8]"
+                      ? "fill-brand text-brand"
+                      : "fill-line text-line"
                   }`}
                 />
               ))}
             </div>
 
-            <p className="mt-0.5 text-xs text-[#9AA3AF]">
+            <p className="mt-0.5 text-xs text-subtle">
               {reviews.length} জন রিভিউ দিয়েছেন
             </p>
           </div>
@@ -78,10 +78,10 @@ export default function ReviewList({
               style={{
                 animationDelay: `${index * 0.06}s`,
               }}
-              className="animate-in fade-in slide-in-from-bottom-1 border-b border-[#F1F3F5] pb-4 duration-500 fill-mode-both last:border-0"
+              className="animate-in fade-in slide-in-from-bottom-1 border-b border-soft pb-4 duration-500 fill-mode-both last:border-0"
             >
               <div className="flex items-start gap-3">
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#0A0E2A] text-xs font-bold text-white">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-navy text-xs font-bold text-white">
                   {avatar ? (
                     <Image
                       src={avatar}
@@ -97,11 +97,11 @@ export default function ReviewList({
 
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
-                    <p className="text-sm font-bold text-[#0A0E2A]">
+                    <p className="text-sm font-bold text-ink">
                       {review.user.name}
                     </p>
 
-                    <span className="text-xs text-[#9AA3AF]">
+                    <span className="text-xs text-subtle">
                       {new Date(review.createdAt).toLocaleDateString("bn-BD")}
                     </span>
                   </div>
@@ -112,14 +112,14 @@ export default function ReviewList({
                         key={i}
                         className={`h-3 w-3 ${
                           i < review.rating
-                            ? "fill-[#2DBDB6] text-[#2DBDB6]"
-                            : "fill-[#E1E5E8] text-[#E1E5E8]"
+                            ? "fill-brand text-brand"
+                            : "fill-line text-line"
                         }`}
                       />
                     ))}
                   </div>
 
-                  <p className="mt-2 text-sm leading-relaxed text-[#6B7280]">
+                  <p className="mt-2 text-sm leading-relaxed text-muted-ink">
                     {review.comment}
                   </p>
                 </div>

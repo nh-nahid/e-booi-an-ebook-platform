@@ -104,38 +104,38 @@ export default function RegisterForm() {
   };
 
   const fieldClass =
-    "h-11 w-full rounded-xl border pl-10 pr-3 text-sm text-[#0A0E2A] outline-none " +
-    "transition-all duration-200 placeholder:text-[#9AA3AF]";
+    "h-11 w-full rounded-xl border pl-10 pr-3 text-sm text-ink outline-none " +
+    "transition-all duration-200 placeholder:text-subtle";
 
   return (
     <div
       className="
-        relative w-full max-w-md overflow-hidden rounded-3xl border border-[#E1E5E8]
-        bg-white p-5 shadow-[0_20px_45px_rgba(10,14,42,0.08)] sm:p-7
+        relative w-full max-w-md overflow-hidden rounded-3xl border border-line
+        bg-surface p-5 shadow-[0_20px_45px_rgba(10,14,42,0.08)] sm:p-7
         animate-in fade-in slide-in-from-bottom-2 duration-500
       "
     >
       {/* ambient blobs */}
-      <div className="pointer-events-none absolute -right-14 -top-14 h-40 w-40 rounded-full bg-[#2DBDB6] opacity-[0.14] blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-16 -left-16 h-36 w-36 rounded-full bg-[#0A0E2A] opacity-[0.08] blur-3xl" />
+      <div className="pointer-events-none absolute -right-14 -top-14 h-40 w-40 rounded-full bg-brand opacity-[0.14] blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-16 -left-16 h-36 w-36 rounded-full bg-navy opacity-[0.08] blur-3xl" />
 
       <div className="relative">
         {/* logo */}
         <div className="mb-5 flex items-center gap-2">
           <Image src="/logo.jpeg" alt="ebooi Logo" width={32} height={32} />
 
-          <span className="text-lg font-extrabold text-[#0A0E2A]">
-            eBoo<span className="text-[#2DBDB6]">i</span>
+          <span className="text-lg font-extrabold text-ink">
+            eBoo<span className="text-brand">i</span>
           </span>
         </div>
 
-        <h1 className="text-2xl font-bold text-[#0A0E2A]">Create an account</h1>
-        <p className="mt-1 text-sm text-[#6B7280]">
+        <h1 className="text-2xl font-bold text-ink">Create an account</h1>
+        <p className="mt-1 text-sm text-muted-ink">
           Join ebooi and start building your library.
         </p>
 
         {/* role toggle */}
-        <div className="mt-5 grid grid-cols-2 gap-1 rounded-full border border-[#E1E5E8] bg-[#F7F9FA] p-1">
+        <div className="mt-5 grid grid-cols-2 gap-1 rounded-full border border-line bg-canvas p-1">
           <button
             type="button"
             onClick={() => handleRoleChange("user")}
@@ -144,8 +144,8 @@ export default function RegisterForm() {
               transition-all duration-200
               ${
                 values.role === "user"
-                  ? "bg-gradient-to-br from-[#2DBDB6] to-[#1f9d97] text-white shadow-[0_4px_12px_rgba(45,189,182,0.35)]"
-                  : "text-[#6B7280] hover:text-[#0A0E2A]"
+                  ? "bg-gradient-to-br from-brand to-brand-strong text-white shadow-[0_4px_12px_rgba(45,189,182,0.35)]"
+                  : "text-muted-ink hover:text-ink"
               }
             `}
           >
@@ -161,8 +161,8 @@ export default function RegisterForm() {
               transition-all duration-200
               ${
                 isAdmin
-                  ? "bg-gradient-to-br from-[#0A0E2A] to-[#1a2050] text-white shadow-[0_4px_12px_rgba(10,14,42,0.35)]"
-                  : "text-[#6B7280] hover:text-[#0A0E2A]"
+                  ? "bg-gradient-to-br from-navy to-[#1a2050] text-white shadow-[0_4px_12px_rgba(10,14,42,0.35)]"
+                  : "text-muted-ink hover:text-ink"
               }
             `}
           >
@@ -173,7 +173,7 @@ export default function RegisterForm() {
 
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-[#0A0E2A]">
+            <label className="text-xs font-semibold text-ink">
               Full Name
             </label>
             <div className="relative">
@@ -200,7 +200,7 @@ export default function RegisterForm() {
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-[#0A0E2A]">
+            <label className="text-xs font-semibold text-ink">
               Email
             </label>
             <div className="relative">
@@ -228,7 +228,7 @@ export default function RegisterForm() {
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-[#0A0E2A]">
+            <label className="text-xs font-semibold text-ink">
               Password
             </label>
             <div className="relative">
@@ -255,7 +255,7 @@ export default function RegisterForm() {
               <button
                 type="button"
                 onClick={() => setShowPassword((s) => !s)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#9AA3AF] transition-transform hover:scale-110"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-subtle transition-transform hover:scale-110"
               >
                 {showPassword ? (
                   <EyeOff className="h-4 w-4" />
@@ -267,7 +267,7 @@ export default function RegisterForm() {
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-[#0A0E2A]">
+            <label className="text-xs font-semibold text-ink">
               Confirm Password
             </label>
             <div className="relative">
@@ -294,7 +294,7 @@ export default function RegisterForm() {
               <button
                 type="button"
                 onClick={() => setShowConfirm((s) => !s)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#9AA3AF] transition-transform hover:scale-110"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-subtle transition-transform hover:scale-110"
               >
                 {showConfirm ? (
                   <EyeOff className="h-4 w-4" />
@@ -313,7 +313,7 @@ export default function RegisterForm() {
             `}
           >
             <div className="min-h-0 space-y-1.5">
-              <label className="text-xs font-semibold text-[#0A0E2A]">
+              <label className="text-xs font-semibold text-ink">
                 Admin Access Code
               </label>
               <div className="relative">
@@ -338,14 +338,14 @@ export default function RegisterForm() {
                   }}
                 />
               </div>
-              <p className="text-[11px] text-[#9AA3AF]">
+              <p className="text-[11px] text-subtle">
                 Ask your workspace owner for an admin invite code.
               </p>
             </div>
           </div>
 
           {error && (
-            <p className="rounded-xl bg-[#FDEDEC] px-3 py-2 text-xs font-medium text-red-600 animate-in fade-in duration-200">
+            <p className="rounded-xl bg-danger-soft px-3 py-2 text-xs font-medium text-danger-ink animate-in fade-in duration-200">
               {error}
             </p>
           )}
@@ -360,8 +360,8 @@ export default function RegisterForm() {
               disabled:opacity-70
               ${
                 isAdmin
-                  ? "bg-gradient-to-br from-[#0A0E2A] to-[#1a2050] shadow-[0_4px_12px_rgba(10,14,42,0.35)] hover:shadow-[0_8px_18px_rgba(10,14,42,0.4)]"
-                  : "bg-gradient-to-br from-[#2DBDB6] to-[#1f9d97] shadow-[0_4px_12px_rgba(45,189,182,0.35)] hover:shadow-[0_8px_18px_rgba(45,189,182,0.4)]"
+                  ? "bg-gradient-to-br from-navy to-[#1a2050] shadow-[0_4px_12px_rgba(10,14,42,0.35)] hover:shadow-[0_8px_18px_rgba(10,14,42,0.4)]"
+                  : "bg-gradient-to-br from-brand to-brand-strong shadow-[0_4px_12px_rgba(45,189,182,0.35)] hover:shadow-[0_8px_18px_rgba(45,189,182,0.4)]"
               }
             `}
           >
@@ -381,11 +381,11 @@ export default function RegisterForm() {
             </span>
           </button>
 
-          <p className="pt-1 text-center text-xs text-[#6B7280]">
+          <p className="pt-1 text-center text-xs text-muted-ink">
             Already have an account?{" "}
             <Link
               href="/login"
-              className="font-semibold text-[#0A0E2A] hover:text-[#2DBDB6]"
+              className="font-semibold text-ink hover:text-brand"
             >
               Log in
             </Link>

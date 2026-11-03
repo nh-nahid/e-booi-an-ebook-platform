@@ -51,13 +51,13 @@ export default function BookViewDialog({
         }
       />
 
-      <DialogContent className="max-h-[90vh] overflow-y-auto rounded-3xl border-[#E1E5E8] sm:max-w-3xl">
+      <DialogContent className="max-h-[90vh] overflow-y-auto rounded-3xl border-line sm:max-w-3xl">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold text-[#0A0E2A]">
+          <DialogTitle className="text-xl font-bold text-ink">
             Book Details
           </DialogTitle>
 
-          <DialogDescription className="text-sm text-gray-500">
+          <DialogDescription className="text-sm text-muted-ink">
             View complete information about this book.
           </DialogDescription>
         </DialogHeader>
@@ -66,7 +66,7 @@ export default function BookViewDialog({
           {/* Top Section */}
           <div className="grid gap-6 sm:grid-cols-[180px_1fr]">
             {/* Cover */}
-            <div className="overflow-hidden rounded-2xl border bg-gray-50">
+            <div className="overflow-hidden rounded-2xl border bg-soft">
               <Image
                 src={coverSrc}
                 alt={book.title}
@@ -79,11 +79,11 @@ export default function BookViewDialog({
             {/* Basic Info */}
             <div className="space-y-4">
               <div>
-                <h2 className="text-xl font-bold text-[#0A0E2A]">
+                <h2 className="text-xl font-bold text-ink">
                   {book.title}
                 </h2>
 
-                <p className="mt-1 text-sm text-gray-500">
+                <p className="mt-1 text-sm text-muted-ink">
                   By {book.author}
                 </p>
               </div>
@@ -124,12 +124,12 @@ export default function BookViewDialog({
 
 
           {/* Description */}
-          <div className="rounded-2xl border border-[#E1E5E8] p-4">
-            <h3 className="mb-2 text-sm font-bold text-[#0A0E2A]">
+          <div className="rounded-2xl border border-line p-4">
+            <h3 className="mb-2 text-sm font-bold text-ink">
               Description
             </h3>
 
-            <p className="text-sm leading-6 text-gray-600">
+            <p className="text-sm leading-6 text-muted-ink">
               {book.description || "No description available."}
             </p>
           </div>
@@ -137,16 +137,16 @@ export default function BookViewDialog({
 
           {/* Files */}
           {book.pdfFile && (
-            <div className="rounded-2xl border border-[#E1E5E8] p-4">
-              <h3 className="mb-3 text-sm font-bold text-[#0A0E2A]">
+            <div className="rounded-2xl border border-line p-4">
+              <h3 className="mb-3 text-sm font-bold text-ink">
                 Digital File
               </h3>
 
-              <div className="flex items-center justify-between rounded-xl bg-gray-50 px-4 py-3">
+              <div className="flex items-center justify-between rounded-xl bg-soft px-4 py-3">
                 <div className="flex items-center gap-3">
-                  <FileText className="h-5 w-5 text-[#2DBDB6]" />
+                  <FileText className="h-5 w-5 text-brand" />
 
-                  <span className="text-sm text-gray-600">
+                  <span className="text-sm text-muted-ink">
                     {book.pdfFile}
                   </span>
                 </div>
@@ -156,7 +156,7 @@ export default function BookViewDialog({
                     href={pdfUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-sm font-semibold text-[#2DBDB6] hover:underline"
+                    className="text-sm font-semibold text-brand hover:underline"
                   >
                     View PDF
                   </a>
@@ -167,7 +167,7 @@ export default function BookViewDialog({
 
 
           {/* Metadata */}
-          <div className="grid gap-4 rounded-2xl border border-[#E1E5E8] p-4 sm:grid-cols-2">
+          <div className="grid gap-4 rounded-2xl border border-line p-4 sm:grid-cols-2">
             <InfoItem
               label="Created At"
               value={new Date(
@@ -198,11 +198,11 @@ function InfoItem({
 }) {
   return (
     <div>
-      <p className="text-xs font-medium text-gray-400">
+      <p className="text-xs font-medium text-muted-ink">
         {label}
       </p>
 
-      <p className="mt-1 font-semibold text-[#0A0E2A]">
+      <p className="mt-1 font-semibold text-ink">
         {value}
       </p>
     </div>

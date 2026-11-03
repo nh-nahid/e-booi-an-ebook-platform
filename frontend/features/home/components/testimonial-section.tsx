@@ -31,10 +31,10 @@ const TESTIMONIALS: Testimonial[] = [
 
 export default function TestimonialSection() {
   return (
-    <section className="bg-[#0A0E2A]">
+    <section className="bg-navy">
       <div className="container mx-auto px-5 py-12 sm:px-10 lg:px-[60px]">
         <div className="mb-8 text-center">
-          <span className="inline-block rounded-2xl bg-white/10 px-4 py-1.5 text-sm font-bold text-[#2DBDB6]">
+          <span className="inline-block rounded-2xl bg-surface/10 px-4 py-1.5 text-sm font-bold text-brand">
             গ্রাহকদের মতামত
           </span>
           <h2 className="mt-3 text-2xl font-extrabold text-white sm:text-3xl">
@@ -50,15 +50,15 @@ export default function TestimonialSection() {
                 key={t.id}
                 style={{ animationDelay: `${i * 0.08}s` }}
                 className="
-                  animate-in fade-in slide-in-from-bottom-2 rounded-2xl bg-white/[0.06] p-5
-                  duration-500 fill-mode-both transition-colors hover:bg-white/[0.09]
+                  animate-in fade-in slide-in-from-bottom-2 rounded-2xl bg-surface/[0.06] p-5
+                  duration-500 fill-mode-both transition-colors hover:bg-surface/[0.09]
                 "
               >
-                <Quote className="h-5 w-5 text-[#2DBDB6]" />
+                <Quote className="h-5 w-5 text-brand" />
                 <p className="mt-3 text-sm leading-relaxed text-white/85">{t.comment}</p>
 
                 <div className="mt-4 flex items-center gap-3">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#2DBDB6] text-xs font-bold text-white">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand text-xs font-bold text-white">
                     {initials}
                   </span>
                   <div>

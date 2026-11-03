@@ -38,11 +38,11 @@ export default function BooksTable({
         : `${imageBaseUrl}/uploads/books/${book.coverImage}`
       : "/book-placeholder.jpg";
   return (
-    <div className="overflow-hidden rounded-2xl border border-[#E1E5E8] bg-white shadow-sm">
-      <div className="border-b border-[#E1E5E8] px-4 py-5 sm:px-6">
-        <h2 className="text-lg font-bold text-[#0A0E2A]">Books Inventory</h2>
+    <div className="overflow-hidden rounded-2xl border border-line bg-surface shadow-sm">
+      <div className="border-b border-line px-4 py-5 sm:px-6">
+        <h2 className="text-lg font-bold text-ink">Books Inventory</h2>
 
-        <p className="mt-1 text-sm text-gray-500">
+        <p className="mt-1 text-sm text-muted-ink">
           Manage all books available in your store.
         </p>
       </div>
@@ -50,8 +50,8 @@ export default function BooksTable({
       {/* Desktop / tablet: table view */}
       <div className="hidden overflow-x-auto md:block">
         <table className="w-full min-w-[900px] lg:min-w-[1100px]">
-          <thead className="bg-[#F8FAFB]">
-            <tr className="text-left text-sm font-semibold text-[#0A0E2A]">
+          <thead className="bg-soft">
+            <tr className="text-left text-sm font-semibold text-ink">
               <th className="px-4 py-4 lg:px-6">Cover</th>
               <th className="px-4 py-4 lg:px-6">Title</th>
               <th className="px-4 py-4 lg:px-6">Author</th>
@@ -68,7 +68,7 @@ export default function BooksTable({
             {books.map((book) => (
               <tr
                 key={book._id}
-                className="border-t border-[#EEF1F2] transition hover:bg-[#FAFCFC]"
+                className="border-t border-soft transition hover:bg-canvas"
               >
                 <td className="px-4 py-4 lg:px-6">
                   <Image
@@ -81,11 +81,11 @@ export default function BooksTable({
                 </td>
 
                 <td className="px-4 py-4 text-sm lg:px-6">
-                  <div className="font-semibold text-[#0A0E2A]">
+                  <div className="font-semibold text-ink">
                     {book.title}
                   </div>
 
-                  <div className="mt-1 text-xs text-gray-500">
+                  <div className="mt-1 text-xs text-muted-ink">
                     #{book._id.slice(-6)}
                   </div>
                 </td>
@@ -93,7 +93,7 @@ export default function BooksTable({
                 <td className="px-4 text-sm py-4 lg:px-6">{book.author}</td>
 
                 <td className="px-4 py-4 lg:px-6">
-                  <span className="rounded-full bg-[#EEF8F7] px-3 py-1 text-xs font-semibold text-[#2DBDB6]">
+                  <span className="rounded-full bg-brand-soft px-3 py-1 text-xs font-semibold text-brand">
                     {book.category}
                   </span>
                 </td>
@@ -102,8 +102,8 @@ export default function BooksTable({
                   <span
                     className={`rounded-full px-3 py-1 text-xs font-semibold ${
                       book.bookType === "Digital"
-                        ? "bg-blue-100 text-blue-700"
-                        : "bg-orange-100 text-orange-700"
+                        ? "bg-info-soft text-info-ink"
+                        : "bg-warn-soft text-warn-ink"
                     }`}
                   >
                     {book.bookType}
@@ -116,7 +116,7 @@ export default function BooksTable({
 
                 <td className="px-4 py-4 text-sm lg:px-6">
                   ⭐ {book.averageRating ?? 0}
-                  <div className="text-xs inline ml-1 text-gray-500">
+                  <div className="text-xs inline ml-1 text-muted-ink">
                     ({book.reviewCount ?? 0})
                   </div>
                 </td>
@@ -125,8 +125,8 @@ export default function BooksTable({
                   <span
                     className={`rounded-full px-3 py-1 text-xs font-semibold ${
                       book.isPublished
-                        ? "bg-green-100 text-green-700"
-                        : "bg-red-100 text-red-700"
+                        ? "bg-success-soft text-success-ink"
+                        : "bg-danger-soft text-danger-ink"
                     }`}
                   >
                     {book.isPublished ? "Published" : "Draft"}
@@ -168,7 +168,7 @@ export default function BooksTable({
                       }
                       trigger={
                         <Button size="icon" variant="outline">
-                          <Edit className="h-4 w-4 text-[#2DBDB6]" />
+                          <Edit className="h-4 w-4 text-brand" />
                         </Button>
                       }
                     />
@@ -176,10 +176,10 @@ export default function BooksTable({
                     <Button
                       size="icon"
                       variant="outline"
-                      className="border-red-200 hover:bg-red-50"
+                      className="border-danger-ink/30 hover:bg-danger-soft"
                       onClick={() => onDelete(book._id)}
                     >
-                      <Trash2 className="h-4 w-4 text-red-500" />
+                      <Trash2 className="h-4 w-4 text-danger-ink" />
                     </Button>
                   </div>
                 </td>
@@ -188,7 +188,7 @@ export default function BooksTable({
 
             {books.length === 0 && (
               <tr>
-                <td colSpan={10} className="py-16 text-center text-gray-500">
+                <td colSpan={10} className="py-16 text-center text-muted-ink">
                   No books found.
                 </td>
               </tr>
@@ -198,7 +198,7 @@ export default function BooksTable({
       </div>
 
       {/* Mobile: stacked card view */}
-      <div className="divide-y divide-[#EEF1F2] md:hidden">
+      <div className="divide-y divide-soft md:hidden">
         {books.map((book) => (
           <div key={book._id} className="flex gap-4 px-4 py-4">
             <Image
@@ -212,13 +212,13 @@ export default function BooksTable({
             <div className="min-w-0 flex-1">
               <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0">
-                  <div className="truncate font-semibold text-[#0A0E2A]">
+                  <div className="truncate font-semibold text-ink">
                     {book.title}
                   </div>
-                  <div className="text-xs text-gray-500">
+                  <div className="text-xs text-muted-ink">
                     #{book._id.slice(-6)}
                   </div>
-                  <div className="mt-0.5 text-sm text-gray-600">
+                  <div className="mt-0.5 text-sm text-muted-ink">
                     {book.author}
                   </div>
                 </div>
@@ -226,8 +226,8 @@ export default function BooksTable({
                 <span
                   className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold ${
                     book.isPublished
-                      ? "bg-green-100 text-green-700"
-                      : "bg-red-100 text-red-700"
+                      ? "bg-success-soft text-success-ink"
+                      : "bg-danger-soft text-danger-ink"
                   }`}
                 >
                   {book.isPublished ? "Published" : "Draft"}
@@ -235,15 +235,15 @@ export default function BooksTable({
               </div>
 
               <div className="mt-2 flex flex-wrap items-center gap-2">
-                <span className="rounded-full bg-[#EEF8F7] px-2.5 py-1 text-xs font-semibold text-[#2DBDB6]">
+                <span className="rounded-full bg-brand-soft px-2.5 py-1 text-xs font-semibold text-brand">
                   {book.category}
                 </span>
 
                 <span
                   className={`rounded-full px-2.5 py-1 text-xs font-semibold ${
                     book.bookType === "Digital"
-                      ? "bg-blue-100 text-blue-700"
-                      : "bg-orange-100 text-orange-700"
+                      ? "bg-info-soft text-info-ink"
+                      : "bg-warn-soft text-warn-ink"
                   }`}
                 >
                   {book.bookType}
@@ -251,11 +251,11 @@ export default function BooksTable({
               </div>
 
               <div className="mt-3 flex items-center justify-between text-sm">
-                <span className="font-semibold text-[#0A0E2A]">
+                <span className="font-semibold text-ink">
                   ৳ {book.price}
                 </span>
 
-                <span className="text-gray-500">
+                <span className="text-muted-ink">
                   ⭐ {book.averageRating ?? 0} ({book.reviewCount ?? 0})
                 </span>
               </div>
@@ -266,15 +266,15 @@ export default function BooksTable({
                 </Button>
 
                 <Button size="icon" variant="outline">
-                  <Edit className="h-4 w-4 text-[#2DBDB6]" />
+                  <Edit className="h-4 w-4 text-brand" />
                 </Button>
 
                 <Button
                   size="icon"
                   variant="outline"
-                  className="border-red-200 hover:bg-red-50"
+                  className="border-danger-ink/30 hover:bg-danger-soft"
                 >
-                  <Trash2 className="h-4 w-4 text-red-500" />
+                  <Trash2 className="h-4 w-4 text-danger-ink" />
                 </Button>
               </div>
             </div>
@@ -282,12 +282,12 @@ export default function BooksTable({
         ))}
 
         {books.length === 0 && (
-          <div className="py-16 text-center text-gray-500">No books found.</div>
+          <div className="py-16 text-center text-muted-ink">No books found.</div>
         )}
       </div>
 
-      <div className="flex flex-col gap-3 border-t border-[#E1E5E8] px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-        <p className="text-sm text-gray-500">
+      <div className="flex flex-col gap-3 border-t border-line px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+        <p className="text-sm text-muted-ink">
           Showing{" "}
           <span className="font-semibold">
             {books.length === 0 ? 0 : (page - 1) * books.length + 1}–
@@ -306,7 +306,7 @@ export default function BooksTable({
             Previous
           </Button>
 
-          <Button size="sm" className="bg-[#2DBDB6] hover:bg-[#249d97]">
+          <Button size="sm" className="bg-brand hover:bg-brand-strong">
             {page}
           </Button>
 

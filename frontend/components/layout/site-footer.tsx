@@ -28,15 +28,15 @@ function FooterAccordionItem({
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="border-b border-white/10 py-2.5 sm:border-0 sm:py-0">
+    <div className="border-b border-line py-2.5 sm:border-0 sm:py-0">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
         className="flex w-full items-center justify-between text-left sm:pointer-events-none sm:cursor-default"
       >
-        <h4 className="text-xs font-bold text-white sm:text-sm">{title}</h4>
+        <h4 className="text-xs font-bold text-ink sm:text-sm">{title}</h4>
         <ChevronDown
-          className={`h-3.5 w-3.5 shrink-0 text-[#A7B0C8] transition-transform duration-300 sm:hidden ${
+          className={`h-3.5 w-3.5 shrink-0 text-muted-ink transition-transform duration-300 sm:hidden ${
             open ? "rotate-180" : ""
           }`}
         />
@@ -53,13 +53,50 @@ function FooterAccordionItem({
   );
 }
 
+const EPS_ALT =
+  "Pay with Visa, Mastercard, American Express, DBBL Nexus, UnionPay, bKash, Nagad, Rocket, Upay, Cellfin and more. Verified by EPS (Easy Payment System).";
+
+const DESKTOP = "mx-auto h-auto w-full max-w-3xl rounded-lg";
+const MOBILE = "mx-auto h-auto w-full max-w-[280px] rounded-lg";
+
+const EPS_STRIPS = [
+  {
+    src: "/eps/footer-desktop-light.webp",
+    width: 2400,
+    height: 123,
+    sizes: "768px",
+    className: `${DESKTOP} hidden sm:block dark:hidden`,
+  },
+  {
+    src: "/eps/footer-desktop-dark.webp",
+    width: 2400,
+    height: 123,
+    sizes: "768px",
+    className: `${DESKTOP} hidden dark:sm:block`,
+  },
+  {
+    src: "/eps/footer-mobile-light.webp",
+    width: 1200,
+    height: 216,
+    sizes: "280px",
+    className: `${MOBILE} block sm:hidden dark:hidden`,
+  },
+  {
+    src: "/eps/footer-mobile-dark.webp",
+    width: 1200,
+    height: 211,
+    sizes: "280px",
+    className: `${MOBILE} hidden dark:block dark:sm:hidden`,
+  },
+];
+
 export default function SiteFooter() {
   return (
-    <footer className="relative mt-10 overflow-hidden bg-[#0A0E2A] px-5 pb-5 pt-7 text-[#cfd6e8] sm:mt-0 sm:px-10 sm:pb-4 sm:pt-10 lg:px-[60px]">
-      <div className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-[#2DBDB6] opacity-[0.08] blur-3xl" />
+    <footer className="relative mt-10 overflow-hidden border-t border-line bg-surface px-5 pb-5 pt-7 text-body sm:mt-0 sm:px-10 sm:pb-4 sm:pt-10 lg:px-[60px]">
+      <div className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-brand opacity-[0.10] blur-3xl" />
 
       <div className="container relative mx-auto grid gap-0 sm:grid-cols-2 sm:gap-10 lg:grid-cols-4">
-        <div className="border-b border-white/10 pb-3 sm:border-0 sm:pb-0">
+        <div className="border-b border-line pb-3 sm:border-0 sm:pb-0">
           <div className="flex items-center gap-2">
             <Image
               src="/logo.jpeg"
@@ -69,11 +106,11 @@ export default function SiteFooter() {
               className="h-[26px] w-[26px] sm:h-8 sm:w-8"
             />
 
-            <span className="text-base font-extrabold text-white sm:text-lg">
-              eb<span className="text-[#2DBDB6]">oo</span>i
+            <span className="text-base font-extrabold text-ink sm:text-lg">
+              eb<span className="text-brand">oo</span>i
             </span>
           </div>
-          <p className="mt-2 text-xs leading-relaxed text-[#A7B0C8] sm:mt-3 sm:text-sm">
+          <p className="mt-2 text-xs leading-relaxed text-muted-ink sm:mt-3 sm:text-sm">
             আপনার প্রিয় বইয়ের সংগ্রহশালা, হাতের মুঠোয়।
           </p>
 
@@ -85,8 +122,8 @@ export default function SiteFooter() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="
-                  flex h-9 w-9 items-center justify-center rounded-full bg-white/5 text-[#A7B0C8]
-                  transition-all duration-200 hover:-translate-y-1 hover:bg-[#2DBDB6] hover:text-white
+                  flex h-9 w-9 items-center justify-center rounded-full bg-soft text-muted-ink
+                  transition-all duration-200 hover:-translate-y-1 hover:bg-brand hover:text-white
                   sm:h-9 sm:w-9
                 "
               >
@@ -100,25 +137,25 @@ export default function SiteFooter() {
           <div className="flex flex-col gap-2 pb-2.5 text-xs sm:gap-2.5 sm:pb-0 sm:text-sm">
             <Link
               href="/categories"
-              className="w-fit text-[#A7B0C8] transition-colors hover:text-[#2DBDB6]"
+              className="w-fit text-muted-ink transition-colors hover:text-brand"
             >
               সব ক্যাটাগরি
             </Link>
             <Link
               href="/books"
-              className="w-fit text-[#A7B0C8] transition-colors hover:text-[#2DBDB6]"
+              className="w-fit text-muted-ink transition-colors hover:text-brand"
             >
               টপ বুকস
             </Link>
             <Link
               href="/pre-order"
-              className="w-fit text-[#A7B0C8] transition-colors hover:text-[#2DBDB6]"
+              className="w-fit text-muted-ink transition-colors hover:text-brand"
             >
               প্রি-অর্ডার
             </Link>
             <Link
               href="/offers"
-              className="w-fit text-[#A7B0C8] transition-colors hover:text-[#2DBDB6]"
+              className="w-fit text-muted-ink transition-colors hover:text-brand"
             >
               অফার
             </Link>
@@ -129,48 +166,79 @@ export default function SiteFooter() {
           <div className="flex flex-col gap-2 pb-2.5 text-xs sm:gap-2.5 sm:pb-0 sm:text-sm">
             <Link
               href="/support"
-              className="w-fit text-[#A7B0C8] transition-colors hover:text-[#2DBDB6]"
+              className="w-fit text-muted-ink transition-colors hover:text-brand"
             >
               সাপোর্ট সেন্টার
             </Link>
             <Link
               href="/privacy"
-              className="w-fit text-[#A7B0C8] transition-colors hover:text-[#2DBDB6]"
+              className="w-fit text-muted-ink transition-colors hover:text-brand"
             >
               প্রাইভেসি পলিসি
             </Link>
             <Link
               href="/terms"
-              className="w-fit text-[#A7B0C8] transition-colors hover:text-[#2DBDB6]"
+              className="w-fit text-muted-ink transition-colors hover:text-brand"
             >
               শর্তাবলী
+            </Link>
+            <Link
+              href="/refund-policy"
+              className="w-fit text-muted-ink transition-colors hover:text-brand"
+            >
+              রিটার্ন ও রিফান্ড পলিসি
+            </Link>
+            <Link
+              href="/about"
+              className="w-fit text-muted-ink transition-colors hover:text-brand"
+            >
+              আমাদের সম্পর্কে
             </Link>
           </div>
         </FooterAccordionItem>
 
         <FooterAccordionItem title="যোগাযোগের তথ্য">
-          <div className="flex flex-col gap-2 pb-1 text-xs text-[#A7B0C8] sm:gap-3 sm:pb-0 sm:text-sm">
+          <div className="flex flex-col gap-2 pb-1 text-xs text-muted-ink sm:gap-3 sm:pb-0 sm:text-sm">
             <a
               href="mailto:ebooi.bd@gmail.com"
-              className="flex items-center gap-2 transition-colors hover:text-[#2DBDB6]"
+              className="flex items-center gap-2 transition-colors hover:text-brand"
             >
-              <Mail className="h-3.5 w-3.5 shrink-0 text-[#2DBDB6] sm:h-4 sm:w-4" />
+              <Mail className="h-3.5 w-3.5 shrink-0 text-brand sm:h-4 sm:w-4" />
               ebooi.bd@gmail.com
             </a>
             <a
               href="https://wa.me/8801791148655"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 transition-colors hover:text-[#2DBDB6]"
+              className="flex items-center gap-2 transition-colors hover:text-brand"
             >
-              <FaWhatsapp className="h-3.5 w-3.5 shrink-0 text-[#2DBDB6] sm:h-4 sm:w-4" />
+              <FaWhatsapp className="h-3.5 w-3.5 shrink-0 text-brand sm:h-4 sm:w-4" />
               +880 1791148655
             </a>
           </div>
         </FooterAccordionItem>
       </div>
 
-      <div className="container relative mx-auto mt-4 border-t border-white/10 pt-3 text-center text-[10px] text-[#7c86a3] sm:mt-4 sm:pt-5 sm:text-[11.5px]">
+      {/* EPS payment-gateway badge strip (supplied by EPS for merchant websites).
+          EPS ships separate light/dark and desktop/mobile artwork; the variant
+          follows the site theme. Only one of the four is displayed at a time
+          (the rest are display:none and lazy, so they are not fetched). */}
+      <div className="container relative mx-auto mt-4 sm:mt-5">
+        {EPS_STRIPS.map((v) => (
+          <Image
+            key={v.src}
+            src={v.src}
+            alt={EPS_ALT}
+            width={v.width}
+            height={v.height}
+            sizes={v.sizes}
+            loading="lazy"
+            className={v.className}
+          />
+        ))}
+      </div>
+
+      <div className="container relative mx-auto mt-4 border-t border-line pt-3 text-center text-[10px] text-subtle sm:mt-4 sm:pt-5 sm:text-[11.5px]">
         © ২০২৬ ebooi. সর্বস্বত্ব সংরক্ষিত।
       </div>
     </footer>

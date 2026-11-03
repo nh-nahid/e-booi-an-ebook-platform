@@ -36,15 +36,15 @@ export default function PaymentSuccessPage() {
 
   if (!orderId) {
     return (
-      <div className="min-h-screen bg-[#F7F9FA]">
+      <div className="min-h-screen bg-canvas">
         <Navbar />
         <div className="container mx-auto flex flex-col items-center gap-4 px-5 py-16 text-center">
-          <p className="text-lg font-bold text-[#0A0E2A]">
+          <p className="text-lg font-bold text-ink">
             অর্ডার তথ্য পাওয়া যায়নি।
           </p>
           <button
             onClick={() => router.push("/orders")}
-            className="rounded-full bg-[#2DBDB6] px-5 py-2.5 text-sm font-bold text-white"
+            className="rounded-full bg-brand px-5 py-2.5 text-sm font-bold text-white"
           >
             আমার অর্ডার দেখুন
           </button>
@@ -60,15 +60,15 @@ export default function PaymentSuccessPage() {
 
   if (isError || !order) {
     return (
-      <div className="min-h-screen bg-[#F7F9FA]">
+      <div className="min-h-screen bg-canvas">
         <Navbar />
         <div className="container mx-auto flex flex-col items-center gap-4 px-5 py-16 text-center">
-          <p className="text-lg font-bold text-[#0A0E2A]">
+          <p className="text-lg font-bold text-ink">
             অর্ডারটি খুঁজে পাওয়া যায়নি।
           </p>
           <button
             onClick={() => router.push("/orders")}
-            className="rounded-full bg-[#2DBDB6] px-5 py-2.5 text-sm font-bold text-white"
+            className="rounded-full bg-brand px-5 py-2.5 text-sm font-bold text-white"
           >
             আমার অর্ডার দেখুন
           </button>
@@ -82,26 +82,26 @@ export default function PaymentSuccessPage() {
   const digitalItems = order.items;
 
   return (
-    <div className="min-h-screen bg-[#F7F9FA]">
+    <div className="min-h-screen bg-canvas">
       <Navbar />
 
       <div className="container mx-auto max-w-2xl px-5 py-10">
         <div className="flex flex-col items-center text-center">
-          <span className="flex h-16 w-16 items-center justify-center rounded-full bg-[#E6F7F6]">
-            <CheckCircle2 className="h-8 w-8 text-[#2DBDB6]" />
+          <span className="flex h-16 w-16 items-center justify-center rounded-full bg-brand-soft">
+            <CheckCircle2 className="h-8 w-8 text-brand" />
           </span>
-          <h1 className="mt-4 text-2xl font-extrabold text-[#0A0E2A]">
+          <h1 className="mt-4 text-2xl font-extrabold text-ink">
             পেমেন্ট সফল হয়েছে
           </h1>
-          <p className="mt-1 text-sm text-[#6B7280]">
+          <p className="mt-1 text-sm text-muted-ink">
             অর্ডার নম্বর: {order._id}
           </p>
         </div>
 
         <div className="space-y-3">
           {digitalItems.length > 0 && (
-            <div className="mt-8 rounded-2xl border border-[#E1E5E8] bg-white p-5">
-              <h2 className="mb-4 text-sm font-bold text-[#0A0E2A]">
+            <div className="mt-8 rounded-2xl border border-line bg-surface p-5">
+              <h2 className="mb-4 text-sm font-bold text-ink">
                 আপনার eBook গুলো
               </h2>
 
@@ -125,10 +125,10 @@ export default function PaymentSuccessPage() {
                   return (
                     <div
                       key={item.book._id}
-                      className="flex items-center justify-between gap-3 rounded-xl border border-[#E1E5E8] p-3.5"
+                      className="flex items-center justify-between gap-3 rounded-xl border border-line p-3.5"
                     >
                       <div className="flex min-w-0 items-center gap-3">
-                        <div className="h-14 w-10 shrink-0 overflow-hidden rounded-lg border border-[#E1E5E8] bg-gradient-to-br from-[#dfe7ea] to-[#cfd8db]">
+                        <div className="h-14 w-10 shrink-0 overflow-hidden rounded-lg border border-line bg-gradient-to-br from-soft to-line">
                           <img
                             src={coverUrl}
                             alt={item.book.title}
@@ -137,10 +137,10 @@ export default function PaymentSuccessPage() {
                         </div>
 
                         <div className="min-w-0">
-                          <p className="truncate text-sm font-semibold text-[#0A0E2A]">
+                          <p className="truncate text-sm font-semibold text-ink">
                             {item.book.title}
                           </p>
-                          <p className="text-xs text-[#6B7280]">
+                          <p className="text-xs text-muted-ink">
                             {item.book.author}
                           </p>
                         </div>
@@ -151,7 +151,7 @@ export default function PaymentSuccessPage() {
                           handleDownload(item.book._id, item.book.title)
                         }
                         disabled={isDownloading}
-                        className="flex shrink-0 items-center cursor-pointer gap-1.5 rounded-full bg-[#2DBDB6] px-4 py-2 text-xs font-bold text-white transition-transform hover:-translate-y-0.5 disabled:opacity-60"
+                        className="flex shrink-0 items-center cursor-pointer gap-1.5 rounded-full bg-brand px-4 py-2 text-xs font-bold text-white transition-transform hover:-translate-y-0.5 disabled:opacity-60"
                       >
                         {isDownloading ? (
                           <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -171,13 +171,13 @@ export default function PaymentSuccessPage() {
         <div className="mt-8 flex justify-center gap-3">
           <button
             onClick={() => router.push("/orders")}
-            className="rounded-full border cursor-pointer border-[#E1E5E8] px-5 py-2.5 text-sm font-bold text-[#0A0E2A] hover:border-[#2DBDB6]"
+            className="rounded-full border cursor-pointer border-line px-5 py-2.5 text-sm font-bold text-ink hover:border-brand"
           >
             আমার অর্ডার দেখুন
           </button>
           <button
             onClick={() => router.push("/books")}
-            className="rounded-full cursor-pointer bg-[#2DBDB6] px-5 py-2.5 text-sm font-bold text-white"
+            className="rounded-full cursor-pointer bg-brand px-5 py-2.5 text-sm font-bold text-white"
           >
             শপিং চালিয়ে যান
           </button>

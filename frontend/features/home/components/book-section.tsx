@@ -61,8 +61,8 @@ export default function BookSection({ title, href = "/books", books }: BookSecti
           aria-label="আগের বই"
           className="
             absolute -left-3 top-1/2 z-10 hidden h-9 w-9 -translate-y-1/2 items-center justify-center
-            rounded-full border border-[#E1E5E8] bg-white text-[#0A0E2A] opacity-0 shadow-md
-            transition-all duration-200 hover:scale-110 hover:border-[#2DBDB6] hover:text-[#2DBDB6]
+            rounded-full border border-line bg-surface text-ink opacity-0 shadow-md
+            transition-all duration-200 hover:scale-110 hover:border-brand hover:text-brand
             active:scale-95
             disabled:pointer-events-none disabled:opacity-0
             group-hover/row:opacity-100 lg:flex
@@ -77,8 +77,8 @@ export default function BookSection({ title, href = "/books", books }: BookSecti
           aria-label="পরবর্তী বই"
           className="
             absolute -right-3 top-1/2 z-10 hidden h-9 w-9 -translate-y-1/2 items-center justify-center
-            rounded-full border border-[#E1E5E8] bg-white text-[#0A0E2A] opacity-0 shadow-md
-            transition-all duration-200 hover:scale-110 hover:border-[#2DBDB6] hover:text-[#2DBDB6]
+            rounded-full border border-line bg-surface text-ink opacity-0 shadow-md
+            transition-all duration-200 hover:scale-110 hover:border-brand hover:text-brand
             active:scale-95
             disabled:pointer-events-none disabled:opacity-0
             group-hover/row:opacity-100 lg:flex
@@ -114,7 +114,7 @@ export default function BookSection({ title, href = "/books", books }: BookSecti
               onClick={() => goToPage(i)}
               aria-label={`পৃষ্ঠা ${i + 1}`}
               className={`h-1.5 rounded-full transition-all duration-300 ${
-                i === page ? "w-3 bg-[#2DBDB6]" : "w-1.5 bg-[#E1E5E8]"
+                i === page ? "w-3 bg-brand" : "w-1.5 bg-line"
               }`}
             />
           ))}

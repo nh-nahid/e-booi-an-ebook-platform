@@ -28,11 +28,11 @@ import {
 import type { Order } from "@/features/orders/types/orders.types";
 
 const STATUS_STYLES: Record<Order["orderStatus"], string> = {
-  pending: "bg-[#FFF7E6] text-[#B7791F]",
-  processing: "bg-[#E6F7F6] text-[#2DBDB6]",
-  shipped: "bg-[#E9F0FF] text-[#3B5BDB]",
-  delivered: "bg-[#E6F9EC] text-[#2F9E44]",
-  cancelled: "bg-[#FDEDEC] text-red-600",
+  pending: "bg-warn-soft text-warn-ink",
+  processing: "bg-brand-soft text-brand",
+  shipped: "bg-info-soft text-info-ink",
+  delivered: "bg-success-soft text-success-ink",
+  cancelled: "bg-danger-soft text-danger-ink",
 };
 
 const STATUS_LABELS: Record<Order["orderStatus"], string> = {
@@ -44,9 +44,9 @@ const STATUS_LABELS: Record<Order["orderStatus"], string> = {
 };
 
 const PAYMENT_STATUS_STYLES: Record<Order["paymentStatus"], string> = {
-  pending: "bg-[#FFF7E6] text-[#B7791F]",
-  paid: "bg-[#E6F9EC] text-[#2F9E44]",
-  failed: "bg-[#FDEDEC] text-red-600",
+  pending: "bg-warn-soft text-warn-ink",
+  paid: "bg-success-soft text-success-ink",
+  failed: "bg-danger-soft text-danger-ink",
 };
 
 const PAYMENT_STATUS_LABELS: Record<Order["paymentStatus"], string> = {
@@ -57,8 +57,9 @@ const PAYMENT_STATUS_LABELS: Record<Order["paymentStatus"], string> = {
 
 const PAYMENT_METHOD_LABELS: Record<string, string> = {
   cod: "ক্যাশ অন ডেলিভারি",
-  sslcommerz: "অনলাইন পেমেন্ট (SSLCommerz)",
+  sslcommerz: "অনলাইন পেমেন্ট",
   stripe: "কার্ড পেমেন্ট (Stripe)",
+  eps: "অনলাইন পেমেন্ট (EPS)",
 };
 
 export default function OrderDetailPage() {
@@ -88,15 +89,15 @@ export default function OrderDetailPage() {
 
   if (isError || !order) {
     return (
-      <div className="min-h-screen bg-[#F7F9FA]">
+      <div className="min-h-screen bg-canvas">
         <Navbar />
         <div className="container mx-auto flex flex-col items-center gap-4 px-5 py-16 text-center">
-          <p className="text-lg font-bold text-[#0A0E2A]">
+          <p className="text-lg font-bold text-ink">
             অর্ডারটি খুঁজে পাওয়া যায়নি।
           </p>
           <Link
             href="/orders"
-            className="rounded-full bg-[#2DBDB6] px-5 py-2.5 text-sm font-bold text-white"
+            className="rounded-full bg-brand px-5 py-2.5 text-sm font-bold text-white"
           >
             আমার অর্ডার দেখুন
           </Link>
@@ -147,13 +148,13 @@ export default function OrderDetailPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7F9FA]">
+    <div className="min-h-screen bg-canvas">
       <Navbar />
 
       <div className="container mx-auto px-5 py-8 sm:px-10 lg:px-[60px]">
         <Link
           href="/orders"
-          className="mb-2 flex w-fit items-center gap-1 text-xs font-semibold text-[#6B7280] transition-colors hover:text-[#2DBDB6]"
+          className="mb-2 flex w-fit items-center gap-1 text-xs font-semibold text-muted-ink transition-colors hover:text-brand"
         >
           <ChevronLeft className="h-3.5 w-3.5" />
           অর্ডার তালিকায় ফিরে যান
@@ -161,10 +162,10 @@ export default function OrderDetailPage() {
 
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h1 className="text-2xl font-extrabold text-[#0A0E2A] sm:text-3xl">
+            <h1 className="text-2xl font-extrabold text-ink sm:text-3xl">
               অর্ডার বিস্তারিত
             </h1>
-            <p className="mt-1 text-xs text-[#6B7280]">
+            <p className="mt-1 text-xs text-muted-ink">
               অর্ডার নম্বর: {order._id}
             </p>
           </div>
@@ -185,8 +186,8 @@ export default function OrderDetailPage() {
 
         <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
           <div className="space-y-6">
-            <div className="rounded-2xl border border-[#E1E5E8] bg-white p-5">
-              <h2 className="mb-4 text-sm font-bold text-[#0A0E2A]">
+            <div className="rounded-2xl border border-line bg-surface p-5">
+              <h2 className="mb-4 text-sm font-bold text-ink">
                 পণ্যসমূহ
               </h2>
 
@@ -194,9 +195,9 @@ export default function OrderDetailPage() {
                 {order.items.map((item) => (
                   <div
                     key={item.book._id}
-                    className="flex items-center gap-3 border-b border-[#F1F3F5] pb-4 last:border-0 last:pb-0"
+                    className="flex items-center gap-3 border-b border-soft pb-4 last:border-0 last:pb-0"
                   >
-                    <div className="h-16 w-12 shrink-0 overflow-hidden rounded-lg border border-[#E1E5E8] bg-gradient-to-br from-[#dfe7ea] to-[#cfd8db]">
+                    <div className="h-16 w-12 shrink-0 overflow-hidden rounded-lg border border-line bg-gradient-to-br from-soft to-line">
                       {item.book.coverImage && (
                         <img
                           src={
@@ -213,23 +214,23 @@ export default function OrderDetailPage() {
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-1.5">
                         {item.bookType === "Digital" ? (
-                          <BookOpen className="h-3.5 w-3.5 shrink-0 text-[#2DBDB6]" />
+                          <BookOpen className="h-3.5 w-3.5 shrink-0 text-brand" />
                         ) : (
-                          <Package className="h-3.5 w-3.5 shrink-0 text-[#6B7280]" />
+                          <Package className="h-3.5 w-3.5 shrink-0 text-muted-ink" />
                         )}
-                        <p className="truncate text-sm font-semibold text-[#0A0E2A]">
+                        <p className="truncate text-sm font-semibold text-ink">
                           {item.book.title}
                         </p>
                       </div>
-                      <p className="text-xs text-[#6B7280]">
+                      <p className="text-xs text-muted-ink">
                         {item.book.author}
                       </p>
-                      <p className="mt-0.5 text-xs text-[#9AA3AF]">
+                      <p className="mt-0.5 text-xs text-subtle">
                         পরিমাণ: {item.quantity}
                       </p>
                     </div>
 
-                    <p className="shrink-0 text-sm font-bold text-[#0A0E2A]">
+                    <p className="shrink-0 text-sm font-bold text-ink">
                       ৳ {(item.price * item.quantity).toLocaleString()}
                     </p>
                   </div>
@@ -237,7 +238,7 @@ export default function OrderDetailPage() {
               </div>
 
               {order.paymentStatus === "paid" && digitalItems.length > 0 && (
-                <div className="mt-4 flex flex-wrap gap-2 border-t border-[#F1F3F5] pt-4">
+                <div className="mt-4 flex flex-wrap gap-2 border-t border-soft pt-4">
                   {digitalItems.map((item) => {
                     const isDownloading =
                       downloadBookMutation.isPending &&
@@ -251,7 +252,7 @@ export default function OrderDetailPage() {
                           handleDownloadBook(item.book._id, item.book.title)
                         }
                         disabled={isDownloading}
-                        className="flex items-center gap-1.5 rounded-full bg-[#2DBDB6] px-3.5 py-2 text-xs font-bold text-white transition-transform hover:-translate-y-0.5 disabled:opacity-60"
+                        className="flex items-center gap-1.5 rounded-full bg-brand px-3.5 py-2 text-xs font-bold text-white transition-transform hover:-translate-y-0.5 disabled:opacity-60"
                       >
                         {isDownloading ? (
                           <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -267,22 +268,22 @@ export default function OrderDetailPage() {
             </div>
 
             {order.shippingAddress && (
-              <div className="rounded-2xl border border-[#E1E5E8] bg-white p-5">
+              <div className="rounded-2xl border border-line bg-surface p-5">
                 <div className="mb-3 flex items-center gap-2">
-                  <MapPin className="h-4 w-4 text-[#2DBDB6]" />
-                  <h2 className="text-sm font-bold text-[#0A0E2A]">
+                  <MapPin className="h-4 w-4 text-brand" />
+                  <h2 className="text-sm font-bold text-ink">
                     শিপিং ঠিকানা
                   </h2>
                 </div>
 
-                <div className="space-y-1 text-sm text-[#0A0E2A]">
+                <div className="space-y-1 text-sm text-ink">
                   <p className="font-semibold">
                     {order.shippingAddress.fullName}
                   </p>
-                  <p className="text-[#6B7280]">
+                  <p className="text-muted-ink">
                     {order.shippingAddress.phone}
                   </p>
-                  <p className="text-[#6B7280]">
+                  <p className="text-muted-ink">
                     {order.shippingAddress.address}, {order.shippingAddress.city}
                     {order.shippingAddress.postalCode &&
                       ` - ${order.shippingAddress.postalCode}`}
@@ -293,40 +294,40 @@ export default function OrderDetailPage() {
           </div>
 
           <div className="space-y-3">
-            <div className="sticky top-24 rounded-2xl border border-[#E1E5E8] bg-white p-5">
-              <h2 className="text-sm font-bold text-[#0A0E2A]">মোট বিল</h2>
+            <div className="sticky top-24 rounded-2xl border border-line bg-surface p-5">
+              <h2 className="text-sm font-bold text-ink">মোট বিল</h2>
 
               <div className="mt-4 space-y-2.5 text-sm">
                 <div className="flex items-center justify-between">
-                  <span className="text-[#6B7280]">সাবটোটাল</span>
-                  <span className="font-semibold text-[#0A0E2A]">
+                  <span className="text-muted-ink">সাবটোটাল</span>
+                  <span className="font-semibold text-ink">
                     ৳ {order.totalAmount.toLocaleString()}
                   </span>
                 </div>
 
                 {order.discountAmount > 0 && (
                   <div className="flex items-center justify-between">
-                    <span className="text-[#6B7280]">ছাড়</span>
-                    <span className="font-semibold text-emerald-600">
+                    <span className="text-muted-ink">ছাড়</span>
+                    <span className="font-semibold text-success-ink">
                       - ৳ {order.discountAmount.toLocaleString()}
                     </span>
                   </div>
                 )}
 
                 <div className="flex items-center justify-between">
-                  <span className="text-[#6B7280]">পেমেন্ট পদ্ধতি</span>
-                  <span className="font-semibold text-[#0A0E2A]">
+                  <span className="text-muted-ink">পেমেন্ট পদ্ধতি</span>
+                  <span className="font-semibold text-ink">
                     {PAYMENT_METHOD_LABELS[order.paymentMethod] ??
                       order.paymentMethod}
                   </span>
                 </div>
               </div>
 
-              <div className="mt-4 flex items-center justify-between border-t border-[#F1F3F5] pt-4">
-                <span className="text-sm font-bold text-[#0A0E2A]">
+              <div className="mt-4 flex items-center justify-between border-t border-soft pt-4">
+                <span className="text-sm font-bold text-ink">
                   সর্বমোট
                 </span>
-                <span className="text-xl font-extrabold text-[#0A0E2A]">
+                <span className="text-xl font-extrabold text-ink">
                   ৳ {order.finalAmount.toLocaleString()}
                 </span>
               </div>
@@ -335,7 +336,7 @@ export default function OrderDetailPage() {
                 <button
                   onClick={handleDownloadInvoice}
                   disabled={downloadInvoiceMutation.isPending}
-                  className="mt-4 flex h-11 w-full items-center justify-center gap-2 rounded-full border border-[#E1E5E8] text-sm font-bold text-[#0A0E2A] transition-colors hover:border-[#2DBDB6] disabled:opacity-60"
+                  className="mt-4 flex h-11 w-full items-center justify-center gap-2 rounded-full border border-line text-sm font-bold text-ink transition-colors hover:border-brand disabled:opacity-60"
                 >
                   {downloadInvoiceMutation.isPending ? (
                     <Loader2 className="h-4 w-4 animate-spin" />

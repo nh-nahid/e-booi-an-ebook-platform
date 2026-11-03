@@ -80,8 +80,8 @@ export default function AddToCartButton({
         active:scale-95
         ${
           added
-            ? "bg-[#0A0E2A] text-white hover:bg-[#1E293B]"
-            : "bg-[#2DBDB6] text-white hover:bg-[#1f9d97]"
+            ? "bg-navy text-white hover:bg-[#1E293B]"
+            : "bg-brand text-white hover:bg-brand-strong"
         }
         ${adding ? "cursor-not-allowed opacity-70" : "cursor-pointer"}
       `}

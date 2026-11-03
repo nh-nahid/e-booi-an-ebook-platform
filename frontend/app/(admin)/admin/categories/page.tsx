@@ -63,7 +63,7 @@ export default function ComingSoonPage() {
   ];
 
   return (
-    <div className="relative -m-6 flex min-h-screen items-center justify-center overflow-hidden bg-[#F7F9FA] -mt-15 px-4 py-16">
+    <div className="relative -m-6 flex min-h-screen items-center justify-center overflow-hidden bg-canvas -mt-15 px-4 py-16">
       <style>{`
         @keyframes csFloat {
           0%, 100% { transform: translate(0, 0) scale(1); }
@@ -87,8 +87,8 @@ export default function ComingSoonPage() {
       `}</style>
 
       {/* ambient blobs */}
-      <div className="cs-blob-a pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-[#2DBDB6] opacity-[0.14] blur-3xl" />
-      <div className="cs-blob-b pointer-events-none absolute -bottom-28 -right-16 h-80 w-80 rounded-full bg-[#0A0E2A] opacity-[0.08] blur-3xl" />
+      <div className="cs-blob-a pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-brand opacity-[0.14] blur-3xl" />
+      <div className="cs-blob-b pointer-events-none absolute -bottom-28 -right-16 h-80 w-80 rounded-full bg-navy opacity-[0.08] blur-3xl" />
 
       <div className="relative z-10 flex w-full max-w-lg flex-col items-center text-center">
         {/* logo */}
@@ -98,22 +98,22 @@ export default function ComingSoonPage() {
         >
           <Image src="/logo.jpeg" alt="ebooi Logo" width={32} height={32} />
 
-          <span className="text-xl font-extrabold text-[#0A0E2A]">
-            eBoo<span className="text-[#2DBDB6]">i</span>
+          <span className="text-xl font-extrabold text-ink">
+            eBoo<span className="text-brand">i</span>
           </span>
         </div>
 
         {/* badge */}
         <span
-          className="cs-fade mb-4 flex items-center gap-1.5 rounded-full bg-[#E6F7F6] px-4 py-1.5 text-xs font-bold text-[#0A0E2A]"
+          className="cs-fade mb-4 flex items-center gap-1.5 rounded-full bg-brand-soft px-4 py-1.5 text-xs font-bold text-ink"
           style={{ animationDelay: "0.05s" }}
         >
-          <Clock className="h-3.5 w-3.5 text-[#2DBDB6]" />
+          <Clock className="h-3.5 w-3.5 text-brand" />
           Launching Soon
         </span>
 
         <h1
-          className="cs-fade text-3xl font-extrabold leading-tight text-[#0A0E2A] sm:text-4xl"
+          className="cs-fade text-3xl font-extrabold leading-tight text-ink sm:text-4xl"
           style={{ animationDelay: "0.1s" }}
         >
           Something great is
@@ -122,7 +122,7 @@ export default function ComingSoonPage() {
         </h1>
 
         <p
-          className="cs-fade mt-3 max-w-sm text-sm text-[#6B7280] sm:text-base"
+          className="cs-fade mt-3 max-w-sm text-sm text-muted-ink sm:text-base"
           style={{ animationDelay: "0.15s" }}
         >
           We&apos;re putting the final touches on this page. Leave your email
@@ -137,15 +137,15 @@ export default function ComingSoonPage() {
           {units.map((unit) => (
             <div
               key={unit.label}
-              className="flex w-16 flex-col items-center rounded-2xl border border-[#E1E5E8] bg-white py-3 shadow-[0_8px_20px_rgba(10,14,42,0.05)] sm:w-20"
+              className="flex w-16 flex-col items-center rounded-2xl border border-line bg-surface py-3 shadow-[0_8px_20px_rgba(10,14,42,0.05)] sm:w-20"
             >
               <span
-                className="text-xl font-extrabold text-[#0A0E2A] sm:text-2xl"
+                className="text-xl font-extrabold text-ink sm:text-2xl"
                 style={{ animation: "csPulse 2s ease-in-out infinite" }}
               >
                 {String(unit.value).padStart(2, "0")}
               </span>
-              <span className="mt-0.5 text-[10px] font-semibold uppercase tracking-wide text-[#9AA3AF]">
+              <span className="mt-0.5 text-[10px] font-semibold uppercase tracking-wide text-subtle">
                 {unit.label}
               </span>
             </div>
@@ -158,8 +158,8 @@ export default function ComingSoonPage() {
           style={{ animationDelay: "0.25s" }}
         >
           {subscribed ? (
-            <div className="flex items-center justify-center gap-2 rounded-full bg-[#E6F7F6] px-5 py-3 text-sm font-semibold text-[#0A0E2A]">
-              <Check className="h-4 w-4 text-[#2DBDB6]" />
+            <div className="flex items-center justify-center gap-2 rounded-full bg-brand-soft px-5 py-3 text-sm font-semibold text-ink">
+              <Check className="h-4 w-4 text-brand" />
               You&apos;re on the list — we&apos;ll email you at launch.
             </div>
           ) : (
@@ -179,7 +179,7 @@ export default function ComingSoonPage() {
                   onFocus={() => setFocused(true)}
                   onBlur={() => setFocused(false)}
                   placeholder="you@example.com"
-                  className="h-12 w-full rounded-full border pl-10 pr-4 text-sm text-[#0A0E2A] outline-none transition-all duration-200 placeholder:text-[#9AA3AF]"
+                  className="h-12 w-full rounded-full border pl-10 pr-4 text-sm text-ink outline-none transition-all duration-200 placeholder:text-subtle"
                   style={{
                     borderColor: focused ? "#2DBDB6" : "#E1E5E8",
                     boxShadow: focused
@@ -194,7 +194,7 @@ export default function ComingSoonPage() {
                 disabled={loading}
                 className="
                   group relative flex h-12 shrink-0 items-center justify-center gap-2
-                  overflow-hidden rounded-full border-0 bg-gradient-to-br from-[#2DBDB6] to-[#1f9d97]
+                  overflow-hidden rounded-full border-0 bg-gradient-to-br from-brand to-brand-strong
                   px-6 text-sm font-bold text-white shadow-[0_4px_12px_rgba(45,189,182,0.35)]
                   transition-transform duration-150
                   hover:-translate-y-0.5 hover:shadow-[0_8px_18px_rgba(45,189,182,0.4)]
@@ -218,13 +218,13 @@ export default function ComingSoonPage() {
           )}
 
           {error && (
-            <p className="mt-2 text-xs font-medium text-red-600">{error}</p>
+            <p className="mt-2 text-xs font-medium text-danger-ink">{error}</p>
           )}
         </div>
 
         <Link
           href="/admin"
-          className="cs-fade mt-8 text-xs font-semibold text-[#6B7280] transition-colors hover:text-[#2DBDB6]"
+          className="cs-fade mt-8 text-xs font-semibold text-muted-ink transition-colors hover:text-brand"
           style={{ animationDelay: "0.3s" }}
         >
           ← Back to homepage

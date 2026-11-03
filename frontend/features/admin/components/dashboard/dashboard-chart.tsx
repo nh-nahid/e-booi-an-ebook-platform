@@ -20,9 +20,9 @@ function CustomTooltip({ active, payload }: any) {
   const entry = payload[0];
 
   return (
-    <div className="rounded-xl border border-[#E1E5E8] bg-white px-3 py-2 shadow-[0_10px_24px_rgba(10,14,42,0.1)]">
-      <p className="text-xs font-semibold text-[#0A0E2A]">{entry.name}</p>
-      <p className="text-xs text-[#6B7280]">{entry.value} books</p>
+    <div className="rounded-xl border border-line bg-surface px-3 py-2 shadow-[0_10px_24px_rgba(10,14,42,0.1)]">
+      <p className="text-xs font-semibold text-ink">{entry.name}</p>
+      <p className="text-xs text-muted-ink">{entry.value} books</p>
     </div>
   );
 }
@@ -35,10 +35,10 @@ export default function DashboardChart({
   const total = data.reduce((sum, d) => sum + d.value, 0);
 
   return (
-    <div className="rounded-2xl border border-[#E1E5E8] bg-white p-5">
+    <div className="rounded-2xl border border-line bg-surface p-5">
       <div className="mb-2">
-        <h3 className="text-sm font-bold text-[#0A0E2A]">{title}</h3>
-        <p className="text-xs text-[#6B7280]">{subtitle}</p>
+        <h3 className="text-sm font-bold text-ink">{title}</h3>
+        <p className="text-xs text-muted-ink">{subtitle}</p>
       </div>
 
       <div className="relative h-64 w-full">
@@ -62,8 +62,8 @@ export default function DashboardChart({
         </ResponsiveContainer>
 
         <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
-          <span className="text-2xl font-extrabold text-[#0A0E2A]">{total}</span>
-          <span className="text-[11px] text-[#6B7280]">Total Books</span>
+          <span className="text-2xl font-extrabold text-ink">{total}</span>
+          <span className="text-[11px] text-muted-ink">Total Books</span>
         </div>
       </div>
 
@@ -74,7 +74,7 @@ export default function DashboardChart({
               className="h-2.5 w-2.5 rounded-full"
               style={{ background: COLORS[i % COLORS.length] }}
             />
-            <span className="text-xs font-medium text-[#6B7280]">{d.name}</span>
+            <span className="text-xs font-medium text-muted-ink">{d.name}</span>
           </div>
         ))}
       </div>

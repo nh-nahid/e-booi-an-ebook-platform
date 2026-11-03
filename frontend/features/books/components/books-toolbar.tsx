@@ -32,11 +32,11 @@ export default function BooksToolbar({
   onOpenMobileFilters,
 }: BooksToolbarProps) {
   return (
-    <div className="flex flex-col gap-3 rounded-2xl border border-[#E1E5E8] bg-white p-4 sm:flex-row sm:items-center sm:justify-between">
+    <div className="flex flex-col gap-3 rounded-2xl border border-line bg-surface p-4 sm:flex-row sm:items-center sm:justify-between">
       {/* Left */}
       <div>
-        <p className="text-xs text-[#6B7280]">
-              <span className="font-semibold text-[#0A0E2A]">
+        <p className="text-xs text-muted-ink">
+              <span className="font-semibold text-ink">
                 সর্বমোট -{resultCount ?? 0} টি বই
               </span> 
             </p>
@@ -48,7 +48,7 @@ export default function BooksToolbar({
         <button
           type="button"
           onClick={onOpenMobileFilters}
-          className="flex h-10 shrink-0 items-center gap-2 rounded-full border border-[#E1E5E8] px-4 text-sm font-medium text-[#0A0E2A] transition hover:border-[#2DBDB6] lg:hidden"
+          className="flex h-10 shrink-0 items-center gap-2 rounded-full border border-line px-4 text-sm font-medium text-ink transition hover:border-brand lg:hidden"
         >
           <SlidersHorizontal className="h-4 w-4" />
           Filters
@@ -58,7 +58,7 @@ export default function BooksToolbar({
         <select
           value={sort}
           onChange={(e) => onSortChange(e.target.value)}
-          className="h-10 min-w-0 flex-1 rounded-full border border-[#E1E5E8] bg-white px-4 text-sm font-medium text-[#0A0E2A] outline-none transition focus:border-[#2DBDB6] sm:flex-none"
+          className="h-10 min-w-0 flex-1 rounded-full border border-line bg-surface px-4 text-sm font-medium text-ink outline-none transition focus:border-brand sm:flex-none"
         >
           {SORT_OPTIONS.map((option) => (
             <option
@@ -71,14 +71,14 @@ export default function BooksToolbar({
         </select>
 
         {/* View */}
-        <div className="hidden items-center rounded-full border border-[#E1E5E8] p-1 md:flex">
+        <div className="hidden items-center rounded-full border border-line p-1 md:flex">
           <button
             type="button"
             onClick={() => onViewChange("grid")}
             className={`flex h-8 w-8 items-center justify-center rounded-full transition ${
               view === "grid"
-                ? "bg-[#2DBDB6] text-white"
-                : "text-[#6B7280] hover:text-[#0A0E2A]"
+                ? "bg-brand text-white"
+                : "text-muted-ink hover:text-ink"
             }`}
           >
             <LayoutGrid className="h-4 w-4" />
@@ -89,8 +89,8 @@ export default function BooksToolbar({
             onClick={() => onViewChange("list")}
             className={`flex h-8 w-8 items-center justify-center rounded-full transition ${
               view === "list"
-                ? "bg-[#2DBDB6] text-white"
-                : "text-[#6B7280] hover:text-[#0A0E2A]"
+                ? "bg-brand text-white"
+                : "text-muted-ink hover:text-ink"
             }`}
           >
             <List className="h-4 w-4" />

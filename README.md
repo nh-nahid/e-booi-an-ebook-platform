@@ -10,7 +10,7 @@ all in one checkout.**
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-Express%205-339933?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org/)
 [![MongoDB](https://img.shields.io/badge/MongoDB-Mongoose-47A248?style=flat-square&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
-[![SSLCommerz](https://img.shields.io/badge/Payments-SSLCommerz-D9A441?style=flat-square)](https://sslcommerz.com/)
+[![EPS](https://img.shields.io/badge/Payments-EPS-E8294A?style=flat-square)](https://www.eps.com.bd/)
 
 🔗 **Live:** [e-booi.com](https://e-booi.com)
 
@@ -21,7 +21,7 @@ all in one checkout.**
 ### ✨ What makes this stack a little different
 
 > 🇧🇩 **Built for the local market, not adapted to it.** Payments route
-> through SSLCommerz so customers pay with bKash, Nagad, Rocket, or card
+> through EPS (Easy Payment System) so customers pay with bKash, Nagad, Rocket, or card
 > without ever leaving the checkout page. Invoices are typeset in a font
 > that renders Bengali *and* Latin script correctly in the same PDF — most
 > off-the-shelf setups quietly fail one or the other.
@@ -60,7 +60,7 @@ all in one checkout.**
 - 🟢 Node.js + Express 5
 - 🍃 MongoDB + Mongoose
 - 🔐 JWT access/refresh, httpOnly cookies
-- 💳 SSLCommerz (`sslcommerz-lts`)
+- 💳 EPS (Easy Payment System) payment gateway
 - 📄 PDFKit (bilingual invoices)
 - ✉️ Nodemailer
 
@@ -76,10 +76,11 @@ all in one checkout.**
 <summary><b>💳 Payment method vs. gateway</b></summary>
 <br>
 
-The frontend lets shoppers pick a granular method (`card` / `bkash` /
-`nagad` / `cod`); the backend maps this to a gateway (`sslcommerz` / `cod`)
-via a `GATEWAY_MAP`. Only the gateway is persisted on the `Order` document —
-the specific method chosen isn't currently tracked past that point.
+eBooi is digital-only, so there is a single online payment flow: the
+storefront sends `paymentMethod: "eps"` and the backend maps it to the `eps`
+gateway via `GATEWAY_MAP`. EPS then lets the shopper pick bKash, Nagad, Rocket
+or a card on its own hosted page. Older orders may carry the legacy
+`sslcommerz` value; it stays in the `Order` enum only so they still validate.
 
 </details>
 
@@ -87,13 +88,10 @@ the specific method chosen isn't currently tracked past that point.
 <summary><b>📦 Stock & cart timing</b></summary>
 <br>
 
-| Order type | Stock reduced | Cart cleared |
-|---|---|---|
-| Cash on Delivery | Immediately at order creation | Immediately |
-| Gateway (SSLCommerz) | Deferred to `paymentSuccess` | Deferred to `paymentSuccess` |
-
-This means an abandoned or failed online payment never silently empties a
-cart or reduces real inventory for a sale that never happened.
+The cart is cleared only after EPS confirms the payment server-to-server (the
+verify call in `epsSuccess`), never when the order is merely created. Digital
+books have no stock to reduce. So an abandoned or failed online payment never
+silently empties a cart or grants a book for a sale that never happened.
 
 </details>
 
@@ -137,7 +135,7 @@ itself.
 ### Prerequisites
 - Node.js 18+
 - MongoDB connection string (Atlas or local)
-- SSLCommerz sandbox or live store credentials
+- EPS sandbox or live merchant credentials
 - An email-sending method (see ⚠️ note below)
 
 ### Backend
@@ -173,10 +171,19 @@ JWT_REFRESH_EXPIRES=
 COOKIE_NAME=
 COOKIE_SECRET=
 
-# SSLCommerz
-SSL_STORE_ID=
-SSL_STORE_PASSWORD=
-SSL_IS_LIVE=
+# Cloudinary
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
+
+# EPS (sandbox: https://sandboxpgapi.eps.com.bd | live: https://pgapi.eps.com.bd)
+EPS_BASE_URL=
+EPS_USERNAME=
+EPS_PASSWORD=
+EPS_HASH_KEY=
+EPS_STORE_ID=
+EPS_MERCHANT_ID=
+EPS_TRANSACTION_TYPE_ID=1
 
 # Email (Gmail SMTP)
 EMAIL_USER=
@@ -226,7 +233,7 @@ All routes are prefixed with `/api/v1`.
 | 📖 Books | `/books` | list · detail · create/update/delete (admin) |
 | 🛒 Cart | `/cart` | get · add · update quantity · remove · clear |
 | 📦 Orders | `/orders` | create · list (own/admin) · detail · status updates · invoice/book download |
-| 💳 Payment | `/payment` | initiate SSLCommerz · success/fail/cancel callbacks |
+| 💳 Payment | `/payment` | initiate EPS payment · `/payment/eps/success`, `/fail`, `/cancel` callbacks |
 | 🎟️ Coupons | `/coupons` | create/list/delete (admin) · apply (preview) |
 | ⭐ Reviews | `/reviews` | per-book: list · add · update · delete |
 | ❤️ Wishlist | `/wishlist` | get · add · remove |

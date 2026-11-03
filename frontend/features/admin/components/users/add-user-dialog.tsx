@@ -116,7 +116,7 @@ export default function AddUserDialog({
         onClick={() => setOpen(true)}
         className="
           group relative overflow-hidden rounded-full border-0
-          bg-gradient-to-br from-[#2DBDB6] to-[#1f9d97]
+          bg-gradient-to-br from-brand to-brand-strong
           font-semibold text-white
           shadow-[0_4px_12px_rgba(45,189,182,0.35)]
           transition-transform duration-150
@@ -132,13 +132,13 @@ export default function AddUserDialog({
         </span>
       </Button>
 
-      <DialogContent className="rounded-3xl border-[#E1E5E8] sm:max-w-md">
+      <DialogContent className="rounded-3xl border-line sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold text-[#0A0E2A]">
+          <DialogTitle className="text-xl font-bold text-ink">
             Add New User
           </DialogTitle>
 
-          <DialogDescription className="text-sm text-[#6B7280]">
+          <DialogDescription className="text-sm text-muted-ink">
             Create a new user or admin account.
           </DialogDescription>
         </DialogHeader>
@@ -193,7 +193,7 @@ export default function AddUserDialog({
                 className="text-xs font-semibold"
               >
                 Phone
-                <span className="ml-1 font-normal text-gray-400">
+                <span className="ml-1 font-normal text-muted-ink">
                   (optional)
                 </span>
               </Label>
@@ -243,7 +243,7 @@ export default function AddUserDialog({
           <div className="space-y-1.5">
   <Label
     htmlFor="password"
-    className="text-xs font-semibold text-[#0A0E2A]"
+    className="text-xs font-semibold text-ink"
   >
     Temporary Password
   </Label>
@@ -255,13 +255,13 @@ export default function AddUserDialog({
       value={values.password}
       onChange={(e) => update("password", e.target.value)}
       placeholder="Set an initial password"
-      className="h-11 rounded-xl border-[#E1E5E8] pr-11 focus-visible:border-[#2DBDB6] focus-visible:ring-4 focus-visible:ring-[#2DBDB6]/15"
+      className="h-11 rounded-xl border-line pr-11 focus-visible:border-brand focus-visible:ring-4 focus-visible:ring-brand/15"
     />
 
     <button
       type="button"
       onClick={() => setShowPassword((prev) => !prev)}
-      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 transition-colors hover:text-[#2DBDB6]"
+      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-ink transition-colors hover:text-brand"
     >
       {showPassword ? (
         <EyeOff className="h-5 w-5" />
@@ -271,13 +271,13 @@ export default function AddUserDialog({
     </button>
   </div>
 
-  <p className="text-[11px] text-[#9AA3AF]">
+  <p className="text-[11px] text-subtle">
     The user can change this password after their first login.
   </p>
 </div>
 
           {error && (
-            <div className="rounded-xl bg-red-50 px-3 py-2 text-sm text-red-600">
+            <div className="rounded-xl bg-danger-soft px-3 py-2 text-sm text-danger-ink">
               {error}
             </div>
           )}
@@ -298,8 +298,8 @@ export default function AddUserDialog({
               className="
                 rounded-full
                 bg-gradient-to-br
-                from-[#2DBDB6]
-                to-[#1f9d97]
+                from-brand
+                to-brand-strong
                 text-white
               "
             >

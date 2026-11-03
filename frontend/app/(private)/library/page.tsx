@@ -78,28 +78,28 @@ export default function LibraryPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7F9FA]">
+    <div className="min-h-screen bg-canvas">
       <Navbar />
 
       <div className="container mx-auto px-5 py-3 sm:px-10 sm:py-8 lg:px-[60px]">
-        <h1 className="mb-2 text-lg font-extrabold text-[#0A0E2A] sm:mb-6 sm:text-3xl">
+        <h1 className="mb-2 text-lg font-extrabold text-ink sm:mb-6 sm:text-3xl">
           আমার বইসমূহ
         </h1>
 
         {books.length === 0 ? (
-          <div className="flex flex-col items-center gap-3 rounded-2xl border border-[#E1E5E8] bg-white py-16 text-center">
-            <span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#F7F9FA]">
-              <BookOpen className="h-6 w-6 text-[#9AA3AF]" />
+          <div className="flex flex-col items-center gap-3 rounded-2xl border border-line bg-surface py-16 text-center">
+            <span className="flex h-14 w-14 items-center justify-center rounded-full bg-canvas">
+              <BookOpen className="h-6 w-6 text-subtle" />
             </span>
-            <p className="text-sm font-bold text-[#0A0E2A]">
+            <p className="text-sm font-bold text-ink">
               আপনার লাইব্রেরিতে কোনো eBook নেই
             </p>
-            <p className="text-xs text-[#6B7280]">
+            <p className="text-xs text-muted-ink">
               eBook কিনুন এবং সাথে সাথে পড়া শুরু করুন
             </p>
             <Link
               href="/books"
-              className="mt-1 flex items-center gap-1.5 rounded-full bg-[#2DBDB6] px-5 py-2.5 text-sm font-bold text-white transition-opacity hover:opacity-90"
+              className="mt-1 flex items-center gap-1.5 rounded-full bg-brand px-5 py-2.5 text-sm font-bold text-white transition-opacity hover:opacity-90"
             >
               বই কিনুন
             </Link>
@@ -125,9 +125,9 @@ export default function LibraryPage() {
               return (
                 <div
                   key={book._id}
-                  className="group rounded border border-[#E1E5E8] bg-white p-1.5 transition-shadow hover:shadow-[0_10px_24px_rgba(10,14,42,0.08)] sm:p-3"
+                  className="group rounded border border-line bg-surface p-1.5 transition-shadow hover:shadow-[0_10px_24px_rgba(10,14,42,0.08)] sm:p-3"
                 >
-                  <div className="aspect-[3/4] w-full overflow-hidden rounded border border-[#E1E5E8] bg-gradient-to-br from-[#dfe7ea] to-[#cfd8db]">
+                  <div className="aspect-[3/4] w-full overflow-hidden rounded border border-line bg-gradient-to-br from-soft to-line">
                     <img
                       src={coverUrl}
                       alt={book.title}
@@ -135,19 +135,19 @@ export default function LibraryPage() {
                     />
                   </div>
 
-                  <p className="mt-1 truncate text-xs font-bold text-[#0A0E2A] sm:mt-2.5 sm:text-sm">
+                  <p className="mt-1 truncate text-xs font-bold text-ink sm:mt-2.5 sm:text-sm">
                     {book.title}
                   </p>
-                  <p className="truncate text-[10px] text-[#6B7280] sm:text-xs">
+                  <p className="truncate text-[10px] text-muted-ink sm:text-xs">
                     {book.author}
                   </p>
 
-                  <div className="mt-1.5 flex h-7 w-full items-stretch overflow-hidden rounded border border-[#E1E5E8] sm:mt-3 sm:h-9">
+                  <div className="mt-1.5 flex h-7 w-full items-stretch overflow-hidden rounded border border-line sm:mt-3 sm:h-9">
                     <button
                       onClick={() => handleDownload(book._id, book.title)}
                       disabled={isDownloading}
                       aria-label="ডাউনলোড"
-                      className="flex flex-1 items-center justify-center border-r border-[#E1E5E8] bg-white text-[#6B7280] transition-colors hover:bg-[#F0F7F5] hover:text-[#2DBDB6] disabled:opacity-60"
+                      className="flex flex-1 items-center justify-center border-r border-line bg-surface text-muted-ink transition-colors hover:bg-brand-soft hover:text-brand disabled:opacity-60"
                     >
                       {isDownloading ? (
                         <Loader2 className="h-3 w-3 animate-spin sm:h-3.5 sm:w-3.5" />
@@ -159,7 +159,7 @@ export default function LibraryPage() {
                     <button
                       onClick={() => handleRead(book._id)}
                       aria-label="পড়ুন"
-                      className="flex flex-1 items-center justify-center border-r border-[#E1E5E8] bg-[#2DBDB6] text-white transition-colors hover:bg-[#1f9d97]"
+                      className="flex flex-1 items-center justify-center border-r border-line bg-brand text-white transition-colors hover:bg-brand-strong"
                     >
                       <BookOpen className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                     </button>
@@ -167,7 +167,7 @@ export default function LibraryPage() {
                     <button
                       onClick={() => handleShare(book._id, book.title)}
                       aria-label="শেয়ার করুন"
-                      className="flex flex-1 items-center justify-center bg-white text-[#6B7280] transition-colors hover:bg-[#F0F7F5] hover:text-[#2DBDB6]"
+                      className="flex flex-1 items-center justify-center bg-surface text-muted-ink transition-colors hover:bg-brand-soft hover:text-brand"
                     >
                       <Share2 className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                     </button>

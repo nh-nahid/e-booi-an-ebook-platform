@@ -1,6 +1,6 @@
 export default function UsersLoading() {
   const shimmer =
-    "relative overflow-hidden bg-[#EEF1F2] before:absolute before:inset-0 " +
+    "relative overflow-hidden bg-soft before:absolute before:inset-0 " +
     "before:-translate-x-full before:animate-[shimmer_1.5s_infinite] " +
     "before:bg-gradient-to-r before:from-transparent before:via-white/60 before:to-transparent";
 
@@ -20,9 +20,9 @@ export default function UsersLoading() {
         <div className={`h-10 w-40 rounded-full ${shimmer}`} />
       </div>
 
-      <div className={`h-16 rounded-2xl border border-[#E1E5E8] ${shimmer}`} />
+      <div className={`h-16 rounded-2xl border border-line ${shimmer}`} />
 
-      <div className="rounded-2xl border border-[#E1E5E8] bg-white p-5">
+      <div className="rounded-2xl border border-line bg-surface p-5">
         <div className="space-y-3">
           {Array.from({ length: 6 }).map((_, i) => (
             <div key={i} className={`h-12 rounded-xl ${shimmer}`} />

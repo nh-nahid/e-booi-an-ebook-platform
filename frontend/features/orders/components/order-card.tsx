@@ -9,11 +9,11 @@ import { useDownloadBook, useDownloadInvoice } from "../hooks/use-orders";
 import type { Order } from "../types/orders.types";
 
 const STATUS_STYLES: Record<Order["orderStatus"], string> = {
-  pending: "bg-[#FFF7E6] text-[#B7791F]",
-  processing: "bg-[#E6F7F6] text-[#2DBDB6]",
-  shipped: "bg-[#E9F0FF] text-[#3B5BDB]",
-  delivered: "bg-[#E6F9EC] text-[#2F9E44]",
-  cancelled: "bg-[#FDEDEC] text-red-600",
+  pending: "bg-warn-soft text-warn-ink",
+  processing: "bg-brand-soft text-brand",
+  shipped: "bg-info-soft text-info-ink",
+  delivered: "bg-success-soft text-success-ink",
+  cancelled: "bg-danger-soft text-danger-ink",
 };
 
 const STATUS_LABELS: Record<Order["orderStatus"], string> = {
@@ -25,9 +25,9 @@ const STATUS_LABELS: Record<Order["orderStatus"], string> = {
 };
 
 const PAYMENT_STATUS_STYLES: Record<Order["paymentStatus"], string> = {
-  pending: "bg-[#FFF7E6] text-[#B7791F]",
-  paid: "bg-[#E6F9EC] text-[#2F9E44]",
-  failed: "bg-[#FDEDEC] text-red-600",
+  pending: "bg-warn-soft text-warn-ink",
+  paid: "bg-success-soft text-success-ink",
+  failed: "bg-danger-soft text-danger-ink",
 };
 
 const PAYMENT_STATUS_LABELS: Record<Order["paymentStatus"], string> = {
@@ -81,12 +81,12 @@ export default function OrderCard({ order }: { order: Order }) {
   };
 
   return (
-    <div className="rounded-2xl border border-[#E1E5E8] bg-white p-5 animate-in fade-in slide-in-from-bottom-1 duration-500">
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#F1F3F5] pb-4">
+    <div className="rounded-2xl border border-line bg-surface p-5 animate-in fade-in slide-in-from-bottom-1 duration-500">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-soft pb-4">
         <div>
-          <p className="text-xs text-[#6B7280]">অর্ডার নম্বর</p>
-          <p className="text-sm font-bold text-[#0A0E2A]">{order._id}</p>
-          <p className="mt-0.5 text-xs text-[#9AA3AF]">
+          <p className="text-xs text-muted-ink">অর্ডার নম্বর</p>
+          <p className="text-sm font-bold text-ink">{order._id}</p>
+          <p className="mt-0.5 text-xs text-subtle">
             {new Date(order.createdAt).toLocaleDateString("bn-BD", {
               year: "numeric",
               month: "long",
@@ -117,27 +117,27 @@ export default function OrderCard({ order }: { order: Order }) {
           >
             <div className="flex min-w-0 items-center gap-2">
               {item.bookType === "Digital" ? (
-                <BookOpen className="h-3.5 w-3.5 shrink-0 text-[#2DBDB6]" />
+                <BookOpen className="h-3.5 w-3.5 shrink-0 text-brand" />
               ) : (
-                <Package className="h-3.5 w-3.5 shrink-0 text-[#6B7280]" />
+                <Package className="h-3.5 w-3.5 shrink-0 text-muted-ink" />
               )}
-              <span className="truncate font-medium text-[#0A0E2A]">
+              <span className="truncate font-medium text-ink">
                 {item.book.title}
               </span>
-              <span className="shrink-0 text-xs text-[#9AA3AF]">
+              <span className="shrink-0 text-xs text-subtle">
                 x{item.quantity}
               </span>
             </div>
-            <span className="shrink-0 font-semibold text-[#0A0E2A]">
+            <span className="shrink-0 font-semibold text-ink">
               ৳ {(item.price * item.quantity).toLocaleString()}
             </span>
           </div>
         ))}
       </div>
 
-      <div className="mt-4 flex items-center justify-between border-t border-[#F1F3F5] pt-4">
-        <span className="text-sm font-bold text-[#0A0E2A]">সর্বমোট</span>
-        <span className="text-base font-extrabold text-[#0A0E2A]">
+      <div className="mt-4 flex items-center justify-between border-t border-soft pt-4">
+        <span className="text-sm font-bold text-ink">সর্বমোট</span>
+        <span className="text-base font-extrabold text-ink">
           ৳ {order.finalAmount.toLocaleString()}
         </span>
       </div>
@@ -156,7 +156,7 @@ export default function OrderCard({ order }: { order: Order }) {
                   handleDownloadBook(item.book._id, item.book.title)
                 }
                 disabled={isDownloading}
-                className="flex items-center gap-1.5 rounded-full bg-[#2DBDB6] px-3.5 py-2 text-xs font-bold text-white transition-transform hover:-translate-y-0.5 disabled:opacity-60"
+                className="flex items-center gap-1.5 rounded-full bg-brand px-3.5 py-2 text-xs font-bold text-white transition-transform hover:-translate-y-0.5 disabled:opacity-60"
               >
                 {isDownloading ? (
                   <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -172,7 +172,7 @@ export default function OrderCard({ order }: { order: Order }) {
           <button
             onClick={handleDownloadInvoice}
             disabled={downloadInvoiceMutation.isPending}
-            className="flex items-center gap-1.5 rounded-full border border-[#E1E5E8] px-3.5 py-2 text-xs font-bold text-[#0A0E2A] transition-colors hover:border-[#2DBDB6] disabled:opacity-60"
+            className="flex items-center gap-1.5 rounded-full border border-line px-3.5 py-2 text-xs font-bold text-ink transition-colors hover:border-brand disabled:opacity-60"
           >
             {downloadInvoiceMutation.isPending ? (
               <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -185,7 +185,7 @@ export default function OrderCard({ order }: { order: Order }) {
 
         <Link
           href={`/orders/${order._id}`}
-          className="ml-auto flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-bold text-[#6B7280] hover:text-[#2DBDB6]"
+          className="ml-auto flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-bold text-muted-ink hover:text-brand"
         >
           বিস্তারিত দেখুন
         </Link>

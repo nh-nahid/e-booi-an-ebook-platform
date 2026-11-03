@@ -28,21 +28,21 @@ export default function UsersFilter({
   onStatusChange,
 }: UsersFilterProps) {
   return (
-    <div className="flex flex-col gap-3 rounded-2xl border border-[#E1E5E8] bg-white p-4 sm:flex-row sm:items-center">
+    <div className="flex flex-col gap-3 rounded-2xl border border-line bg-surface p-4 sm:flex-row sm:items-center">
       <div className="relative flex-1">
-        <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#9AA3AF]" />
+        <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-subtle" />
 
         <input
           value={search}
           onChange={(e) => onSearchChange(e.target.value)}
           placeholder="Search by name or email..."
           className="
-            h-10 w-full rounded-full border border-[#E1E5E8] bg-[#F7F9FA]
-            pl-10 pr-4 text-sm text-[#0A0E2A] outline-none
+            h-10 w-full rounded-full border border-line bg-canvas
+            pl-10 pr-4 text-sm text-ink outline-none
             transition-all duration-200
-            placeholder:text-[#9AA3AF]
-            focus:border-[#2DBDB6]
-            focus:bg-white
+            placeholder:text-subtle
+            focus:border-brand
+            focus:bg-surface
             focus:shadow-[0_0_0_4px_rgba(45,189,182,0.15)]
           "
         />
@@ -57,7 +57,7 @@ export default function UsersFilter({
             }
           }}
         >
-          <SelectTrigger className="h-10 w-full rounded-full border-[#E1E5E8] text-sm sm:w-[150px]">
+          <SelectTrigger className="h-10 w-full rounded-full border-line text-sm sm:w-[150px]">
             <SelectValue placeholder="All roles" />
           </SelectTrigger>
 
@@ -76,7 +76,7 @@ export default function UsersFilter({
             }
           }}
         >
-          <SelectTrigger className="h-10 w-full rounded-full border-[#E1E5E8] text-sm sm:w-[150px]">
+          <SelectTrigger className="h-10 w-full rounded-full border-line text-sm sm:w-[150px]">
             <SelectValue placeholder="All statuses" />
           </SelectTrigger>
 

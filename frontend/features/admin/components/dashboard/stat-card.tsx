@@ -43,7 +43,7 @@ export default function StatCard({
   return (
     <div
       className="
-        group relative overflow-hidden rounded-2xl border border-[#E1E5E8] bg-white p-5
+        group relative overflow-hidden rounded-2xl border border-line bg-surface p-5
         transition-all duration-300
         hover:-translate-y-1 hover:shadow-[0_12px_28px_rgba(10,14,42,0.08)]
       "
@@ -55,8 +55,8 @@ export default function StatCard({
 
       <div className="relative flex items-start justify-between">
         <div>
-          <p className="text-xs font-semibold text-[#6B7280]">{label}</p>
-          <p className="mt-1.5 text-2xl font-extrabold text-[#0A0E2A]">
+          <p className="text-xs font-semibold text-muted-ink">{label}</p>
+          <p className="mt-1.5 text-2xl font-extrabold text-ink">
             {value}
           </p>
         </div>
@@ -79,8 +79,8 @@ export default function StatCard({
               flex items-center gap-0.5 rounded-full px-2 py-0.5 text-[11px] font-bold
               ${
                 isUp
-                  ? "bg-[#E6F7F6] text-[#1f9d97]"
-                  : "bg-red-50 text-red-600"
+                  ? "bg-brand-soft text-brand-strong"
+                  : "bg-danger-soft text-danger-ink"
               }
             `}
           >
@@ -92,7 +92,7 @@ export default function StatCard({
             {Math.abs(trend)}%
           </span>
 
-          <span className="text-[11px] text-[#9AA3AF]">
+          <span className="text-[11px] text-subtle">
             {trendLabel}
           </span>
         </div>

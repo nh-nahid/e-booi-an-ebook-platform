@@ -1,6 +1,6 @@
 export default function BooksLoading() {
   const shimmer =
-    "relative overflow-hidden bg-[#EEF1F2] before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_1.5s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/60 before:to-transparent";
+    "relative overflow-hidden bg-soft before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_1.5s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/60 before:to-transparent";
 
   return (
     <div className="space-y-6">
@@ -29,15 +29,15 @@ export default function BooksLoading() {
       </div>
 
       {/* Table */}
-      <div className="overflow-hidden rounded-2xl border border-[#E1E5E8] bg-white">
+      <div className="overflow-hidden rounded-2xl border border-line bg-surface">
         {/* Table Header */}
-        <div className="border-b border-[#E1E5E8] px-6 py-5">
+        <div className="border-b border-line px-6 py-5">
           <div className={`h-5 w-40 rounded ${shimmer}`} />
           <div className={`mt-2 h-4 w-64 rounded ${shimmer}`} />
         </div>
 
         {/* Column Headings */}
-        <div className="grid grid-cols-10 gap-4 border-b border-[#E1E5E8] bg-[#F8FAFB] px-6 py-4">
+        <div className="grid grid-cols-10 gap-4 border-b border-line bg-soft px-6 py-4">
           {Array.from({ length: 10 }).map((_, i) => (
             <div
               key={i}
@@ -47,7 +47,7 @@ export default function BooksLoading() {
         </div>
 
         {/* Rows */}
-        <div className="divide-y divide-[#EEF1F2]">
+        <div className="divide-y divide-soft">
           {Array.from({ length: 6 }).map((_, row) => (
             <div
               key={row}
@@ -94,7 +94,7 @@ export default function BooksLoading() {
         </div>
 
         {/* Pagination */}
-        <div className="flex items-center justify-between border-t border-[#E1E5E8] px-6 py-4">
+        <div className="flex items-center justify-between border-t border-line px-6 py-4">
           <div className={`h-4 w-44 rounded ${shimmer}`} />
 
           <div className="flex gap-2">

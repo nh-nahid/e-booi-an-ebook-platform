@@ -69,7 +69,7 @@ export default function ReviewSection({ bookId, reviews }: ReviewSectionProps) {
 
   return (
     <section className="mt-8 animate-in fade-in slide-in-from-bottom-2 duration-500 [animation-delay:120ms]">
-      <h2 className="mb-4 text-lg font-extrabold text-[#0A0E2A]">
+      <h2 className="mb-4 text-lg font-extrabold text-ink">
         রিভিউ ও মন্তব্য ({reviews.length})
       </h2>
 
@@ -92,8 +92,8 @@ export default function ReviewSection({ bookId, reviews }: ReviewSectionProps) {
                 <Star
                   className={`h-4 w-4 ${
                     active
-                      ? "fill-[#2DBDB6] text-[#2DBDB6]"
-                      : "fill-[#E1E5E8] text-[#E1E5E8]"
+                      ? "fill-brand text-brand"
+                      : "fill-line text-line"
                   }`}
                 />
               </button>
@@ -101,17 +101,17 @@ export default function ReviewSection({ bookId, reviews }: ReviewSectionProps) {
           })}
         </div>
 
-        <div className="flex items-center gap-2 rounded-full border border-[#E1E5E8] bg-white px-4 py-2 focus-within:border-[#2DBDB6]">
+        <div className="flex items-center gap-2 rounded-full border border-line bg-surface px-4 py-2 focus-within:border-brand">
           <input
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             placeholder="একটি মন্তব্য লিখুন..."
-            className="flex-1 bg-transparent text-sm text-[#0A0E2A] outline-none placeholder:text-[#9AA3AF]"
+            className="flex-1 bg-transparent text-sm text-ink outline-none placeholder:text-subtle"
           />
           <button
             type="submit"
             disabled={addReview.isPending || !comment.trim()}
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#2DBDB6] text-white transition-colors hover:bg-[#1f9d97] disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand text-white transition-colors hover:bg-brand-strong disabled:cursor-not-allowed disabled:opacity-50"
             aria-label="মন্তব্য পাঠান"
           >
             {addReview.isPending ? (
@@ -124,7 +124,7 @@ export default function ReviewSection({ bookId, reviews }: ReviewSectionProps) {
       </form>
 
       {reviews.length === 0 ? (
-        <p className="text-sm text-[#6B7280]">এখনও কোনো রিভিউ নেই।</p>
+        <p className="text-sm text-muted-ink">এখনও কোনো রিভিউ নেই।</p>
       ) : (
         <div className="max-w-2xl space-y-5">
           {reviews.map((review, index) => {
@@ -140,9 +140,9 @@ export default function ReviewSection({ bookId, reviews }: ReviewSectionProps) {
               <div
                 key={review._id}
                 style={{ animationDelay: `${index * 0.06}s` }}
-                className="animate-in fade-in slide-in-from-bottom-1 flex items-start gap-3 border-b border-[#F1F3F5] pb-4 duration-500 fill-mode-both last:border-0"
+                className="animate-in fade-in slide-in-from-bottom-1 flex items-start gap-3 border-b border-soft pb-4 duration-500 fill-mode-both last:border-0"
               >
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#0A0E2A] text-xs font-bold text-white">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-navy text-xs font-bold text-white">
                   {avatar ? (
                     <Image
                       src={avatar}
@@ -157,7 +157,7 @@ export default function ReviewSection({ bookId, reviews }: ReviewSectionProps) {
                 </span>
 
                 <div className="min-w-0 flex-1">
-                  <p className="text-sm font-bold text-[#0A0E2A]">
+                  <p className="text-sm font-bold text-ink">
                     {review.user.name}
                   </p>
 
@@ -167,14 +167,14 @@ export default function ReviewSection({ bookId, reviews }: ReviewSectionProps) {
                         key={i}
                         className={`h-3 w-3 ${
                           i < review.rating
-                            ? "fill-[#2DBDB6] text-[#2DBDB6]"
-                            : "fill-[#E1E5E8] text-[#E1E5E8]"
+                            ? "fill-brand text-brand"
+                            : "fill-line text-line"
                         }`}
                       />
                     ))}
                   </div>
 
-                  <p className="mt-1.5 text-sm leading-relaxed text-[#6B7280]">
+                  <p className="mt-1.5 text-sm leading-relaxed text-muted-ink">
                     {review.comment}
                   </p>
                 </div>

@@ -225,7 +225,7 @@ async function getBook(req, res, next) {
         },
       },
       {
-        new: true,
+        returnDocument: "after",
       },
     ).populate("uploadedBy", "name");
 
@@ -314,7 +314,7 @@ async function updateBook(req, res, next) {
     }
 
     const updatedBook = await Book.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
+      returnDocument: "after",
     });
 
     // remove old Cloudinary assets after a successful update

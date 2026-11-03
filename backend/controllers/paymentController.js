@@ -1,5 +1,3 @@
-const SSLCommerzPayment = require("sslcommerz-lts");
-
 const Order = require("../models/Order");
 const User = require("../models/User");
 const Coupon = require("../models/Coupon");
@@ -10,6 +8,7 @@ const sendEmail = require("../utils/sendEmail");
 const paymentEmail = require("../emails/templates/paymentEmail");
 const DigitalBookEmail = require("../emails/templates/digitalBookEmail");
 const generateInvoice = require("../utils/generateInvoice");
+const eps = require("../utils/eps");
 
 // ======================
 // INITIALIZE PAYMENT
@@ -32,63 +31,15 @@ async function initiatePayment(req, res, next) {
             });
         }
 
-        const customer = order.user;
-
-        // eBooi is Digital-only now — there's never a physical shipment,
-        // so shipping fields just mirror the customer's account details
-        // (SSLCommerz still requires them to be non-empty).
-        const data = {
-            total_amount: order.finalAmount || order.totalAmount,
-            currency: "BDT",
-            tran_id: order._id.toString(),
-
-            success_url: `${process.env.BACKEND_URL}/api/v1/payment/success`,
-            fail_url: `${process.env.BACKEND_URL}/api/v1/payment/fail`,
-            cancel_url: `${process.env.BACKEND_URL}/api/v1/payment/cancel`,
-            ipn_url: `${process.env.BACKEND_URL}/api/v1/payment/ipn`,
-
-            shipping_method: "NO",
-
-            product_name: "Book Purchase",
-            product_category: "Books",
-            product_profile: "general",
-
-            // Shipping Information (unused for Digital delivery, but
-            // SSLCommerz requires these fields to be populated)
-            ship_name: customer?.name || "Customer",
-            ship_add1: "N/A",
-            ship_city: "N/A",
-            ship_postcode: "0000",
-            ship_country: "Bangladesh",
-            ship_phone: customer?.phone || "01700000000",
-
-            // Customer Information
-            cus_name: customer?.name || "Customer",
-            cus_email: customer?.email || "customer@example.com",
-            cus_phone: customer?.phone || "01700000000",
-            cus_add1: "N/A",
-            cus_city: "N/A",
-            cus_country: "Bangladesh",
-        };
-
-        const sslcz = new SSLCommerzPayment(
-            process.env.SSL_STORE_ID,
-            process.env.SSL_STORE_PASSWORD,
-            process.env.SSL_IS_LIVE === "true"
-        );
-
-        const apiResponse = await sslcz.init(data);
-
-        if (!apiResponse || !apiResponse.GatewayPageURL) {
-            return res.status(500).json({
-                message: "Payment gateway failed to initialize",
-                debug: apiResponse,
+        // EPS is the only supported payment gateway.
+        if (order.paymentMethod !== "eps") {
+            return res.status(400).json({
+                message:
+                    "This order's payment method is no longer supported. Please place a new order.",
             });
         }
 
-        return res.json({
-            gatewayURL: apiResponse.GatewayPageURL,
-        });
+        return await initiateEpsPayment(order, req, res);
     } catch (error) {
         console.log(error);
         next(error);
@@ -96,32 +47,12 @@ async function initiatePayment(req, res, next) {
 }
 
 // ======================
-// PAYMENT SUCCESS
+// MARK ORDER PAID (called once a gateway confirms payment)
 // ======================
-async function paymentSuccess(req, res, next) {
-    try {
-        const { tran_id, bank_tran_id } = req.body;
-
-        const order = await Order.findById(tran_id)
-            .populate("items.book")
-            .populate("coupon");
-
-        if (!order) {
-            return res.status(404).json({
-                message: "Order not found",
-            });
-        }
-
-        // Prevent duplicate callback processing
-        if (order.paymentStatus === "paid") {
-            return res.redirect(
-                `${process.env.FRONTEND_URL}/payment-success?orderId=${order._id}`
-            );
-        }
-
+async function markOrderPaid(order, transactionId) {
         // Update payment info
         order.paymentStatus = "paid";
-        order.transactionId = bank_tran_id;
+        order.transactionId = transactionId;
         order.paidAt = new Date();
 
         // Increase coupon usage
@@ -158,7 +89,7 @@ async function paymentSuccess(req, res, next) {
             await sendEmail({
                 to: user.email,
                 subject: "Payment Successful",
-                html: paymentEmail(user, order, bank_tran_id),
+                html: paymentEmail(user, order, transactionId),
             });
         } catch (emailError) {
             console.log("Payment email failed:", emailError.message);
@@ -182,37 +113,181 @@ async function paymentSuccess(req, res, next) {
             }
         }
 
+}
+
+// ======================
+// EPS (Easy Payment System)
+// ======================
+function clientIp(req) {
+    const ip = (req.ip || "").replace("::ffff:", "");
+    return ip && !ip.includes(":") ? ip : "127.0.0.1";
+}
+
+async function initiateEpsPayment(order, req, res) {
+    const customer = order.user;
+    const amount = Number(order.finalAmount ?? order.totalAmount);
+    const FE = process.env.FRONTEND_URL;
+
+    if (!Number.isFinite(amount) || amount < 0) {
+        console.log("EPS: invalid order amount", {
+            orderId: String(order._id),
+            finalAmount: order.finalAmount,
+            totalAmount: order.totalAmount,
+        });
+        return res.status(400).json({
+            message: "Invalid order amount. Please place the order again.",
+        });
+    }
+
+    // Nothing to charge (free book or a 100% coupon): EPS rejects amounts
+    // below 1 BDT, so complete the order directly without the gateway.
+    if (amount === 0) {
+        await order.populate("items.book");
+        await markOrderPaid(order, `FREE-${order._id}`);
+        return res.json({
+            gatewayURL: `${FE}/payment-success?orderId=${order._id}`,
+        });
+    }
+
+    if (amount < 1) {
+        return res.status(400).json({
+            message: "The minimum online payment amount is ৳1.",
+        });
+    }
+
+    // A fresh id for every attempt — EPS rejects duplicates.
+    const merchantTransactionId = eps.generateMerchantTransactionId();
+    order.epsMerchantTransactionId = merchantTransactionId;
+    await order.save();
+
+    const callbackBase = `${process.env.BACKEND_URL}/api/v1/payment/eps`;
+
+    const payload = {
+        storeId: process.env.EPS_STORE_ID,
+        ...(process.env.EPS_MERCHANT_ID
+            ? { merchantId: process.env.EPS_MERCHANT_ID }
+            : {}),
+        CustomerOrderId: order._id.toString(),
+        merchantTransactionId,
+        transactionTypeId: Number(process.env.EPS_TRANSACTION_TYPE_ID || 1),
+        financialEntityId: 0,
+        transitionStatusId: 0,
+        totalAmount: amount,
+        ipAddress: clientIp(req),
+        version: "1",
+        successUrl: `${callbackBase}/success`,
+        failUrl: `${callbackBase}/fail`,
+        cancelUrl: `${callbackBase}/cancel`,
+
+        // eBooi is Digital-only; EPS still requires address fields.
+        customerName: customer?.name || "Customer",
+        customerEmail: customer?.email || "customer@example.com",
+        customerAddress: "N/A",
+        customerCity: "Dhaka",
+        customerState: "Dhaka",
+        customerPostcode: "1000",
+        customerCountry: "BD",
+        customerPhone: customer?.phone || "01700000000",
+
+        shippingMethod: "NO",
+        noOfItem: String(order.items?.length || 1),
+        productName: "Book Purchase",
+        productProfile: "general",
+        productCategory: "Books",
+    };
+
+    let redirectUrl;
+    try {
+        ({ redirectUrl } = await eps.initializePayment(payload));
+    } catch (error) {
+        console.log("EPS initialize failed:", error.message, { amount });
+        return res.status(502).json({
+            message:
+                "Could not start the payment. Please try again in a moment.",
+        });
+    }
+
+    return res.json({ gatewayURL: redirectUrl });
+}
+
+// EPS returns the shopper to successUrl/failUrl/cancelUrl with data in the
+// query string. The query string is user-controlled, so it is only used to
+// *identify* the order — success is always confirmed server-to-server.
+async function loadEpsOrder(req) {
+    const params = { ...(req.query || {}), ...(req.body || {}) };
+    const raw = eps.pick(params, "merchantTransactionId");
+    const txnId = raw ? String(raw) : null;
+
+    const order = txnId
+        ? await Order.findOne({ epsMerchantTransactionId: txnId })
+              .populate("items.book")
+              .populate("coupon")
+        : null;
+
+    return { params, txnId, order };
+}
+
+async function epsSuccess(req, res, next) {
+    try {
+        const { params, txnId, order } = await loadEpsOrder(req);
+        const FE = process.env.FRONTEND_URL;
+
+        if (!order) {
+            console.log("EPS success callback: order not found", params);
+            return res.redirect(`${FE}/payment-failed?orderId=`);
+        }
+
+        if (order.paymentStatus === "paid") {
+            return res.redirect(`${FE}/payment-success?orderId=${order._id}`);
+        }
+
+        const result = await eps.checkTransactionStatus(txnId);
+        const status = String(eps.pick(result, "Status") || "");
+        const paidAmount = Number(eps.pick(result, "TotalAmount"));
+        const expected = Number(order.finalAmount || order.totalAmount);
+
+        const verified =
+            status.toLowerCase() === "success" &&
+            Math.abs(paidAmount - expected) < 0.01;
+
+        if (!verified) {
+            console.log("EPS verification failed", { txnId, status, paidAmount, expected });
+            return res.redirect(`${FE}/payment-failed?orderId=${order._id}`);
+        }
+
+        await markOrderPaid(order, txnId);
+
+        return res.redirect(`${FE}/payment-success?orderId=${order._id}`);
+    } catch (error) {
+        next(error);
+    }
+}
+
+async function epsFail(req, res, next) {
+    try {
+        const { order } = await loadEpsOrder(req);
         res.redirect(
-            `${process.env.FRONTEND_URL}/payment-success?orderId=${order._id}`
+            `${process.env.FRONTEND_URL}/payment-failed?orderId=${order?._id ?? ""}`
         );
     } catch (error) {
         next(error);
     }
 }
 
-// ======================
-// PAYMENT FAILED
-// ======================
-async function paymentFail(req, res) {
-    const { tran_id } = req.body;
-    res.redirect(
-        `${process.env.FRONTEND_URL}/payment-failed?orderId=${tran_id ?? ""}`
-    );
-}
-
-// ======================
-// PAYMENT CANCELLED
-// ======================
-async function paymentCancel(req, res) {
-    const { tran_id } = req.body;
-    res.redirect(
-        `${process.env.FRONTEND_URL}/payment-cancel?orderId=${tran_id ?? ""}`
-    );
+async function epsCancel(req, res, next) {
+    try {
+        const { order } = await loadEpsOrder(req);
+        res.redirect(
+            `${process.env.FRONTEND_URL}/payment-cancel?orderId=${order?._id ?? ""}`
+        );
+    } catch (error) {
+        next(error);
+    }
 }
 
 module.exports = {
+    epsSuccess,
+    epsFail,
+    epsCancel,
     initiatePayment,
-    paymentSuccess,
-    paymentFail,
-    paymentCancel,
 };

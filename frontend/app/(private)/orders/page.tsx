@@ -32,28 +32,28 @@ export default function OrdersPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F7F9FA]">
+    <div className="min-h-screen bg-canvas">
       <Navbar />
 
       <div className="container mx-auto px-5 py-8 sm:px-10 lg:px-[60px]">
-        <h1 className="mb-6 text-2xl font-extrabold text-[#0A0E2A] sm:text-3xl">
+        <h1 className="mb-6 text-2xl font-extrabold text-ink sm:text-3xl">
           আমার অর্ডার
         </h1>
 
         {orders.length === 0 ? (
-          <div className="flex flex-col items-center gap-3 rounded-2xl border border-[#E1E5E8] bg-white py-16 text-center">
-            <span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#F7F9FA]">
-              <PackageSearch className="h-6 w-6 text-[#9AA3AF]" />
+          <div className="flex flex-col items-center gap-3 rounded-2xl border border-line bg-surface py-16 text-center">
+            <span className="flex h-14 w-14 items-center justify-center rounded-full bg-canvas">
+              <PackageSearch className="h-6 w-6 text-subtle" />
             </span>
-            <p className="text-sm font-bold text-[#0A0E2A]">
+            <p className="text-sm font-bold text-ink">
               আপনার কোনো অর্ডার নেই
             </p>
-            <p className="text-xs text-[#6B7280]">
+            <p className="text-xs text-muted-ink">
               বই কেনাকাটা শুরু করুন এবং এখানে আপনার অর্ডার দেখুন
             </p>
              <button
             onClick={() => router.push("/books")}
-            className="rounded-full cursor-pointer bg-[#2DBDB6] px-5 py-2.5 text-sm font-bold text-white"
+            className="rounded-full cursor-pointer bg-brand px-5 py-2.5 text-sm font-bold text-white"
           >
             শপিং চালিয়ে যান
           </button>

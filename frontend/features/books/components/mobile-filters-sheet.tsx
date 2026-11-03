@@ -31,13 +31,13 @@ export default function MobileFiltersSheet({
       />
 
       <div className="absolute inset-y-0 left-0 w-[85%] max-w-sm animate-in slide-in-from-left duration-300">
-        <div className="flex h-full flex-col overflow-y-auto bg-[#F7F9FA] p-4">
+        <div className="flex h-full flex-col overflow-y-auto bg-canvas p-4">
           <div className="mb-3 flex items-center justify-between">
-            <h2 className="text-base font-bold text-[#0A0E2A]">Filters</h2>
+            <h2 className="text-base font-bold text-ink">Filters</h2>
 
             <button
               onClick={onClose}
-              className="flex h-8 w-8 items-center justify-center rounded-full text-[#6B7280] hover:bg-[#E6F7F6] hover:text-[#2DBDB6]"
+              className="flex h-8 w-8 items-center justify-center rounded-full text-muted-ink hover:bg-brand-soft hover:text-brand"
             >
               <X className="h-4 w-4" />
             </button>
@@ -52,7 +52,7 @@ export default function MobileFiltersSheet({
 
           <button
             onClick={onClose}
-            className="mt-4 h-11 w-full rounded-full bg-gradient-to-br from-[#2DBDB6] to-[#1f9d97] text-sm font-bold text-white shadow-[0_4px_12px_rgba(45,189,182,0.35)]"
+            className="mt-4 h-11 w-full rounded-full bg-gradient-to-br from-brand to-brand-strong text-sm font-bold text-white shadow-[0_4px_12px_rgba(45,189,182,0.35)]"
           >
             Show Results
           </button>

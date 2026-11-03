@@ -46,30 +46,30 @@ export default function ProfilePage() {
 
   if (isError || !data?.user) {
     return (
-      <div className="flex min-h-[60vh] items-center justify-center bg-[#F7F9FA]">
+      <div className="flex min-h-[60vh] items-center justify-center bg-canvas">
         <div
           className="
             flex flex-col items-center gap-2
-            rounded-3xl border border-[#E1E5E8]
-            bg-white px-8 py-10 text-center
+            rounded-3xl border border-line
+            bg-surface px-8 py-10 text-center
             shadow-[0_10px_30px_rgba(10,14,42,0.06)]
           "
         >
           <span
             className="
-              rounded-full bg-[#E6F7F6]
+              rounded-full bg-brand-soft
               px-3 py-1 text-xs font-bold
-              text-[#0A0E2A]
+              text-ink
             "
           >
             404
           </span>
 
-          <p className="mt-2 text-lg font-bold text-[#0A0E2A]">
+          <p className="mt-2 text-lg font-bold text-ink">
             Profile not found
           </p>
 
-          <p className="text-sm text-[#6B7280]">
+          <p className="text-sm text-muted-ink">
             We couldn&apos;t load your profile information.
           </p>
         </div>
@@ -89,7 +89,7 @@ export default function ProfilePage() {
     : "";
 
   return (
-    <div className="min-h-screen bg-[#F7F9FA]">
+    <div className="min-h-screen bg-canvas">
       <div className="container mx-auto px-5 py-6 sm:px-10 lg:px-[60px]">
         <div className="grid gap-6 lg:grid-cols-[360px_1fr] lg:gap-8">
           {/* Left Side */}
@@ -117,11 +117,11 @@ export default function ProfilePage() {
               disabled={loggingOut}
               className="
                 flex w-full max-w-md items-center justify-center gap-2
-                rounded-3xl border border-red-200 bg-white px-5 py-3.5
-                text-sm font-bold text-red-600
+                rounded-3xl border border-danger-ink/30 bg-surface px-5 py-3.5
+                text-sm font-bold text-danger-ink
                 shadow-[0_10px_30px_rgba(10,14,42,0.06)]
                 transition-all duration-200
-                hover:-translate-y-0.5 hover:bg-red-50
+                hover:-translate-y-0.5 hover:bg-danger-soft
                 disabled:cursor-not-allowed disabled:opacity-60
               "
             >

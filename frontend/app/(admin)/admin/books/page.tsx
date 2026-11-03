@@ -151,12 +151,12 @@ export default function AdminBooksPage() {
 
   if (isError || !data) {
     return (
-      <div className="rounded-2xl border border-red-200 bg-red-50 p-8 text-center">
-        <h2 className="text-lg font-semibold text-red-600">
+      <div className="rounded-2xl border border-danger-ink/30 bg-danger-soft p-8 text-center">
+        <h2 className="text-lg font-semibold text-danger-ink">
           Failed to load books
         </h2>
 
-        <p className="mt-2 text-sm text-gray-600">
+        <p className="mt-2 text-sm text-muted-ink">
           Please refresh the page and try again.
         </p>
       </div>
@@ -167,11 +167,11 @@ export default function AdminBooksPage() {
     <div className="space-y-6">
       <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-center">
         <div>
-          <h1 className="text-3xl font-bold text-[#0A0E2A]">
+          <h1 className="text-3xl font-bold text-ink">
             Books Management
           </h1>
 
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-sm text-muted-ink">
             Manage all books available in your bookstore.
           </p>
         </div>

@@ -124,7 +124,7 @@ export default function BooksPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7F9FA]">
+    <div className="min-h-screen bg-canvas">
       <div className="container mx-auto px-5 py-8 sm:px-10 lg:px-[60px]">
         <div className="grid gap-6 lg:grid-cols-[260px_1fr]">
           <aside className="hidden lg:block">

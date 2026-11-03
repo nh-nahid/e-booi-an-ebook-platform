@@ -41,13 +41,13 @@ export default function MobileNav() {
         </div>
       </SheetTrigger>
 
-      <SheetContent side="left" className="w-[300px]" style={{ background: "#FFFFFF" }}>
+      <SheetContent side="left" className="w-[300px]" style={{ background: "var(--surface)" }}>
         <SheetHeader>
           <SheetTitle
             className="inline-flex w-fit items-center gap-1 rounded-2xl px-4 py-1.5 text-lg font-extrabold"
-            style={{ background: "#E6F7F6", color: "#0A0E2A" }}
+            style={{ background: "var(--brand-soft)", color: "var(--ink)" }}
           >
-            eboo<span style={{ color: "#2DBDB6" }}>i</span>
+            eboo<span style={{ color: "var(--brand)" }}>i</span>
           </SheetTitle>
         </SheetHeader>
 
@@ -103,7 +103,7 @@ export default function MobileNav() {
               <Button
                 onClick={() => (window.location.href = "/login")}
                 className="mn-cta-primary rounded-full border-0 font-bold text-white"
-                style={{ background: "linear-gradient(135deg, #2DBDB6, #1f9d97)" }}
+                style={{ background: "linear-gradient(135deg, var(--brand), var(--brand-strong))" }}
               >
                 Login
               </Button>
@@ -112,7 +112,7 @@ export default function MobileNav() {
                 variant="outline"
                 onClick={() => (window.location.href = "/register")}
                 className="mn-cta-outline rounded-full font-bold"
-                style={{ borderColor: "#E1E5E8", color: "#0A0E2A" }}
+                style={{ borderColor: "var(--line)", color: "var(--ink)" }}
               >
                 Register
               </Button>

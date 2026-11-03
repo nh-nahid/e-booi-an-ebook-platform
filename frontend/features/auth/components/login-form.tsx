@@ -72,13 +72,13 @@ export default function LoginForm() {
   return (
     <div
       className="flex min-h-[560px] w-full items-center justify-center p-3 sm:p-6"
-      style={{ background: "#F7F9FA" }}
+      style={{ background: "var(--canvas)" }}
     >
       <Card
         className="relative w-full max-w-md overflow-hidden rounded-3xl border shadow-lg"
         style={{
-          borderColor: "#E1E5E8",
-          background: "#FFFFFF",
+          borderColor: "var(--line)",
+          background: "var(--surface)",
           boxShadow: "0 20px 45px rgba(10,14,42,0.08)",
         }}
       >
@@ -89,7 +89,7 @@ export default function LoginForm() {
             height: 160,
             top: -60,
             right: -60,
-            background: "#2DBDB6",
+            background: "var(--brand)",
           }}
         />
 
@@ -100,7 +100,7 @@ export default function LoginForm() {
             height: 140,
             bottom: -50,
             left: -50,
-            background: "#2DBDB6",
+            background: "var(--brand)",
           }}
         />
 
@@ -114,19 +114,19 @@ export default function LoginForm() {
               className="rounded-md"
             />
 
-            <span className="text-lg font-bold" style={{ color: "#0A0E2A" }}>
+            <span className="text-lg font-bold" style={{ color: "var(--ink)" }}>
               ebooi
             </span>
           </div>
 
           <CardTitle
             className="text-3xl font-bold"
-            style={{ color: "#0A0E2A" }}
+            style={{ color: "var(--ink)" }}
           >
             Welcome back
           </CardTitle>
 
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-muted-ink">
             Login to continue reading your favorite books.
           </p>
         </CardHeader>
@@ -140,7 +140,7 @@ export default function LoginForm() {
                 <Mail
                   className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2"
                   style={{
-                    color: focused === "email" ? "#2DBDB6" : "#9AA3AF",
+                    color: focused === "email" ? "var(--brand)" : "#9AA3AF",
                   }}
                 />
 
@@ -153,7 +153,7 @@ export default function LoginForm() {
                   onBlur={() => setFocused(null)}
                   className="h-11 rounded-xl pl-9"
                   style={{
-                    borderColor: focused === "email" ? "#2DBDB6" : "#E1E5E8",
+                    borderColor: focused === "email" ? "var(--brand)" : "var(--line)",
                     boxShadow:
                       focused === "email"
                         ? "0 0 0 4px rgba(45,189,182,0.15)"
@@ -163,7 +163,7 @@ export default function LoginForm() {
               </div>
 
               {form.formState.errors.email && (
-                <p className="mt-1 text-xs text-red-500">
+                <p className="mt-1 text-xs text-danger-ink">
                   {form.formState.errors.email.message}
                 </p>
               )}
@@ -176,7 +176,7 @@ export default function LoginForm() {
                 <Lock
                   className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2"
                   style={{
-                    color: focused === "password" ? "#2DBDB6" : "#9AA3AF",
+                    color: focused === "password" ? "var(--brand)" : "#9AA3AF",
                   }}
                 />
 
@@ -189,7 +189,7 @@ export default function LoginForm() {
                   onBlur={() => setFocused(null)}
                   className="h-11 rounded-xl pl-9 pr-10"
                   style={{
-                    borderColor: focused === "password" ? "#2DBDB6" : "#E1E5E8",
+                    borderColor: focused === "password" ? "var(--brand)" : "var(--line)",
                     boxShadow:
                       focused === "password"
                         ? "0 0 0 4px rgba(45,189,182,0.15)"
@@ -200,7 +200,7 @@ export default function LoginForm() {
                 <button
                   type="button"
                   onClick={() => setShowPassword((prev) => !prev)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-ink hover:text-body"
                 >
                   {showPassword ? (
                     <EyeOff className="h-4 w-4" />
@@ -211,21 +211,21 @@ export default function LoginForm() {
               </div>
 
               {form.formState.errors.password && (
-                <p className="mt-1 text-xs text-red-500">
+                <p className="mt-1 text-xs text-danger-ink">
                   {form.formState.errors.password.message}
                 </p>
               )}
             </div>
 
             <div className="flex items-center justify-between text-sm">
-              <label className="flex items-center gap-2 text-gray-600">
+              <label className="flex items-center gap-2 text-muted-ink">
                 <input type="checkbox" className="h-4 w-4 accent-[#2DBDB6]" />
                 Remember me
               </label>
 
               <Link
                 href="/forgot-password"
-                className="font-medium text-[#2DBDB6] hover:underline"
+                className="font-medium text-brand hover:underline"
               >
                 Forgot password?
               </Link>
@@ -234,7 +234,7 @@ export default function LoginForm() {
             <Button
               type="submit"
               disabled={isPending}
-              className="h-11 w-full rounded-full bg-[#2DBDB6] cursor-pointer font-semibold text-white transition-all hover:bg-[#249d97] disabled:cursor-not-allowed disabled:opacity-70"
+              className="h-11 w-full rounded-full bg-brand cursor-pointer font-semibold text-white transition-all hover:bg-brand-strong disabled:cursor-not-allowed disabled:opacity-70"
             >
               {isPending ? (
                 <span className="flex items-center gap-2">
@@ -251,11 +251,11 @@ export default function LoginForm() {
 
             <div className="relative py-2">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-200" />
+                <div className="w-full border-t border-line" />
               </div>
 
               <div className="relative flex justify-center">
-                <span className="bg-white px-3 text-xs uppercase tracking-wider text-gray-400">
+                <span className="bg-surface px-3 text-xs uppercase tracking-wider text-muted-ink">
                   Or
                 </span>
               </div>
@@ -270,11 +270,11 @@ export default function LoginForm() {
               Continue with Google (Coming Soon)
             </Button>
 
-            <p className="pt-2 text-center text-sm text-gray-600">
+            <p className="pt-2 text-center text-sm text-muted-ink">
               Don&apos;t have an account?{" "}
               <Link
                 href="/register"
-                className="font-semibold text-[#2DBDB6] hover:underline"
+                className="font-semibold text-brand hover:underline"
               >
                 Create one
               </Link>

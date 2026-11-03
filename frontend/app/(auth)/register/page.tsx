@@ -13,7 +13,7 @@ export default async function RegisterPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#F7F9FA] px-3 py-6 sm:px-4 sm:py-10">
+    <div className="flex min-h-screen items-center justify-center bg-canvas px-3 py-6 sm:px-4 sm:py-10">
       <RegisterForm />
     </div>
   );

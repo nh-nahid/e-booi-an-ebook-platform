@@ -58,7 +58,7 @@ export default function HeroSection({ statistics }: HeroSectionProps) {
   ].filter((s) => typeof s.value === "number" && s.value > 0);
 
   return (
-    <section className="relative overflow-hidden bg-white">
+    <section className="relative overflow-hidden bg-surface">
       <style>{`
         @keyframes heroBlob {
           0%, 100% { transform: scale(1) translate(0, 0); }
@@ -74,8 +74,8 @@ export default function HeroSection({ statistics }: HeroSectionProps) {
         .hero-float { animation: heroFloat 3.2s ease-in-out infinite; }
       `}</style>
 
-      <div className="hero-blob-a pointer-events-none absolute -left-20 top-10 h-64 w-64 rounded-full bg-[#2DBDB6] opacity-[0.1] blur-3xl" />
-      <div className="hero-blob-b pointer-events-none absolute -right-16 top-24 h-72 w-72 rounded-full bg-[#0A0E2A] opacity-[0.05] blur-3xl" />
+      <div className="hero-blob-a pointer-events-none absolute -left-20 top-10 h-64 w-64 rounded-full bg-brand opacity-[0.1] blur-3xl" />
+      <div className="hero-blob-b pointer-events-none absolute -right-16 top-24 h-72 w-72 rounded-full bg-navy opacity-[0.05] blur-3xl" />
 
       <div className="relative mx-auto px-5 sm:px-10">
         {/* eyebrow badge */}
@@ -115,13 +115,13 @@ function StatItem({
       style={{ animationDelay: `${delay}ms` }}
       className="flex animate-in fade-in slide-in-from-bottom-1 flex-col items-center gap-1.5 duration-500 fill-mode-both"
     >
-      <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#E6F7F6] text-[#2DBDB6]">
+      <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-soft text-brand">
         <Icon className="h-4 w-4" />
       </span>
-      <p className="text-xl font-extrabold text-[#0A0E2A]">
+      <p className="text-xl font-extrabold text-ink">
         {count.toLocaleString()}+
       </p>
-      <p className="text-xs font-medium text-[#6B7280]">{label}</p>
+      <p className="text-xs font-medium text-muted-ink">{label}</p>
     </div>
   );
 }

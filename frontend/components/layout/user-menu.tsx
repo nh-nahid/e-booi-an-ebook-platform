@@ -35,7 +35,7 @@ export default function UserMenu() {
   const { mutate: logout, isPending } = useLogout();
 
   if (isLoading) {
-    return <div className="h-9 w-9 rounded-full bg-gray-200 animate-pulse" />;
+    return <div className="h-9 w-9 rounded-full bg-line animate-pulse" />;
   }
 
   // If no user, just hide menu safely (NO crash)
@@ -84,14 +84,14 @@ export default function UserMenu() {
           <AvatarFallback>{initials}</AvatarFallback>
         </Avatar>
 
-        <ChevronsUpDown className="h-4 w-4 text-gray-500" strokeWidth={1.25} />
+        <ChevronsUpDown className="h-4 w-4 text-muted-ink" strokeWidth={1.25} />
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="end" className="w-64">
         {/* USER INFO */}
         <div className="p-2">
           <p className="font-bold">{user.name}</p>
-          <p className="text-xs text-gray-500">{user.email}</p>
+          <p className="text-xs text-muted-ink">{user.email}</p>
         </div>
 
         <DropdownMenuSeparator />
@@ -137,7 +137,7 @@ export default function UserMenu() {
         <DropdownMenuItem
           onClick={handleLogout}
           disabled={isPending}
-          className="text-red-600 cursor-pointer"
+          className="text-danger-ink cursor-pointer"
         >
           <LogOut className="mr-2 h-4 w-4" strokeWidth={1.25} />
           Logout

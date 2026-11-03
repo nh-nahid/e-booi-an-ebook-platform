@@ -4,6 +4,7 @@ import { api } from "@/services/api/api";
 import { ENDPOINTS } from "@/services/api/endpoints";
 
 import type {
+  ForgotPasswordPayload,
   LoginPayload,
   RegisterPayload,
 } from "../schemas/auth.schema";
@@ -71,6 +72,29 @@ export const refreshAccessToken = async (): Promise<{
     success: boolean;
     accessToken: string;
   }>(ENDPOINTS.AUTH.REFRESH_TOKEN);
+
+  return response.data;
+};
+
+export const forgotPassword = async (
+  data: ForgotPasswordPayload
+): Promise<{ message: string }> => {
+  const response = await api.post<{ message: string }>(
+    ENDPOINTS.AUTH.FORGOT_PASSWORD,
+    data
+  );
+
+  return response.data;
+};
+
+export const resetPassword = async (data: {
+  token: string;
+  password: string;
+}): Promise<{ message: string }> => {
+  const response = await api.post<{ message: string }>(
+    ENDPOINTS.AUTH.RESET_PASSWORD,
+    data
+  );
 
   return response.data;
 };

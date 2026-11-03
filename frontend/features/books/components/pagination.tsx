@@ -33,10 +33,10 @@ export default function Pagination({ page, totalPages, onPageChange }: Paginatio
         onClick={() => onPageChange(Math.max(1, page - 1))}
         disabled={page === 1}
         className="
-          flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[#E1E5E8]
-          text-[#0A0E2A] transition-all duration-200
-          hover:border-[#2DBDB6] hover:text-[#2DBDB6]
-          disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-[#E1E5E8] disabled:hover:text-[#0A0E2A]
+          flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-line
+          text-ink transition-all duration-200
+          hover:border-brand hover:text-brand
+          disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-line disabled:hover:text-ink
           sm:h-9 sm:w-9
         "
       >
@@ -45,7 +45,7 @@ export default function Pagination({ page, totalPages, onPageChange }: Paginatio
 
       {pages.map((p, i) =>
         p === "..." ? (
-          <span key={`dots-${i}`} className="px-1 text-sm text-[#9AA3AF] sm:px-1.5">
+          <span key={`dots-${i}`} className="px-1 text-sm text-subtle sm:px-1.5">
             …
           </span>
         ) : (
@@ -57,8 +57,8 @@ export default function Pagination({ page, totalPages, onPageChange }: Paginatio
               transition-all duration-200 sm:h-9 sm:w-9
               ${
                 p === page
-                  ? "bg-gradient-to-br from-[#2DBDB6] to-[#1f9d97] text-white shadow-[0_4px_12px_rgba(45,189,182,0.35)]"
-                  : "text-[#6B7280] hover:bg-[#F7F9FA] hover:text-[#0A0E2A]"
+                  ? "bg-gradient-to-br from-brand to-brand-strong text-white shadow-[0_4px_12px_rgba(45,189,182,0.35)]"
+                  : "text-muted-ink hover:bg-canvas hover:text-ink"
               }
             `}
           >
@@ -71,10 +71,10 @@ export default function Pagination({ page, totalPages, onPageChange }: Paginatio
         onClick={() => onPageChange(Math.min(totalPages, page + 1))}
         disabled={page === totalPages}
         className="
-          flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[#E1E5E8]
-          text-[#0A0E2A] transition-all duration-200
-          hover:border-[#2DBDB6] hover:text-[#2DBDB6]
-          disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-[#E1E5E8] disabled:hover:text-[#0A0E2A]
+          flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-line
+          text-ink transition-all duration-200
+          hover:border-brand hover:text-brand
+          disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-line disabled:hover:text-ink
           sm:h-9 sm:w-9
         "
       >

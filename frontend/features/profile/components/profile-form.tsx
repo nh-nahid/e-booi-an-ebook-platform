@@ -23,8 +23,8 @@ interface ProfileFormProps {
 
 
 const fieldBase =
-  "h-11 rounded-xl border-[#E1E5E8] pl-10 transition-all duration-200 " +
-  "focus-visible:border-[#2DBDB6] focus-visible:ring-4 focus-visible:ring-[#2DBDB6]/15";
+  "h-11 rounded-xl border-line pl-10 transition-all duration-200 " +
+  "focus-visible:border-brand focus-visible:ring-4 focus-visible:ring-brand/15";
 
 
 export default function ProfileForm({
@@ -113,8 +113,8 @@ export default function ProfileForm({
     <form
       onSubmit={handleSubmit}
       className="
-        w-full rounded-3xl border border-[#E1E5E8]
-        bg-white p-5 sm:p-6
+        w-full rounded-3xl border border-line
+        bg-surface p-5 sm:p-6
         shadow-[0_10px_30px_rgba(10,14,42,0.06)]
         animate-in fade-in slide-in-from-bottom-2 duration-500
       "
@@ -123,12 +123,12 @@ export default function ProfileForm({
 
       <div className="mb-5">
 
-        <h3 className="text-lg font-bold text-[#0A0E2A]">
+        <h3 className="text-lg font-bold text-ink">
           Edit Profile
         </h3>
 
 
-        <p className="text-sm text-[#6B7280]">
+        <p className="text-sm text-muted-ink">
           Update your personal information.
         </p>
 
@@ -141,7 +141,7 @@ export default function ProfileForm({
 
         <Label
           htmlFor="name"
-          className="text-xs font-semibold text-[#0A0E2A]"
+          className="text-xs font-semibold text-ink"
         >
           Full Name
         </Label>
@@ -187,7 +187,7 @@ export default function ProfileForm({
 
         <Label
           htmlFor="email"
-          className="text-xs font-semibold text-[#0A0E2A]"
+          className="text-xs font-semibold text-ink"
         >
           Email
         </Label>
@@ -208,7 +208,7 @@ export default function ProfileForm({
             type="email"
             value={values.email}
             disabled
-            className={`${fieldBase} cursor-not-allowed bg-[#F7F9FA]`}
+            className={`${fieldBase} cursor-not-allowed bg-canvas`}
           />
 
         </div>
@@ -223,10 +223,10 @@ export default function ProfileForm({
 
         <Label
           htmlFor="phone"
-          className="text-xs font-semibold text-[#0A0E2A]"
+          className="text-xs font-semibold text-ink"
         >
           Phone
-          <span className="ml-1 font-normal text-[#9AA3AF]">
+          <span className="ml-1 font-normal text-subtle">
             (optional)
           </span>
         </Label>
@@ -273,7 +273,7 @@ export default function ProfileForm({
 
         <Label
           htmlFor="bio"
-          className="text-xs font-semibold text-[#0A0E2A]"
+          className="text-xs font-semibold text-ink"
         >
           Bio
         </Label>
@@ -308,11 +308,11 @@ export default function ProfileForm({
             placeholder="Tell us about yourself..."
             className="
               resize-none rounded-xl
-              border-[#E1E5E8]
+              border-line
               pl-10 pt-2.5
-              focus-visible:border-[#2DBDB6]
+              focus-visible:border-brand
               focus-visible:ring-4
-              focus-visible:ring-[#2DBDB6]/15
+              focus-visible:ring-brand/15
             "
           />
 
@@ -328,7 +328,7 @@ export default function ProfileForm({
         disabled={isPending}
         className="
           mt-6 h-11 w-full rounded-full
-          bg-gradient-to-br from-[#2DBDB6] to-[#1f9d97]
+          bg-gradient-to-br from-brand to-brand-strong
           font-semibold text-white
           shadow-[0_4px_12px_rgba(45,189,182,0.35)]
         "

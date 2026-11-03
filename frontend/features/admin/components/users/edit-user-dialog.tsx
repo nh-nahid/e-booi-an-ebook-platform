@@ -104,15 +104,15 @@ export default function EditUserDialog({
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="flex h-8 w-8 items-center justify-center rounded-full text-[#6B7280] transition hover:bg-[#E6F7F6] hover:text-[#2DBDB6]"
+        className="flex h-8 w-8 items-center justify-center rounded-full text-muted-ink transition hover:bg-brand-soft hover:text-brand"
       >
         <Pencil className="h-4 w-4" />
       </button>
 
       <Dialog open={open} onOpenChange={handleOpenChange}>
-        <DialogContent className="rounded-3xl border-[#E1E5E8] sm:max-w-md">
+        <DialogContent className="rounded-3xl border-line sm:max-w-md">
           <DialogHeader>
-            <DialogTitle className="text-xl font-bold text-[#0A0E2A]">
+            <DialogTitle className="text-xl font-bold text-ink">
               Edit User
             </DialogTitle>
 
@@ -170,7 +170,7 @@ export default function EditUserDialog({
             </div>
 
             {error && (
-              <p className="rounded-xl bg-red-50 px-3 py-2 text-sm text-red-600">
+              <p className="rounded-xl bg-danger-soft px-3 py-2 text-sm text-danger-ink">
                 {error}
               </p>
             )}
@@ -187,7 +187,7 @@ export default function EditUserDialog({
               <Button
                 type="submit"
                 disabled={loading}
-                className="bg-[#2DBDB6] hover:bg-[#26a59e]"
+                className="bg-brand hover:bg-brand-strong"
               >
                 {loading ? (
                   <>
