@@ -375,6 +375,8 @@ async function loginUser(req, res, next) {
       success: true,
       message: "Login successful",
       accessToken,
+      // The mobile app stores this in secure storage instead of a cookie.
+      ...(req.get("x-client") === "mobile" ? { refreshToken } : {}),
       user: {
         id: user._id,
         name: user.name,
@@ -428,7 +430,9 @@ async function logoutUser(req, res, next) {
 // REFRESH TOKEN
 async function refreshToken(req, res, next) {
   try {
-    const refreshToken = req.cookies.refreshToken;
+    const isMobile = req.get("x-client") === "mobile";
+    const refreshToken =
+      req.cookies.refreshToken || (isMobile ? req.body?.refreshToken : null);
 
     if (!refreshToken) {
       return res.status(401).json({
@@ -476,6 +480,7 @@ async function refreshToken(req, res, next) {
     return res.status(200).json({
       success: true,
       accessToken: newAccessToken,
+      ...(isMobile ? { refreshToken: newRefreshToken } : {}),
     });
   } catch (error) {
     next(error);

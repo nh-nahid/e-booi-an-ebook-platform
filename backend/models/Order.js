@@ -82,6 +82,15 @@ const orderSchema = new mongoose.Schema(
 
     // Unique id sent to EPS on each payment attempt; used to find the order
     // again when EPS redirects the shopper back.
+    // Which client placed the order. EPS sends the shopper back to our
+    // backend, which then forwards them to the website or, for the mobile
+    // app, to its deep link (ebooi://...).
+    source: {
+      type: String,
+      enum: ["web", "mobile"],
+      default: "web",
+    },
+
     epsMerchantTransactionId: {
       type: String,
       default: null,

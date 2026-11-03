@@ -118,6 +118,15 @@ async function markOrderPaid(order, transactionId) {
 // ======================
 // EPS (Easy Payment System)
 // ======================
+
+// Where to send the shopper after EPS: the website, or the app's deep link
+// when the order was started from the mobile app.
+function returnUrl(order, path) {
+    if (order && order.source === "mobile") {
+        return `ebooi://${path}`;
+    }
+    return `${process.env.FRONTEND_URL}/${path}`;
+}
 function clientIp(req) {
     const ip = (req.ip || "").replace("::ffff:", "");
     return ip && !ip.includes(":") ? ip : "127.0.0.1";
@@ -126,7 +135,9 @@ function clientIp(req) {
 async function initiateEpsPayment(order, req, res) {
     const customer = order.user;
     const amount = Number(order.finalAmount ?? order.totalAmount);
-    const FE = process.env.FRONTEND_URL;
+    if (req.body && req.body.source === "mobile") {
+        order.source = "mobile";
+    }
 
     if (!Number.isFinite(amount) || amount < 0) {
         console.log("EPS: invalid order amount", {
@@ -145,7 +156,7 @@ async function initiateEpsPayment(order, req, res) {
         await order.populate("items.book");
         await markOrderPaid(order, `FREE-${order._id}`);
         return res.json({
-            gatewayURL: `${FE}/payment-success?orderId=${order._id}`,
+            gatewayURL: returnUrl(order, `payment-success?orderId=${order._id}`),
         });
     }
 
@@ -230,21 +241,22 @@ async function loadEpsOrder(req) {
 async function epsSuccess(req, res, next) {
     try {
         const { params, txnId, order } = await loadEpsOrder(req);
-        const FE = process.env.FRONTEND_URL;
 
         if (!order) {
             console.log("EPS success callback: order not found", params);
-            return res.redirect(`${FE}/payment-failed?orderId=`);
+            return res.redirect(returnUrl(null, "payment-failed?orderId="));
         }
 
         if (order.paymentStatus === "paid") {
-            return res.redirect(`${FE}/payment-success?orderId=${order._id}`);
+            return res.redirect(
+                returnUrl(order, `payment-success?orderId=${order._id}`)
+            );
         }
 
         const result = await eps.checkTransactionStatus(txnId);
         const status = String(eps.pick(result, "Status") || "");
         const paidAmount = Number(eps.pick(result, "TotalAmount"));
-        const expected = Number(order.finalAmount || order.totalAmount);
+        const expected = Number(order.finalAmount ?? order.totalAmount);
 
         const verified =
             status.toLowerCase() === "success" &&
@@ -252,12 +264,16 @@ async function epsSuccess(req, res, next) {
 
         if (!verified) {
             console.log("EPS verification failed", { txnId, status, paidAmount, expected });
-            return res.redirect(`${FE}/payment-failed?orderId=${order._id}`);
+            return res.redirect(
+                returnUrl(order, `payment-failed?orderId=${order._id}`)
+            );
         }
 
         await markOrderPaid(order, txnId);
 
-        return res.redirect(`${FE}/payment-success?orderId=${order._id}`);
+        return res.redirect(
+            returnUrl(order, `payment-success?orderId=${order._id}`)
+        );
     } catch (error) {
         next(error);
     }
@@ -267,7 +283,7 @@ async function epsFail(req, res, next) {
     try {
         const { order } = await loadEpsOrder(req);
         res.redirect(
-            `${process.env.FRONTEND_URL}/payment-failed?orderId=${order?._id ?? ""}`
+            returnUrl(order, `payment-failed?orderId=${order?._id ?? ""}`)
         );
     } catch (error) {
         next(error);
@@ -278,7 +294,7 @@ async function epsCancel(req, res, next) {
     try {
         const { order } = await loadEpsOrder(req);
         res.redirect(
-            `${process.env.FRONTEND_URL}/payment-cancel?orderId=${order?._id ?? ""}`
+            returnUrl(order, `payment-cancel?orderId=${order?._id ?? ""}`)
         );
     } catch (error) {
         next(error);
