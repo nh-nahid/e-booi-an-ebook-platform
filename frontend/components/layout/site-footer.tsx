@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown, Mail, Smartphone } from "lucide-react";
+import { ChevronDown, Mail } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState, type ReactNode } from "react";
@@ -137,21 +137,6 @@ export default function SiteFooter() {
               </a>
             ))}
           </div>
-
-          <a
-            href={APP_DOWNLOAD_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-3 flex w-fit items-center gap-2 rounded-lg border border-line bg-soft px-3 py-2 text-xs font-semibold text-ink transition-all duration-200 hover:-translate-y-0.5 hover:border-brand hover:text-brand sm:text-sm"
-          >
-            <Smartphone className="h-4 w-4 shrink-0" />
-            <span className="flex flex-col leading-tight">
-              <span className="text-[10px] font-normal text-muted-ink">
-                আমাদের অ্যাপ নামান
-              </span>
-              Android অ্যাপ ডাউনলোড
-            </span>
-          </a>
         </div>
 
         <FooterAccordionItem title="কুইক লিংক">
@@ -235,6 +220,27 @@ export default function SiteFooter() {
             >
               <FaWhatsapp className="h-3.5 w-3.5 shrink-0 text-brand sm:h-4 sm:w-4" />
               +880 1791148655
+            </a>
+
+            <a
+              href={APP_DOWNLOAD_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-1 flex w-fit items-center gap-2.5 rounded-lg border border-line bg-soft px-3 py-2 font-semibold text-ink transition-all duration-200 hover:-translate-y-0.5 hover:border-brand hover:text-brand"
+            >
+              <Image
+                src="/logo.jpeg"
+                alt="ebooi অ্যাপ"
+                width={32}
+                height={32}
+                className="h-8 w-8 shrink-0 rounded-md"
+              />
+              <span className="flex flex-col leading-tight">
+                <span className="text-[10px] font-normal text-muted-ink">
+                  আমাদের অ্যাপ নামান
+                </span>
+                Android অ্যাপ ডাউনলোড
+              </span>
             </a>
           </div>
         </FooterAccordionItem>
