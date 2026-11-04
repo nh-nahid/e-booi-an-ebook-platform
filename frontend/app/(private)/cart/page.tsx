@@ -41,7 +41,9 @@ const router = useRouter();
   // items and subtotal must be computed here — before any early return —
   // since the coupon effect below depends on subtotal, and all hooks
   // must run unconditionally on every render
-  const items: CartItemData[] = cart.map((item) => ({
+  const items: CartItemData[] = cart
+    .filter((item) => item.book)
+    .map((item) => ({
     id: item._id,
     bookId: item.book._id,
     title: item.book.title,

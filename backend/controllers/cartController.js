@@ -56,10 +56,19 @@ async function getCart(req, res, next) {
         "title author coverImage price bookType isPreOrder",
     });
 
+    // A book can be deleted while still sitting in someone's cart; populate
+    // then yields book: null, which crashed the cart page. Drop (and clean
+    // up) such orphaned entries.
+    const valid = cart.filter((item) => item.book);
+    if (valid.length !== cart.length) {
+      const orphanIds = cart.filter((item) => !item.book).map((i) => i._id);
+      await Cart.deleteMany({ _id: { $in: orphanIds } });
+    }
+
     res.status(200).json({
       success: true,
       message: "Cart fetched successfully",
-      data: cart,
+      data: valid,
     });
   } catch (error) {
     next(error);
