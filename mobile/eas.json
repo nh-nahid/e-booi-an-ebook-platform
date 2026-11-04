@@ -8,14 +8,14 @@
       "distribution": "internal",
       "android": { "buildType": "apk" },
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://REPLACE-WITH-YOUR-RENDER-SERVICE.onrender.com/api/v1",
+        "EXPO_PUBLIC_API_URL": "https://e-booi-an-ebook-platform-le9r.onrender.com/api/v1",
         "EXPO_PUBLIC_SITE_URL": "https://ebooi.bd"
       }
     },
     "production": {
       "android": { "buildType": "app-bundle" },
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://REPLACE-WITH-YOUR-RENDER-SERVICE.onrender.com/api/v1",
+        "EXPO_PUBLIC_API_URL": "https://e-booi-an-ebook-platform-le9r.onrender.com/api/v1",
         "EXPO_PUBLIC_SITE_URL": "https://ebooi.bd"
       }
     }

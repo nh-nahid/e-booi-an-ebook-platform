@@ -1,0 +1,14 @@
+# EAS Build archives the whole git repo. Only mobile/ is needed for the app.
+/backend
+/frontend
+/Claude outputs
+/.claude
+**/node_modules
+**/.next
+**/.expo
+**/android
+**/ios
+*.tgz
+*.zip
+*.pdf
+*.docx

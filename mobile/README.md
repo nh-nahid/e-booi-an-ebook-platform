@@ -1,4 +1,4 @@
-# eBooi — Android app (React Native / Expo)
+# ebooi — Android app (React Native / Expo)
 
 Bangla-first digital ebook store. Same backend and accounts as the website.
 

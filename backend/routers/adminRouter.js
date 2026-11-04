@@ -11,6 +11,7 @@ const {
   getUser,
 } = require("../controllers/adminController");
 
+const { broadcast } = require("../controllers/notificationController");
 const { checkLogin, requireRole } = require("../middlewares/common/checkLogin");
 
 const { avatarUpload } = require("../middlewares/users/avatarUpload");
@@ -19,6 +20,7 @@ const router = express.Router();
 
 router.use(checkLogin, requireRole("admin"));
 
+router.post("/notifications", broadcast);
 router.get("/dashboard", getDashboard);
 router.get("/sales", getMonthlySales);
 router.get("/top-books", getTopBooks);

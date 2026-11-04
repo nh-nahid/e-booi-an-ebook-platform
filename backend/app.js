@@ -24,6 +24,7 @@ const reviewRouter = require("./routers/reviewRouter");
 const wishlistRouter = require("./routers/wishlistRouter");
 const couponRouter = require("./routers/couponRouter");
 const homeRouter = require("./routers/homeRouter");
+const notificationRouter = require("./routers/notificationRouter");
 
 const {
   notFoundHandler,
@@ -62,6 +63,7 @@ app.use("/api/v1/admin", adminRouter);
 app.use("/api/v1/reviews", reviewRouter);
 app.use("/api/v1/wishlist", wishlistRouter);
 app.use("/api/v1/coupons", couponRouter);
+app.use("/api/v1/notifications", notificationRouter);
 
 // invoice route
 app.use(

@@ -16,11 +16,11 @@ export default function WishlistScreen() {
   const cardW = (width - 32 - gap) / 2;
 
   if (!isAuthenticated) return <LoginPrompt title="উইশলিস্ট" hint="উইশলিস্ট দেখতে লগইন করুন।" />;
-  if (q.isLoading) return <Screen edges={[]}><Loading /></Screen>;
-  if (q.isError) return <Screen edges={[]}><ErrorState onRetry={q.refetch} /></Screen>;
+  if (q.isLoading) return <Screen><Loading /></Screen>;
+  if (q.isError) return <Screen><ErrorState onRetry={q.refetch} /></Screen>;
 
   return (
-    <Screen edges={[]} padded={false}>
+    <Screen padded={false}>
       <FlatList
         data={q.data ?? []}
         keyExtractor={(w) => w._id}

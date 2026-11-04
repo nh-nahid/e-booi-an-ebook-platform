@@ -1,6 +1,21 @@
 const Book = require("../models/Book");
 const path = require("path");
 const { destroyAsset } = require("../utils/cloudinary");
+const { notifyAll } = require("../utils/notify");
+
+// Tell every user about a newly published book (fire-and-forget: a failure
+// here must never fail the admin's save).
+function announceBook(book) {
+  const pre = book.isPreOrder;
+  notifyAll({
+    type: "announcement",
+    title: pre ? "নতুন বই প্রি-অর্ডারে" : "নতুন বই প্রকাশিত হয়েছে",
+    message: `${book.title}${book.author ? " — " + book.author : ""}`,
+    link: `/books/${book._id}`,
+  }).catch((e) => console.log("Book notification failed:", e.message));
+}
+
+const isTrue = (v) => v === true || v === "true";
 const {
   getOrCreatePreview,
   removePreview,
@@ -39,6 +54,8 @@ async function addBook(req, res, next) {
 
       throw error;
     }
+
+    if (book.isPublished) announceBook(book);
 
     res.status(201).json({
       message: "Book added successfully",
@@ -313,6 +330,8 @@ async function updateBook(req, res, next) {
       req.body.pdfFilePublicId = req.files.pdfFile[0].filename;
     }
 
+    const wasPublished = book.isPublished;
+
     const updatedBook = await Book.findByIdAndUpdate(req.params.id, req.body, {
       returnDocument: "after",
     });
@@ -328,6 +347,11 @@ async function updateBook(req, res, next) {
       // the cached preview was built from the old pdfFile — drop it so
       // the next preview request rebuilds from the new one.
       removePreview(book._id);
+    }
+
+    // draft -> published transition: announce it
+    if (!wasPublished && updatedBook?.isPublished && isTrue(req.body.isPublished)) {
+      announceBook(updatedBook);
     }
 
     res.json({

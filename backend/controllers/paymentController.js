@@ -1,3 +1,4 @@
+const { notifyUser } = require("../utils/notify");
 const Order = require("../models/Order");
 const User = require("../models/User");
 const Coupon = require("../models/Coupon");
@@ -83,6 +84,13 @@ async function markOrderPaid(order, transactionId) {
         order.invoiceUrl = invoice.invoiceUrl;
 
         await order.save();
+
+        await notifyUser(order.user, {
+            type: "payment",
+            title: "পেমেন্ট সফল হয়েছে",
+            message: `৳${order.totalAmount} পেমেন্ট নিশ্চিত হয়েছে। বইগুলো এখন আপনার লাইব্রেরিতে।`,
+            link: `/orders/${order._id}`,
+        });
 
         // Payment confirmation email
         try {

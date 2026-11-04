@@ -12,6 +12,7 @@ import type {
   BooksPage,
   BooksSort,
   CartItem,
+  AppNotification,
   HomeData,
   LibraryBook,
   Order,
@@ -200,3 +201,32 @@ export const createOrder = async (p: {
 export const startPayment = async (orderId: string) =>
   (await api.post<{ gatewayURL: string }>(`/payment/pay/${orderId}`, { source: "mobile" }))
     .data.gatewayURL;
+
+/* ----------------------------- notifications ----------------------------- */
+
+export const useNotifications = () => {
+  const { isAuthenticated } = useAuth();
+  return useQuery({
+    queryKey: ["notifications"],
+    enabled: isAuthenticated,
+    // light polling keeps the badge fresh without sockets / push
+    refetchInterval: 60_000,
+    queryFn: async () =>
+      (await api.get<{ data: AppNotification[]; unread: number }>("/notifications")).data,
+  });
+};
+
+function useNotificationAction<T>(fn: (arg: T) => Promise<unknown>) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: fn,
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["notifications"] }),
+  });
+}
+
+export const useMarkNotificationRead = () =>
+  useNotificationAction<string>((id) => api.patch(`/notifications/${id}/read`));
+export const useMarkAllNotificationsRead = () =>
+  useNotificationAction<void>(() => api.patch("/notifications/read-all"));
+export const useDeleteNotification = () =>
+  useNotificationAction<string>((id) => api.delete(`/notifications/${id}`));

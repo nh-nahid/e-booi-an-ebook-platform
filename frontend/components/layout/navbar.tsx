@@ -13,6 +13,7 @@ import { useCart } from "@/features/cart/hooks/use-cart";
 import ThemeSwitcher from "@/components/theme/theme-switcher";
 
 import MobileNav from "./mobile-nav";
+import NotificationBell from "./notification-bell";
 
 export default function Navbar() {
   const searchParams = useSearchParams();
@@ -152,6 +153,8 @@ export default function Navbar() {
 
         <div className="flex shrink-0 items-center gap-3 sm:gap-6">
           <ThemeSwitcher />
+
+          <NotificationBell onClick={clearSearchState} />
 
           <Link
             href="/library"

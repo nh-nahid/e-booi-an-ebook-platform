@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "eBooi",
+    "name": "ebooi",
     "slug": "ebooi",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -19,7 +19,10 @@
         "backgroundColor": "#ffffff",
         "foregroundImage": "./assets/android-icon-foreground.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "plugins": [
       "expo-router",
@@ -31,6 +34,17 @@
           "photosPermission": "প্রোফাইল ছবি বদলানোর জন্য আপনার ছবি লাগবে।"
         }
       ]
-    ]
+    ],
+    "extra": {
+      "router": {
+        "asyncRoutes": {
+          "web": true
+        }
+      },
+      "eas": {
+        "projectId": "11290fa7-6507-4a81-80fd-2d90b8e43f2d"
+      }
+    },
+    "owner": "ebooi.bd"
   }
 }

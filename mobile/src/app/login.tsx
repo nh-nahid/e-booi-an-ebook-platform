@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Alert, KeyboardAvoidingView, Platform, View } from "react-native";
+import { Image } from "expo-image";
 import { Link, router } from "expo-router";
 
 import { useAuth } from "@/auth/AuthProvider";
@@ -36,6 +37,7 @@ export default function LoginScreen() {
     <Screen scroll edges={["bottom"]}>
       <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined}>
         <View style={{ alignItems: "center", marginVertical: 24 }}>
+          <Image source={require("../../assets/logo.webp")} style={{ width: 64, height: 64, borderRadius: 14, marginBottom: 8 }} contentFit="cover" />
           <Txt size={34} bold>
             eb<Txt size={34} bold color="brand">oo</Txt>i
           </Txt>

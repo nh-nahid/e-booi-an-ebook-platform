@@ -29,10 +29,10 @@ export default function TabsLayout() {
 
   const screens = [
     tab("index", "হোম", "home-outline", "home"),
-    tab("books", "বই", "search-outline", "search"),
+    tab("books", "বই", "book-outline", "book"),
     tab("library", "লাইব্রেরি", "library-outline", "library"),
     tab("cart", "কার্ট", "cart-outline", "cart"),
-    tab("profile", "প্রোফাইল", "person-outline", "person"),
+    tab("wishlist", "উইশলিস্ট", "heart-outline", "heart"),
   ];
 
   return (
@@ -66,6 +66,8 @@ export default function TabsLayout() {
           }
         />
       ))}
+      {/* Profile stays reachable from the header avatar; hidden from the tab bar. */}
+      <Tabs.Screen name="profile" options={{ href: null }} />
     </Tabs>
   );
 }
