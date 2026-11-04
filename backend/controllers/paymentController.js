@@ -246,7 +246,12 @@ async function loadEpsOrder(req) {
     return { params, txnId, order };
 }
 
+// Orders currently being verified — stops two simultaneous callbacks (user
+// refresh / EPS retry) from completing the same order twice.
+const verifying = new Set();
+
 async function epsSuccess(req, res, next) {
+    let lockKey = null;
     try {
         const { params, txnId, order } = await loadEpsOrder(req);
 
@@ -260,6 +265,15 @@ async function epsSuccess(req, res, next) {
                 returnUrl(order, `payment-success?orderId=${order._id}`)
             );
         }
+
+        // Another callback for this order is already being completed.
+        if (verifying.has(String(order._id))) {
+            return res.redirect(
+                returnUrl(order, `payment-success?orderId=${order._id}`)
+            );
+        }
+        lockKey = String(order._id);
+        verifying.add(lockKey);
 
         const result = await eps.checkTransactionStatus(txnId);
         const status = String(eps.pick(result, "Status") || "");
@@ -284,6 +298,8 @@ async function epsSuccess(req, res, next) {
         );
     } catch (error) {
         next(error);
+    } finally {
+        if (lockKey) verifying.delete(lockKey);
     }
 }
 

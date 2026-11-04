@@ -33,6 +33,10 @@ const {
 
 const app = express();
 
+// Behind Render's proxy: trust X-Forwarded-For so req.ip is the real client
+// (EPS requires the shopper's IP address).
+app.set("trust proxy", 1);
+
 // database connection
 connectDB();
 
@@ -76,6 +80,13 @@ app.use(notFoundHandler);
 
 // common error handler
 app.use(errorHandler);
+
+// make the active payment mode obvious in the logs
+const epsMode = require("./utils/eps").isLive() ? "LIVE" : "SANDBOX";
+console.log(`EPS payment gateway mode: ${epsMode}`);
+if (process.env.NODE_ENV === "production" && epsMode === "SANDBOX") {
+  console.error("WARNING: production is running against the EPS SANDBOX.");
+}
 
 app.listen(process.env.PORT, () => {
   console.log(`app is connected at port ${process.env.PORT}`);

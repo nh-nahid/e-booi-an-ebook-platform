@@ -15,11 +15,24 @@ const TOKEN_TTL_MS = 5 * 60 * 1000; // re-fetch well before the token expires
 
 let cachedToken = { value: null, expiresAt: 0 };
 
+const SANDBOX_URL = "https://sandboxpgapi.eps.com.bd";
+
 function baseUrl() {
-  return (process.env.EPS_BASE_URL || "https://sandboxpgapi.eps.com.bd").replace(
-    /\/+$/,
-    "",
-  );
+  const url = (process.env.EPS_BASE_URL || SANDBOX_URL).replace(/\/+$/, "");
+
+  // Safety net: a production deploy must never silently charge (or fail to
+  // charge) through the sandbox. Set EPS_BASE_URL=https://pgapi.eps.com.bd
+  // together with the live credentials.
+  if (process.env.NODE_ENV === "production" && /sandbox/i.test(url)) {
+    throw new Error(
+      "EPS_BASE_URL points to the sandbox while NODE_ENV=production. Use the live gateway URL and live credentials.",
+    );
+  }
+  return url;
+}
+
+function isLive() {
+  return !/sandbox/i.test(process.env.EPS_BASE_URL || SANDBOX_URL);
 }
 
 function requireEnv(name) {
@@ -129,6 +142,7 @@ async function checkTransactionStatus(merchantTransactionId) {
 }
 
 module.exports = {
+  isLive,
   makeHash,
   pick,
   generateMerchantTransactionId,
