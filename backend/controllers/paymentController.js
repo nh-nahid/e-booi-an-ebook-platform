@@ -179,7 +179,11 @@ async function initiateEpsPayment(order, req, res) {
     order.epsMerchantTransactionId = merchantTransactionId;
     await order.save();
 
-    const callbackBase = `${process.env.BACKEND_URL}/api/v1/payment/eps`;
+    // EPS only accepts success/fail/cancel URLs on the merchant's registered
+    // domain (e.g. ebooi.bd). PAYMENT_CALLBACK_BASE is that public origin; the
+    // frontend proxies /api/v1/payment/eps/* to this backend (next.config.ts).
+    // Falls back to BACKEND_URL for local development / sandbox.
+    const callbackBase = `${(process.env.PAYMENT_CALLBACK_BASE || process.env.BACKEND_URL || "").replace(/\/+$/, "")}/api/v1/payment/eps`;
 
     const payload = {
         storeId: process.env.EPS_STORE_ID,
