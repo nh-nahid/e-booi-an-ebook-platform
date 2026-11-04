@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/sheet";
 
 import { useAuth } from "@/hooks/use-auth";
+import ThemeSwitcher from "@/components/theme/theme-switcher";
 
 import UserMenu from "./user-menu";
 import { NAV_LINKS } from "./nav-links";
@@ -52,6 +53,12 @@ export default function MobileNav() {
         </SheetHeader>
 
         <div className="mt-8 flex flex-col gap-1">
+          {/* Theme (light / dark / accent) lives here instead of the header */}
+          <div className="mb-2 flex items-center justify-between rounded-2xl border border-line px-3 py-2">
+            <span className="text-sm font-semibold text-ink">থিম ও কালার</span>
+            <ThemeSwitcher align="right" />
+          </div>
+
           {/* NAV LINKS (now plain Links, NOT Buttons) */}
           {NAV_LINKS.map((link, i) => {
             const Icon = link.icon;
