@@ -21,6 +21,9 @@ const nextConfig = {
   },
   images: {
     // unoptimized: true,
+    // Next 16 refuses to optimize images from localhost/private IPs. Allow it
+    // for local development only (production images come from public hosts).
+    dangerouslyAllowLocalIP: process.env.NODE_ENV !== "production",
     remotePatterns: [
       {
         protocol: "http",
