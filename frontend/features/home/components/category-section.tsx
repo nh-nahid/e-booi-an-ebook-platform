@@ -3,7 +3,7 @@
 import { useRef, useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { BookOpen } from "lucide-react";
+import { BookOpen, ChevronLeft, ChevronRight } from "lucide-react";
 
 import SectionHeader from "./section-header";
 import type { Category } from "../types/home.types";
@@ -51,7 +51,10 @@ export default function CategorySection({ categories: rawCategories }: CategoryS
   // viewport = visible width per page, total = full width of every card
   // laid out in a row (including the ones currently off-screen).
   const [dims, setDims] = useState({ viewport: 0, total: 0 });
-  const pageCount = Math.max(1, Math.ceil(categories.length / VISIBLE_COUNT));
+  // Pages follow the real layout (cards per row changes with screen width).
+  const pageCount = dims.viewport
+    ? Math.max(1, Math.ceil(dims.total / dims.viewport - 0.05))
+    : Math.max(1, Math.ceil(categories.length / VISIBLE_COUNT));
 
   useEffect(() => {
     const node = rowRef.current;
@@ -69,7 +72,7 @@ export default function CategorySection({ categories: rawCategories }: CategoryS
   // instead it snaps to the true end, overlapping with the previous
   // page's tail so a full set of cards is always visible.
   const maxOffset = Math.max(0, dims.total - dims.viewport);
-  const offset = Math.min(page * dims.viewport, maxOffset);
+  const baseOffset = Math.min(page * dims.viewport, maxOffset);
 
   const goToPage = useCallback(
     (next: number) => {
@@ -78,17 +81,33 @@ export default function CategorySection({ categories: rawCategories }: CategoryS
     [pageCount]
   );
 
-  // Touch swipe — same threshold/pattern as the hero banner slider.
-  const touchStartX = useRef<number | null>(null);
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
+  // Swipe / drag with finger or mouse: the row follows the pointer, and on
+  // release snaps to the previous/next page when dragged far enough.
+  const [dragX, setDragX] = useState(0);
+  const [dragging, setDragging] = useState(false);
+  const startX = useRef<number | null>(null);
+  const moved = useRef(false);
+
+  const onPointerDown = (e: React.PointerEvent) => {
+    if (e.pointerType === "mouse" && e.button !== 0) return;
+    startX.current = e.clientX;
+    moved.current = false;
+    setDragging(true);
   };
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartX.current === null) return;
-    const delta = e.changedTouches[0].clientX - touchStartX.current;
-    if (delta > 40) goToPage(page - 1);
-    if (delta < -40) goToPage(page + 1);
-    touchStartX.current = null;
+  const onPointerMove = (e: React.PointerEvent) => {
+    if (startX.current === null) return;
+    const dx = e.clientX - startX.current;
+    if (Math.abs(dx) > 6) moved.current = true;
+    setDragX(dx);
+  };
+  const endDrag = () => {
+    if (startX.current === null) return;
+    const dx = dragX;
+    startX.current = null;
+    setDragging(false);
+    setDragX(0);
+    if (dx > 50) goToPage(page - 1);
+    else if (dx < -50) goToPage(page + 1);
   };
 
   // Auto-slide, same pattern as the hero banner: advance on a timer and
@@ -112,14 +131,18 @@ export default function CategorySection({ categories: rawCategories }: CategoryS
       <div
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
-        className="overflow-hidden px-1 py-4"
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={endDrag}
+        onPointerCancel={endDrag}
+        onPointerLeave={endDrag}
+        style={{ touchAction: "pan-y" }}
+        className={`overflow-hidden px-1 py-4 ${dragging ? "cursor-grabbing" : "cursor-grab"}`}
       >
         <div
           ref={rowRef}
-          className="flex gap-2 transition-transform duration-[900ms] ease-in-out sm:gap-5"
-          style={{ transform: `translateX(-${offset}px)` }}
+          className={`flex gap-2 sm:gap-5 ${dragging ? "" : "transition-transform duration-[900ms] ease-in-out"}`}
+          style={{ transform: `translateX(${dragX - baseOffset}px)` }}
         >
           {categories.map((category) => {
             const imageSrc = CATEGORY_IMAGES[category.name];
@@ -127,7 +150,15 @@ export default function CategorySection({ categories: rawCategories }: CategoryS
               <Link
                 key={category.name}
                 href={`/books?category=${encodeURIComponent(category.name)}`}
-                className="
+                draggable={false}
+                onClickCapture={(e) => {
+                  // A drag must not count as a click on a card.
+                  if (moved.current) {
+                    e.preventDefault();
+                    moved.current = false;
+                  }
+                }}
+                className="select-none 
                   group relative flex h-[104px] w-[calc(33.333%_-_6px)] shrink-0
                   flex-col items-center justify-start gap-1 overflow-hidden rounded-xl bg-soft p-1.5 pt-2
                   shadow-[4px_6px_0px_rgba(0,0,0,0.08),0_1px_2px_rgba(0,0,0,0.05)]
@@ -182,7 +213,16 @@ export default function CategorySection({ categories: rawCategories }: CategoryS
       </div>
 
       {pageCount > 1 && (
-        <div className="mt-4 flex justify-center gap-1.5">
+        <div className="mt-4 flex items-center justify-center gap-3">
+          <button
+            onClick={() => goToPage(page - 1)}
+            disabled={page === 0}
+            aria-label="আগের"
+            className="rounded-full border border-line bg-surface p-1 text-muted-ink disabled:opacity-30"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </button>
+          <div className="flex gap-1.5">
           {Array.from({ length: pageCount }).map((_, i) => (
             <button
               key={i}
@@ -193,6 +233,15 @@ export default function CategorySection({ categories: rawCategories }: CategoryS
               }`}
             />
           ))}
+          </div>
+          <button
+            onClick={() => goToPage(page + 1)}
+            disabled={page >= pageCount - 1}
+            aria-label="পরের"
+            className="rounded-full border border-line bg-surface p-1 text-muted-ink disabled:opacity-30"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </button>
         </div>
       )}
     </section>
