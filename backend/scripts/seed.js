@@ -1,8 +1,9 @@
 // Seeds the catalogue: categories, sample books, subscription plans, author.
 //
 //   cd backend
-//   node scripts/seed.js --yes                 # add/update sample data (keeps existing books)
-//   node scripts/seed.js --yes --reset         # FIRST delete all books + related data, then seed
+//   pnpm seed                                    # dry run, writes nothing
+//   pnpm seed:add                                # add/update sample data (keeps existing books)
+//   pnpm seed:reset --i-know-this-is-production  # FIRST delete all books + related data, then seed
 //
 // --reset deletes: books, carts, wishlists, reviews, categories, plans,
 // subscriptions. Users and orders are kept (order lines pointing at deleted
