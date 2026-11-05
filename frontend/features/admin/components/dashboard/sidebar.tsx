@@ -3,6 +3,7 @@
 import {
   BookOpen,
   Crown,
+  Ticket,
   FolderTree,
   LayoutDashboard,
   LogOut,
@@ -25,6 +26,7 @@ const NAV_ITEMS = [
   { href: "/admin/users", label: "Users", icon: Users },
   { href: "/admin/orders", label: "Orders", icon: ShoppingBag },
   { href: "/admin/categories", label: "Categories", icon: FolderTree },
+  { href: "/admin/coupons", label: "Coupons", icon: Ticket },
   { href: "/admin/subscriptions", label: "Subscriptions", icon: Crown },
   { href: "/admin/authors", label: "Author Profile", icon: PenSquare },
 ];
