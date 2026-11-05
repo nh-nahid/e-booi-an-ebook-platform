@@ -2,6 +2,8 @@ const Book = require("../models/Book");
 const path = require("path");
 const { destroyAsset } = require("../utils/cloudinary");
 const { notifyAll } = require("../utils/notify");
+const Category = require("../models/Category");
+const { ensureCategory } = require("./categoryController");
 
 // Tell every user about a newly published book (fire-and-forget: a failure
 // here must never fail the admin's save).
@@ -45,6 +47,7 @@ async function addBook(req, res, next) {
     });
 
     try {
+      await ensureCategory(book.category);
       await book.save();
     } catch (error) {
       // rollback uploaded Cloudinary assets
@@ -209,7 +212,7 @@ async function getBooks(req, res, next) {
 
       Book.countDocuments(query),
 
-      Book.distinct("category"),
+      Category.find().sort({ order: 1, createdAt: 1 }).then((cs) => cs.map((c) => c.name)),
     ]);
 
     res.status(200).json({
@@ -331,6 +334,8 @@ async function updateBook(req, res, next) {
     }
 
     const wasPublished = book.isPublished;
+
+    await ensureCategory(req.body.category);
 
     const updatedBook = await Book.findByIdAndUpdate(req.params.id, req.body, {
       returnDocument: "after",

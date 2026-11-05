@@ -142,10 +142,10 @@ export default function SiteFooter() {
         <FooterAccordionItem title="কুইক লিংক">
           <div className="flex flex-col gap-2 pb-2.5 text-xs sm:gap-2.5 sm:pb-0 sm:text-sm">
             <Link
-              href="/categories"
+              href="/author"
               className="w-fit text-muted-ink transition-colors hover:text-brand"
             >
-              সব ক্যাটাগরি
+              লেখক পরিচিতি
             </Link>
             <Link
               href="/books"
@@ -154,10 +154,10 @@ export default function SiteFooter() {
               টপ বুকস
             </Link>
             <Link
-              href="/pre-order"
+              href="/subscription"
               className="w-fit text-muted-ink transition-colors hover:text-brand"
             >
-              প্রি-অর্ডার
+              সাবস্ক্রিপশন
             </Link>
             <Link
               href="/offers"

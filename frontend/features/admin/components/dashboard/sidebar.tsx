@@ -2,7 +2,7 @@
 
 import {
   BookOpen,
-  Building2,
+  Crown,
   FolderTree,
   LayoutDashboard,
   LogOut,
@@ -20,8 +20,8 @@ const NAV_ITEMS = [
   { href: "/admin/users", label: "Users", icon: Users },
   { href: "/admin/orders", label: "Orders", icon: ShoppingBag },
   { href: "/admin/categories", label: "Categories", icon: FolderTree },
-  { href: "/admin/authors", label: "Authors", icon: PenSquare },
-  { href: "/admin/publishers", label: "Publishers", icon: Building2 },
+  { href: "/admin/subscriptions", label: "Subscriptions", icon: Crown },
+  { href: "/admin/authors", label: "Author Profile", icon: PenSquare },
 ];
 
 export default function Sidebar() {

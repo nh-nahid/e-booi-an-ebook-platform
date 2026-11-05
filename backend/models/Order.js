@@ -35,6 +35,13 @@ const orderSchema = new mongoose.Schema(
       required: true,
     },
 
+    // Set when the order buys a subscription plan instead of books.
+    subscriptionPlan: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Plan",
+      default: null,
+    },
+
     // true when these items were pulled from the user's Cart (normal
     // checkout). false for a direct "buy now" order placed straight from
     // a book page — those items never touched the Cart collection, so

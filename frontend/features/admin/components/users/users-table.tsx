@@ -1,6 +1,7 @@
 "use client";
 
-import { Pencil, Trash2 } from "lucide-react";
+import { BookMarked } from "lucide-react";
+import Link from "next/link";
 
 import DeleteUserDialog from "./delete-user-dialog";
 import ViewUserDialog from "./view-user-dialog";
@@ -144,6 +145,14 @@ export default function UsersTable({
 
                   <td className="py-3">
                     <div className="flex items-center justify-end gap-1">
+                      <Link
+                        href={`/admin/users/${user._id}`}
+                        title="কন্টেন্ট ও সাবস্ক্রিপশন"
+                        className="rounded-lg p-2 text-muted-ink hover:bg-canvas hover:text-ink"
+                      >
+                        <BookMarked className="h-4 w-4" />
+                      </Link>
+
                       <ViewUserDialog user={user} />
 
                       <EditUserDialog

@@ -1,4 +1,5 @@
 const Book = require("../models/Book");
+const Category = require("../models/Category");
 
 // get home
 async function getHome(req, res, next) {
@@ -17,23 +18,19 @@ async function getHome(req, res, next) {
 
     const bestSellingBooks = await Book.find().sort({ sold: -1 }).limit(8);
 
-    const categories = await Book.aggregate([
-      {
-        $group: {
-          _id: "$category",
-          booksCount: {
-            $sum: 1,
-          },
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          name: "$_id",
-          booksCount: 1,
-        },
-      },
+    const counts = await Book.aggregate([
+      { $group: { _id: "$category", booksCount: { $sum: 1 } } },
     ]);
+    const countMap = new Map(counts.map((c) => [c._id, c.booksCount]));
+    let catDocs = await Category.find().sort({ order: 1, createdAt: 1 });
+    // Not seeded yet: fall back to the categories found on books.
+    const categories = catDocs.length
+      ? catDocs.map((c) => ({
+          name: c.name,
+          image: c.image,
+          booksCount: countMap.get(c.name) || 0,
+        }))
+      : counts.map((c) => ({ name: c._id, booksCount: c.booksCount }));
 
     const totalBooks = await Book.countDocuments();
 

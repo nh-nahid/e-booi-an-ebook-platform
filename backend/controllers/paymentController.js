@@ -51,6 +51,17 @@ async function initiatePayment(req, res, next) {
 // MARK ORDER PAID (called once a gateway confirms payment)
 // ======================
 async function markOrderPaid(order, transactionId) {
+        // Subscription purchase: no books, cart or invoice — just activate.
+        if (order.subscriptionPlan) {
+            order.paymentStatus = "paid";
+            order.orderStatus = "delivered";
+            order.transactionId = transactionId;
+            order.paidAt = new Date();
+            await order.save();
+            await require("./subscriptionController").activateFromOrder(order);
+            return;
+        }
+
         // Update payment info
         order.paymentStatus = "paid";
         order.transactionId = transactionId;
