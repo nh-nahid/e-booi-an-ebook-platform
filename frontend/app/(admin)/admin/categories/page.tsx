@@ -13,7 +13,7 @@ const errMsg = (e: unknown) =>
 
 export default function AdminCategoriesPage() {
   const qc = useQueryClient();
-  const { data: cats = [], isLoading } = useQuery({
+  const { data: cats = [], isLoading, isError, error: loadError } = useQuery({
     queryKey: ["admin", "categories"],
     queryFn: categoriesApi.list,
   });
@@ -75,6 +75,8 @@ export default function AdminCategoriesPage() {
       <div className="rounded-2xl border border-line bg-surface">
         {isLoading ? (
           <p className="p-6 text-sm text-muted-ink">লোড হচ্ছে…</p>
+        ) : isError ? (
+          <p className="p-6 text-sm text-danger-ink">ক্যাটেগরি লোড করা যায়নি: {errMsg(loadError)}</p>
         ) : cats.length === 0 ? (
           <p className="p-6 text-sm text-muted-ink">কোনো ক্যাটেগরি নেই।</p>
         ) : (

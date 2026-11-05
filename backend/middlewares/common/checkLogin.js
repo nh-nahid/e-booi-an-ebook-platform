@@ -74,12 +74,13 @@ function requireRole(...roles) {
             try {
                 const User = require("../../models/User");
                 const fresh = await User.findById(req.user.id).select("role status");
-                if (!fresh || fresh.role !== "admin" || fresh.status !== "active") {
+                if (!fresh || fresh.role !== "admin" || fresh.status === "suspended") {
                     return res.status(403).json({
                         message: "Forbidden - Access denied",
                     });
                 }
             } catch (error) {
+                console.error("requireRole DB check failed:", error);
                 return res.status(500).json({ message: "Authorization failed" });
             }
         }
