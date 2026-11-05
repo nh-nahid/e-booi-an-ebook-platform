@@ -37,9 +37,9 @@ const PLANS = [
 ];
 
 const AUTHOR = {
-  name: "নমুনা লেখক",
+  name: "আব্দুর রফিক",
   tagline: "লেখক ও বক্তা",
-  bio: "এটি একটি নমুনা পরিচিতি। অ্যাডমিন প্যানেলের ‘Author Profile’ থেকে আসল নাম, ছবি ও জীবনী বসিয়ে নিন।",
+  bio: "এটি একটি নমুনা পরিচিতি। অ্যাডমিন প্যানেলের ‘Author Profile’ থেকে জীবনী ও ছবি বসিয়ে নিন।",
 };
 
 module.exports = { CATEGORIES, BOOKS, PLANS, AUTHOR };

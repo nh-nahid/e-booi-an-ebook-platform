@@ -90,7 +90,10 @@ async function run() {
     await Plan.findOneAndUpdate({ name: p.name }, { ...p, isActive: true }, { upsert: true, setDefaultsOnInsert: true });
   }
 
-  if (!(await AuthorProfile.findOne())) await AuthorProfile.create(AUTHOR);
+  // Create the profile, or replace only the old placeholder (never real edits).
+  const existing = await AuthorProfile.findOne();
+  if (!existing) await AuthorProfile.create(AUTHOR);
+  else if (existing.name === "নমুনা লেখক") await AuthorProfile.updateOne({}, { name: AUTHOR.name, tagline: AUTHOR.tagline });
 
   console.log(
     `Seeded ${CATEGORIES.length} categories, ${BOOKS.length} books, ${PLANS.length} plans.`,
