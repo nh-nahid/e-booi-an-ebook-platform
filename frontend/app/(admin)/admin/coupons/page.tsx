@@ -48,7 +48,7 @@ const input = "w-full rounded-xl border border-line bg-canvas px-3 py-2 text-sm 
 
 export default function AdminCouponsPage() {
   const qc = useQueryClient();
-  const { data: coupons = [], isLoading } = useQuery({
+  const { data: coupons = [], isLoading, isError, error: loadError } = useQuery({
     queryKey: ["admin", "coupons"],
     queryFn: async () => (await api.get<Coupon[]>("/coupons")).data,
   });
@@ -153,6 +153,12 @@ export default function AdminCouponsPage() {
         </form>
       )}
 
+      {isError && (
+        <div className="rounded-2xl border border-danger-ink/30 bg-danger-soft p-4 text-sm text-danger-ink">
+          কুপন লোড করা যায়নি: {errMsg(loadError)}
+        </div>
+      )}
+
       <div className="overflow-x-auto rounded-2xl border border-line bg-surface">
         <table className="w-full text-left text-sm">
           <thead className="text-xs text-muted-ink">
@@ -163,7 +169,7 @@ export default function AdminCouponsPage() {
           </thead>
           <tbody>
             {isLoading && <tr><td colSpan={7} className="p-5 text-muted-ink">লোড হচ্ছে…</td></tr>}
-            {!isLoading && coupons.length === 0 && <tr><td colSpan={7} className="p-5 text-muted-ink">কোনো কুপন নেই।</td></tr>}
+            {!isLoading && !isError && coupons.length === 0 && <tr><td colSpan={7} className="p-5 text-muted-ink">কোনো কুপন নেই।</td></tr>}
             {coupons.map((c) => {
               const expired = new Date(c.expiryDate) < new Date();
               const exhausted = c.usageLimit > 0 && c.usedCount >= c.usageLimit;

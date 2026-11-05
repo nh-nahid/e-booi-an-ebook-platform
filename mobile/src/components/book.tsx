@@ -15,13 +15,25 @@ import {
   useWishlist,
 } from "@/hooks/queries";
 import { downloadAuthed } from "@/lib/files";
-import { SITE_URL } from "@/lib/config";
+import { API_ORIGIN, SITE_URL } from "@/lib/config";
 import { taka, bn, errorMessage } from "@/lib/format";
 import type { Book } from "@/types";
 import { Stars, Txt } from "./ui";
 
-export const coverOf = (b: { coverImage?: string; coverUrl?: string }) =>
-  b.coverUrl || b.coverImage || undefined;
+// Covers saved with a development host (localhost / emulator address) can't be
+// opened from a phone — point them at the real backend instead.
+const DEV_HOST = /^https?:\/\/(localhost|127\.0\.0\.1|10\.0\.2\.2)(:\d+)?/i;
+
+export const coverOf = (b: { coverImage?: string; coverUrl?: string }) => {
+  const url = b.coverUrl || b.coverImage || undefined;
+  if (!url) return undefined;
+  if (DEV_HOST.test(url)) return url.replace(DEV_HOST, API_ORIGIN);
+  // Relative paths (older uploads) live on the backend too.
+  if (!/^https?:\/\//i.test(url)) return `${API_ORIGIN}/${url.replace(/^\/+/, "")}`;
+  // Android blocks plain http:// images in release builds; the website's image
+  // proxy hides this, the app does not.
+  return url.replace(/^http:\/\//i, "https://");
+};
 
 export function Cover({
   book,
