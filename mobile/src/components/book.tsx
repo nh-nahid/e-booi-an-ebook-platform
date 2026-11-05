@@ -30,7 +30,9 @@ export const coverOf = (b: { coverImage?: string; coverUrl?: string }) => {
   if (DEV_HOST.test(url)) return url.replace(DEV_HOST, API_ORIGIN);
   // Relative paths (older uploads) live on the backend too.
   if (!/^https?:\/\//i.test(url)) return `${API_ORIGIN}/${url.replace(/^\/+/, "")}`;
-  return url;
+  // Android blocks plain http:// images in release builds; the website's image
+  // proxy hides this, the app does not.
+  return url.replace(/^http:\/\//i, "https://");
 };
 
 export function Cover({
