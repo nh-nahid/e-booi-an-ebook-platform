@@ -1,5 +1,6 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import * as WebBrowser from "expo-web-browser";
 
 import {
   api,
@@ -8,6 +9,7 @@ import {
   saveSession,
   setAuthLostHandler,
 } from "@/lib/api";
+import { API_URL, DEEP_LINK_PREFIX } from "@/lib/config";
 import { KEYS, getItem } from "@/lib/storage";
 import type { User } from "@/types";
 
@@ -16,6 +18,8 @@ interface AuthValue {
   isLoading: boolean;
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<void>;
+  /** Opens Google sign-in; resolves true when signed in, false if cancelled. */
+  loginWithGoogle: () => Promise<boolean>;
   register: (name: string, email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   reloadProfile: () => Promise<void>;
@@ -91,6 +95,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     [qc],
   );
 
+  const loginWithGoogle = useCallback(async () => {
+    const result = await WebBrowser.openAuthSessionAsync(
+      `${API_URL}/users/google/mobile`,
+      `${DEEP_LINK_PREFIX}google-auth`,
+    );
+    if (result.type !== "success" || !result.url) return false;
+
+    const query = result.url.split("?")[1] ?? "";
+    const params = new URLSearchParams(query);
+    const error = params.get("error");
+    if (error === "cancelled") return false;
+    if (error === "suspended") throw new Error("আপনার অ্যাকাউন্টটি সাময়িকভাবে বন্ধ আছে");
+    const code = params.get("code");
+    if (error || !code) throw new Error("গুগল দিয়ে সাইন-ইন করা যায়নি। আবার চেষ্টা করুন।");
+
+    const { data } = await api.post<{
+      accessToken: string;
+      refreshToken?: string;
+      user: ProfileUser;
+    }>("/users/google/exchange", { code });
+    await saveSession(data.accessToken, data.refreshToken);
+    setUser(toUser(data.user));
+    qc.invalidateQueries();
+    return true;
+  }, [qc]);
+
   const register = useCallback(
     async (name: string, email: string, password: string) => {
       await api.post("/users/register", {
@@ -121,11 +151,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       isLoading,
       isAuthenticated: !!user,
       login,
+      loginWithGoogle,
       register,
       logout,
       reloadProfile: loadProfile,
     }),
-    [user, isLoading, login, register, logout, loadProfile],
+    [user, isLoading, login, loginWithGoogle, register, logout, loadProfile],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

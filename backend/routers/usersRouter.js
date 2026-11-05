@@ -18,6 +18,13 @@ const {
     deleteAvatar,
 } = require("../controllers/usersController");
 
+const {
+    googleLogin,
+    googleMobileStart,
+    googleCallback,
+    googleExchange,
+} = require("../controllers/googleAuthController");
+
 const { checkLogin, requireRole } = require("../middlewares/common/checkLogin");
 
 const { avatarUpload } = require("../middlewares/users/avatarUpload");
@@ -46,6 +53,12 @@ router.post(
 
 // login user
 router.post("/login", loginUser);
+
+// Google sign-in
+router.post("/google", googleLogin);
+router.get("/google/mobile", googleMobileStart);
+router.get("/google/callback", googleCallback);
+router.post("/google/exchange", googleExchange);
 
 // logout user
 router.post("/logout", logoutUser);

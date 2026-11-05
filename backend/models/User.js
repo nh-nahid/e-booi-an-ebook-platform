@@ -59,6 +59,12 @@ const UserSchema = new mongoose.Schema(
       default: "active",
     },
 
+    // Google account id (the "sub" claim) once the user signs in with Google.
+    googleId: {
+      type: String,
+      default: null,
+    },
+
     refreshToken: {
       type: String,
       default: null,
