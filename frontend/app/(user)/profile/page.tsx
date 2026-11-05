@@ -8,6 +8,8 @@ import { LogOut, Loader2 } from "lucide-react";
 import { useProfile } from "@/features/profile/hooks/profile.hooks";
 import { useLogout } from "@/features/auth/hooks/auth.hooks";
 import { clearAccessToken } from "@/services/api/token";
+import { useLibrary } from "@/features/library/hooks/use-library";
+import { useMyOrders } from "@/features/orders/hooks/use-orders";
 
 import ProfileCard from "@/features/profile/components/profile-card";
 import ProfileForm from "@/features/profile/components/profile-form";
@@ -20,6 +22,11 @@ export default function ProfilePage() {
 
   const { data, isLoading, isError } = useProfile();
   const { mutate: logout, isPending: loggingOut } = useLogout();
+
+  // The /profile response carries no counts, so read them from the library and
+  // orders lists (cached and shared with the other pages).
+  const { data: library } = useLibrary();
+  const { data: orders } = useMyOrders();
 
   const handleLogout = () => {
     logout(undefined, {
@@ -99,8 +106,8 @@ export default function ProfilePage() {
               email={user.email}
               avatarUrl={avatarUrl}
               role={user.role}
-              booksOwned={user.booksOwned ?? 0}
-              ordersCount={user.ordersCount ?? 0}
+              booksOwned={library?.length ?? user.booksOwned ?? 0}
+              ordersCount={orders?.length ?? user.ordersCount ?? 0}
               memberSince={
                 user.createdAt
                   ? new Date(user.createdAt).toLocaleDateString("en-US", {
