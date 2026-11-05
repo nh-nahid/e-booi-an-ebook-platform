@@ -29,7 +29,10 @@ export function useInView<T extends HTMLElement>(options?: UseInViewOptions) {
           observer.disconnect();
         }
       },
-      { threshold: 0.15, rootMargin: "0px 0px -60px 0px", ...options },
+      // threshold 0: reveal as soon as ANY part is visible. A fractional
+      // threshold never fires for tall sections (e.g. a book grid on a
+      // phone) until the user scrolls well past them, leaving them blank.
+      { threshold: 0, rootMargin: "0px 0px -20px 0px", ...options },
     );
 
     observer.observe(node);
