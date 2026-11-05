@@ -54,7 +54,7 @@ function shippingEmail(user, order) {
                 </p>
 
                 <p>
-                    Thank you for choosing our bookstore.
+                    Thank you for choosing ebooi.
                 </p>
 
             </div>

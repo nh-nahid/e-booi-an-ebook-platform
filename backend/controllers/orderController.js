@@ -10,7 +10,7 @@ const { libraryBooks, hasBookAccess } = require("../utils/access");
 
 // Payment methods the storefront can send. Every online method (bKash, Nagad,
 // Rocket, cards) is processed through the EPS gateway. Cash on Delivery was
-// removed when eBooi became Digital-only.
+// removed when ebooi became Digital-only.
 const GATEWAY_MAP = {
   eps: "eps",
 };

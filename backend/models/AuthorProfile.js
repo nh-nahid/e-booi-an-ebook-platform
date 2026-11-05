@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-// eBooi sells the work of a single author, so this is a singleton document.
+// ebooi sells the work of a single author, so this is a singleton document.
 const authorProfileSchema = new mongoose.Schema(
   {
     name: { type: String, required: true, trim: true },

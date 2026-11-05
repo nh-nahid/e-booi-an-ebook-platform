@@ -51,7 +51,7 @@
 
 
 /* =====================================================================
-   eBooi theme tokens
+   ebooi theme tokens
    - Light / dark come from the `.dark` class (next-themes).
    - The accent colour comes from `data-accent` on <html> (AccentProvider).
    Components use utilities like bg-surface, text-ink, border-line, bg-brand.

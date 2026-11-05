@@ -1,4 +1,4 @@
-# eBooi — UI/UX Design Brief
+# ebooi — UI/UX Design Brief
 
 > Paste this whole file into ChatGPT (or any design tool) and ask it to design the UI.
 > A suggested prompt is at the very end.
@@ -7,7 +7,7 @@
 
 ## 1. Product in one paragraph
 
-**eBooi** (live at **ebooi.bd**) is a **Bangla-first online ebook store for Bangladesh**.
+**ebooi** (live at **ebooi.bd**) is a **Bangla-first online ebook store for Bangladesh**.
 Readers browse and buy **digital books (PDF ebooks only)**, pay with local methods
 (bKash, Nagad, Rocket, cards via an online payment gateway), and the purchased book is
 **added to their personal Library instantly** where they can read it online in a built-in
@@ -215,7 +215,7 @@ is outdated — replace with digital-first messaging such as "তাৎক্ষ
 
 ### Suggested prompt to send with this file
 
-> Act as a senior product designer. Using the attached brief for eBooi, a Bangla-first digital
+> Act as a senior product designer. Using the attached brief for ebooi, a Bangla-first digital
 > ebook store, propose three distinct visual directions, then fully develop the one I pick into a
 > design system and mobile-first high-fidelity screens. Keep it implementable with Tailwind CSS v4
 > and shadcn/ui, with excellent Bangla typography.

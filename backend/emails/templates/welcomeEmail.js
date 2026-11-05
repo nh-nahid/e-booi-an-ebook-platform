@@ -20,7 +20,7 @@ function welcomeEmail(user) {
                 </p>
 
                 <p>
-                    Thank you for joining our bookstore.
+                    Thank you for joining ebooi.
                 </p>
             </div>
 

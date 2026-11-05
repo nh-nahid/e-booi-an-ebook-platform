@@ -1,6 +1,6 @@
 <div align="center">
 
-# 📚 eBooi
+# 📚 ebooi
 
 **A modern ebook & bookstore platform for Bangladesh — instant digital
 downloads, physical shipping, and local payments (bKash / Nagad / cards),
@@ -76,7 +76,7 @@ all in one checkout.**
 <summary><b>💳 Payment method vs. gateway</b></summary>
 <br>
 
-eBooi is digital-only, so there is a single online payment flow: the
+ebooi is digital-only, so there is a single online payment flow: the
 storefront sends `paymentMethod: "eps"` and the backend maps it to the `eps`
 gateway via `GATEWAY_MAP`. EPS then lets the shopper pick bKash, Nagad, Rocket
 or a card on its own hosted page. Older orders may carry the legacy

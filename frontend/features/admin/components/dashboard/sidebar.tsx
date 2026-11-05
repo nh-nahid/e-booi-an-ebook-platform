@@ -54,7 +54,7 @@ export default function Sidebar() {
         <Image src="/logo.jpeg" alt="ebooi Admin Logo" width={32} height={32} />
 
         <span className="text-lg font-extrabold text-ink">
-          eBoo<span className="text-brand">i</span>
+          eboo<span className="text-brand">i</span>
         </span>
 
         <span className="ml-1 rounded-full bg-brand-soft px-2 py-0.5 text-[10px] font-bold text-ink">

@@ -114,7 +114,7 @@ async function markOrderPaid(order, transactionId) {
             console.log("Payment email failed:", emailError.message);
         }
 
-        // Send Digital books email — eBooi is Digital-only, so every
+        // Send Digital books email — ebooi is Digital-only, so every
         // purchased item qualifies.
         const DigitalBooks = order.items
             .filter((item) => item.book)
@@ -213,7 +213,7 @@ async function initiateEpsPayment(order, req, res) {
         failUrl: `${callbackBase}/fail`,
         cancelUrl: `${callbackBase}/cancel`,
 
-        // eBooi is Digital-only; EPS still requires address fields.
+        // ebooi is Digital-only; EPS still requires address fields.
         customerName: customer?.name || "Customer",
         customerEmail: customer?.email || "customer@example.com",
         customerAddress: "N/A",

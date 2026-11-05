@@ -53,7 +53,7 @@ function orderEmail(user, order) {
                 </p>
 
                 <p>
-                    Thank you for shopping with us.
+                    Thank you for shopping with ebooi.
                 </p>
 
             </div>

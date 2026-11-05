@@ -1,6 +1,6 @@
 // One-time cleanup script — run this after deploying the Digital-only
 // code changes, to purge old Physical-book data from the live database.
-// eBooi has moved to a Digital-only (eBook) catalog: this removes
+// ebooi has moved to a Digital-only (eBook) catalog: this removes
 //   1) Cart items pointing at a Physical book (so nothing orphaned lingers)
 //   2) Orders placed with "cod" (Cash on Delivery) — COD was only ever
 //      usable for Physical books (the app blocked COD whenever a Digital
@@ -46,7 +46,7 @@ async function run() {
   const booksResult = await Book.deleteMany({ bookType: "Physical" });
   console.log(`Removed ${booksResult.deletedCount} Physical book(s) from the catalog.`);
 
-  console.log("Cleanup complete — eBooi's catalog and order data are now Digital-only.");
+  console.log("Cleanup complete — ebooi's catalog and order data are now Digital-only.");
 
   await mongoose.disconnect();
   process.exit(0);

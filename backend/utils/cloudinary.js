@@ -7,7 +7,7 @@ cloudinary.config({
   secure: true,
 });
 
-// Base folder every eBooi asset lives under in the Cloudinary media
+// Base folder every ebooi asset lives under in the Cloudinary media
 // library, so it's easy to find/manage things there without digging
 // through an account that might hold other projects' assets too.
 const ROOT_FOLDER = "ebooi";
