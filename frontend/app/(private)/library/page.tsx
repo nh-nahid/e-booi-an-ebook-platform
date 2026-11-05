@@ -123,8 +123,8 @@ export default function LibraryPage() {
         </h1>
 
         {books.length > 0 && (
-          <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center">
-            <div className="relative flex-1">
+          <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
+            <div className="relative w-full sm:max-w-xs">
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-subtle" />
               <input
                 value={search}
@@ -133,6 +133,19 @@ export default function LibraryPage() {
                 className="w-full rounded-lg border border-line bg-surface py-2.5 pl-9 pr-3 text-sm text-ink outline-none focus:border-brand"
               />
             </div>
+            <select
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              aria-label="ক্যাটেগরি"
+              className="rounded-lg border border-line bg-surface px-3 py-2.5 text-sm font-semibold text-ink outline-none focus:border-brand"
+            >
+              <option value="all">সব ক্যাটেগরি</option>
+              {categories.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </select>
             <select
               value={sort}
               onChange={(e) => setSort(e.target.value as "newest" | "oldest")}
@@ -150,24 +163,6 @@ export default function LibraryPage() {
                 {showHidden ? "← আমার বইসমূহ" : `সরানো বই (${hiddenCount})`}
               </button>
             )}
-          </div>
-        )}
-
-        {categories.length > 1 && (
-          <div className="mb-4 flex gap-2 overflow-x-auto pb-1">
-            {["all", ...categories].map((c) => (
-              <button
-                key={c}
-                onClick={() => setCategory(c)}
-                className={`shrink-0 rounded-full border px-4 py-1.5 text-xs font-bold transition-colors sm:text-sm ${
-                  category === c
-                    ? "border-brand bg-brand-soft text-ink"
-                    : "border-line bg-surface text-muted-ink hover:text-ink"
-                }`}
-              >
-                {c === "all" ? "সব" : c}
-              </button>
-            ))}
           </div>
         )}
 

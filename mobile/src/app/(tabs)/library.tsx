@@ -80,7 +80,7 @@ export default function LibraryScreen() {
             onChangeText={setSearch}
             returnKeyType="search"
           />
-          {categories.length > 1 && (
+          {categories.length > 0 && (
             <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ flexGrow: 0, marginBottom: 10 }} contentContainerStyle={{ gap: 8 }}>
               {["all", ...categories].map((name) => {
                 const on = category === name;
