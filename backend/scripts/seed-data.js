@@ -4,6 +4,8 @@ const CATEGORIES = [
   { name: "কর্ম ও জীবিকা", description: "ক্যারিয়ার, আয় ও দক্ষতা বাড়ানোর বই" },
   { name: "সেলফ লার্নিং", description: "নিজে নিজে শেখা ও অভ্যাস গড়ার বই" },
   { name: "সিরিজ", description: "ধারাবাহিক বইয়ের সিরিজ" },
+  { name: "বিজ্ঞান", description: "বিজ্ঞান ও প্রযুক্তি সহজ ভাষায়" },
+  { name: "ব্যবসা", description: "ব্যবসা শুরু ও বাড়ানোর ব্যবহারিক বই" },
 ];
 
 // hue drives the generated cover colour
@@ -20,6 +22,12 @@ const BOOKS = [
   { slug: "series-1", title: "জীবনের পাঠ — পর্ব ১", category: "সিরিজ", price: 99, hue: 345, featured: true, desc: "জীবনের গুরুত্বপূর্ণ শিক্ষা নিয়ে ধারাবাহিক সিরিজের প্রথম পর্ব।" },
   { slug: "series-2", title: "জীবনের পাঠ — পর্ব ২", category: "সিরিজ", price: 99, hue: 5, desc: "সিরিজের দ্বিতীয় পর্ব: সম্পর্ক, ধৈর্য ও কৃতজ্ঞতা।" },
   { slug: "series-3", title: "জীবনের পাঠ — পর্ব ৩", category: "সিরিজ", price: 99, hue: 325, preOrder: true, desc: "সিরিজের তৃতীয় পর্ব — প্রি-অর্ডার চলছে।" },
+  { slug: "biggan-ar-biswas", title: "বিজ্ঞান ও বিশ্বাস", category: "বিজ্ঞান", price: 189, originalPrice: 250, hue: 205, featured: true, desc: "বিজ্ঞানের আবিষ্কার ও বিশ্বাসের সম্পর্ক নিয়ে সহজ ও যুক্তিনির্ভর আলোচনা।" },
+  { slug: "mohakash-er-rohosyo", title: "মহাকাশের রহস্য", category: "বিজ্ঞান", price: 169, hue: 225, desc: "গ্রহ-নক্ষত্র ও মহাবিশ্বের চমকপ্রদ তথ্য, ছোট-বড় সবার জন্য।" },
+  { slug: "projukti-r-notun-juge", title: "প্রযুক্তির নতুন যুগ", category: "বিজ্ঞান", price: 179, hue: 245, desc: "এআই, ইন্টারনেট ও আগামী দিনের প্রযুক্তি কীভাবে জীবন বদলাচ্ছে।" },
+  { slug: "chhoto-bebsha", title: "ছোট ব্যবসা, বড় স্বপ্ন", category: "ব্যবসা", price: 219, originalPrice: 290, hue: 80, featured: true, desc: "অল্প পুঁজিতে ব্যবসা শুরু, গ্রাহক ধরা ও ধাপে ধাপে বড় করার গাইড।" },
+  { slug: "online-bebsha", title: "অনলাইন ব্যবসার কৌশল", category: "ব্যবসা", price: 199, hue: 100, desc: "ফেসবুক ও ই-কমার্সে বিক্রি বাড়ানোর কার্যকর কৌশল।" },
+  { slug: "hisab-nikash", title: "হিসাব-নিকাশ সহজ", category: "ব্যবসা", price: 149, hue: 60, desc: "ব্যবসার আয়-ব্যয়, লাভ-ক্ষতি ও বাজেট বোঝার প্রাথমিক পাঠ।" },
 ];
 
 const PLANS = [
