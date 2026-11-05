@@ -10,7 +10,7 @@ const { libraryBooks, hasBookAccess } = require("../utils/access");
 
 // Payment methods the storefront can send. Every online method (bKash, Nagad,
 // Rocket, cards) is processed through the EPS gateway. Cash on Delivery was
-// removed when eBooi became Digital-only.
+// removed when ebooi became Digital-only.
 const GATEWAY_MAP = {
   eps: "eps",
 };
@@ -322,9 +322,48 @@ async function updatePaymentStatus(req, res, next) {
 // user Digital library
 async function getLibrary(req, res, next) {
   try {
-    const books = await libraryBooks(req.user.id);
+    // All accessible books, each flagged with isHidden. Hidden (removed) books
+    // still count as owned elsewhere (e.g. the "buy" button), so the client
+    // decides what to show.
+    const [books, me] = await Promise.all([
+      libraryBooks(req.user.id),
+      User.findById(req.user.id).select("hiddenBooks"),
+    ]);
+    const hidden = new Set((me?.hiddenBooks || []).map(String));
 
-    res.json(books);
+    // When the user got each book: first paid order that contains it; books
+    // from a subscription or an admin grant fall back to the book's date.
+    const paid = await Order.find({ user: req.user.id, paymentStatus: "paid" })
+      .select("items.book paidAt createdAt");
+    const acquired = new Map();
+    paid.forEach((o) => {
+      const when = o.paidAt || o.createdAt;
+      o.items.forEach((i) => {
+        const id = i.book?.toString();
+        if (id && (!acquired.has(id) || when < acquired.get(id))) acquired.set(id, when);
+      });
+    });
+
+    res.json(
+      books.map((b) => ({
+        ...b.toObject(),
+        isHidden: hidden.has(b._id.toString()),
+        acquiredAt: acquired.get(b._id.toString()) || b.createdAt,
+      })),
+    );
+  } catch (error) {
+    next(error);
+  }
+}
+
+// remove a book from the library view (or bring it back)
+async function setLibraryHidden(req, res, next) {
+  try {
+    const hide = req.params.action === "hide";
+    await User.findByIdAndUpdate(req.user.id, hide
+      ? { $addToSet: { hiddenBooks: req.params.bookId } }
+      : { $pull: { hiddenBooks: req.params.bookId } });
+    res.json({ message: hide ? "Removed from library" : "Restored to library" });
   } catch (error) {
     next(error);
   }
@@ -460,5 +499,6 @@ module.exports = {
   downloadBook,
   updatePaymentStatus,
   getLibrary,
+  setLibraryHidden,
   downloadInvoice,
 };

@@ -89,6 +89,9 @@ export interface LibraryBook {
   author: string;
   coverImage?: string;
   price: number;
+  isHidden?: boolean;
+  category?: string;
+  acquiredAt?: string;
 }
 
 export interface WishlistEntry {

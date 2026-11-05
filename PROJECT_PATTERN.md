@@ -1,4 +1,4 @@
-# Project Pattern Guide — eBooi (eBook Platform)
+# Project Pattern Guide — ebooi (eBook Platform)
 
 > A reference document describing the architecture, file management, and technologies of this project.
 > Reuse this exact stack + structure to build a **School Management System**.

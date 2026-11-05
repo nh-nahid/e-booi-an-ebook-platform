@@ -91,7 +91,7 @@ async function updateCartQuantity(req,res,next){
     }
 
 
-    // eBooi is Digital-only — one copy per cart line item.
+    // ebooi is Digital-only — one copy per cart line item.
     cartItem.quantity = 1;
 
 

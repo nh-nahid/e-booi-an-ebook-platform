@@ -112,7 +112,7 @@ export default function Navbar() {
           >
             <Image
               src="/logo.jpeg"
-              alt="eBooi Logo"
+              alt="ebooi Logo"
               width={36}
               height={36}
               priority

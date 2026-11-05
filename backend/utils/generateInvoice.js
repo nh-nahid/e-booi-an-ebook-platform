@@ -106,7 +106,7 @@ function drawHeader(doc, invoiceNumber, pageWidth) {
     .fillColor(COLORS.white)
     .font(FONT_BOLD)
     .fontSize(24)
-    .text("E-Booi", PAGE_MARGIN, 32);
+    .text("ebooi", PAGE_MARGIN, 32);
 
   doc
     .font(FONT_REGULAR)
@@ -321,7 +321,7 @@ function drawFooter(doc, order, pageWidth) {
     .fontSize(9)
     .fillColor(COLORS.muted)
     .text(
-      "Thank you for shopping with E-Booi. This is a system-generated invoice.",
+      "Thank you for shopping with ebooi. This is a system-generated invoice.",
       PAGE_MARGIN,
       y + 12,
       { width: pageWidth, align: "center" },

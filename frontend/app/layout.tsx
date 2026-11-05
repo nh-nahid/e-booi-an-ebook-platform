@@ -23,7 +23,7 @@ const banglaFont = Noto_Sans_Bengali({
 });
 
 export const metadata: Metadata = {
-  title: "E-Booi | ই-বই",
+  title: "ebooi | ই-বই",
   description: "Modern Online Book Store",
 };
 

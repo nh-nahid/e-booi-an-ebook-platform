@@ -78,7 +78,7 @@ const orderSchema = new mongoose.Schema(
     },
 
     // "cod" (Cash on Delivery) was only ever used for Physical book
-    // shipping and is removed now that eBooi is Digital-only.
+    // shipping and is removed now that ebooi is Digital-only.
     paymentMethod: {
       type: String,
       // "sslcommerz" and "stripe" are legacy values kept only so older orders

@@ -146,6 +146,10 @@ export function useToggleWishlist() {
 
 /* --------------------------- library and orders -------------------------- */
 
+export const setLibraryHidden = async (bookId: string, hide: boolean) => {
+  await api.patch(`/orders/library/${bookId}/${hide ? "hide" : "unhide"}`);
+};
+
 export const useLibrary = () => {
   const { isAuthenticated } = useAuth();
   return useQuery({

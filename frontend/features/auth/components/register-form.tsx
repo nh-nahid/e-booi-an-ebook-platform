@@ -126,7 +126,7 @@ export default function RegisterForm() {
           <Image src="/logo.jpeg" alt="ebooi Logo" width={32} height={32} />
 
           <span className="text-lg font-extrabold text-ink">
-            eBoo<span className="text-brand">i</span>
+            eboo<span className="text-brand">i</span>
           </span>
         </div>
 

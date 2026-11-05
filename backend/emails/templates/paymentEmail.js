@@ -48,7 +48,7 @@ function paymentEmail(user, order, transactionId) {
                 </div>
 
                 <p>
-                    Thank you for your purchase.
+                    Thank you for your purchase from ebooi.
                 </p>
 
             </div>

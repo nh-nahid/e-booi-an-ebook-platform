@@ -1,16 +1,53 @@
 const Coupon = require("../models/Coupon");
 const User = require("../models/User");
 
+// Only the editable fields — never usedCount etc. Emails are normalised.
+function couponFields(body) {
+  const out = {};
+  if (body.code !== undefined) out.code = String(body.code).trim().toUpperCase();
+  ["type", "value", "minimumAmount", "usageLimit", "isActive"].forEach((f) => {
+    if (body[f] !== undefined) out[f] = body[f];
+  });
+  if (body.expiryDate !== undefined) out.expiryDate = body.expiryDate;
+  if (body.allowedEmails !== undefined) {
+    const list = Array.isArray(body.allowedEmails)
+      ? body.allowedEmails
+      : String(body.allowedEmails).split(/[\s,;]+/);
+    out.allowedEmails = [...new Set(list.map((e) => String(e).trim().toLowerCase()).filter(Boolean))];
+  }
+  return out;
+}
+
+// update coupon (edit details, activate/deactivate, manage allowed emails)
+async function updateCoupon(req, res, next) {
+  try {
+    const coupon = await Coupon.findByIdAndUpdate(req.params.id, couponFields(req.body), {
+      new: true,
+      runValidators: true,
+    });
+    if (!coupon) return res.status(404).json({ message: "Coupon not found" });
+    res.json({ message: "Coupon updated", coupon });
+  } catch (error) {
+    if (error.code === 11000) {
+      return res.status(409).json({ message: "এই কোড আগে থেকেই আছে" });
+    }
+    next(error);
+  }
+}
+
 // create coupon
 async function createCoupon(req, res, next) {
   try {
-    const coupon = await Coupon.create(req.body);
+    const coupon = await Coupon.create(couponFields(req.body));
 
     res.status(201).json({
       message: "Coupon created successfully",
       coupon,
     });
   } catch (error) {
+    if (error.code === 11000) {
+      return res.status(409).json({ message: "এই কোড আগে থেকেই আছে" });
+    }
     next(error);
   }
 }
@@ -18,7 +55,7 @@ async function createCoupon(req, res, next) {
 // get all coupons
 async function getCoupons(req, res, next) {
   try {
-    const coupons = await Coupon.find();
+    const coupons = await Coupon.find().sort({ createdAt: -1 });
 
     res.json(coupons);
   } catch (error) {
@@ -129,6 +166,7 @@ async function applyCoupon(req, res, next) {
 }
 
 module.exports = {
+  updateCoupon,
   createCoupon,
   getCoupons,
   deleteCoupon,

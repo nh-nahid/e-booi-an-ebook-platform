@@ -109,7 +109,7 @@ export default function ComingSoonPage() {
             />
 
             <span className="text-xl font-extrabold text-ink">
-              eBoo<span className="text-brand">i</span>
+              eboo<span className="text-brand">i</span>
             </span>
           </div>
 

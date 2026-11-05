@@ -17,7 +17,7 @@ async function sendEmail({ to, subject, html }) {
       from: `"${process.env.APP_NAME}" <${process.env.EMAIL_USER}>`,
       to,
       subject,
-      text: "Welcome to Ebooi Book Store.",
+      text: "Welcome to ebooi.",
       html,
     });
   } catch (err) {

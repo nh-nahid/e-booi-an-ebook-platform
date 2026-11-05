@@ -358,7 +358,7 @@ async function createUser(req, res, next) {
 
     await sendEmail({
       to: user.email,
-      subject: "Welcome to E-Booi",
+      subject: "Welcome to ebooi",
       html: welcomeEmail(user),
     });
 

@@ -50,7 +50,7 @@ export default function AdminAuthorPage() {
     <div className="max-w-2xl space-y-6">
       <div>
         <h1 className="text-2xl font-extrabold text-ink">লেখক প্রোফাইল</h1>
-        <p className="text-sm text-muted-ink">eBooi-তে একজন লেখকের বই বিক্রি হয় — তাঁর পরিচিতি এখানে সম্পাদনা করুন।</p>
+        <p className="text-sm text-muted-ink">ebooi-তে একজন লেখকের বই বিক্রি হয় — তাঁর পরিচিতি এখানে সম্পাদনা করুন।</p>
       </div>
 
       <form

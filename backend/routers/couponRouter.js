@@ -2,6 +2,7 @@ const express = require("express");
 
 const {
     createCoupon,
+    updateCoupon,
     getCoupons,
     deleteCoupon,
     applyCoupon,
@@ -27,6 +28,13 @@ router.get(
     checkLogin,
     requireRole("admin"),
     getCoupons
+);
+
+router.put(
+    "/:id",
+    checkLogin,
+    requireRole("admin"),
+    updateCoupon
 );
 
 router.delete(

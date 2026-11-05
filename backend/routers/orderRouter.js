@@ -9,6 +9,7 @@ const {
     downloadBook,
     updatePaymentStatus,
     getLibrary,
+    setLibraryHidden,
     downloadInvoice,
 } = require("../controllers/orderController");
 
@@ -47,6 +48,16 @@ router.get(
     forbidAdmin,
     getLibrary
 );
+
+// Remove from / restore to my library view
+router.patch("/library/:bookId/hide", checkLogin, forbidAdmin, (req, res, next) => {
+    req.params.action = "hide";
+    setLibraryHidden(req, res, next);
+});
+router.patch("/library/:bookId/unhide", checkLogin, forbidAdmin, (req, res, next) => {
+    req.params.action = "unhide";
+    setLibraryHidden(req, res, next);
+});
 
 // Download purchased Digital book
 router.get(

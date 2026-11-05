@@ -5,4 +5,7 @@ export interface LibraryBook {
   coverImage?: string;
   bookType: "Digital";
   price: number;
+  isHidden?: boolean;
+  category?: string;
+  acquiredAt?: string;
 }
