@@ -26,12 +26,17 @@ const nextConfig = {
         protocol: "http",
         hostname: "localhost",
         port: "5000",
-        pathname: "/uploads/**",
+        pathname: "/**",
       },
       {
         protocol: "http",
         hostname: "e-booi.com",
         pathname: "/uploads/**",
+      },
+      {
+        protocol: "https",
+        hostname: "e-booi-an-ebook-platform-le9r.onrender.com",
+        pathname: "/**",
       },
       {
         protocol: "https",
