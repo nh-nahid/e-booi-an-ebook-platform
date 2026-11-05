@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { BookOpen, Download, Loader2, Share2 } from "lucide-react";
+import { BookOpen, Download, Loader2, RotateCcw, Search, Share2, Trash2 } from "lucide-react";
 import { FaFacebook, FaWhatsapp } from "react-icons/fa";
 import { toast } from "sonner";
 import { isAxiosError } from "axios";
@@ -13,7 +13,7 @@ import SiteFooter from "@/components/layout/site-footer";
 import Loading from "@/app/loading";
 
 import { useAuth } from "@/hooks/use-auth";
-import { useLibrary } from "@/features/library/hooks/use-library";
+import { useLibrary, useSetLibraryHidden } from "@/features/library/hooks/use-library";
 import { useDownloadBook } from "@/features/orders/hooks/use-orders";
 
 export default function LibraryPage() {
@@ -21,6 +21,19 @@ export default function LibraryPage() {
   const { user, isLoading: authLoading } = useAuth();
   const { data: books = [], isLoading } = useLibrary();
   const downloadMutation = useDownloadBook();
+  const hideMutation = useSetLibraryHidden();
+  const [search, setSearch] = useState("");
+  const [showHidden, setShowHidden] = useState(false);
+
+  const hiddenCount = books.filter((b) => b.isHidden).length;
+  const shown = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return books.filter(
+      (b) =>
+        !!b.isHidden === showHidden &&
+        (!q || b.title.toLowerCase().includes(q) || b.author.toLowerCase().includes(q)),
+    );
+  }, [books, search, showHidden]);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -49,6 +62,19 @@ export default function LibraryPage() {
             toast.error("ডাউনলোড করা যায়নি");
           }
         },
+      },
+    );
+  };
+
+  const handleHide = (bookId: string, title: string, hide: boolean) => {
+    if (hide && !window.confirm(`"${title}" আপনার লাইব্রেরি থেকে সরাবেন? পরে "সরানো বই" থেকে ফিরিয়ে আনতে পারবেন।`)) {
+      return;
+    }
+    hideMutation.mutate(
+      { bookId, hide },
+      {
+        onSuccess: () => toast.success(hide ? "লাইব্রেরি থেকে সরানো হয়েছে" : "লাইব্রেরিতে ফিরিয়ে আনা হয়েছে"),
+        onError: () => toast.error("সম্পন্ন করা যায়নি"),
       },
     );
   };
@@ -86,7 +112,33 @@ export default function LibraryPage() {
           আমার বইসমূহ
         </h1>
 
-        {books.length === 0 ? (
+        {books.length > 0 && (
+          <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center">
+            <div className="relative flex-1">
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-subtle" />
+              <input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="লাইব্রেরিতে বই বা লেখক খুঁজুন"
+                className="w-full rounded-lg border border-line bg-surface py-2.5 pl-9 pr-3 text-sm text-ink outline-none focus:border-brand"
+              />
+            </div>
+            {(hiddenCount > 0 || showHidden) && (
+              <button
+                onClick={() => setShowHidden((v) => !v)}
+                className="rounded-lg border border-line bg-surface px-4 py-2.5 text-sm font-semibold text-muted-ink hover:text-ink"
+              >
+                {showHidden ? "← আমার বইসমূহ" : `সরানো বই (${hiddenCount})`}
+              </button>
+            )}
+          </div>
+        )}
+
+        {books.length > 0 && shown.length === 0 ? (
+          <p className="rounded-2xl border border-line bg-surface py-12 text-center text-sm text-muted-ink">
+            {showHidden ? "সরানো কোনো বই নেই" : "কোনো বই পাওয়া যায়নি"}
+          </p>
+        ) : books.length === 0 ? (
           <div className="flex flex-col items-center gap-3 rounded-2xl border border-line bg-surface py-16 text-center">
             <span className="flex h-14 w-14 items-center justify-center rounded-full bg-canvas">
               <BookOpen className="h-6 w-6 text-subtle" />
@@ -106,7 +158,7 @@ export default function LibraryPage() {
           </div>
         ) : (
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5">
-            {books.map((book) => {
+            {shown.map((book) => {
               const isDownloading =
                 downloadMutation.isPending &&
                 downloadMutation.variables?.bookId === book._id;
@@ -167,9 +219,22 @@ export default function LibraryPage() {
                     <button
                       onClick={() => handleShare(book._id, book.title)}
                       aria-label="শেয়ার করুন"
-                      className="flex flex-1 items-center justify-center bg-surface text-muted-ink transition-colors hover:bg-brand-soft hover:text-brand"
+                      className="flex flex-1 items-center justify-center border-r border-line bg-surface text-muted-ink transition-colors hover:bg-brand-soft hover:text-brand"
                     >
                       <Share2 className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                    </button>
+
+                    <button
+                      onClick={() => handleHide(book._id, book.title, !book.isHidden)}
+                      disabled={hideMutation.isPending}
+                      aria-label={book.isHidden ? "ফিরিয়ে আনুন" : "লাইব্রেরি থেকে সরান"}
+                      className="flex flex-1 items-center justify-center bg-surface text-muted-ink transition-colors hover:bg-danger-soft hover:text-danger-ink disabled:opacity-60"
+                    >
+                      {book.isHidden ? (
+                        <RotateCcw className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                      ) : (
+                        <Trash2 className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                      )}
                     </button>
                   </div>
                 </div>

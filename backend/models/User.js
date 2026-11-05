@@ -55,6 +55,9 @@ const UserSchema = new mongoose.Schema(
 
     // Admin content management: books handed out for free / books whose
     // access an admin removed (overrides purchases and subscriptions).
+    // Books the user removed from their own library view (reversible; the
+    // purchase and read access are untouched).
+    hiddenBooks: [{ type: mongoose.Schema.Types.ObjectId, ref: "Book" }],
     grantedBooks: [{ type: mongoose.Schema.Types.ObjectId, ref: "Book" }],
     revokedBooks: [{ type: mongoose.Schema.Types.ObjectId, ref: "Book" }],
 

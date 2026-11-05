@@ -322,9 +322,30 @@ async function updatePaymentStatus(req, res, next) {
 // user Digital library
 async function getLibrary(req, res, next) {
   try {
-    const books = await libraryBooks(req.user.id);
+    // All accessible books, each flagged with isHidden. Hidden (removed) books
+    // still count as owned elsewhere (e.g. the "buy" button), so the client
+    // decides what to show.
+    const [books, me] = await Promise.all([
+      libraryBooks(req.user.id),
+      User.findById(req.user.id).select("hiddenBooks"),
+    ]);
+    const hidden = new Set((me?.hiddenBooks || []).map(String));
+    res.json(
+      books.map((b) => ({ ...b.toObject(), isHidden: hidden.has(b._id.toString()) })),
+    );
+  } catch (error) {
+    next(error);
+  }
+}
 
-    res.json(books);
+// remove a book from the library view (or bring it back)
+async function setLibraryHidden(req, res, next) {
+  try {
+    const hide = req.params.action === "hide";
+    await User.findByIdAndUpdate(req.user.id, hide
+      ? { $addToSet: { hiddenBooks: req.params.bookId } }
+      : { $pull: { hiddenBooks: req.params.bookId } });
+    res.json({ message: hide ? "Removed from library" : "Restored to library" });
   } catch (error) {
     next(error);
   }
@@ -460,5 +481,6 @@ module.exports = {
   downloadBook,
   updatePaymentStatus,
   getLibrary,
+  setLibraryHidden,
   downloadInvoice,
 };

@@ -26,8 +26,10 @@ async function purchasedBookIds(userId) {
 
 // Every book the user may read: purchases + admin grants (+ all published
 // books while a subscription is active) minus anything an admin revoked.
-async function libraryBooks(userId) {
-  const user = await User.findById(userId).select("grantedBooks revokedBooks");
+// `hidden`: "all" (default, access checks) | false (the library screen)
+// | true (the user's removed/hidden books).
+async function libraryBooks(userId, { hidden = "all" } = {}) {
+  const user = await User.findById(userId).select("grantedBooks revokedBooks hiddenBooks");
   const revoked = new Set((user?.revokedBooks || []).map(String));
   const subs = await activeSubscriptions(userId);
 
@@ -48,7 +50,13 @@ async function libraryBooks(userId) {
   else if (cats.size) or.push({ ...base, category: { $in: [...cats] } });
 
   const books = await Book.find({ $or: or, bookType: "Digital" });
-  return books.filter((b) => !revoked.has(b._id.toString()));
+  const hid = new Set((user?.hiddenBooks || []).map(String));
+  return books.filter((b) => {
+    const id = b._id.toString();
+    if (revoked.has(id)) return false;
+    if (hidden === "all") return true;
+    return hidden ? hid.has(id) : !hid.has(id);
+  });
 }
 
 async function hasBookAccess(userId, bookId) {
