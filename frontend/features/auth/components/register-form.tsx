@@ -18,6 +18,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import { useRegister } from "@/features/auth/hooks/auth.hooks";
+import GoogleButton from "./google-button";
 
 import type { ApiError } from "@/features/auth/types/api-error";
 
@@ -380,6 +381,19 @@ export default function RegisterForm() {
               )}
             </span>
           </button>
+
+          <div className="relative py-1">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-line" />
+            </div>
+            <div className="relative flex justify-center">
+              <span className="bg-surface px-3 text-xs uppercase tracking-wider text-muted-ink">
+                Or
+              </span>
+            </div>
+          </div>
+
+          <GoogleButton />
 
           <p className="pt-1 text-center text-xs text-muted-ink">
             Already have an account?{" "}

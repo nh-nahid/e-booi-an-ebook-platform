@@ -5,6 +5,7 @@ import { Link, router } from "expo-router";
 
 import { useAuth } from "@/auth/AuthProvider";
 import { Button, Input, Screen, Txt } from "@/components/ui";
+import { GoogleButton } from "@/components/google-button";
 import { errorMessage } from "@/lib/format";
 
 export default function LoginScreen() {
@@ -59,6 +60,8 @@ export default function LoginScreen() {
         </View>
 
         <Button title="লগইন" loading={busy} onPress={submit} />
+
+        <GoogleButton />
 
         <View style={{ flexDirection: "row", justifyContent: "center", marginTop: 18, gap: 6 }}>
           <Txt color="muted">অ্যাকাউন্ট নেই?</Txt>

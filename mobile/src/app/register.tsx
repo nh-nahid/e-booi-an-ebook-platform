@@ -4,6 +4,7 @@ import { Link, router } from "expo-router";
 
 import { useAuth } from "@/auth/AuthProvider";
 import { Button, Input, Screen, Txt } from "@/components/ui";
+import { GoogleButton } from "@/components/google-button";
 import { errorMessage } from "@/lib/format";
 
 export default function RegisterScreen() {
@@ -48,6 +49,8 @@ export default function RegisterScreen() {
       <Input label="পাসওয়ার্ড" icon="lock-closed-outline" secure value={password} onChangeText={setPassword} autoCapitalize="none" error={errors.password} />
       <Input label="পাসওয়ার্ড আবার দিন" icon="lock-closed-outline" secure value={confirm} onChangeText={setConfirm} autoCapitalize="none" error={errors.confirm} />
       <Button title="অ্যাকাউন্ট খুলুন" loading={busy} onPress={submit} />
+
+      <GoogleButton />
       <View style={{ flexDirection: "row", justifyContent: "center", marginTop: 18, gap: 6 }}>
         <Txt color="muted">আগে থেকেই অ্যাকাউন্ট আছে?</Txt>
         <Link href="/login" replace>

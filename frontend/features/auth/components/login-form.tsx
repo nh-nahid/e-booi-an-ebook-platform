@@ -24,6 +24,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { setAccessToken } from "@/services/api/token";
 import { ArrowRight, Eye, EyeOff, Loader2, Lock, Mail } from "lucide-react";
 import { getProfile } from "../api/auth.api";
+import GoogleButton from "./google-button";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -261,14 +262,7 @@ export default function LoginForm() {
               </div>
             </div>
 
-            <Button
-              type="button"
-              variant="outline"
-              disabled
-              className="h-11 w-full rounded-full"
-            >
-              Continue with Google (Coming Soon)
-            </Button>
+            <GoogleButton />
 
             <p className="pt-2 text-center text-sm text-muted-ink">
               Don&apos;t have an account?{" "}
