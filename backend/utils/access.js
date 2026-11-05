@@ -3,12 +3,18 @@ const Book = require("../models/Book");
 const User = require("../models/User");
 const Subscription = require("../models/Subscription");
 
-async function activeSubscription(userId) {
-  return Subscription.findOne({
+async function activeSubscriptions(userId) {
+  return Subscription.find({
     user: userId,
     status: "active",
     expiresAt: { $gt: new Date() },
-  }).sort({ expiresAt: -1 });
+  })
+    .populate("plan", "name scope categories")
+    .sort({ expiresAt: -1 });
+}
+
+async function activeSubscription(userId) {
+  return (await activeSubscriptions(userId))[0] || null;
 }
 
 async function purchasedBookIds(userId) {
@@ -23,22 +29,25 @@ async function purchasedBookIds(userId) {
 async function libraryBooks(userId) {
   const user = await User.findById(userId).select("grantedBooks revokedBooks");
   const revoked = new Set((user?.revokedBooks || []).map(String));
-  const sub = await activeSubscription(userId);
+  const subs = await activeSubscriptions(userId);
 
-  let books;
-  if (sub) {
-    books = await Book.find({ isPublished: true, bookType: "Digital" });
-  } else {
-    const ids = await purchasedBookIds(userId);
-    (user?.grantedBooks || []).forEach((id) => ids.add(id.toString()));
-    books = await Book.find({ _id: { $in: [...ids] }, bookType: "Digital" });
-  }
-  // Admin grants always apply, even when not otherwise visible.
-  if (sub && user?.grantedBooks?.length) {
-    const have = new Set(books.map((b) => b._id.toString()));
-    const extra = user.grantedBooks.filter((id) => !have.has(id.toString()));
-    if (extra.length) books = books.concat(await Book.find({ _id: { $in: extra } }));
-  }
+  // Purchases and admin grants always apply.
+  const ids = await purchasedBookIds(userId);
+  (user?.grantedBooks || []).forEach((id) => ids.add(id.toString()));
+
+  // Subscriptions add either every book or the books of the plan's categories.
+  const base = { isPublished: true, bookType: "Digital" };
+  const or = [{ _id: { $in: [...ids] } }];
+  let all = false;
+  const cats = new Set();
+  subs.forEach((s) => {
+    if (!s.plan || s.plan.scope === "all") all = true;
+    else s.plan.categories.forEach((c) => cats.add(c));
+  });
+  if (all) or.push(base);
+  else if (cats.size) or.push({ ...base, category: { $in: [...cats] } });
+
+  const books = await Book.find({ $or: or, bookType: "Digital" });
   return books.filter((b) => !revoked.has(b._id.toString()));
 }
 
@@ -47,4 +56,4 @@ async function hasBookAccess(userId, bookId) {
   return books.find((b) => b._id.toString() === String(bookId)) || null;
 }
 
-module.exports = { activeSubscription, purchasedBookIds, libraryBooks, hasBookAccess };
+module.exports = { activeSubscriptions, activeSubscription, purchasedBookIds, libraryBooks, hasBookAccess };

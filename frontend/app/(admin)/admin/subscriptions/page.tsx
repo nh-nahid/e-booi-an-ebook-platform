@@ -6,7 +6,7 @@ import { Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
-import { plansApi, subsApi, type Plan } from "@/features/admin/content/api";
+import { categoriesApi, plansApi, subsApi, type Plan } from "@/features/admin/content/api";
 
 const errMsg = (e: unknown) =>
   (e as AxiosError<{ message: string }>).response?.data?.message ?? "কিছু একটা সমস্যা হয়েছে";
@@ -17,9 +17,11 @@ export default function AdminSubscriptionsPage() {
   const qc = useQueryClient();
   const refresh = () => qc.invalidateQueries({ queryKey: ["admin"] });
   const { data: plans = [] } = useQuery({ queryKey: ["admin", "plans"], queryFn: plansApi.list });
+  const { data: cats = [] } = useQuery({ queryKey: ["admin", "categories"], queryFn: categoriesApi.list });
   const { data: subs = [] } = useQuery({ queryKey: ["admin", "subs"], queryFn: subsApi.list });
 
-  const [form, setForm] = useState({ name: "", price: "", durationDays: "30", description: "" });
+  const blank = { name: "", price: "", durationDays: "30", description: "", scope: "all" as "all" | "categories", categories: [] as string[] };
+  const [form, setForm] = useState(blank);
   const create = useMutation({
     mutationFn: () =>
       plansApi.create({
@@ -27,9 +29,11 @@ export default function AdminSubscriptionsPage() {
         description: form.description,
         price: Number(form.price),
         durationDays: Number(form.durationDays),
+        scope: form.scope,
+        categories: form.scope === "categories" ? form.categories : [],
       }),
     onSuccess: () => {
-      setForm({ name: "", price: "", durationDays: "30", description: "" });
+      setForm(blank);
       toast.success("প্ল্যান তৈরি হয়েছে");
       refresh();
     },
@@ -64,7 +68,7 @@ export default function AdminSubscriptionsPage() {
     <div className="space-y-8">
       <div>
         <h1 className="text-2xl font-extrabold text-ink">সাবস্ক্রিপশন</h1>
-        <p className="text-sm text-muted-ink">সাবস্ক্রিপশন চালু থাকলে ইউজার সব প্রকাশিত বই পড়তে পারবে।</p>
+        <p className="text-sm text-muted-ink">প্ল্যান অনুযায়ী ইউজার সব বই অথবা নির্বাচিত সিরিজের বই পড়তে পারবে। আলাদা করে একক বইও কেনা যায়।</p>
       </div>
 
       {/* Plans */}
@@ -78,12 +82,35 @@ export default function AdminSubscriptionsPage() {
           <input className={input} type="number" min={0} placeholder="দাম (৳)" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} />
           <input className={input} type="number" min={1} placeholder="মেয়াদ (দিন)" value={form.durationDays} onChange={(e) => setForm({ ...form, durationDays: e.target.value })} />
           <button
-            disabled={create.isPending || !form.name.trim() || form.price === ""}
+            disabled={create.isPending || !form.name.trim() || form.price === "" || (form.scope === "categories" && form.categories.length === 0)}
             className="flex items-center justify-center gap-1.5 rounded-xl bg-brand px-4 py-2 text-sm font-bold text-white disabled:opacity-50"
           >
             <Plus className="h-4 w-4" /> যোগ
           </button>
           <input className={`${input} sm:col-span-4`} placeholder="বিবরণ (ঐচ্ছিক)" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+          <div className="space-y-2 sm:col-span-4">
+            <select className={input} value={form.scope} onChange={(e) => setForm({ ...form, scope: e.target.value as "all" | "categories" })}>
+              <option value="all">সব বই আনলক করবে</option>
+              <option value="categories">শুধু নির্বাচিত সিরিজ/ক্যাটেগরির বই</option>
+            </select>
+            {form.scope === "categories" && (
+              <div className="flex flex-wrap gap-2">
+                {cats.map((c) => {
+                  const on = form.categories.includes(c.name);
+                  return (
+                    <button
+                      type="button"
+                      key={c._id}
+                      onClick={() => setForm({ ...form, categories: on ? form.categories.filter((n) => n !== c.name) : [...form.categories, c.name] })}
+                      className={`rounded-full border px-3 py-1 text-xs font-bold ${on ? "border-brand bg-brand-soft text-ink" : "border-line text-muted-ink"}`}
+                    >
+                      {c.name}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
         </form>
 
         <div className="rounded-2xl border border-line bg-surface">
@@ -94,6 +121,7 @@ export default function AdminSubscriptionsPage() {
                 <p className="font-semibold text-ink">
                   {p.name} — ৳{p.price} / {p.durationDays} দিন
                 </p>
+                <p className="text-xs text-muted-ink">{p.scope === "all" ? "সব বই" : p.categories.join(", ")}</p>
                 <p className="text-xs text-muted-ink">সক্রিয় সাবস্ক্রাইবার: {p.activeSubscribers ?? 0}</p>
               </div>
               <button

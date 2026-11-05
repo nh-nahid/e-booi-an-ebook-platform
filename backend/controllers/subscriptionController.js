@@ -3,7 +3,7 @@ const Subscription = require("../models/Subscription");
 const Order = require("../models/Order");
 const User = require("../models/User");
 const { notifyUser } = require("../utils/notify");
-const { activeSubscription } = require("../utils/access");
+const { activeSubscriptions } = require("../utils/access");
 
 const DAY = 24 * 60 * 60 * 1000;
 
@@ -20,8 +20,17 @@ async function listPlans(req, res, next) {
 
 async function mySubscription(req, res, next) {
   try {
-    const sub = await activeSubscription(req.user.id);
-    res.json({ data: sub });
+    const subs = await activeSubscriptions(req.user.id);
+    res.json({
+      data: subs.map((s) => ({
+        _id: s._id,
+        planId: s.plan?._id,
+        planName: s.planName,
+        scope: s.plan?.scope || "all",
+        categories: s.plan?.categories || [],
+        expiresAt: s.expiresAt,
+      })),
+    });
   } catch (e) {
     next(e);
   }
@@ -57,7 +66,13 @@ async function createSubscriptionOrder(req, res, next) {
 async function activateFromOrder(order) {
   const plan = await Plan.findById(order.subscriptionPlan);
   if (!plan) return null;
-  const existing = await activeSubscription(order.user);
+  // Same plan bought again extends that plan's current period.
+  const existing = await Subscription.findOne({
+    user: order.user,
+    plan: plan._id,
+    status: "active",
+    expiresAt: { $gt: new Date() },
+  }).sort({ expiresAt: -1 });
   const start = existing ? existing.expiresAt : new Date();
   const sub = await Subscription.create({
     user: order.user,
@@ -71,7 +86,7 @@ async function activateFromOrder(order) {
   await notifyUser(order.user, {
     type: "payment",
     title: "সাবস্ক্রিপশন চালু হয়েছে",
-    message: `${plan.name} প্ল্যান চালু হয়েছে। এখন সব বই পড়তে পারবেন।`,
+    message: `${plan.name} প্ল্যান চালু হয়েছে। ${plan.scope === "categories" ? plan.categories.join(", ") + "-এর বইগুলো" : "সব বই"} এখন পড়তে পারবেন।`,
     link: "/library",
   });
   return sub;
@@ -101,7 +116,7 @@ async function adminListPlans(req, res, next) {
 
 function planFields(body) {
   const out = {};
-  ["name", "description", "price", "durationDays", "isActive", "order"].forEach((f) => {
+  ["name", "description", "price", "durationDays", "isActive", "order", "scope", "categories"].forEach((f) => {
     if (body[f] !== undefined) out[f] = body[f];
   });
   return out;

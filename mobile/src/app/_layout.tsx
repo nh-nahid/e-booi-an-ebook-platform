@@ -43,6 +43,8 @@ function Shell() {
         <Stack.Screen name="orders/index" options={{ title: "আমার অর্ডার" }} />
         <Stack.Screen name="orders/[id]" options={{ title: "অর্ডারের বিবরণ" }} />
         <Stack.Screen name="settings" options={{ title: "থিম ও সেটিংস" }} />
+        <Stack.Screen name="subscription" options={{ title: "সাবস্ক্রিপশন" }} />
+        <Stack.Screen name="author" options={{ title: "লেখক পরিচিতি" }} />
         <Stack.Screen name="notifications" options={{ title: "নোটিফিকেশন" }} />
         <Stack.Screen name="edit-profile" options={{ title: "প্রোফাইল এডিট" }} />
         <Stack.Screen name="change-password" options={{ title: "পাসওয়ার্ড পরিবর্তন" }} />

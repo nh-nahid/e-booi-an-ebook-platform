@@ -25,6 +25,8 @@ export type Plan = {
   description?: string;
   price: number;
   durationDays: number;
+  scope: "all" | "categories";
+  categories: string[];
   isActive: boolean;
   activeSubscribers?: number;
 };

@@ -17,6 +17,7 @@ export default function PaymentSuccess() {
     qc.invalidateQueries({ queryKey: ["cart"] });
     qc.invalidateQueries({ queryKey: ["library"] });
     qc.invalidateQueries({ queryKey: ["orders"] });
+    qc.invalidateQueries({ queryKey: ["my-subscription"] });
   }, [qc]);
 
   return (
