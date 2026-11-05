@@ -12,13 +12,15 @@ interface BookSectionProps {
   title: string;
   href?: string;
   books: Book[];
+  /** First section on the page: show immediately, no scroll-reveal. */
+  eager?: boolean;
 }
 
 const VISIBLE_COUNT = 6;
 
-export default function BookSection({ title, href = "/books", books }: BookSectionProps) {
+export default function BookSection({ title, href = "/books", books, eager }: BookSectionProps) {
   const [page, setPage] = useState(0);
-  const { ref, inView } = useInView<HTMLElement>();
+  const { ref, inView } = useInView<HTMLElement>({ disabled: eager });
 
   // Split books into fixed-size pages of VISIBLE_COUNT so every page shows
   // full cards only — no partially-cut-off card at the row's edge.

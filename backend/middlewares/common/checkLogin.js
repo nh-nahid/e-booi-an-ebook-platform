@@ -55,7 +55,7 @@ function checkLogin(req, res, next) {
 // ROLE BASED ACCESS CONTROL
 // =======================
 function requireRole(...roles) {
-    return (req, res, next) => {
+    return async (req, res, next) => {
         if (!req.user) {
             return res.status(401).json({
                 message: "Unauthorized",
@@ -68,11 +68,38 @@ function requireRole(...roles) {
             });
         }
 
+        // The role inside a JWT can be stale (demoted / suspended after the
+        // token was issued), so privileged roles are re-checked in the DB.
+        if (roles.includes("admin")) {
+            try {
+                const User = require("../../models/User");
+                const fresh = await User.findById(req.user.id).select("role status");
+                if (!fresh || fresh.role !== "admin" || fresh.status !== "active") {
+                    return res.status(403).json({
+                        message: "Forbidden - Access denied",
+                    });
+                }
+            } catch (error) {
+                return res.status(500).json({ message: "Authorization failed" });
+            }
+        }
+
         next();
     };
+}
+
+// Admin accounts only manage the store; they don't shop on the user side.
+function forbidAdmin(req, res, next) {
+    if (req.user?.role === "admin") {
+        return res.status(403).json({
+            message: "অ্যাডমিন অ্যাকাউন্ট দিয়ে এই কাজ করা যায় না",
+        });
+    }
+    next();
 }
 
 module.exports = {
     checkLogin,
     requireRole,
+    forbidAdmin,
 };

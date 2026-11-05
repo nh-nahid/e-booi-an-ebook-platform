@@ -27,6 +27,7 @@ export default async function HomePage() {
         title="সকল বই"
         href="/books?featured=true"
         books={homeData.featuredBooks}
+        eager
       />
 
 

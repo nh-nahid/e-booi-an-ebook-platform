@@ -2,7 +2,7 @@
 
 import {
   BookOpen,
-  Building2,
+  Crown,
   FolderTree,
   LayoutDashboard,
   LogOut,
@@ -12,7 +12,12 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+
+import { useLogout } from "@/features/auth/hooks/auth.hooks";
+import { clearAccessToken } from "@/services/api/token";
 
 const NAV_ITEMS = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
@@ -20,12 +25,25 @@ const NAV_ITEMS = [
   { href: "/admin/users", label: "Users", icon: Users },
   { href: "/admin/orders", label: "Orders", icon: ShoppingBag },
   { href: "/admin/categories", label: "Categories", icon: FolderTree },
-  { href: "/admin/authors", label: "Authors", icon: PenSquare },
-  { href: "/admin/publishers", label: "Publishers", icon: Building2 },
+  { href: "/admin/subscriptions", label: "Subscriptions", icon: Crown },
+  { href: "/admin/authors", label: "Author Profile", icon: PenSquare },
 ];
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  const { mutate: logout, isPending } = useLogout();
+
+  const handleLogout = () =>
+    logout(undefined, {
+      onSuccess: () => {
+        clearAccessToken();
+        queryClient.setQueryData(["profile"], { user: null });
+        router.replace("/login");
+      },
+      onError: () => toast.error("লগআউট করা যায়নি"),
+    });
 
   return (
     <aside className="sticky top-0 flex h-screen w-64 shrink-0 flex-col border-r border-line bg-surface">
@@ -77,6 +95,8 @@ export default function Sidebar() {
       {/* Footer */}
       <div className="border-t border-line p-3">
         <button
+          onClick={handleLogout}
+          disabled={isPending}
           className="
             flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold
             text-muted-ink transition-all duration-200

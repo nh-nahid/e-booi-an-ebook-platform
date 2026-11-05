@@ -196,6 +196,15 @@ async function addUser(req, res, next) {
 
     // Validate admin access
     if (role === "admin") {
+      // Public sign-up can't create admins unless explicitly switched on
+      // (e.g. temporarily, to bootstrap the first admin). Otherwise admins
+      // are created from inside the admin panel by an existing admin.
+      if (process.env.ALLOW_ADMIN_SIGNUP !== "true" || !process.env.ADMIN_ACCESS_CODE) {
+        return res.status(403).json({
+          message: "অ্যাডমিন অ্যাকাউন্ট এখানে খোলা যায় না।",
+        });
+      }
+
       if (!adminCode) {
         return res.status(400).json({
           message: "Admin access code is required.",

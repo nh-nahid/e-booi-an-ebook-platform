@@ -53,6 +53,11 @@ const UserSchema = new mongoose.Schema(
       default: "user",
     },
 
+    // Admin content management: books handed out for free / books whose
+    // access an admin removed (overrides purchases and subscriptions).
+    grantedBooks: [{ type: mongoose.Schema.Types.ObjectId, ref: "Book" }],
+    revokedBooks: [{ type: mongoose.Schema.Types.ObjectId, ref: "Book" }],
+
     status: {
       type: String,
       enum: ["active", "suspended"],

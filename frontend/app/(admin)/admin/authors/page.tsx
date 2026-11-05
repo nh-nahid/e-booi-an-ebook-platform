@@ -1,234 +1,80 @@
 "use client";
 
-import { ArrowRight, Check, Clock, Loader2, Mail } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
-// Set your real launch date/time here
-const LAUNCH_DATE = new Date("2026-09-01T00:00:00");
+import { authorApi, type Author } from "@/features/admin/content/api";
 
-function getTimeLeft(target: Date) {
-  const diff = Math.max(0, target.getTime() - Date.now());
+const empty: Author = { name: "", tagline: "", bio: "", photo: "", facebook: "", youtube: "", website: "" };
 
-  return {
-    days: Math.floor(diff / (1000 * 60 * 60 * 24)),
-    hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
-    minutes: Math.floor((diff / (1000 * 60)) % 60),
-    seconds: Math.floor((diff / 1000) % 60),
-  };
-}
-
-export default function ComingSoonPage() {
-  const [timeLeft, setTimeLeft] = useState(() => getTimeLeft(LAUNCH_DATE));
-  const [email, setEmail] = useState("");
-  const [focused, setFocused] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [subscribed, setSubscribed] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+export default function AdminAuthorPage() {
+  const qc = useQueryClient();
+  const { data, isLoading } = useQuery({ queryKey: ["admin", "author"], queryFn: authorApi.get });
+  const [form, setForm] = useState<Author>(empty);
 
   useEffect(() => {
-    const timer = setInterval(
-      () => setTimeLeft(getTimeLeft(LAUNCH_DATE)),
-      1000,
-    );
-    return () => clearInterval(timer);
-  }, []);
+    if (data) setForm({ ...empty, ...data });
+  }, [data]);
 
-  const handleSubscribe = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
+  const save = useMutation({
+    mutationFn: () => authorApi.save(form),
+    onSuccess: () => { toast.success("লেখক প্রোফাইল সেভ হয়েছে"); qc.invalidateQueries({ queryKey: ["admin", "author"] }); },
+    onError: (e) => toast.error((e as AxiosError<{ message: string }>).response?.data?.message ?? "সেভ হয়নি"),
+  });
 
-    if (!/^\S+@\S+\.\S+$/.test(email)) {
-      setError("Please enter a valid email address.");
-      return;
-    }
+  const field = (key: keyof Author, label: string, multiline = false) => (
+    <label className="block space-y-1">
+      <span className="text-sm font-semibold text-ink">{label}</span>
+      {multiline ? (
+        <textarea
+          rows={6}
+          value={form[key] ?? ""}
+          onChange={(e) => setForm({ ...form, [key]: e.target.value })}
+          className="w-full rounded-xl border border-line bg-canvas px-3 py-2 text-sm text-ink outline-none focus:border-brand"
+        />
+      ) : (
+        <input
+          value={form[key] ?? ""}
+          onChange={(e) => setForm({ ...form, [key]: e.target.value })}
+          className="w-full rounded-xl border border-line bg-canvas px-3 py-2 text-sm text-ink outline-none focus:border-brand"
+        />
+      )}
+    </label>
+  );
 
-    setLoading(true);
-    try {
-      // TODO: wire up to your actual notify-me mutation
-      // await subscribeToLaunch(email);
-      await new Promise((r) => setTimeout(r, 900));
-      setSubscribed(true);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const units: { label: string; value: number }[] = [
-    { label: "Days", value: timeLeft.days },
-    { label: "Hours", value: timeLeft.hours },
-    { label: "Minutes", value: timeLeft.minutes },
-    { label: "Seconds", value: timeLeft.seconds },
-  ];
+  if (isLoading) return <p className="text-sm text-muted-ink">লোড হচ্ছে…</p>;
 
   return (
-    <div className="relative -m-6 flex min-h-screen items-center justify-center overflow-hidden bg-canvas -mt-15 px-4 py-16">
-      <style>{`
-        @keyframes csFloat {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          50% { transform: translate(16px, -18px) scale(1.06); }
-        }
-        @keyframes csFloatSlow {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          50% { transform: translate(-14px, 14px) scale(1.04); }
-        }
-        @keyframes csFadeUp {
-          from { opacity: 0; transform: translateY(16px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes csPulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.55; }
-        }
-        .cs-blob-a { animation: csFloat 8s ease-in-out infinite; }
-        .cs-blob-b { animation: csFloatSlow 10s ease-in-out infinite; }
-        .cs-fade { animation: csFadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
-      `}</style>
-
-      {/* ambient blobs */}
-      <div className="cs-blob-a pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-brand opacity-[0.14] blur-3xl" />
-      <div className="cs-blob-b pointer-events-none absolute -bottom-28 -right-16 h-80 w-80 rounded-full bg-navy opacity-[0.08] blur-3xl" />
-
-      <div className="relative z-10 flex w-full max-w-lg flex-col items-center text-center">
-        {/* logo */}
-        <div
-          className="cs-fade mb-6 flex items-center gap-2"
-          style={{ animationDelay: "0s" }}
-        >
-          <Image src="/logo.jpeg" alt="ebooi Logo" width={32} height={32} />
-          <span className="text-xl font-extrabold text-ink">
-            eBoo<span className="text-brand">i</span>
-          </span>
-        </div>
-
-        {/* badge */}
-        <span
-          className="cs-fade mb-4 flex items-center gap-1.5 rounded-full bg-brand-soft px-4 py-1.5 text-xs font-bold text-ink"
-          style={{ animationDelay: "0.05s" }}
-        >
-          <Clock className="h-3.5 w-3.5 text-brand" />
-          Launching Soon
-        </span>
-
-        <h1
-          className="cs-fade text-3xl font-extrabold leading-tight text-ink sm:text-4xl"
-          style={{ animationDelay: "0.1s" }}
-        >
-          Something great is
-          <br />
-          on its way.
-        </h1>
-
-        <p
-          className="cs-fade mt-3 max-w-sm text-sm text-muted-ink sm:text-base"
-          style={{ animationDelay: "0.15s" }}
-        >
-          We&apos;re putting the final touches on this page. Leave your email
-          and we&apos;ll let you know the moment it&apos;s live.
-        </p>
-
-        {/* countdown */}
-        <div
-          className="cs-fade mt-8 grid grid-cols-4 gap-2 sm:gap-3"
-          style={{ animationDelay: "0.2s" }}
-        >
-          {units.map((unit) => (
-            <div
-              key={unit.label}
-              className="flex w-16 flex-col items-center rounded-2xl border border-line bg-surface py-3 shadow-[0_8px_20px_rgba(10,14,42,0.05)] sm:w-20"
-            >
-              <span
-                className="text-xl font-extrabold text-ink sm:text-2xl"
-                style={{ animation: "csPulse 2s ease-in-out infinite" }}
-              >
-                {String(unit.value).padStart(2, "0")}
-              </span>
-              <span className="mt-0.5 text-[10px] font-semibold uppercase tracking-wide text-subtle">
-                {unit.label}
-              </span>
-            </div>
-          ))}
-        </div>
-
-        {/* subscribe form */}
-        <div
-          className="cs-fade mt-9 w-full"
-          style={{ animationDelay: "0.25s" }}
-        >
-          {subscribed ? (
-            <div className="flex items-center justify-center gap-2 rounded-full bg-brand-soft px-5 py-3 text-sm font-semibold text-ink">
-              <Check className="h-4 w-4 text-brand" />
-              You&apos;re on the list — we&apos;ll email you at launch.
-            </div>
-          ) : (
-            <form
-              onSubmit={handleSubscribe}
-              className="flex flex-col gap-2 sm:flex-row"
-            >
-              <div className="relative flex-1">
-                <Mail
-                  className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 transition-colors"
-                  style={{ color: focused ? "#2DBDB6" : "#9AA3AF" }}
-                />
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  onFocus={() => setFocused(true)}
-                  onBlur={() => setFocused(false)}
-                  placeholder="you@example.com"
-                  className="h-12 w-full rounded-full border pl-10 pr-4 text-sm text-ink outline-none transition-all duration-200 placeholder:text-subtle"
-                  style={{
-                    borderColor: focused ? "#2DBDB6" : "#E1E5E8",
-                    boxShadow: focused
-                      ? "0 0 0 4px rgba(45,189,182,0.15)"
-                      : "none",
-                  }}
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled={loading}
-                className="
-                  group relative flex h-12 shrink-0 items-center justify-center gap-2
-                  overflow-hidden rounded-full border-0 bg-gradient-to-br from-brand to-brand-strong
-                  px-6 text-sm font-bold text-white shadow-[0_4px_12px_rgba(45,189,182,0.35)]
-                  transition-transform duration-150
-                  hover:-translate-y-0.5 hover:shadow-[0_8px_18px_rgba(45,189,182,0.4)]
-                  active:translate-y-0 active:scale-[0.98]
-                  disabled:opacity-70
-                "
-              >
-                <span className="absolute inset-0 -translate-x-[120%] bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-500 group-hover:translate-x-[120%]" />
-                <span className="relative flex items-center gap-2">
-                  {loading ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <>
-                      Notify Me
-                      <ArrowRight className="h-4 w-4" />
-                    </>
-                  )}
-                </span>
-              </button>
-            </form>
-          )}
-
-          {error && (
-            <p className="mt-2 text-xs font-medium text-danger-ink">{error}</p>
-          )}
-        </div>
-
-        <Link
-          href="/admin"
-          className="cs-fade mt-8 text-xs font-semibold text-muted-ink transition-colors hover:text-brand"
-          style={{ animationDelay: "0.3s" }}
-        >
-          ← Back to homepage
-        </Link>
+    <div className="max-w-2xl space-y-6">
+      <div>
+        <h1 className="text-2xl font-extrabold text-ink">লেখক প্রোফাইল</h1>
+        <p className="text-sm text-muted-ink">eBooi-তে একজন লেখকের বই বিক্রি হয় — তাঁর পরিচিতি এখানে সম্পাদনা করুন।</p>
       </div>
+
+      <form
+        onSubmit={(e) => { e.preventDefault(); save.mutate(); }}
+        className="space-y-4 rounded-2xl border border-line bg-surface p-5"
+      >
+        {field("name", "লেখকের নাম")}
+        {field("tagline", "সংক্ষিপ্ত পরিচয় (যেমন: লেখক ও বক্তা)")}
+        {field("bio", "জীবনী", true)}
+        {field("photo", "ছবির লিংক (URL)")}
+        {form.photo && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={form.photo} alt="" className="h-24 w-24 rounded-full object-cover" />
+        )}
+        {field("facebook", "Facebook লিংক")}
+        {field("youtube", "YouTube লিংক")}
+        {field("website", "ওয়েবসাইট")}
+        <button
+          disabled={save.isPending || !form.name.trim()}
+          className="rounded-xl bg-brand px-5 py-2.5 text-sm font-bold text-white disabled:opacity-50"
+        >
+          {save.isPending ? "সেভ হচ্ছে…" : "সেভ করুন"}
+        </button>
+      </form>
     </div>
   );
 }

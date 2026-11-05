@@ -15,6 +15,7 @@ const {
 const {
     checkLogin,
     requireRole,
+    forbidAdmin,
 } = require("../middlewares/common/checkLogin");
 
 const router = express.Router();
@@ -27,6 +28,7 @@ const router = express.Router();
 router.post(
     "/",
     checkLogin,
+    forbidAdmin,
     createOrder
 );
 
@@ -34,6 +36,7 @@ router.post(
 router.get(
     "/my-orders",
     checkLogin,
+    forbidAdmin,
     getMyOrders
 );
 
@@ -41,6 +44,7 @@ router.get(
 router.get(
     "/library",
     checkLogin,
+    forbidAdmin,
     getLibrary
 );
 
@@ -48,6 +52,7 @@ router.get(
 router.get(
     "/download/:bookId",
     checkLogin,
+    forbidAdmin,
     downloadBook
 );
 

@@ -8,6 +8,7 @@ import AuthProvider from "@/providers/auth-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { ACCENT_INIT_SCRIPT } from "@/components/theme/accent";
 import SearchCleanup from "@/components/search/search-cleanup";
+import AdminRedirect from "@/components/auth/admin-redirect";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -44,6 +45,7 @@ export default function RootLayout({
           <QueryProvider>
             <AuthProvider>
               <SearchCleanup />
+              <AdminRedirect />
               {children}
               <Toaster position="bottom-right" richColors />
             </AuthProvider>

@@ -68,6 +68,8 @@ app.use("/api/v1/reviews", reviewRouter);
 app.use("/api/v1/wishlist", wishlistRouter);
 app.use("/api/v1/coupons", couponRouter);
 app.use("/api/v1/notifications", notificationRouter);
+app.use("/api/v1/categories", require("./routers/categoryRouter"));
+app.use("/api/v1/store", require("./routers/publicContentRouter"));
 
 // invoice route
 app.use(

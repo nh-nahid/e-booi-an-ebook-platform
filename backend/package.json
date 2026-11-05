@@ -9,7 +9,10 @@
   "scripts": {
     "dev": "nodemon app.js",
     "start": "set NODE_ENV=development&& nodemon app.js",
-    "prod": "set NODE_ENV=production&& node app.js"
+    "prod": "set NODE_ENV=production&& node app.js",
+    "seed": "node scripts/seed.js",
+    "seed:add": "node scripts/seed.js --yes",
+    "seed:reset": "node scripts/seed.js --yes --reset"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",

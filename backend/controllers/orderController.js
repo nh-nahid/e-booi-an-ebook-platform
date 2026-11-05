@@ -6,6 +6,7 @@ const sendEmail = require("../utils/sendEmail");
 const orderEmail = require("../emails/templates/orderEmail");
 const Coupon = require("../models/Coupon");
 const path = require("path");
+const { libraryBooks, hasBookAccess } = require("../utils/access");
 
 // Payment methods the storefront can send. Every online method (bKash, Nagad,
 // Rocket, cards) is processed through the EPS gateway. Cash on Delivery was
@@ -240,21 +241,15 @@ async function getOrderById(req, res, next) {
 // download Digital books
 async function downloadBook(req, res, next) {
   try {
-    const order = await Order.findOne({
-      user: req.user.id,
-      paymentStatus: "paid",
-      "items.book": req.params.bookId,
-    }).populate("items.book");
+    const accessibleBook = await hasBookAccess(req.user.id, req.params.bookId);
 
-    if (!order) {
+    if (!accessibleBook) {
       return res.status(403).json({
         message: "Book not purchased",
       });
     }
 
-    const item = order.items.find(
-      (item) => item.book._id.toString() === req.params.bookId,
-    );
+    const item = { book: accessibleBook };
 
     if (item.book.bookType !== "Digital") {
       return res.status(400).json({
@@ -327,22 +322,7 @@ async function updatePaymentStatus(req, res, next) {
 // user Digital library
 async function getLibrary(req, res, next) {
   try {
-    const orders = await Order.find({
-      user: req.user.id,
-      paymentStatus: "paid",
-    }).populate("items.book");
-
-    const booksMap = new Map();
-
-    orders.forEach((order) => {
-      order.items.forEach((item) => {
-        if (item.book && item.book.bookType === "Digital") {
-          booksMap.set(item.book._id.toString(), item.book);
-        }
-      });
-    });
-
-    const books = Array.from(booksMap.values());
+    const books = await libraryBooks(req.user.id);
 
     res.json(books);
   } catch (error) {
