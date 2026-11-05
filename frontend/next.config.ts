@@ -48,6 +48,13 @@ const nextConfig = {
         hostname: "res.cloudinary.com",
         pathname: "/**",
       },
+      // Google profile pictures (users who sign in with Google keep their
+      // Google avatar URL). Without this, <Image> refuses to load them.
+      {
+        protocol: "https",
+        hostname: "**.googleusercontent.com",
+        pathname: "/**",
+      },
     ],
   },
 };
