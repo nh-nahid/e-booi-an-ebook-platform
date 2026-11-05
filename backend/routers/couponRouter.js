@@ -10,6 +10,7 @@ const {
 const {
     checkLogin,
     requireRole,
+    forbidAdmin,
 } = require("../middlewares/common/checkLogin");
 
 const router = express.Router();
@@ -35,6 +36,6 @@ router.delete(
     deleteCoupon
 );
 
-router.post("/apply", checkLogin, applyCoupon);
+router.post("/apply", checkLogin, forbidAdmin, applyCoupon);
 
 module.exports = router;

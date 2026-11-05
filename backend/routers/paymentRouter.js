@@ -8,7 +8,7 @@ const {
 } = require("../controllers/paymentController");
 
 const {
-    checkLogin,
+    checkLogin, forbidAdmin,
 } = require("../middlewares/common/checkLogin");
 
 const router = express.Router();
@@ -16,6 +16,7 @@ const router = express.Router();
 router.post(
     "/pay/:id",
     checkLogin,
+    forbidAdmin,
     initiatePayment
 );
 

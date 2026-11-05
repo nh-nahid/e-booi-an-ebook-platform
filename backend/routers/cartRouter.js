@@ -8,11 +8,11 @@ const {
     updateCartQuantity,
 } = require("../controllers/cartController");
 
-const { checkLogin } = require("../middlewares/common/checkLogin");
+const { checkLogin, forbidAdmin } = require("../middlewares/common/checkLogin");
 
 const router = express.Router();
 
-router.use(checkLogin);
+router.use(checkLogin, forbidAdmin);
 
 router.get("/", getCart);
 

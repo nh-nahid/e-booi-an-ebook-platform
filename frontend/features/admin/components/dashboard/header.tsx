@@ -1,7 +1,7 @@
 "use client";
 
 import ThemeSwitcher from "@/components/theme/theme-switcher";
-import { Bell, User, Settings, LogOut, ChevronsUpDown } from "lucide-react";
+import { Bell, LogOut, ChevronsUpDown } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -133,18 +133,6 @@ export default function AdminHeader() {
               <p className="font-semibold">{user.name}</p>
               <p className="text-xs text-muted-foreground">{user.email}</p>
             </div>
-
-            <DropdownMenuSeparator />
-
-            <DropdownMenuItem onClick={() => router.push("/profile")}>
-              <User className="mr-2 h-4 w-4" />
-              Profile
-            </DropdownMenuItem>
-
-            <DropdownMenuItem onClick={() => router.push("/admin/settings")}>
-              <Settings className="mr-2 h-4 w-4" />
-              Settings
-            </DropdownMenuItem>
 
             <DropdownMenuSeparator />
 
