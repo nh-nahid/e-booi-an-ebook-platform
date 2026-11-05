@@ -46,6 +46,15 @@ async function run() {
 
   const base = (process.env.SEED_ASSET_BASE || process.env.BACKEND_URL || "http://localhost:5000").replace(/\/+$/, "");
 
+  // Covers/PDFs are stored as absolute URLs: a localhost base would break them
+  // for everyone except this computer (web on another device, the phone app).
+  if (/localhost|127\.0\.0\.1/.test(base) && /mongodb\+srv/.test(uri) && !args.has("--allow-localhost")) {
+    throw new Error(
+      "Asset base is localhost but the database is remote. Set SEED_ASSET_BASE to your public backend URL " +
+        "(e.g. https://<your-backend>.onrender.com) in .env, or pass --allow-localhost.",
+    );
+  }
+
   await mongoose.connect(uri);
   console.log("Connected to", mongoose.connection.host);
 
