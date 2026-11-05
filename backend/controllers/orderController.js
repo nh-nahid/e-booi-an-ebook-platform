@@ -330,8 +330,26 @@ async function getLibrary(req, res, next) {
       User.findById(req.user.id).select("hiddenBooks"),
     ]);
     const hidden = new Set((me?.hiddenBooks || []).map(String));
+
+    // When the user got each book: first paid order that contains it; books
+    // from a subscription or an admin grant fall back to the book's date.
+    const paid = await Order.find({ user: req.user.id, paymentStatus: "paid" })
+      .select("items.book paidAt createdAt");
+    const acquired = new Map();
+    paid.forEach((o) => {
+      const when = o.paidAt || o.createdAt;
+      o.items.forEach((i) => {
+        const id = i.book?.toString();
+        if (id && (!acquired.has(id) || when < acquired.get(id))) acquired.set(id, when);
+      });
+    });
+
     res.json(
-      books.map((b) => ({ ...b.toObject(), isHidden: hidden.has(b._id.toString()) })),
+      books.map((b) => ({
+        ...b.toObject(),
+        isHidden: hidden.has(b._id.toString()),
+        acquiredAt: acquired.get(b._id.toString()) || b.createdAt,
+      })),
     );
   } catch (error) {
     next(error);

@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { Alert, FlatList, Pressable, View } from "react-native";
+import { Alert, FlatList, Pressable, ScrollView, View } from "react-native";
 import { router } from "expo-router";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -18,17 +18,27 @@ export default function LibraryScreen() {
   const q = useLibrary();
   const [search, setSearch] = useState("");
   const [showHidden, setShowHidden] = useState(false);
+  const [category, setCategory] = useState("all");
+  const [newestFirst, setNewestFirst] = useState(true);
 
   const all = q.data ?? [];
   const hiddenCount = all.filter((b) => b.isHidden).length;
+  const categories = useMemo(
+    () => Array.from(new Set(all.map((b) => b.category).filter(Boolean))) as string[],
+    [all],
+  );
   const books = useMemo(() => {
     const term = search.trim().toLowerCase();
-    return all.filter(
-      (b) =>
-        !!b.isHidden === showHidden &&
-        (!term || b.title.toLowerCase().includes(term) || b.author.toLowerCase().includes(term)),
-    );
-  }, [all, search, showHidden]);
+    const time = (b: (typeof all)[number]) => (b.acquiredAt ? new Date(b.acquiredAt).getTime() : 0);
+    return all
+      .filter(
+        (b) =>
+          !!b.isHidden === showHidden &&
+          (category === "all" || b.category === category) &&
+          (!term || b.title.toLowerCase().includes(term) || b.author.toLowerCase().includes(term)),
+      )
+      .sort((a, b) => (newestFirst ? time(b) - time(a) : time(a) - time(b)));
+  }, [all, search, showHidden, category, newestFirst]);
 
   if (authLoading) return <Screen><Loading /></Screen>;
   if (!isAuthenticated)
@@ -70,13 +80,41 @@ export default function LibraryScreen() {
             onChangeText={setSearch}
             returnKeyType="search"
           />
-          {(hiddenCount > 0 || showHidden) && (
-            <Pressable onPress={() => setShowHidden((v) => !v)} style={{ marginBottom: 10, alignSelf: "flex-start" }}>
-              <Txt bold style={{ color: c.brand }}>
-                {showHidden ? "← আমার লাইব্রেরি" : `সরানো বই (${hiddenCount})`}
-              </Txt>
-            </Pressable>
+          {categories.length > 1 && (
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ flexGrow: 0, marginBottom: 10 }} contentContainerStyle={{ gap: 8 }}>
+              {["all", ...categories].map((name) => {
+                const on = category === name;
+                return (
+                  <Pressable
+                    key={name}
+                    onPress={() => setCategory(name)}
+                    style={{
+                      paddingHorizontal: 14,
+                      paddingVertical: 7,
+                      borderRadius: 999,
+                      borderWidth: 1,
+                      borderColor: on ? c.brand : c.line,
+                      backgroundColor: on ? c.brandSoft : c.surface,
+                    }}
+                  >
+                    <Txt size={12} bold color={on ? "ink" : "muted"}>{name === "all" ? "সব" : name}</Txt>
+                  </Pressable>
+                );
+              })}
+            </ScrollView>
           )}
+          <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+            <Pressable onPress={() => setNewestFirst((v) => !v)}>
+              <Txt bold style={{ color: c.brand }}>{newestFirst ? "↓ নতুন আগে" : "↑ পুরোনো আগে"}</Txt>
+            </Pressable>
+            {(hiddenCount > 0 || showHidden) && (
+              <Pressable onPress={() => setShowHidden((v) => !v)}>
+                <Txt bold style={{ color: c.brand }}>
+                  {showHidden ? "← আমার লাইব্রেরি" : `সরানো বই (${hiddenCount})`}
+                </Txt>
+              </Pressable>
+            )}
+          </View>
         </>
       )}
 

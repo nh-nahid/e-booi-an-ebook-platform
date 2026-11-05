@@ -90,6 +90,8 @@ export interface LibraryBook {
   coverImage?: string;
   price: number;
   isHidden?: boolean;
+  category?: string;
+  acquiredAt?: string;
 }
 
 export interface WishlistEntry {

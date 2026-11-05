@@ -6,4 +6,6 @@ export interface LibraryBook {
   bookType: "Digital";
   price: number;
   isHidden?: boolean;
+  category?: string;
+  acquiredAt?: string;
 }

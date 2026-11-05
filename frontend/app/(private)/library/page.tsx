@@ -24,16 +24,26 @@ export default function LibraryPage() {
   const hideMutation = useSetLibraryHidden();
   const [search, setSearch] = useState("");
   const [showHidden, setShowHidden] = useState(false);
+  const [category, setCategory] = useState("all");
+  const [sort, setSort] = useState<"newest" | "oldest">("newest");
 
   const hiddenCount = books.filter((b) => b.isHidden).length;
+  const categories = useMemo(
+    () => Array.from(new Set(books.map((b) => b.category).filter(Boolean))) as string[],
+    [books],
+  );
   const shown = useMemo(() => {
     const q = search.trim().toLowerCase();
-    return books.filter(
-      (b) =>
-        !!b.isHidden === showHidden &&
-        (!q || b.title.toLowerCase().includes(q) || b.author.toLowerCase().includes(q)),
-    );
-  }, [books, search, showHidden]);
+    const time = (b: (typeof books)[number]) => (b.acquiredAt ? new Date(b.acquiredAt).getTime() : 0);
+    return books
+      .filter(
+        (b) =>
+          !!b.isHidden === showHidden &&
+          (category === "all" || b.category === category) &&
+          (!q || b.title.toLowerCase().includes(q) || b.author.toLowerCase().includes(q)),
+      )
+      .sort((a, b) => (sort === "newest" ? time(b) - time(a) : time(a) - time(b)));
+  }, [books, search, showHidden, category, sort]);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -123,6 +133,15 @@ export default function LibraryPage() {
                 className="w-full rounded-lg border border-line bg-surface py-2.5 pl-9 pr-3 text-sm text-ink outline-none focus:border-brand"
               />
             </div>
+            <select
+              value={sort}
+              onChange={(e) => setSort(e.target.value as "newest" | "oldest")}
+              aria-label="সাজান"
+              className="rounded-lg border border-line bg-surface px-3 py-2.5 text-sm font-semibold text-ink outline-none focus:border-brand"
+            >
+              <option value="newest">নতুন আগে</option>
+              <option value="oldest">পুরোনো আগে</option>
+            </select>
             {(hiddenCount > 0 || showHidden) && (
               <button
                 onClick={() => setShowHidden((v) => !v)}
@@ -131,6 +150,24 @@ export default function LibraryPage() {
                 {showHidden ? "← আমার বইসমূহ" : `সরানো বই (${hiddenCount})`}
               </button>
             )}
+          </div>
+        )}
+
+        {categories.length > 1 && (
+          <div className="mb-4 flex gap-2 overflow-x-auto pb-1">
+            {["all", ...categories].map((c) => (
+              <button
+                key={c}
+                onClick={() => setCategory(c)}
+                className={`shrink-0 rounded-full border px-4 py-1.5 text-xs font-bold transition-colors sm:text-sm ${
+                  category === c
+                    ? "border-brand bg-brand-soft text-ink"
+                    : "border-line bg-surface text-muted-ink hover:text-ink"
+                }`}
+              >
+                {c === "all" ? "সব" : c}
+              </button>
+            ))}
           </div>
         )}
 
