@@ -7,12 +7,6 @@ import { useState, type ReactNode } from "react";
 import { FaFacebook, FaWhatsapp } from "react-icons/fa";
 import InstallAppButton from "@/components/pwa/install-app-button";
 
-// Android app (EAS build page). Override with NEXT_PUBLIC_APP_DOWNLOAD_URL
-// when a newer build or a Play Store link is available.
-const APP_DOWNLOAD_URL =
-  process.env.NEXT_PUBLIC_APP_DOWNLOAD_URL ||
-  "https://expo.dev/accounts/ebooi.bd/projects/ebooi/builds/add930e5-d545-44c3-8258-1598c073f678";
-
 const SOCIAL_LINKS = [
   {
     Icon: FaFacebook,
@@ -223,7 +217,7 @@ export default function SiteFooter() {
               +880 1791148655
             </a>
 
-            <InstallAppButton apkUrl={APP_DOWNLOAD_URL} />
+            <InstallAppButton />
           </div>
         </FooterAccordionItem>
       </div>

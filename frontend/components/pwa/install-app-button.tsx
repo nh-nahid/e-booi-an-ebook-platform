@@ -10,7 +10,7 @@ type InstallEvent = Event & {
 
 /** Footer "app download" button that installs the PWA (one tap on Android/desktop Chrome,
  *  short instructions on iPhone/Safari). Hidden once the site already runs as an installed app. */
-export default function InstallAppButton({ apkUrl }: { apkUrl?: string }) {
+export default function InstallAppButton() {
   const [evt, setEvt] = useState<InstallEvent | null>(null);
   const [installed, setInstalled] = useState(false);
   const [help, setHelp] = useState(false);
@@ -70,12 +70,6 @@ export default function InstallAppButton({ apkUrl }: { apkUrl?: string }) {
             ? "Safari-তে Share (⬆︎) বাটনে চাপুন → \"Add to Home Screen\" বেছে নিন।"
             : "ব্রাউজারের মেনু (⋮) থেকে \"Install app\" বা \"Add to Home screen\" বেছে নিন।"}
         </p>
-      )}
-
-      {apkUrl && (
-        <a href={apkUrl} target="_blank" rel="noopener noreferrer" className="w-fit text-[11px] text-muted-ink underline-offset-2 hover:text-brand hover:underline">
-          অথবা Android APK ডাউনলোড করুন
-        </a>
       )}
     </div>
   );
