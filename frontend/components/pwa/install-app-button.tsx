@@ -17,11 +17,14 @@ export default function InstallAppButton({ apkUrl }: { apkUrl?: string }) {
   const [ios, setIos] = useState(false);
 
   useEffect(() => {
-    const standalone =
-      window.matchMedia("(display-mode: standalone)").matches ||
-      (navigator as unknown as { standalone?: boolean }).standalone === true;
-    setInstalled(standalone);
-    setIos(/iphone|ipad|ipod/i.test(navigator.userAgent));
+    // Read browser-only state after hydration (deferred so it is not a sync setState in the effect).
+    const t = setTimeout(() => {
+      setInstalled(
+        window.matchMedia("(display-mode: standalone)").matches ||
+          (navigator as unknown as { standalone?: boolean }).standalone === true,
+      );
+      setIos(/iphone|ipad|ipod/i.test(navigator.userAgent));
+    }, 0);
 
     const onPrompt = (e: Event) => {
       e.preventDefault();
@@ -31,6 +34,7 @@ export default function InstallAppButton({ apkUrl }: { apkUrl?: string }) {
     window.addEventListener("beforeinstallprompt", onPrompt);
     window.addEventListener("appinstalled", onInstalled);
     return () => {
+      clearTimeout(t);
       window.removeEventListener("beforeinstallprompt", onPrompt);
       window.removeEventListener("appinstalled", onInstalled);
     };
