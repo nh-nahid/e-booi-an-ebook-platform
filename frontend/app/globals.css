@@ -673,3 +673,23 @@
   /* Sonner toasts sit above the tab bar */
   [data-sonner-toaster] { bottom: calc(70px + env(safe-area-inset-bottom)) !important; }
 }
+
+/* Installed app: header matches the native app (menu · logo … library · bell · avatar, search below).
+   Cart lives in the bottom tab bar, as in the native app. */
+@media (display-mode: standalone) and (max-width: 767px) {
+  .app-header {
+    background: var(--surface);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: none;
+    border-bottom: 1px solid var(--line);
+    padding-top: calc(10px + env(safe-area-inset-top));
+    padding-bottom: 10px;
+  }
+  .app-header-actions { gap: 14px; }
+  .app-header-actions a[aria-label="লাইব্রেরি"] { order: 1; }
+  .app-header-actions a[aria-label="নোটিফিকেশন"] { order: 2; }
+  .app-header-actions a[aria-label="My Profile"],
+  .app-header-actions a[aria-label="Login"] { order: 3; }
+  .app-header-actions a[aria-label="কার্ট"] { display: none; }
+}
