@@ -11,8 +11,21 @@ const BACKEND_ORIGIN = (
 ).replace(/\/+$/, "");
 
 const nextConfig = {
+  async headers() {
+    return [
+      {
+        // The service worker must always be revalidated so updates reach users.
+        source: "/sw.js",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=0, must-revalidate" },
+          { key: "Service-Worker-Allowed", value: "/" },
+        ],
+      },
+    ];
+  },
   async rewrites() {
     return [
+      { source: "/.well-known/assetlinks.json", destination: "/assetlinks" },
       {
         source: "/api/v1/payment/eps/:path*",
         destination: `${BACKEND_ORIGIN}/api/v1/payment/eps/:path*`,
