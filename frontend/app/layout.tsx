@@ -10,6 +10,7 @@ import { ACCENT_INIT_SCRIPT } from "@/components/theme/accent";
 import SearchCleanup from "@/components/search/search-cleanup";
 import AdminRedirect from "@/components/auth/admin-redirect";
 import ServiceWorkerRegister from "@/components/pwa/sw-register";
+import BottomTabs from "@/components/pwa/bottom-tabs";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -41,6 +42,7 @@ export const viewport: Viewport = {
   themeColor: "#2bb8b0",
   width: "device-width",
   initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
@@ -64,6 +66,7 @@ export default function RootLayout({
               <AdminRedirect />
               <ServiceWorkerRegister />
               {children}
+              <BottomTabs />
               <Toaster position="bottom-right" richColors />
             </AuthProvider>
           </QueryProvider>

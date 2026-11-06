@@ -620,3 +620,56 @@
   border-color: var(--brand) !important;
   color: var(--brand) !important;
 }
+
+/* ---------- Installed-app (PWA / TWA) native-style tab bar ---------- */
+.pwa-tabbar { display: none; }
+
+@media (display-mode: standalone) and (max-width: 767px) {
+  .pwa-tabbar {
+    display: flex;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 50;
+    background: var(--surface);
+    border-top: 1px solid var(--line);
+    padding: 6px 0 calc(4px + env(safe-area-inset-bottom));
+  }
+  .pwa-tab {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted-ink);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .pwa-tab.active { color: var(--brand); }
+  .pwa-tab-icon { position: relative; display: inline-flex; }
+  .pwa-tab-icon svg { width: 24px; height: 24px; }
+  .pwa-badge {
+    position: absolute;
+    top: -4px;
+    right: -9px;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    border-radius: 999px;
+    background: var(--brand);
+    color: #fff;
+    font-size: 10px;
+    line-height: 16px;
+    text-align: center;
+  }
+  body.has-tabbar { padding-bottom: calc(60px + env(safe-area-inset-bottom)); }
+
+  /* App feel: no text-selection flash / rubber-band, no hover-only chrome */
+  body { overscroll-behavior-y: none; -webkit-touch-callout: none; }
+  /* The site footer is a web-page pattern; the native app has none. */
+  body.has-tabbar footer { display: none; }
+  /* Sonner toasts sit above the tab bar */
+  [data-sonner-toaster] { bottom: calc(70px + env(safe-area-inset-bottom)) !important; }
+}
