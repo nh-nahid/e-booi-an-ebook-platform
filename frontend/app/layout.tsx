@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Noto_Sans_Bengali } from "next/font/google";
 import "./globals.css";
 
@@ -9,6 +9,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { ACCENT_INIT_SCRIPT } from "@/components/theme/accent";
 import SearchCleanup from "@/components/search/search-cleanup";
 import AdminRedirect from "@/components/auth/admin-redirect";
+import ServiceWorkerRegister from "@/components/pwa/sw-register";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -25,6 +26,21 @@ const banglaFont = Noto_Sans_Bengali({
 export const metadata: Metadata = {
   title: "ebooi | ই-বই",
   description: "Modern Online Book Store",
+  applicationName: "ebooi",
+  appleWebApp: { capable: true, title: "ebooi", statusBarStyle: "default" },
+  icons: {
+    icon: [
+      { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: "/icons/apple-touch-icon.png",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#2bb8b0",
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({
@@ -46,6 +62,7 @@ export default function RootLayout({
             <AuthProvider>
               <SearchCleanup />
               <AdminRedirect />
+              <ServiceWorkerRegister />
               {children}
               <Toaster position="bottom-right" richColors />
             </AuthProvider>
