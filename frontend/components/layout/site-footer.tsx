@@ -5,12 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, type ReactNode } from "react";
 import { FaFacebook, FaWhatsapp } from "react-icons/fa";
-
-// Android app (EAS build page). Override with NEXT_PUBLIC_APP_DOWNLOAD_URL
-// when a newer build or a Play Store link is available.
-const APP_DOWNLOAD_URL =
-  process.env.NEXT_PUBLIC_APP_DOWNLOAD_URL ||
-  "https://expo.dev/accounts/ebooi.bd/projects/ebooi/builds/add930e5-d545-44c3-8258-1598c073f678";
+import InstallAppButton from "@/components/pwa/install-app-button";
 
 const SOCIAL_LINKS = [
   {
@@ -222,26 +217,7 @@ export default function SiteFooter() {
               +880 1791148655
             </a>
 
-            <a
-              href={APP_DOWNLOAD_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-1 flex w-fit items-center gap-2.5 rounded-lg border border-line bg-soft px-3 py-2 font-semibold text-ink transition-all duration-200 hover:-translate-y-0.5 hover:border-brand hover:text-brand"
-            >
-              <Image
-                src="/logo.jpeg"
-                alt="ebooi অ্যাপ"
-                width={32}
-                height={32}
-                className="h-8 w-8 shrink-0 rounded-md"
-              />
-              <span className="flex flex-col leading-tight">
-                <span className="text-[10px] font-normal text-muted-ink">
-                  আমাদের অ্যাপ নামান
-                </span>
-                Android অ্যাপ ডাউনলোড
-              </span>
-            </a>
+            <InstallAppButton />
           </div>
         </FooterAccordionItem>
       </div>
