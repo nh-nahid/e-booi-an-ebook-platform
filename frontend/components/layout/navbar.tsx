@@ -100,7 +100,7 @@ export default function Navbar() {
     : null;
 
   return (
-    <header className="sticky top-0 z-40 border-b border-white/30 bg-surface/65 px-4 shadow-[0_4px_30px_rgba(0,0,0,0.05)] backdrop-blur-xl backdrop-saturate-150 dark:border-white/10 dark:shadow-[0_4px_30px_rgba(0,0,0,0.3)] py-3.5 sm:px-25 sm:py-3">
+    <header className="app-header sticky top-0 z-40 border-b border-white/30 bg-surface/65 px-4 shadow-[0_4px_30px_rgba(0,0,0,0.05)] backdrop-blur-xl backdrop-saturate-150 dark:border-white/10 dark:shadow-[0_4px_30px_rgba(0,0,0,0.3)] py-3.5 sm:px-25 sm:py-3">
       <div className="flex items-center justify-between gap-2 sm:gap-6">
         <div className="flex shrink-0 items-center gap-2">
           <MobileNav />
@@ -149,7 +149,7 @@ export default function Navbar() {
           </button>
         </div>
 
-        <div className="flex shrink-0 items-center gap-3 sm:gap-6">
+        <div className="app-header-actions flex shrink-0 items-center gap-3 sm:gap-6">
           <NotificationBell onClick={clearSearchState} />
 
           <Link
